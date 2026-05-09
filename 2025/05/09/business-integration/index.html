@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="eligible123">
+  <meta name="keywords" content="REST,SOAP,Kafka,集成">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="云枢业务集成：REST/SOAP/Kafka实战">
+  <meta property="og:url" content="https://eligible123.github.io/2025/05/09/business-integration/index.html">
+  <meta property="og:site_name" content="eligible123.github.io">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="article:published_time" content="2025-05-09T05:00:00.000Z">
+  <meta property="article:author" content="eligible123">
+  <title>云枢业务集成：REST/SOAP/Kafka实战 - eligible123的技术博客</title>
+  <link rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css">
+  <link rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css">
+  <link rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css">
+  <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css">
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eligible123.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false},"search_path":"/local-search.xml","include_content_in_search":true};
+  </script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+  <style>
+    .markdown-body {
+      padding: 20px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    .markdown-body h2 { font-size: 24px; margin-top: 30px; }
+    .markdown-body h3 { font-size: 20px; }
+    .markdown-body code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; }
+    .markdown-body pre { background: #f6f8fa; padding: 16px; border-radius: 6px; overflow-x: auto; }
+    .markdown-body table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #dfe2e5; padding: 8px 12px; }
+    .markdown-body th { background: #f6f8fa; font-weight: 600; }
+    .markdown-body blockquote { border-left: 4px solid #42b983; padding: 10px 20px; margin: 16px 0; background: #f8f8f8; }
+    .article-meta { color: #999; font-size: 14px; margin-bottom: 20px; }
+    .article-meta .tag { background: #f0f0f0; padding: 2px 8px; border-radius: 3px; margin-right: 5px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner" style="height: 50vh;">
+      <nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+        <div class="container">
+          <a class="navbar-brand" href="/"><strong>eligible123的技术博客</strong></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+              <li class="nav-item"><a class="nav-link" href="/archives/">归档</a></li>
+              <li class="nav-item"><a class="nav-link" href="/categories/">分类</a></li>
+              <li class="nav-item"><a class="nav-link" href="/tags/">标签</a></li>
+              <li class="nav-item"><a class="nav-link" href="/about/">关于</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="container nopadding-x">
+      <div class="py-5" id="board">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+              <article class="markdown-body">
+                <h1>云枢业务集成：REST/SOAP/Kafka实战</h1>
+                <div class="article-meta">
+                  <span>发布于 2025-05-09</span>
+                  <span> | 分类: 集成</span>
+                  <span> | 标签: <span class="tag">REST</span> <span class="tag">SOAP</span> <span class="tag">Kafka</span> <span class="tag">集成</span></span>
+                </div>
+                <h1>业务集成场景示例</h1>
+
+<h2>使用场景</h2>
+
+<p><tr><td>场景描述</td><td>功能点</td><td>示例</td></tr></p>
+<p><tr><td>----------</td><td>--------</td><td>------</td></tr></p>
+<p><tr><td>进销存中，采购商品生成生成订单，集成到财务系统并从财务系统获取付款情况，若付款成功则采购流程完成</td><td>标准Rest适配器</td><td>示例一</td></tr></p>
+<p><tr><td>进销存系统商品采购后，调用销售系统的服务进行数据对接</td><td>Soap 适配器</td><td>示例二</td></tr></p>
+<p><tr><td>金融企业中数据的完整性要求较高，对核心业务的数据需实时做备份；业务处理时直接对备份数据库的表做增删改查</td><td>Data Table适配器</td><td>示例三</td></tr></p>
+<p><tr><td>考勤专员把xx网络能源技术股份有限公司的考勤记录，定时同步到云6中的recordDemo表单中</td><td>Database Sql适配器</td><td>示例四</td></tr></p>
+<p><tr><td>HR系统中，员工管理中的数据实时推送到kafka存储，运营系统根据需要拉取员工数据</td><td>Kafka适配器</td><td>示例五</td></tr></p>
+<p><tr><td>物流系统与客户的SAP ERP系统对接</td><td>SAP 适配器</td><td>示例六</td></tr></p>
+
+<h2>适配器对比说明</h2>
+
+<h3>1、标准Rest适配器、Soap 适配器</h3>
+
+<p>都是调用第三方系统的接口，做数据对接</p>
+
+<p>不同点是：当对方系统发布的服务为http协议时使用rest适配器，对方发布的服务为webservice时使用Soap适配器</p>
+
+<h3>2、Data Table适配器、Database Sql适配器</h3>
+
+<p>都是使用sql对某个数据库中的具体表做数据处理</p>
+
+<p>不同点是：Database Sql仅支持查询数据表的数据做展示，Data Table支持对数据表做增删改查</p>
+
+<h2>场景示例</h2>
+
+<h3>示例一：标准Rest适配器</h3>
+
+<strong>进销存中，采购商品生成生成订单，集成到财务系统并从财务系统获取付款情况，若付款成功则采购流程完成</strong>
+
+<strong>步骤</strong>
+
+<p>1、「业务集成」—>「集成服务」—>「新建服务」：添加集成服务方法，选择标准Rest适配器，输入服务URL地址，保存成功</p>
+
+<p>2、在刚刚的业务服务下，新增业务方法</p>
+
+<p>HTTP连接方法：post</p>
+<p>Request Body格式：Form-urlencode</p>
+<p>传入参数：订单编号：dingno</p>
+<p>返回值：付款状态：payment_status</p>
+
+<p>保存并连接测试，验证与财务系统的连接情况</p>
+
+<p>3、【采购商品】中，新建自定义按钮/流程触发的业务规则，名称为"获取付款详情"</p>
+
+<p>新增"业务方法"，选择刚创建的付款状态方法</p>
+
+<p>传入参数：订单编号=【采购商品】订单编号</p>
+<p>返回值：付款状态=【采购商品】付款状态</p>
+
+<p>增加分支判断，设置到结束的分支条件：付款状态是已付款</p>
+
+<p>若不满足此条件则到异常终止，设置提示语"付款失败，请验证"</p>
+
+<p>4、流程中增加系统活动节点，选择"获取付款详情"规则</p>
+
+<strong>效果展示</strong>
+
+<p>【采购商品】中发起流程后，若从财务系统获取付款状态为"已付款"，则流程正常结束，若不是已付款则流程异常并提示</p>
+
+<h3>示例二：Soap 适配器</h3>
+
+<strong>进销存系统商品采购后，调用销售系统的服务进行数据对接</strong>
+
+<strong>步骤</strong>
+
+<p>1、添加集成服务方法，「业务集成」—>「集成服务」—>「新建服务」，选择soap适配器，输入要调用的soap的地址URL，保存</p>
+
+<p>2、点击此服务的"同步"按钮，获取此服务下已经定义好的方法</p>
+
+<p>3、业务规则中调用相关的业务方法</p>
+
+<h3>示例三：Data Table适配器</h3>
+
+<strong>金融企业中数据的完整性要求较高，对核心业务的数据需实时做备份；业务处理时直接对备份数据库的表做增删改查</strong>
+
+<strong>步骤</strong>
+
+<p>1、「业务集成」—>「集成服务」—>「新建服务」：添加集成服务方法，选择"Data Table适配器"，选择要获取数据的数据源，保存成功</p>
+
+<p>2、在刚刚的业务服务下，新增业务方法</p>
+
+<p>选择数据表order，下方自动显示5个方法，默认有sql和参数：</p>
+<ul>
+<li>i31zc_Order_DELETE_1</li>
+<li>i31zc_Order_INSERT_1</li>
+<li>i31zc_Order_SELECT_1</li>
+<li>i31zc_Order_UPDATE_1</li>
+<li>i31zc_Order_UPSERT_1</li>
+</ul>
+<strong>注意：</strong> 这里仅仅是操作技术示例，实际使用中，严禁通过自定义SQL往业务表添加数据（应该用在线编码），可能会造成卡死数据库或者问题数据的情况。
+
+<p>3、数据新增规则中，新增业务方法，并选择备份数据的方法</p>
+
+<p>4、同样的方式在数据更新、数据删除中，配置update、delete方法</p>
+
+<strong>效果展示</strong>
+
+<p>【设备盘点】新增、更新、删除数据时，同步到备份数据库的order表中</p>
+
+<h3>示例四：Database Sql适配器</h3>
+
+<strong>考勤专员把xx网络能源技术股份有限公司的考勤记录，定时同步到云6中的recordDemo表单中</strong>
+
+<strong>步骤</strong>
+
+<p>1、添加集成服务方法，「业务集成」—>「集成服务」—>「新建服务」，选择要获取数据的数据源；适配器：Database Sql适配器</p>
+
+<p>2、新增获取数据的方法，并写入sql查询语句，从kaoqin表中获取数据</p>
+
+<p>返回值参数：</p>
+<ul>
+<li>人员编号：person_pin</li>
+<li>姓名：person_name</li>
+<li>部门编号：dept_no</li>
+<li>部门名：dept_name</li>
+<li>考勤日期时间：att_datetime</li>
+<li>考勤日期：att_date</li>
+<li>考勤时间：att_time</li>
+</ul>
+<p>3、在模型下调用业务方法</p>
+
+<p>进入模型【考勤同步】，创建定时触发，将定时任务与集成服务-方法绑定，并配置需要返回的参数</p>
+
+<p>路径：「考勤同步」—>「数据模型」—>「业务规则」—>「新建定时触发」</p>
+
+<p>4、增加节点"新增数据"，通过定时任务获取的数据，新增到模型中，并展示出来</p>
+
+<strong>效果展示</strong>
+
+<p>前台视图列表可查看定时获取到的数据</p>
+
+<h3>示例五：Kafka适配器</h3>
+
+<strong>HR系统中，员工管理中的数据实时推送到kafka存储，运营系统根据需要拉取员工数据</strong>
+
+<strong>步骤</strong>
+
+<p>1、「业务集成」—>「数据源」—>「新建数据源」，添加数据源</p>
+
+<p>配置kafka数据源时，目前支持三种认证方式：</p>
+<ul>
+<li><strong>无密码认证</strong>：输入ip、端口号即可</li>
+<li><strong>SASL/PLAIN认证</strong>：在kafka设置KAFKA_SECURITY_INTER_BROKER_PROTOCOL为SASL_PLAINTEXT情况下，使用的是该认证模式</li>
+<li><strong>SASL/SCRAM认证</strong>：在kafka设置KAFKA_SECURITY_INTER_BROKER_PROTOCOL为SCRAM-SHA-256/SCRAM-SHA-512的情况下，使用的是该认证模式</li>
+</ul>
+<p>2、添加集成服务方法，「业务集成」—>「集成服务」—>「新建服务」，选择数据源，数据源只能选择Kafka类型的数据源</p>
+
+<p>适配器：Kafka适配器</p>
+
+<p>3、新增获取数据的方法，选择发送模式、设置参数</p>
+
+<p>发送模式分为三种：</p>
+<ul>
+<li><strong>发后既往</strong>：不会返回发送结果，速度最快，但消息的发送结果没有保证</li>
+<li><strong>同步发送</strong>：会返回发送结果，且保证消息的顺序</li>
+<li><strong>异步发送</strong>：会返回发送结果，但不保证消息的顺序，性能比同步发送更好</li>
+</ul>
+<p>4、进入模型【员工管理】，在数据新增时增加调用业务方法</p>
+
+                <hr>
+                <blockquote>
+                  <p>原文来源: <a href="https://www.yuque.com/skwme4" target="_blank">云枢知识中心</a></p>
+                </blockquote>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="text-center mt-5 py-5">
+    <div class="footer-content">© 2025 eligible123 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank">Fluid</a></div>
+  </footer>
+  <script src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script>
+  <script src="/js/events.js"></script>
+  <script src="/js/plugins.js"></script>
+  <script src="/js/next-boot.js"></script>
+</body>
+</html>
