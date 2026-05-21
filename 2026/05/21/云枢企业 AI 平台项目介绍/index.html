@@ -1,0 +1,1216 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="李阳">
+  <meta name="keywords" content="云枢,CloudPivot,低代码,后端开发,Authine,奥哲">
+  
+    <meta name="description" content="云枢企业 AI 平台项目介绍云枢企业 AI 平台前端 — 目录结构与依赖说明 版本标识：AI-Platform-v1.1.0（根 package.json）文档用途：说明仓库目录职责、工作区内包与 npm 依赖的分类，并附带可渲染为思维导图的结构（Mermaid）。 1. 仓库与技术栈概览   维度 说明    形态 Yarn Workspaces + Lerna 的 Monorepo（根 wor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云枢企业 AI 平台项目介绍">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9A%20AI%20%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="李阳的技术博客">
+<meta property="og:description" content="云枢企业 AI 平台项目介绍云枢企业 AI 平台前端 — 目录结构与依赖说明 版本标识：AI-Platform-v1.1.0（根 package.json）文档用途：说明仓库目录职责、工作区内包与 npm 依赖的分类，并附带可渲染为思维导图的结构（Mermaid）。 1. 仓库与技术栈概览   维度 说明    形态 Yarn Workspaces + Lerna 的 Monorepo（根 wor">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/__mermaid_v3/c98f5ea6a4dfdeb151d17058221287c7.svg">
+<meta property="article:published_time" content="2026-05-21T06:49:04.000Z">
+<meta property="article:modified_time" content="2026-05-21T06:49:04.843Z">
+<meta property="article:author" content="李阳">
+<meta property="article:tag" content="CloudPivot">
+<meta property="article:tag" content="云枢">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/__mermaid_v3/c98f5ea6a4dfdeb151d17058221287c7.svg">
+  
+  
+  
+  <title>云枢企业 AI 平台项目介绍 - 李阳的技术博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eligible123.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":true,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>李阳的技术博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1920&q=80') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">云枢企业 AI 平台项目介绍</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        李阳
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-21 14:49" pubdate>
+          2026年5月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          48 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">云枢企业 AI 平台项目介绍</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="云枢企业-AI-平台项目介绍"><a href="#云枢企业-AI-平台项目介绍" class="headerlink" title="云枢企业 AI 平台项目介绍"></a>云枢企业 AI 平台项目介绍</h1><p>云枢企业 AI 平台前端 — 目录结构与依赖说明</p>
+<p>版本标识：AI-Platform-v1.1.0（根 package.json）<br>文档用途：说明仓库目录职责、工作区内包与 npm 依赖的分类，并附带可渲染为思维导图的结构（Mermaid）。</p>
+<h2 id="1-仓库与技术栈概览"><a href="#1-仓库与技术栈概览" class="headerlink" title="1. 仓库与技术栈概览"></a>1. 仓库与技术栈概览</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>形态</td>
+<td>Yarn Workspaces + Lerna 的 Monorepo（根 workspaces 含 packages&#x2F;<em>、packages&#x2F;builtin&#x2F;</em>、packages&#x2F;plugin&#x2F;*）</td>
+</tr>
+<tr>
+<td>默认 Registry</td>
+<td>企业 Nexus：<a target="_blank" rel="noopener" href="https://nexus01.authine.cn/repository/npm-all/%EF%BC%88.npmrc">https://nexus01.authine.cn/repository/npm-all/（.npmrc</a> &#x2F; .yarnrc）</td>
+</tr>
+<tr>
+<td>可发布库 Registry</td>
+<td><a target="_blank" rel="noopener" href="https://nexus01.authine.cn/repository/npm-cloudpivot/%EF%BC%88%E5%90%84">https://nexus01.authine.cn/repository/npm-cloudpivot/（各</a> cloudpivot-* 的 publishConfig）</td>
+</tr>
+<tr>
+<td>主框架</td>
+<td>Vue 2.7、Vue Router 3、Vuex 3、TypeScript ~4.1</td>
+</tr>
+<tr>
+<td>三端应用</td>
+<td>admin（管理端）、portal（门户）、mobile（移动端）</td>
+</tr>
+</tbody></table>
+<h2 id="2-根目录详细结构"><a href="#2-根目录详细结构" class="headerlink" title="2. 根目录详细结构"></a>2. 根目录详细结构</h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs nix">frontend<span class="hljs-symbol">/</span><br>├── .vscode<span class="hljs-symbol">/</span>                    <span class="hljs-comment"># 编辑器片段与团队约定（如 code-snippets）</span><br>├── bin<span class="hljs-symbol">/</span>                        <span class="hljs-comment"># 工程脚本：安装修复、清理、合并构建产物、路径替换等</span><br>│   ├── addNotes.js<br>│   ├── build.sh<br>│   ├── changePath.js<br>│   ├── clean.js<br>│   ├── find-large-files.js<br>│   ├── fix-antd.js<br>│   ├── fix-dynamic-Import.js<br>│   ├── generate-tree.js<br>│   ├── install-fix.js          <span class="hljs-comment"># 各子应用 scripts 中常见前置步骤</span><br>│   └── merge-item.js<br>├── config<span class="hljs-symbol">/</span>                     <span class="hljs-comment"># 提交规范、ESLint/TS 标准、本地开发代理与 dev 配置等</span><br>│   ├── commitlint-config-standard.js<br>│   ├── common-config.js<br>│   ├── cz-customizable-config-standard.js<br>│   ├── dev-config<span class="hljs-symbol">/</span>             <span class="hljs-comment"># 本地 dev 服务、代理、内嵌资源说明</span><br>│   ├── dev-token.js<br>│   ├── js-standard.js<br>│   ├── proxy.js<br>│   ├── ts-standard.js<br>│   └── vue-standard.js<br>├── packages<span class="hljs-symbol">/</span>                   <span class="hljs-comment"># 所有工作区包（应用 + 可复用库），见第 3 节</span><br>├── scripts<span class="hljs-symbol">/</span>                    <span class="hljs-comment"># 与 Git Hook / 质量相关的 Node 脚本</span><br>│   ├── find-duplicate-files.js<br>│   ├── find-locale-unused.js<br>│   └── i18n-checker.js         <span class="hljs-comment"># husky pre-commit 中调用</span><br>├── .eslintignore <span class="hljs-symbol">/</span> .eslintrc.js<br>├── .gitignore<br>├── .gitlab-ci.yml<br>├── .npmrc <span class="hljs-symbol">/</span> .yarnrc<br>├── .prettierignore <span class="hljs-symbol">/</span> .prettierrc<br>├── babel.config.js<br>├── commitlint.config.js<br>├── lerna.json                  <span class="hljs-comment"># independent 版本；发布指向 npm-cloudpivot</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-1-关键根级文件职责"><a href="#2-1-关键根级文件职责" class="headerlink" title="2.1 关键根级文件职责"></a>2.1 关键根级文件职责</h3><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>package.json</td>
+<td>全仓依赖锁定在根；scripts 统一调度三端 serve&#x2F;build&#x2F;dll；lint-staged + husky 控制提交质量</td>
+</tr>
+<tr>
+<td>lerna.json</td>
+<td>Lerna 与 Yarn Workspaces 协同；packages 字段当前为 packages&#x2F;*（builtin&#x2F;plugin 由 workspaces glob 纳入）</td>
+</tr>
+<tr>
+<td>bin&#x2F;install-fix.js</td>
+<td>子应用构建&#x2F;启动前常用修复逻辑（链接、补丁类）</td>
+</tr>
+<tr>
+<td>config&#x2F;proxy.js、config&#x2F;dev-config&#x2F;</td>
+<td>本地联调后端、代理与调试入口</td>
+</tr>
+</tbody></table>
+<h2 id="3-packages-目录结构（工作区包）"><a href="#3-packages-目录结构（工作区包）" class="headerlink" title="3. packages&#x2F; 目录结构（工作区包）"></a>3. packages&#x2F; 目录结构（工作区包）</h2><h3 id="3-1-典型应用包内部（以-admin-portal-mobile-为例）"><a href="#3-1-典型应用包内部（以-admin-portal-mobile-为例）" class="headerlink" title="3.1 典型应用包内部（以 admin &#x2F; portal &#x2F; mobile 为例）"></a>3.1 典型应用包内部（以 admin &#x2F; portal &#x2F; mobile 为例）</h3><p>三端均为 Vue CLI 工程，常见子目录：</p>
+<ul>
+<li>public&#x2F;：静态入口、index.html、运行时 config.js 等</li>
+<li>src&#x2F;：路由、视图、API 适配、主题、启动 main.ts &#x2F; bootstrap.ts</li>
+<li>extends&#x2F;：主题或扩展配置（如 theme.js、api.ts）</li>
+<li>webpack.dll.config.js（若使用）：DLL 预构建加速开发</li>
+</ul>
+<h2 id="4-工作区包：公有库-vs-私有应用（package-json-维度）"><a href="#4-工作区包：公有库-vs-私有应用（package-json-维度）" class="headerlink" title="4. 工作区包：公有库 vs 私有应用（package.json 维度）"></a>4. 工作区包：公有库 vs 私有应用（package.json 维度）</h2><h3 id="4-1-私有包（不对外单独发布，仅本仓构建使用）"><a href="#4-1-私有包（不对外单独发布，仅本仓构建使用）" class="headerlink" title="4.1 私有包（不对外单独发布，仅本仓构建使用）"></a>4.1 私有包（不对外单独发布，仅本仓构建使用）</h3><table>
+<thead>
+<tr>
+<th>包目录</th>
+<th>name</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>packages&#x2F;admin</td>
+<td>cloudpivot-admin</td>
+<td>管理端完整应用</td>
+</tr>
+<tr>
+<td>packages&#x2F;portal</td>
+<td>cloudpivot-portal</td>
+<td>门户完整应用</td>
+</tr>
+<tr>
+<td>packages&#x2F;mobile</td>
+<td>cloudpivot-mobile</td>
+<td>移动端完整应用</td>
+</tr>
+<tr>
+<td>仓库根</td>
+<td>frontend</td>
+<td>根工程，private: true</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-可发布公共库（private-false，可发布至企业-npm-cloudpivot）"><a href="#4-2-可发布公共库（private-false，可发布至企业-npm-cloudpivot）" class="headerlink" title="4.2 可发布公共库（private: false，可发布至企业 npm-cloudpivot）"></a>4.2 可发布公共库（private: false，可发布至企业 npm-cloudpivot）</h3><table>
+<thead>
+<tr>
+<th>包目录</th>
+<th>name</th>
+<th>简述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cloudpivot</td>
+<td>cloudpivot</td>
+<td>公共模块总入口</td>
+</tr>
+<tr>
+<td>cloudpivot-apis</td>
+<td>cloudpivot-apis</td>
+<td>API 与公共接口层</td>
+</tr>
+<tr>
+<td>cloudpivot-utils</td>
+<td>cloudpivot-utils</td>
+<td>通用工具</td>
+</tr>
+<tr>
+<td>cloudpivot-typings</td>
+<td>cloudpivot-typings</td>
+<td>公共类型定义</td>
+</tr>
+<tr>
+<td>cloudpivot-locale</td>
+<td>cloudpivot-locale</td>
+<td>国际化语言包</td>
+</tr>
+<tr>
+<td>cloudpivot-forms</td>
+<td>cloudpivot-forms</td>
+<td>表单控制器</td>
+</tr>
+<tr>
+<td>cloudpivot-form</td>
+<td>cloudpivot-form</td>
+<td>表单模块</td>
+</tr>
+<tr>
+<td>cloudpivot-form-extend</td>
+<td>cloudpivot-form-extend</td>
+<td>表单二开组件</td>
+</tr>
+<tr>
+<td>cloudpivot-list</td>
+<td>cloudpivot-list</td>
+<td>视图&#x2F;列表模块</td>
+</tr>
+<tr>
+<td>cloudpivot-flow</td>
+<td>cloudpivot-flow</td>
+<td>流程模块</td>
+</tr>
+<tr>
+<td>cloudpivot-designer</td>
+<td>cloudpivot-designer</td>
+<td>设计器依赖库</td>
+</tr>
+<tr>
+<td>cloudpivot-page</td>
+<td>cloudpivot-page</td>
+<td>页面设计器相关能力</td>
+</tr>
+<tr>
+<td>cloudpivot-page-designer</td>
+<td>cloudpivot-page-designer</td>
+<td>自定义页面设计器</td>
+</tr>
+<tr>
+<td>cloudpivot-portal-designer</td>
+<td>cloudpivot-portal-designer</td>
+<td>门户设计器</td>
+</tr>
+<tr>
+<td>cloudpivot-admin-core</td>
+<td>cloudpivot-admin-core</td>
+<td>Admin 核心包</td>
+</tr>
+<tr>
+<td>cloudpivot-platform</td>
+<td>cloudpivot-platform</td>
+<td>平台适配</td>
+</tr>
+<tr>
+<td>cloudpivot-ai</td>
+<td>cloudpivot-ai</td>
+<td>AI 模块</td>
+</tr>
+<tr>
+<td>cloudpivot-web-ide</td>
+<td>cloudpivot-web-ide</td>
+<td>在线开发编辑器</td>
+</tr>
+<tr>
+<td>cloudpivot-mobile-vue</td>
+<td>cloudpivot-mobile-vue</td>
+<td>移动端基础组件库</td>
+</tr>
+<tr>
+<td>cloudpivot-openwebapi</td>
+<td>cloudpivot-openwebapi</td>
+<td>前端 JS API SDK</td>
+</tr>
+<tr>
+<td>builtin&#x2F;cloudpivot-icons</td>
+<td>cloudpivot-icons</td>
+<td>图标字体库</td>
+</tr>
+<tr>
+<td>builtin&#x2F;cloudpivot-kindeditor</td>
+<td>cloudpivot-kindeditor</td>
+<td>富文本编辑器组件</td>
+</tr>
+<tr>
+<td>plugin&#x2F;cloudpivot-gantt</td>
+<td>cloudpivot-gantt</td>
+<td>甘特图插件</td>
+</tr>
+<tr>
+<td>portal-designer-toolbox</td>
+<td>@portal-designer&#x2F;toolbox</td>
+<td>门户设计器工具箱</td>
+</tr>
+<tr>
+<td>extension-template</td>
+<td>extension-template</td>
+<td>二次开发示例工程（亦可作模板发布）</td>
+</tr>
+</tbody></table>
+<h2 id="5-根-package-json-依赖：公用-vs-私有-企业定制"><a href="#5-根-package-json-依赖：公用-vs-私有-企业定制" class="headerlink" title="5. 根 package.json 依赖：公用 vs 私有&#x2F;企业定制"></a>5. 根 package.json 依赖：公用 vs 私有&#x2F;企业定制</h2><ul>
+<li><strong>公用依赖</strong>：开源生态主流库，通过企业 Nexus 代理&#x2F;缓存安装，版本仍遵循 semver。</li>
+<li><strong>私有&#x2F;企业定制依赖</strong>：@h3&#x2F;<em>、@h3print&#x2F;</em>、h3-* 等浩鲸&#x2F;云枢体系下的 UI、报表、打印、移动端组件；通常为公司内部制品。</li>
+</ul>
+<h3 id="5-1-生产依赖-dependencies（节选说明）"><a href="#5-1-生产依赖-dependencies（节选说明）" class="headerlink" title="5.1 生产依赖 dependencies（节选说明）"></a>5.1 生产依赖 dependencies（节选说明）</h3><table>
+<thead>
+<tr>
+<th>依赖</th>
+<th>分类</th>
+<th>作用摘要</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vue &#x2F; vue-router &#x2F; vuex</td>
+<td>公用</td>
+<td>核心框架与路由、状态</td>
+</tr>
+<tr>
+<td>vue-class-component &#x2F; vue-property-decorator &#x2F; vuex-class</td>
+<td>公用</td>
+<td>Class 风格与 Vuex 装饰器</td>
+</tr>
+<tr>
+<td>vue-i18n</td>
+<td>公用</td>
+<td>国际化运行时</td>
+</tr>
+<tr>
+<td>lodash &#x2F; moment &#x2F; decimal.js-light &#x2F; number-precision</td>
+<td>公用</td>
+<td>数据与日期、精度</td>
+</tr>
+<tr>
+<td>core-js &#x2F; babel-polyfill</td>
+<td>公用</td>
+<td>运行时垫片（legacy 兼容）</td>
+</tr>
+<tr>
+<td>axios</td>
+<td>公用</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>tinymce &#x2F; codemirror</td>
+<td>公用</td>
+<td>富文本、代码编辑</td>
+</tr>
+<tr>
+<td>markdown-it &#x2F; turndown</td>
+<td>公用</td>
+<td>Markdown 与 HTML 互转</td>
+</tr>
+<tr>
+<td>jsencrypt &#x2F; js-base64 &#x2F; js-cookie &#x2F; jszip</td>
+<td>公用</td>
+<td>安全、编码、Cookie、压缩包</td>
+</tr>
+<tr>
+<td>xss</td>
+<td>公用</td>
+<td>防 XSS</td>
+</tr>
+<tr>
+<td>dingtalk-jsapi &#x2F; gdt-jsapi &#x2F; wx-jsapi</td>
+<td>公用</td>
+<td>钉钉、企微、微信 JS-SDK</td>
+</tr>
+<tr>
+<td>@microsoft&#x2F;fetch-event-source &#x2F; event-source-polyfill</td>
+<td>公用</td>
+<td>SSE 与兼容</td>
+</tr>
+<tr>
+<td>recorder-core &#x2F; smooth-signature</td>
+<td>公用</td>
+<td>录音、手写签名</td>
+</tr>
+<tr>
+<td>v-charts &#x2F; vue-amap</td>
+<td>公用</td>
+<td>图表、高德地图 Vue 封装</td>
+</tr>
+<tr>
+<td>@h3&#x2F;antd-vue &#x2F; h3-antd-vue</td>
+<td>企业定制</td>
+<td>Ant Design Vue 体系（H3 维护&#x2F;定制版本）</td>
+</tr>
+<tr>
+<td>@h3&#x2F;awesome-ui &#x2F; @h3&#x2F;thinking-ui &#x2F; @h3&#x2F;theme-pc</td>
+<td>企业定制</td>
+<td>PC 端组件与主题</td>
+</tr>
+<tr>
+<td>@h3&#x2F;report &#x2F; @h3&#x2F;report-mobile</td>
+<td>企业定制</td>
+<td>报表与移动端报表</td>
+</tr>
+<tr>
+<td>@h3print&#x2F;designer &#x2F; excellit &#x2F; runtime</td>
+<td>企业定制</td>
+<td>打印设计器与运行时</td>
+</tr>
+<tr>
+<td>h3-mobile-vue &#x2F; h3-flow-drawer</td>
+<td>企业定制</td>
+<td>移动端组件、流程抽屉</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-开发依赖-devDependencies（归类）"><a href="#5-2-开发依赖-devDependencies（归类）" class="headerlink" title="5.2 开发依赖 devDependencies（归类）"></a>5.2 开发依赖 devDependencies（归类）</h3><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>代表依赖</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公用 · 构建</td>
+<td>webpack &#x2F; webpack-cli &#x2F; @vue&#x2F;cli-service &#x2F; babel-loader &#x2F; less-loader</td>
+<td>打包与样式</td>
+</tr>
+<tr>
+<td>公用 · 语言</td>
+<td>typescript &#x2F; @babel&#x2F;core</td>
+<td>TS 与转译</td>
+</tr>
+<tr>
+<td>公用 · 质量</td>
+<td>eslint 全家桶 &#x2F; prettier &#x2F; stylelint &#x2F; lint-staged &#x2F; husky</td>
+<td>规范与提交前检查</td>
+</tr>
+<tr>
+<td>公用 · Monorepo</td>
+<td>lerna</td>
+<td>多包版本与发布流程</td>
+</tr>
+<tr>
+<td>公用 · 提交</td>
+<td>@commitlint&#x2F;* &#x2F; commitizen &#x2F; cz-customizable</td>
+<td>规范化 commit message</td>
+</tr>
+</tbody></table>
+<h2 id="6-三端应用对工作区库的依赖关系（摘要）"><a href="#6-三端应用对工作区库的依赖关系（摘要）" class="headerlink" title="6. 三端应用对工作区库的依赖关系（摘要）"></a>6. 三端应用对工作区库的依赖关系（摘要）</h2><ul>
+<li><strong>admin</strong>：引入最全，包含 cloudpivot-admin-core、cloudpivot-ai、cloudpivot-web-ide、cloudpivot-designer、全量设计器与 monaco-editor 等。</li>
+<li><strong>portal</strong>：不含 admin-core &#x2F; ai &#x2F; web-ide，侧重门户与设计器、列表、流程、表单等。</li>
+<li><strong>mobile</strong>：子集依赖，无 cloudpivot-designer、cloudpivot-gantt、cloudpivot-kindeditor 等偏 PC 设计器类包。</li>
+</ul>
+<h2 id="7-思维导图（Mermaid-mindmap）"><a href="#7-思维导图（Mermaid-mindmap）" class="headerlink" title="7. 思维导图（Mermaid mindmap）"></a>7. 思维导图（Mermaid mindmap）</h2><p><img src="https://cdn.nlark.com/yuque/__mermaid_v3/c98f5ea6a4dfdeb151d17058221287c7.svg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="8-转为外部思维导图工具的几种方式"><a href="#8-转为外部思维导图工具的几种方式" class="headerlink" title="8. 转为外部思维导图工具的几种方式"></a>8. 转为外部思维导图工具的几种方式</h2><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mermaid Live Editor</td>
+<td>复制第 7 节代码块到 Mermaid Live，可导出 SVG&#x2F;PNG。</td>
+</tr>
+<tr>
+<td>Markdown → XMind &#x2F; MindMaster</td>
+<td>使用支持 Markdown 大纲导入的思维导图软件，以本文第 2–3 节标题层级作为节点来源。</td>
+</tr>
+<tr>
+<td>手动对照</td>
+<td>以第 7 节 mindmap 为纲，在 XMind、MindNode、FreeMind 中逐层展开。</td>
+</tr>
+</tbody></table>
+<h2 id="9-文档维护说明"><a href="#9-文档维护说明" class="headerlink" title="9. 文档维护说明"></a>9. 文档维护说明</h2><ul>
+<li>工作区包列表以 packages&#x2F;**&#x2F;package.json 为准；新增包时请同步更新本文第 3、4 节。</li>
+<li>根依赖以根 package.json 为准；升级大版本后请更新第 5 节表格中的「作用摘要」若行为有变。</li>
+<li>lerna.json 中 packages 仅列 packages&#x2F;* 时，builtin&#x2F;plugin 仍由 Yarn workspaces 纳入安装，与 Lerna 命令范围可能不一致，排障时需注意。</li>
+</ul>
+<hr>
+<blockquote>
+<p>来源: <a target="_blank" rel="noopener" href="https://www.yuque.com/skwme4/epaofp/og24po8o768xzv2z">https://www.yuque.com/skwme4/epaofp/og24po8o768xzv2z</a><br>分类: 开发者手册</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%91%E6%9E%A2/" class="print-no-link">#云枢</a>
+      
+        <a href="/tags/CloudPivot/" class="print-no-link">#CloudPivot</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>云枢企业 AI 平台项目介绍</div>
+      <div>https://eligible123.github.io/2026/05/21/云枢企业 AI 平台项目介绍/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>李阳</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年5月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/05/21/%E4%BA%91%E6%9E%A26.0%E6%8A%A5%E8%A1%A8%E8%9E%8D%E5%90%88%E9%83%A8%E7%BD%B2%E6%B1%87%E6%80%BB/" title="云枢6.0报表融合部署汇总">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">云枢6.0报表融合部署汇总</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9AAI%E5%B9%B3%E5%8F%B0V1.1%E7%89%88%E6%9C%AC/" title="云枢企业AI平台V1.1版本">
+                        <span class="hidden-mobile">云枢企业AI平台V1.1版本</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <span> | </span> <span>© 2025 李阳</span> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

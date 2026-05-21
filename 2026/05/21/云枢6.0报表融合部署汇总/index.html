@@ -1,0 +1,915 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="李阳">
+  <meta name="keywords" content="云枢,CloudPivot,低代码,后端开发,Authine,奥哲">
+  
+    <meta name="description" content="云枢6.0报表融合部署汇总该部分后续会合并至部署文档中，以一个中间件&#x2F;服务的方式被云枢调用，其版本与云枢6.0版本的对应关系如下：    云枢 报表(X为修订版本号，X越大越接近报表的最新版本)    6.0-6.2 3.0-3.2   6.3-6.6 3.4.1.X   6.7 3.5.0.X   6.9~6.11 4.3.4.X   6.12 5.1.1.X   6.13 后端：5.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云枢6.0报表融合部署汇总">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/21/%E4%BA%91%E6%9E%A26.0%E6%8A%A5%E8%A1%A8%E8%9E%8D%E5%90%88%E9%83%A8%E7%BD%B2%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:site_name" content="李阳的技术博客">
+<meta property="og:description" content="云枢6.0报表融合部署汇总该部分后续会合并至部署文档中，以一个中间件&#x2F;服务的方式被云枢调用，其版本与云枢6.0版本的对应关系如下：    云枢 报表(X为修订版本号，X越大越接近报表的最新版本)    6.0-6.2 3.0-3.2   6.3-6.6 3.4.1.X   6.7 3.5.0.X   6.9~6.11 4.3.4.X   6.12 5.1.1.X   6.13 后端：5.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-21T06:49:04.000Z">
+<meta property="article:modified_time" content="2026-05-21T06:49:04.841Z">
+<meta property="article:author" content="李阳">
+<meta property="article:tag" content="CloudPivot">
+<meta property="article:tag" content="云枢">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>云枢6.0报表融合部署汇总 - 李阳的技术博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eligible123.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":true,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>李阳的技术博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1920&q=80') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">云枢6.0报表融合部署汇总</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        李阳
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-21 14:49" pubdate>
+          2026年5月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">云枢6.0报表融合部署汇总</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="云枢6-0报表融合部署汇总"><a href="#云枢6-0报表融合部署汇总" class="headerlink" title="云枢6.0报表融合部署汇总"></a>云枢6.0报表融合部署汇总</h1><p>该部分后续会合并至部署文档中，以一个中间件&#x2F;服务的方式被云枢调用，其版本与云枢6.0版本的对应关系如下：</p>
+<table>
+<thead>
+<tr>
+<th>云枢</th>
+<th>报表(X为修订版本号，X越大越接近报表的最新版本)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>6.0-6.2</td>
+<td>3.0-3.2</td>
+</tr>
+<tr>
+<td>6.3-6.6</td>
+<td>3.4.1.X</td>
+</tr>
+<tr>
+<td>6.7</td>
+<td>3.5.0.X</td>
+</tr>
+<tr>
+<td>6.9~6.11</td>
+<td>4.3.4.X</td>
+</tr>
+<tr>
+<td>6.12</td>
+<td>5.1.1.X</td>
+</tr>
+<tr>
+<td>6.13</td>
+<td>后端：5.3.6.X 前端：5.3.2.X</td>
+</tr>
+<tr>
+<td>6.14、6.15</td>
+<td>后端：5.3.11.X 前端：5.3.10-X</td>
+</tr>
+<tr>
+<td>6.16</td>
+<td>后端：5.4.6.X 前端：5.4.6-X</td>
+</tr>
+<tr>
+<td>8.0</td>
+<td>后端：5.4.6.4-5.4.6.x 前端：5.4.6.4-5.4.6.x</td>
+</tr>
+<tr>
+<td>8.1</td>
+<td>后端：6.0.0.x 前端：6.0.x</td>
+</tr>
+<tr>
+<td>8.3</td>
+<td>后端：6.2.0.15以上</td>
+</tr>
+<tr>
+<td>8.5</td>
+<td>后端：6.2.0.15以上</td>
+</tr>
+<tr>
+<td>8.6</td>
+<td>后端：6.2.0.15以上</td>
+</tr>
+</tbody></table>
+<p>其中报表的最后一位小版本x，通常情况下是兼容的，即可以直接选择最新的5.3.2.x版本去与云枢的6.13对接。</p>
+<h2 id="部署包下载"><a href="#部署包下载" class="headerlink" title="部署包下载"></a>部署包下载</h2><ul>
+<li>目前报表部署包统一上传到钉钉发布群，请到钉钉群【报表发布群】下载相对应版本</li>
+</ul>
+<h2 id="部署包内容"><a href="#部署包内容" class="headerlink" title="部署包内容"></a>部署包内容</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">reporter-deploy<br>├── <span class="hljs-keyword">bin </span>               <span class="hljs-comment">#部署脚本</span><br>├── docker             <span class="hljs-comment">#docker部署相关脚本，如docker镜像构建等</span><br>├── <span class="hljs-keyword">jars</span><br><span class="hljs-keyword"></span>│   └── reporter-integrate-webapi <span class="hljs-comment">#仪表盘web服务</span><br>├── ps<br>├── sql                <span class="hljs-comment">#报表服务初始化/升级脚本</span><br>├── wars               <span class="hljs-comment">#war包部署相关</span><br>└── README.md          <span class="hljs-comment">#README.md文件</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Nginx配置文件调整"><a href="#Nginx配置文件调整" class="headerlink" title="Nginx配置文件调整"></a>Nginx配置文件调整</h2><p>新增报表中间件，需要在云枢6.0的nginx.conf配置文件中的server配置项中新增以下3个location，以满足报表中间件与云枢6.0系统的交互。</p>
+<p>配置文件位置：<code>{DEPLOY_PATH}/cloudpivot/middleware/nginx/conf/nginx.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>    ...<br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> /v1/ &#123;<br>        <span class="hljs-attribute">proxy_pass</span>          http://webapi:8080/api/v1/;<br>        <span class="hljs-attribute">proxy_set_header</span>    Host              <span class="hljs-variable">$host</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>    X-Real-IP         <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>    X-Forwarded-For   <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>    X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>        <span class="hljs-attribute">proxy_read_timeout</span>  <span class="hljs-number">36000</span>;<br>    &#125;<br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> /dashboard/ &#123;<br>        <span class="hljs-attribute">proxy_pass</span> http://report:6061/dashboard/;<br>        <span class="hljs-attribute">proxy_set_header</span>   Host             <span class="hljs-variable">$host</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Real-IP        <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-For  <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>        <span class="hljs-attribute">proxy_read_timeout</span>          <span class="hljs-number">300</span>;<br>    &#125;<br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> /data-source/ &#123;<br>        <span class="hljs-attribute">proxy_pass</span> http://report:6061/data-source/;<br>        <span class="hljs-attribute">proxy_set_header</span>   Host             <span class="hljs-variable">$host</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Real-IP        <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-For  <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>        <span class="hljs-attribute">proxy_read_timeout</span>          <span class="hljs-number">300</span>;<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 4.x及5.x的nginx配置有差异</p>
+<h2 id="ECS部署流程"><a href="#ECS部署流程" class="headerlink" title="ECS部署流程"></a>ECS部署流程</h2><p>将报表当成独立的中间件服务来部署</p>
+<h3 id="1-执行数据库初始化-升级脚本"><a href="#1-执行数据库初始化-升级脚本" class="headerlink" title="1. 执行数据库初始化&#x2F;升级脚本"></a>1. 执行数据库初始化&#x2F;升级脚本</h3><p>数据库脚本位于部署包中的sql目录，初次安装报表中间件时，选择其下对应数据库类型的 <code>report_{Database.Type}.sql</code> 执行；版本升级时，根据其下的 <code>report_{Database.Type}_upgrade.sql</code> 文件，注意不是简单直接执行这个文件，需要根据对应的版本，有选择的执行。</p>
+<h3 id="2-配置项更改"><a href="#2-配置项更改" class="headerlink" title="2. 配置项更改"></a>2. 配置项更改</h3><p>部署配置信息位于bin目录下的report.config，其配置项如下所示，通常情况下需要配置：</p>
+<ul>
+<li><code>REPORTER_ADAPTOR_HOST</code> 云枢6.0服务器地址，注意此项配置为云枢6.0的访问地址</li>
+<li><code>REPORTER_DATASTORE_DB_*</code> 报表数据库信息，包括driver、url、username、password等</li>
+<li><code>REPORTER_LOG_DIR</code> 日志存储目录</li>
+<li>其它配置信息使用默认值即可，也可根据对应的注释信息按需配置即可</li>
+</ul>
+<h3 id="3-生成配置文件"><a href="#3-生成配置文件" class="headerlink" title="3. 生成配置文件"></a>3. 生成配置文件</h3><p>以上配置完report.config之后，执行bin目录下的 <code>setup.sh</code>，执行后会将report.config的配置内容写入实际的配置文件，如application.properties等</p>
+<h3 id="4-启动-停止及运行状态检查"><a href="#4-启动-停止及运行状态检查" class="headerlink" title="4. 启动&#x2F;停止及运行状态检查"></a>4. 启动&#x2F;停止及运行状态检查</h3><p>配置文件生成之后，可直接通过startup.sh来启动报表中间件，此类脚本位于bin目录下</p>
+<h2 id="docker-compose部署流程"><a href="#docker-compose部署流程" class="headerlink" title="docker-compose部署流程"></a>docker-compose部署流程</h2><p>将下载的报表中间件部署包解压于云枢6.0分发包的<code>${DEPLOY}/cloudpivot/middleware/</code>目录下</p>
+<h3 id="镜像制作步骤"><a href="#镜像制作步骤" class="headerlink" title="镜像制作步骤"></a>镜像制作步骤</h3><p>docker镜像制作的相关脚本，位于reporter-deploy&#x2F;docker目录下</p>
+<ol>
+<li>同以上的ECS部署流程，首先配置bin目录下 <code>report.config</code> 其中的配置信息。</li>
+<li>修改完配置信息后执行bin目录下的 <code>setup.sh</code> 以写入实际的配置文件。</li>
+<li>执行 <code>dockerbuild.sh</code> 开始构建镜像</li>
+</ol>
+<p><strong>注意：</strong></p>
+<ol>
+<li><code>docker.config</code> 中的镜像标签TAG是根据 <code>report.config</code> 中的TAG变量生成，可通过修改后者的值来发布不同的镜像版本(默认情况下，保持与报表中间件的版本一致)</li>
+<li>Dockfile中使用的jdk非标准的openjdk，建议换为：<code>openjdk:8-jdk-alpine</code></li>
+<li>若改变了日志文件的存储目录 <code>REPORTER_LOG_DIR</code>，需要同步更改一键部署脚本中的环境变量：<code>${DEPLOY}/cloudpivot/bin/.env</code>文件中的 <code>REPORTER_LOG_DIR</code> 变量</li>
+<li>nginx的配置文件中已新增报表相关的location，如有需要则拷贝到使用的nginx配置文件中</li>
+</ol>
+<h2 id="k8s部署流程"><a href="#k8s部署流程" class="headerlink" title="k8s部署流程"></a>k8s部署流程</h2><p>将报表作为一个新的report服务，注册到k8s中，注意使用相同的namespace(与webapi有直接的api调用交互)</p>
+<h3 id="镜像制作"><a href="#镜像制作" class="headerlink" title="镜像制作"></a>镜像制作</h3><p>同docker-compose部分的镜像制作流程，注意其中report.config中的 <code>REPORTER_ADAPTOR_HOST</code> 设置为访问云枢的访问域名</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>报表帮助文档中心: <a target="_blank" rel="noopener" href="https://authine.yuque.com/books/share/4f55e863-ceb1-4fed-99b4-0f95e5fa7746">https://authine.yuque.com/books/share/4f55e863-ceb1-4fed-99b4-0f95e5fa7746</a></p>
+<hr>
+<blockquote>
+<p>原文链接: <a target="_blank" rel="noopener" href="https://www.yuque.com/skwme4/hzo079/txrh4x8sitntonxd">https://www.yuque.com/skwme4/hzo079/txrh4x8sitntonxd</a></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%91%E6%9E%A2/" class="print-no-link">#云枢</a>
+      
+        <a href="/tags/CloudPivot/" class="print-no-link">#CloudPivot</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>云枢6.0报表融合部署汇总</div>
+      <div>https://eligible123.github.io/2026/05/21/云枢6.0报表融合部署汇总/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>李阳</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年5月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/05/21/%E4%BA%918.6%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/" title="云8.6产品部署准备工作">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">云8.6产品部署准备工作</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9A%20AI%20%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" title="云枢企业 AI 平台项目介绍">
+                        <span class="hidden-mobile">云枢企业 AI 平台项目介绍</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <span> | </span> <span>© 2025 李阳</span> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

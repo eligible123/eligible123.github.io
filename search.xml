@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>001 流程事件依赖的业务规则升级</title>
+      <link href="/2026/05/21/001%20%E6%B5%81%E7%A8%8B%E4%BA%8B%E4%BB%B6%E4%BE%9D%E8%B5%96%E7%9A%84%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%99%E5%8D%87%E7%BA%A7/"/>
+      <url>/2026/05/21/001%20%E6%B5%81%E7%A8%8B%E4%BA%8B%E4%BB%B6%E4%BE%9D%E8%B5%96%E7%9A%84%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%99%E5%8D%87%E7%BA%A7/</url>
+      
+        <content type="html"><![CDATA[<h1 id="001-流程事件依赖的业务规则升级"><a href="#001-流程事件依赖的业务规则升级" class="headerlink" title="001 流程事件依赖的业务规则升级"></a>001 流程事件依赖的业务规则升级</h1><p>历史默认逻辑，流程事件以及系统节点配置的业务规则，在流程中执行后会默认更新业务模型数据到数据库，实际只有业务规则有数据赋值节点、业务方法节点才需要更新到数据库。</p><p>此升级程序针对的是在流程事件、系统节点配置的业务规则且此业务规则包含数据赋值节点、业务方法节点，那么升级程序在对应节点开启落库开关。</p><h2 id="开关"><a href="#开关" class="headerlink" title="开关"></a>开关</h2><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/hzo079/eadi96m8199g6d18">https://www.yuque.com/skwme4/hzo079/eadi96m8199g6d18</a><br>分类: 开发者手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>PostgreSql等小众数据库，启动服务默认执行DDL死锁问题</title>
+      <link href="/2026/05/21/PostgreSql%E7%AD%89%E5%B0%8F%E4%BC%97%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E9%BB%98%E8%AE%A4%E6%89%A7%E8%A1%8CDDL%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/"/>
+      <url>/2026/05/21/PostgreSql%E7%AD%89%E5%B0%8F%E4%BC%97%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E9%BB%98%E8%AE%A4%E6%89%A7%E8%A1%8CDDL%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h1 id="PostgreSql等小众数据库，启动服务默认执行DDL死锁问题"><a href="#PostgreSql等小众数据库，启动服务默认执行DDL死锁问题" class="headerlink" title="PostgreSql等小众数据库，启动服务默认执行DDL死锁问题"></a>PostgreSql等小众数据库，启动服务默认执行DDL死锁问题</h1><p>云枢8.3之后更换了ORM，默认启动服务时，ORM会主动检查表结构并默认执行DDL强校准。在Mysql等数据库下，多节点启动并不会存在问题。</p><p>当前在postgresql等小众数据库下存在锁表的风险，对应工单：</p><p><strong>#197010 【西钻升级】多节点下启动程序会报锁表启动不起来</strong></p><p>参考链接: <a href="https://rdmp.authine.cn/project/#/team/LSY1vbUE/task/75mwf6EPWiWyTOUD">https://rdmp.authine.cn/project/#/team/LSY1vbUE/task/75mwf6EPWiWyTOUD</a></p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>添加配置（<code>cloudpivot.orm.postgresql.tableConsistencyEnable = false</code>）关闭校准。</p><p><strong>注意：</strong><br>关闭校准会导致开发增加新字段，或者添加了新表，导致不一致，所以操作方式：升级版本时，一定要先把<code>cloudpivot.orm.postgresql.tableConsistencyEnable = true</code> 或者删除该配置，等校准结束，再开启配置。</p><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/kdt8c4/rmad793k1xnc2gnb">https://www.yuque.com/skwme4/kdt8c4/rmad793k1xnc2gnb</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>oceanbase-v3数据库配置样例</title>
+      <link href="/2026/05/21/oceanbase-v3%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E6%A0%B7%E4%BE%8B/"/>
+      <url>/2026/05/21/oceanbase-v3%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E6%A0%B7%E4%BE%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="oceanbase-v3数据库配置样例"><a href="#oceanbase-v3数据库配置样例" class="headerlink" title="oceanbase-v3数据库配置样例"></a>oceanbase-v3数据库配置样例</h1><p>1.cloudpivot_user</p><p>application-prod.yml</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">代码块内容需要在浏览器中查看完整内容</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">请访问: https://www.yuque.com/skwme4/qlby6y/gggbsxlznryvmizi</span><br></code></pre></td></tr></table></figure><p>2.tenant-manage</p><p>application.properties</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 代码块内容需要在浏览器中查看完整内容<br></code></pre></td></tr></table></figure><p>3.auncher</p><h2 id="3-1-租户初始化SQL"><a href="#3-1-租户初始化SQL" class="headerlink" title="3.1 租户初始化SQL"></a>3.1 租户初始化SQL</h2><p>cloudpivot-launcher-init.sql</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 代码块内容需要在浏览器中查看完整内容<br></code></pre></td></tr></table></figure><h2 id="3-2-配置样例"><a href="#3-2-配置样例" class="headerlink" title="3.2 配置样例"></a>3.2 配置样例</h2><p>application-prod.yml</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">代码块内容需要在浏览器中查看完整内容</span><br></code></pre></td></tr></table></figure><p>4.report</p><h2 id="4-1-初始化SQL"><a href="#4-1-初始化SQL" class="headerlink" title="4.1 初始化SQL"></a>4.1 初始化SQL</h2><p>report-init.sql</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 代码块内容需要在浏览器中查看完整内容<br></code></pre></td></tr></table></figure><h2 id="4-2-配置样例"><a href="#4-2-配置样例" class="headerlink" title="4.2 配置样例"></a>4.2 配置样例</h2><p>application.properties</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">代码块内容需要在浏览器中查看完整内容</span><br></code></pre></td></tr></table></figure><p>5.integration（可选）</p><h2 id="5-1-初始化sql"><a href="#5-1-初始化sql" class="headerlink" title="5.1 初始化sql"></a>5.1 初始化sql</h2><p>integration-init.sql</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 代码块内容需要在浏览器中查看完整内容<br></code></pre></td></tr></table></figure><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/qlby6y/gggbsxlznryvmizi">https://www.yuque.com/skwme4/qlby6y/gggbsxlznryvmizi</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>业务集成场景示例</title>
+      <link href="/2026/05/21/%E4%B8%9A%E5%8A%A1%E9%9B%86%E6%88%90%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B/"/>
+      <url>/2026/05/21/%E4%B8%9A%E5%8A%A1%E9%9B%86%E6%88%90%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="业务集成场景示例"><a href="#业务集成场景示例" class="headerlink" title="业务集成场景示例"></a>业务集成场景示例</h1><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><table><thead><tr><th>场景描述</th><th>功能点</th><th>示例</th></tr></thead><tbody><tr><td>进销存中，采购商品生成生成订单，集成到财务系统并从财务系统获取付款情况，若付款成功则采购流程完成</td><td>标准Rest适配器</td><td>示例一</td></tr><tr><td>进销存系统商品采购后，调用销售系统的服务进行数据对接</td><td>Soap 适配器</td><td>示例二</td></tr><tr><td>金融企业中数据的完整性要求较高，对核心业务的数据需实时做备份；业务处理时直接对备份数据库的表做增删改查</td><td>Data Table适配器</td><td>示例三</td></tr><tr><td>考勤专员把xx网络能源技术股份有限公司的考勤记录，定时同步到云6中的recordDemo表单中</td><td>Database Sql适配器</td><td>示例四</td></tr><tr><td>HR系统中，员工管理中的数据实时推送到kafka存储，运营系统根据需要拉取员工数据</td><td>Kafka适配器</td><td>示例五</td></tr><tr><td>物流系统与客户的SAP ERP系统对接</td><td>SAP 适配器</td><td>示例六</td></tr></tbody></table><h2 id="适配器对比说明"><a href="#适配器对比说明" class="headerlink" title="适配器对比说明"></a>适配器对比说明</h2><h3 id="1、标准Rest适配器、Soap-适配器"><a href="#1、标准Rest适配器、Soap-适配器" class="headerlink" title="1、标准Rest适配器、Soap 适配器"></a>1、标准Rest适配器、Soap 适配器</h3><p>都是调用第三方系统的接口，做数据对接</p><p>不同点是：当对方系统发布的服务为http协议时使用rest适配器，对方发布的服务为webservice时使用Soap适配器</p><h3 id="2、Data-Table适配器、Database-Sql适配器"><a href="#2、Data-Table适配器、Database-Sql适配器" class="headerlink" title="2、Data Table适配器、Database Sql适配器"></a>2、Data Table适配器、Database Sql适配器</h3><p>都是使用sql对某个数据库中的具体表做数据处理</p><p>不同点是：Database Sql仅支持查询数据表的数据做展示，Data Table支持对数据表做增删改查</p><h2 id="场景示例"><a href="#场景示例" class="headerlink" title="场景示例"></a>场景示例</h2><h3 id="示例一：标准Rest适配器"><a href="#示例一：标准Rest适配器" class="headerlink" title="示例一：标准Rest适配器"></a>示例一：标准Rest适配器</h3><p><strong>进销存中，采购商品生成生成订单，集成到财务系统并从财务系统获取付款情况，若付款成功则采购流程完成</strong></p><p><strong>步骤</strong></p><p>1、「业务集成」—&gt;「集成服务」—&gt;「新建服务」：添加集成服务方法，选择标准Rest适配器，输入服务URL地址，保存成功</p><p>2、在刚刚的业务服务下，新增业务方法</p><p>HTTP连接方法：post<br>Request Body格式：Form-urlencode<br>传入参数：订单编号：dingno<br>返回值：付款状态：payment_status</p><p>保存并连接测试，验证与财务系统的连接情况</p><p>3、【采购商品】中，新建自定义按钮&#x2F;流程触发的业务规则，名称为”获取付款详情”</p><p>新增”业务方法”，选择刚创建的付款状态方法</p><p>传入参数：订单编号&#x3D;【采购商品】订单编号<br>返回值：付款状态&#x3D;【采购商品】付款状态</p><p>增加分支判断，设置到结束的分支条件：付款状态是已付款</p><p>若不满足此条件则到异常终止，设置提示语”付款失败，请验证”</p><p>4、流程中增加系统活动节点，选择”获取付款详情”规则</p><p><strong>效果展示</strong></p><p>【采购商品】中发起流程后，若从财务系统获取付款状态为”已付款”，则流程正常结束，若不是已付款则流程异常并提示</p><h3 id="示例二：Soap-适配器"><a href="#示例二：Soap-适配器" class="headerlink" title="示例二：Soap 适配器"></a>示例二：Soap 适配器</h3><p><strong>进销存系统商品采购后，调用销售系统的服务进行数据对接</strong></p><p><strong>步骤</strong></p><p>1、添加集成服务方法，「业务集成」—&gt;「集成服务」—&gt;「新建服务」，选择soap适配器，输入要调用的soap的地址URL，保存</p><p>2、点击此服务的”同步”按钮，获取此服务下已经定义好的方法</p><p>3、业务规则中调用相关的业务方法</p><h3 id="示例三：Data-Table适配器"><a href="#示例三：Data-Table适配器" class="headerlink" title="示例三：Data Table适配器"></a>示例三：Data Table适配器</h3><p><strong>金融企业中数据的完整性要求较高，对核心业务的数据需实时做备份；业务处理时直接对备份数据库的表做增删改查</strong></p><p><strong>步骤</strong></p><p>1、「业务集成」—&gt;「集成服务」—&gt;「新建服务」：添加集成服务方法，选择”Data Table适配器”，选择要获取数据的数据源，保存成功</p><p>2、在刚刚的业务服务下，新增业务方法</p><p>选择数据表order，下方自动显示5个方法，默认有sql和参数：</p><ul><li>i31zc_Order_DELETE_1</li><li>i31zc_Order_INSERT_1</li><li>i31zc_Order_SELECT_1</li><li>i31zc_Order_UPDATE_1</li><li>i31zc_Order_UPSERT_1</li></ul><p><strong>注意：</strong> 这里仅仅是操作技术示例，实际使用中，严禁通过自定义SQL往业务表添加数据（应该用在线编码），可能会造成卡死数据库或者问题数据的情况。</p><p>3、数据新增规则中，新增业务方法，并选择备份数据的方法</p><p>4、同样的方式在数据更新、数据删除中，配置update、delete方法</p><p><strong>效果展示</strong></p><p>【设备盘点】新增、更新、删除数据时，同步到备份数据库的order表中</p><h3 id="示例四：Database-Sql适配器"><a href="#示例四：Database-Sql适配器" class="headerlink" title="示例四：Database Sql适配器"></a>示例四：Database Sql适配器</h3><p><strong>考勤专员把xx网络能源技术股份有限公司的考勤记录，定时同步到云6中的recordDemo表单中</strong></p><p><strong>步骤</strong></p><p>1、添加集成服务方法，「业务集成」—&gt;「集成服务」—&gt;「新建服务」，选择要获取数据的数据源；适配器：Database Sql适配器</p><p>2、新增获取数据的方法，并写入sql查询语句，从kaoqin表中获取数据</p><p>返回值参数：</p><ul><li>人员编号：person_pin</li><li>姓名：person_name</li><li>部门编号：dept_no</li><li>部门名：dept_name</li><li>考勤日期时间：att_datetime</li><li>考勤日期：att_date</li><li>考勤时间：att_time</li></ul><p>3、在模型下调用业务方法</p><p>进入模型【考勤同步】，创建定时触发，将定时任务与集成服务-方法绑定，并配置需要返回的参数</p><p>路径：「考勤同步」—&gt;「数据模型」—&gt;「业务规则」—&gt;「新建定时触发」</p><p>4、增加节点”新增数据”，通过定时任务获取的数据，新增到模型中，并展示出来</p><p><strong>效果展示</strong></p><p>前台视图列表可查看定时获取到的数据</p><h3 id="示例五：Kafka适配器"><a href="#示例五：Kafka适配器" class="headerlink" title="示例五：Kafka适配器"></a>示例五：Kafka适配器</h3><p><strong>HR系统中，员工管理中的数据实时推送到kafka存储，运营系统根据需要拉取员工数据</strong></p><p><strong>步骤</strong></p><p>1、「业务集成」—&gt;「数据源」—&gt;「新建数据源」，添加数据源</p><p>配置kafka数据源时，目前支持三种认证方式：</p><ul><li><strong>无密码认证</strong>：输入ip、端口号即可</li><li><strong>SASL&#x2F;PLAIN认证</strong>：在kafka设置KAFKA_SECURITY_INTER_BROKER_PROTOCOL为SASL_PLAINTEXT情况下，使用的是该认证模式</li><li><strong>SASL&#x2F;SCRAM认证</strong>：在kafka设置KAFKA_SECURITY_INTER_BROKER_PROTOCOL为SCRAM-SHA-256&#x2F;SCRAM-SHA-512的情况下，使用的是该认证模式</li></ul><p>2、添加集成服务方法，「业务集成」—&gt;「集成服务」—&gt;「新建服务」，选择数据源，数据源只能选择Kafka类型的数据源</p><p>适配器：Kafka适配器</p><p>3、新增获取数据的方法，选择发送模式、设置参数</p><p>发送模式分为三种：</p><ul><li><strong>发后既往</strong>：不会返回发送结果，速度最快，但消息的发送结果没有保证</li><li><strong>同步发送</strong>：会返回发送结果，且保证消息的顺序</li><li><strong>异步发送</strong>：会返回发送结果，但不保证消息的顺序，性能比同步发送更好</li></ul><p>4、进入模型【员工管理】，在数据新增时增加调用业务方法</p><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/ht166i/qr99xiahcgqn0y8q">https://www.yuque.com/skwme4/ht166i/qr99xiahcgqn0y8q</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>云8.5产品部署准备工作</title>
+      <link href="/2026/05/21/%E4%BA%918.5%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/"/>
+      <url>/2026/05/21/%E4%BA%918.5%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/</url>
+      
+        <content type="html"><![CDATA[<h1 id="云8-5产品部署准备工作"><a href="#云8-5产品部署准备工作" class="headerlink" title="云8.5产品部署准备工作"></a>云8.5产品部署准备工作</h1><h2 id="一-环境要求"><a href="#一-环境要求" class="headerlink" title="一.环境要求"></a>一.环境要求</h2><table><thead><tr><th>类型</th><th>支持范围</th><th>备注</th></tr></thead><tbody><tr><td>网络</td><td>内部数据库&#x2F;中间件&#x2F;节点互通</td><td></td></tr><tr><td>缓存服务</td><td>redis5.0+&#x2F;宝兰德bcs&#x2F;东方通cache</td><td></td></tr><tr><td>数据库</td><td>DM8&#x2F;MySQL5.7&#x2F;MySQL8&#x2F;TaurusDB&#x2F;postgres16&#x2F;oracle19c+&#x2F;KingBaseV8R6(for postgres)&#x2F;OceanBaseV3&#x2F;YashanDB(for Oracle)</td><td>不推荐MySQL5.7</td></tr><tr><td>文件服务</td><td>SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td><td></td></tr><tr><td>（可选）kubernetes</td><td>部署方式选择k8s部署时，版本1.20+</td><td></td></tr><tr><td>（可选）操作系统</td><td>Centos7.x&#x2F;Centos8.x&#x2F;CentosStream9&#x2F;Redhat7.x&#x2F;Redhat8.x&#x2F;Ubuntu22&#x2F;Ubuntu24&#x2F;Debian12&#x2F;Debian10&#x2F;麒麟V10&#x2F;麒麟V11&#x2F;统信V20&#x2F;统信V25</td><td>推荐centos9</td></tr><tr><td>（可选）国产应用服务</td><td>东方通内嵌版tongWeb7.0.E.7</td><td>替换开源tomcat的国产应用服务器</td></tr><tr><td>功能受限</td><td>语音识别依赖豆包</td><td></td></tr><tr><td>JDK</td><td>8u471、openjdk-1.8.0_482</td><td>推荐openjdk-1.8.0_482</td></tr></tbody></table><blockquote><p>若为MySQL数据库，需注意数据库配置 lower_case_table_names&#x3D;1</p></blockquote><h2 id="二-收集环境信息"><a href="#二-收集环境信息" class="headerlink" title="二.收集环境信息"></a>二.收集环境信息</h2><ol><li>业务数据库&#x2F;缓存服务类型、地址、账号密码（生产环境必须提供，开发&#x2F;测试环境若客户同意可部署，但不负责运维。向量数据库可部署不负责运维）</li><li>文件服务地址、认证信息（生产环境必须提供，开发&#x2F;测试若客户同意可部署，但不负责运维）</li><li>部署方式有否要求？k8s还是物理部署</li><li>多租户还是单租户？需要部署的具体云枢版本号(例如8.5.21&#x2F;8.6.2&#x2F;8.5最新)？</li><li>如何连接内部机器、数据库（提供vpn等）</li><li>合同是否带AI。若需配置AI至云枢，需提供AI大语言模型、向量模型、多模态模型id名称、API地址、API-key等信息</li><li>客户内网环境是否有外网权限，我们需要下载安装包、依赖等。若没有需提供上传权限</li><li>规划的访问入口，指定机器的端口（以80&#x2F;443端口为例）有网络限制需提前申请开通</li><li>机器cpu架构是x86、arm、龙芯还是？</li></ol><h2 id="三-环境资源"><a href="#三-环境资源" class="headerlink" title="三.环境资源"></a>三.环境资源</h2><h3 id="1-单个服务实例所需最低资源"><a href="#1-单个服务实例所需最低资源" class="headerlink" title="1.单个服务实例所需最低资源"></a>1.单个服务实例所需最低资源</h3><table><thead><tr><th>服务名称</th><th>资源占用</th><th>备注</th></tr></thead><tbody><tr><td>用户服务(user)</td><td>CPU：1核 ,内存：2G</td><td></td></tr><tr><td>引擎服务(launcher)</td><td>CPU：2核 ,内存：12G</td><td></td></tr><tr><td>前端服务</td><td>CPU：1核 ,内存：2G</td><td></td></tr><tr><td>租户管理服务（tenant-manage）</td><td>CPU：1核 ,内存：2G</td><td>可选，多租户场景必须部署</td></tr><tr><td>缓存服务(redis)</td><td>CPU：1核 ,内存：1G</td><td></td></tr><tr><td>向量数据库</td><td>CPU：1核 ,内存：4G</td><td>可选，AI场景必须部署</td></tr><tr><td>业务数据库</td><td>CPU：4核 ,内存：8G</td><td></td></tr><tr><td>文件服务</td><td>磁盘：100G+</td><td></td></tr></tbody></table><h3 id="2-所需资源"><a href="#2-所需资源" class="headerlink" title="2.所需资源"></a>2.所需资源</h3><h4 id="2-1-单台机器所需最低资源"><a href="#2-1-单台机器所需最低资源" class="headerlink" title="2.1 单台机器所需最低资源"></a>2.1 单台机器所需最低资源</h4><p>适用于开发&#x2F;测试环境，若长期使用建议内存为32G！</p><table><thead><tr><th></th><th>配置</th><th>部署服务</th><th>备注</th></tr></thead><tbody><tr><td>服务器&#x2F;虚拟机</td><td>CPU：4核 内存：24G 磁盘：100G</td><td>user+launcher+nginx</td><td></td></tr><tr><td>redis+文件服务(sftp)</td><td></td><td></td><td></td></tr><tr><td>业务数据库</td><td></td><td></td><td></td></tr><tr><td>向量数据库(可选)</td><td></td><td></td><td></td></tr></tbody></table><h4 id="2-2-200并发所需资源"><a href="#2-2-200并发所需资源" class="headerlink" title="2.2 200并发所需资源"></a>2.2 200并发所需资源</h4><p>200并发：200人同时使用云枢8.5系统</p><p>（在生产环境，缓存服务redis和文件服务建议由客户提供）</p><table><thead><tr><th>服务器角色</th><th>配置</th><th>部署服务</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>user+launcher+nginx+redis</td><td>1</td><td></td></tr><tr><td>应用服务器</td><td>8核16G 磁盘200G+</td><td>launcher+nginx+文件服务</td><td>1</td><td></td></tr><tr><td>数据库服务器</td><td>16核32G 磁盘500G+ 延迟≤1ms IOPS≥10万</td><td>数据库实例</td><td>1</td><td>由客户部署，建议主从</td></tr><tr><td>文件服务</td><td>300G+</td><td></td><td>1</td><td>支持SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td></tr><tr><td>向量数据库服务器（可选）</td><td>8核16G</td><td></td><td>1</td><td>使用AI功能必须部署（postgres16+vector插件）</td></tr><tr><td></td><td>200Mbps+</td><td>负载均衡(SLB)</td><td>1</td><td>由客户提供，转发到应用服务器</td></tr></tbody></table><h4 id="2-3-500并发所需资源"><a href="#2-3-500并发所需资源" class="headerlink" title="2.3 500并发所需资源"></a>2.3 500并发所需资源</h4><table><thead><tr><th>服务器角色</th><th>配置</th><th>部署服务</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>user+launcher+nginx+redis</td><td>1</td><td></td></tr><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>launcher+nginx+文件服务</td><td>1</td><td></td></tr><tr><td>数据库服务器</td><td>16核32G+ 磁盘600G+ 带宽≥10Gbps 延迟≤1ms IOPS≥20万</td><td>数据库实例</td><td>1</td><td>由客户部署(参数调优)</td></tr><tr><td>文件服务</td><td>500G+</td><td></td><td>1</td><td>支持SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td></tr><tr><td>向量数据库服务器（可选）</td><td>8核16G</td><td></td><td>1</td><td>使用AI功能必须部署（postgres16+vector插件）</td></tr><tr><td></td><td>500Mbps+</td><td>负载均衡(SLB)</td><td>1</td><td>由客户提供，转发到应用服务器</td></tr></tbody></table><h4 id="2-4-1000并发所需资源"><a href="#2-4-1000并发所需资源" class="headerlink" title="2.4 1000并发所需资源"></a>2.4 1000并发所需资源</h4><table><thead><tr><th>服务器角色</th><th>配置</th><th>部署服务</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>user+launcher+nginx+redis</td><td>1</td><td></td></tr><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>launcher+nginx</td><td>3</td><td></td></tr><tr><td>数据库服务器</td><td>64核128G+ 磁盘600G+ 带宽≥10Gbps 延迟≤1ms IOPS≥30万</td><td>数据库实例</td><td>1</td><td>由客户部署(参数调优)</td></tr><tr><td>文件服务</td><td>500G+</td><td></td><td>1</td><td>支持SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td></tr><tr><td>向量数据库服务器（可选）</td><td>8核16G</td><td></td><td>1</td><td>使用AI功能必须部署（postgres16+vector插件）</td></tr><tr><td></td><td>1000Mbps+</td><td>负载均衡(SLB)</td><td>1</td><td>由客户提供，转发到应用服务器</td></tr></tbody></table>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>云8.6产品部署准备工作</title>
+      <link href="/2026/05/21/%E4%BA%918.6%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/"/>
+      <url>/2026/05/21/%E4%BA%918.6%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/</url>
+      
+        <content type="html"><![CDATA[<h1 id="云8-6产品部署准备工作"><a href="#云8-6产品部署准备工作" class="headerlink" title="云8.6产品部署准备工作"></a>云8.6产品部署准备工作</h1><h2 id="一-环境要求"><a href="#一-环境要求" class="headerlink" title="一.环境要求"></a>一.环境要求</h2><table><thead><tr><th>类型</th><th>支持范围</th><th>备注</th></tr></thead><tbody><tr><td>网络</td><td>内部数据库&#x2F;中间件&#x2F;节点互通</td><td></td></tr><tr><td>缓存服务</td><td>redis5.0+&#x2F;宝兰德bcs&#x2F;东方通cache</td><td></td></tr><tr><td>数据库</td><td>DM8&#x2F;MySQL5.7&#x2F;MySQL8&#x2F;TaurusDB&#x2F;postgres16&#x2F;oracle19c+&#x2F;KingBaseV8R6(for postgres)</td><td>不推荐MySQL5.7</td></tr><tr><td>文件服务</td><td>SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td><td></td></tr><tr><td>（可选）kubernetes</td><td>部署方式选择k8s部署时，版本1.20+</td><td></td></tr><tr><td>（可选）操作系统</td><td>Centos7.x&#x2F;Centos8.x&#x2F;Redhat7.x&#x2F;Redhat8.x&#x2F;Ubuntu22&#x2F;Ubuntu24&#x2F;Debian12&#x2F;Debian10&#x2F;麒麟V10&#x2F;麒麟V11&#x2F;统信V20&#x2F;统信V25</td><td>推荐centos7.9</td></tr><tr><td>（可选）国产应用服务</td><td>东方通内嵌版tongWeb7.0.E.7</td><td>替换开源tomcat的国产应用服务器</td></tr></tbody></table><p><strong>注意：</strong> 若为MySQL数据库，需注意数据库配置 <code>lower_case_table_names = 1</code></p><h2 id="二-收集环境信息"><a href="#二-收集环境信息" class="headerlink" title="二.收集环境信息"></a>二.收集环境信息</h2><ol><li>业务数据库类型、地址、账号密码（生产环境必须提供，开发&#x2F;测试环境若客户同意可部署，但不负责运维。向量数据库可部署不负责运维）</li><li>文件服务地址、认证信息（生产环境必须提供，开发&#x2F;测试若客户同意可部署，但不负责运维）</li><li>部署方式有否要求？k8s还是物理部署</li><li>多租户还是单租户？需要部署的具体云枢版本号(例如8.5.21&#x2F;8.6.2&#x2F;8.5最新)？</li><li>如何连接内部机器、数据库（提供vpn等）</li><li>合同是否带AI。若需配置AI至云枢，需提供AI大语言模型、向量模型、API地址、API-key等信息</li><li>客户内网环境是否有外网权限，我们需要下载安装包、依赖等。若没有需提供上传权限</li><li>规划的访问入口，指定机器的端口（以80&#x2F;443端口为例）有网络限制需提前申请开通</li><li>机器cpu架构是x86、arm、龙芯还是？</li></ol><h2 id="三-环境资源"><a href="#三-环境资源" class="headerlink" title="三.环境资源"></a>三.环境资源</h2><h3 id="1-单个服务实例所需最低资源"><a href="#1-单个服务实例所需最低资源" class="headerlink" title="1.单个服务实例所需最低资源"></a>1.单个服务实例所需最低资源</h3><table><thead><tr><th>服务名称</th><th>资源占用</th><th>备注</th></tr></thead><tbody><tr><td>用户服务(user)</td><td>CPU：1核 ,内存：2G</td><td></td></tr><tr><td>引擎服务(launcher)</td><td>CPU：2核 ,内存：6G</td><td></td></tr><tr><td>前端服务</td><td>CPU：1核 ,内存：2G</td><td></td></tr><tr><td>租户管理服务（tenant-manage）</td><td>CPU：1核 ,内存：2G</td><td>可选，多租户场景必须部署</td></tr><tr><td>缓存服务(redis)</td><td>CPU：1核 ,内存：1G</td><td></td></tr><tr><td>向量数据库</td><td>CPU：1核 ,内存：4G</td><td>可选，AI场景必须部署</td></tr><tr><td>业务数据库</td><td>CPU：4核 ,内存：8G</td><td></td></tr><tr><td>文件服务</td><td>磁盘：100G+</td><td></td></tr></tbody></table><h3 id="2-所需资源"><a href="#2-所需资源" class="headerlink" title="2.所需资源"></a>2.所需资源</h3><h4 id="2-1-单台机器所需最低资源"><a href="#2-1-单台机器所需最低资源" class="headerlink" title="2.1 单台机器所需最低资源"></a>2.1 单台机器所需最低资源</h4><p>适用于开发&#x2F;测试环境，若长期使用建议内存为32G！</p><table><thead><tr><th>配置</th><th>部署服务</th><th>备注</th></tr></thead><tbody><tr><td>服务器&#x2F;虚拟机</td><td>CPU：4核 内存：16G 磁盘：100G</td><td>user+launcher+nginx</td></tr><tr><td></td><td></td><td>redis+文件服务(sftp)</td></tr><tr><td></td><td></td><td>业务数据库</td></tr><tr><td></td><td></td><td>向量数据库(可选)</td></tr></tbody></table><h4 id="2-2-200并发所需资源"><a href="#2-2-200并发所需资源" class="headerlink" title="2.2 200并发所需资源"></a>2.2 200并发所需资源</h4><p>200并发：200人同时使用云枢8.5系统</p><table><thead><tr><th>服务器角色</th><th>配置</th><th>部署服务</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>user+launcher+nginx+redis</td><td>1</td><td></td></tr><tr><td>应用服务器</td><td>8核16G 磁盘200G+</td><td>launcher+nginx+文件服务</td><td>1</td><td></td></tr><tr><td>数据库服务器</td><td>16核32G 磁盘500G+ 延迟≤1ms IOPS≥10万</td><td>数据库实例</td><td>1</td><td>由客户部署，建议主从</td></tr><tr><td>文件服务</td><td>300G+</td><td></td><td>1</td><td>支持SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td></tr><tr><td>向量数据库服务器（可选）</td><td>8核16G</td><td></td><td>1</td><td>使用AI功能必须部署（postgres16+vector插件）</td></tr><tr><td></td><td>200Mbps+</td><td>负载均衡(SLB)</td><td>1</td><td>由客户提供，转发到应用服务器</td></tr></tbody></table><h4 id="2-3-500并发所需资源"><a href="#2-3-500并发所需资源" class="headerlink" title="2.3 500并发所需资源"></a>2.3 500并发所需资源</h4><table><thead><tr><th>服务器角色</th><th>配置</th><th>部署服务</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>user+launcher+nginx+redis</td><td>1</td><td></td></tr><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>launcher+nginx+文件服务</td><td>1</td><td></td></tr><tr><td>数据库服务器</td><td>16核32G+ 磁盘600G+ 带宽≥10Gbps，延迟≤1ms IOPS≥20万</td><td>数据库实例</td><td>1</td><td>由客户部署(参数调优)</td></tr><tr><td>文件服务</td><td>500G+</td><td></td><td>1</td><td>支持SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td></tr><tr><td>向量数据库服务器（可选）</td><td>8核16G</td><td></td><td>1</td><td>使用AI功能必须部署（postgres16+vector插件）</td></tr><tr><td></td><td>500Mbps+</td><td>负载均衡(SLB)</td><td>1</td><td>由客户提供，转发到应用服务器</td></tr></tbody></table><h4 id="2-4-1000并发所需资源"><a href="#2-4-1000并发所需资源" class="headerlink" title="2.4 1000并发所需资源"></a>2.4 1000并发所需资源</h4><table><thead><tr><th>服务器角色</th><th>配置</th><th>部署服务</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>user+launcher+nginx+redis</td><td>1</td><td></td></tr><tr><td>应用服务器</td><td>16核32G 磁盘200G+</td><td>launcher+nginx</td><td>3</td><td></td></tr><tr><td>数据库服务器</td><td>64核128G+ 磁盘600G+ 带宽≥10Gbps，延迟≤1ms IOPS≥30万</td><td>数据库实例</td><td>1</td><td>由客户部署(参数调优)</td></tr><tr><td>文件服务</td><td>500G+</td><td></td><td>1</td><td>支持SFTP&#x2F;MINIO&#x2F;阿里云OSS&#x2F;华为云OBS</td></tr><tr><td>向量数据库服务器（可选）</td><td>8核16G</td><td></td><td>1</td><td>使用AI功能必须部署（postgres16+vector插件）</td></tr><tr><td></td><td>1000Mbps+</td><td>负载均衡(SLB)</td><td>1</td><td>由客户提供，转发到应用服务器</td></tr></tbody></table><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/kdt8c4/frgfcrv8pzvfk9rr">https://www.yuque.com/skwme4/kdt8c4/frgfcrv8pzvfk9rr</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>云枢6.0报表融合部署汇总</title>
+      <link href="/2026/05/21/%E4%BA%91%E6%9E%A26.0%E6%8A%A5%E8%A1%A8%E8%9E%8D%E5%90%88%E9%83%A8%E7%BD%B2%E6%B1%87%E6%80%BB/"/>
+      <url>/2026/05/21/%E4%BA%91%E6%9E%A26.0%E6%8A%A5%E8%A1%A8%E8%9E%8D%E5%90%88%E9%83%A8%E7%BD%B2%E6%B1%87%E6%80%BB/</url>
+      
+        <content type="html"><![CDATA[<h1 id="云枢6-0报表融合部署汇总"><a href="#云枢6-0报表融合部署汇总" class="headerlink" title="云枢6.0报表融合部署汇总"></a>云枢6.0报表融合部署汇总</h1><p>该部分后续会合并至部署文档中，以一个中间件&#x2F;服务的方式被云枢调用，其版本与云枢6.0版本的对应关系如下：</p><table><thead><tr><th>云枢</th><th>报表(X为修订版本号，X越大越接近报表的最新版本)</th></tr></thead><tbody><tr><td>6.0-6.2</td><td>3.0-3.2</td></tr><tr><td>6.3-6.6</td><td>3.4.1.X</td></tr><tr><td>6.7</td><td>3.5.0.X</td></tr><tr><td>6.9~6.11</td><td>4.3.4.X</td></tr><tr><td>6.12</td><td>5.1.1.X</td></tr><tr><td>6.13</td><td>后端：5.3.6.X 前端：5.3.2.X</td></tr><tr><td>6.14、6.15</td><td>后端：5.3.11.X 前端：5.3.10-X</td></tr><tr><td>6.16</td><td>后端：5.4.6.X 前端：5.4.6-X</td></tr><tr><td>8.0</td><td>后端：5.4.6.4-5.4.6.x 前端：5.4.6.4-5.4.6.x</td></tr><tr><td>8.1</td><td>后端：6.0.0.x 前端：6.0.x</td></tr><tr><td>8.3</td><td>后端：6.2.0.15以上</td></tr><tr><td>8.5</td><td>后端：6.2.0.15以上</td></tr><tr><td>8.6</td><td>后端：6.2.0.15以上</td></tr></tbody></table><p>其中报表的最后一位小版本x，通常情况下是兼容的，即可以直接选择最新的5.3.2.x版本去与云枢的6.13对接。</p><h2 id="部署包下载"><a href="#部署包下载" class="headerlink" title="部署包下载"></a>部署包下载</h2><ul><li>目前报表部署包统一上传到钉钉发布群，请到钉钉群【报表发布群】下载相对应版本</li></ul><h2 id="部署包内容"><a href="#部署包内容" class="headerlink" title="部署包内容"></a>部署包内容</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">reporter-deploy<br>├── <span class="hljs-keyword">bin </span>               <span class="hljs-comment">#部署脚本</span><br>├── docker             <span class="hljs-comment">#docker部署相关脚本，如docker镜像构建等</span><br>├── <span class="hljs-keyword">jars</span><br><span class="hljs-keyword"></span>│   └── reporter-integrate-webapi <span class="hljs-comment">#仪表盘web服务</span><br>├── ps<br>├── sql                <span class="hljs-comment">#报表服务初始化/升级脚本</span><br>├── wars               <span class="hljs-comment">#war包部署相关</span><br>└── README.md          <span class="hljs-comment">#README.md文件</span><br></code></pre></td></tr></table></figure><h2 id="Nginx配置文件调整"><a href="#Nginx配置文件调整" class="headerlink" title="Nginx配置文件调整"></a>Nginx配置文件调整</h2><p>新增报表中间件，需要在云枢6.0的nginx.conf配置文件中的server配置项中新增以下3个location，以满足报表中间件与云枢6.0系统的交互。</p><p>配置文件位置：<code>{DEPLOY_PATH}/cloudpivot/middleware/nginx/conf/nginx.conf</code></p><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>    ...<br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> /v1/ &#123;<br>        <span class="hljs-attribute">proxy_pass</span>          http://webapi:8080/api/v1/;<br>        <span class="hljs-attribute">proxy_set_header</span>    Host              <span class="hljs-variable">$host</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>    X-Real-IP         <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>    X-Forwarded-For   <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>    X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>        <span class="hljs-attribute">proxy_read_timeout</span>  <span class="hljs-number">36000</span>;<br>    &#125;<br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> /dashboard/ &#123;<br>        <span class="hljs-attribute">proxy_pass</span> http://report:6061/dashboard/;<br>        <span class="hljs-attribute">proxy_set_header</span>   Host             <span class="hljs-variable">$host</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Real-IP        <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-For  <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>        <span class="hljs-attribute">proxy_read_timeout</span>          <span class="hljs-number">300</span>;<br>    &#125;<br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> /data-source/ &#123;<br>        <span class="hljs-attribute">proxy_pass</span> http://report:6061/data-source/;<br>        <span class="hljs-attribute">proxy_set_header</span>   Host             <span class="hljs-variable">$host</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Real-IP        <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-For  <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>        <span class="hljs-attribute">proxy_read_timeout</span>          <span class="hljs-number">300</span>;<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure><p><strong>注意：</strong> 4.x及5.x的nginx配置有差异</p><h2 id="ECS部署流程"><a href="#ECS部署流程" class="headerlink" title="ECS部署流程"></a>ECS部署流程</h2><p>将报表当成独立的中间件服务来部署</p><h3 id="1-执行数据库初始化-升级脚本"><a href="#1-执行数据库初始化-升级脚本" class="headerlink" title="1. 执行数据库初始化&#x2F;升级脚本"></a>1. 执行数据库初始化&#x2F;升级脚本</h3><p>数据库脚本位于部署包中的sql目录，初次安装报表中间件时，选择其下对应数据库类型的 <code>report_{Database.Type}.sql</code> 执行；版本升级时，根据其下的 <code>report_{Database.Type}_upgrade.sql</code> 文件，注意不是简单直接执行这个文件，需要根据对应的版本，有选择的执行。</p><h3 id="2-配置项更改"><a href="#2-配置项更改" class="headerlink" title="2. 配置项更改"></a>2. 配置项更改</h3><p>部署配置信息位于bin目录下的report.config，其配置项如下所示，通常情况下需要配置：</p><ul><li><code>REPORTER_ADAPTOR_HOST</code> 云枢6.0服务器地址，注意此项配置为云枢6.0的访问地址</li><li><code>REPORTER_DATASTORE_DB_*</code> 报表数据库信息，包括driver、url、username、password等</li><li><code>REPORTER_LOG_DIR</code> 日志存储目录</li><li>其它配置信息使用默认值即可，也可根据对应的注释信息按需配置即可</li></ul><h3 id="3-生成配置文件"><a href="#3-生成配置文件" class="headerlink" title="3. 生成配置文件"></a>3. 生成配置文件</h3><p>以上配置完report.config之后，执行bin目录下的 <code>setup.sh</code>，执行后会将report.config的配置内容写入实际的配置文件，如application.properties等</p><h3 id="4-启动-停止及运行状态检查"><a href="#4-启动-停止及运行状态检查" class="headerlink" title="4. 启动&#x2F;停止及运行状态检查"></a>4. 启动&#x2F;停止及运行状态检查</h3><p>配置文件生成之后，可直接通过startup.sh来启动报表中间件，此类脚本位于bin目录下</p><h2 id="docker-compose部署流程"><a href="#docker-compose部署流程" class="headerlink" title="docker-compose部署流程"></a>docker-compose部署流程</h2><p>将下载的报表中间件部署包解压于云枢6.0分发包的<code>${DEPLOY}/cloudpivot/middleware/</code>目录下</p><h3 id="镜像制作步骤"><a href="#镜像制作步骤" class="headerlink" title="镜像制作步骤"></a>镜像制作步骤</h3><p>docker镜像制作的相关脚本，位于reporter-deploy&#x2F;docker目录下</p><ol><li>同以上的ECS部署流程，首先配置bin目录下 <code>report.config</code> 其中的配置信息。</li><li>修改完配置信息后执行bin目录下的 <code>setup.sh</code> 以写入实际的配置文件。</li><li>执行 <code>dockerbuild.sh</code> 开始构建镜像</li></ol><p><strong>注意：</strong></p><ol><li><code>docker.config</code> 中的镜像标签TAG是根据 <code>report.config</code> 中的TAG变量生成，可通过修改后者的值来发布不同的镜像版本(默认情况下，保持与报表中间件的版本一致)</li><li>Dockfile中使用的jdk非标准的openjdk，建议换为：<code>openjdk:8-jdk-alpine</code></li><li>若改变了日志文件的存储目录 <code>REPORTER_LOG_DIR</code>，需要同步更改一键部署脚本中的环境变量：<code>${DEPLOY}/cloudpivot/bin/.env</code>文件中的 <code>REPORTER_LOG_DIR</code> 变量</li><li>nginx的配置文件中已新增报表相关的location，如有需要则拷贝到使用的nginx配置文件中</li></ol><h2 id="k8s部署流程"><a href="#k8s部署流程" class="headerlink" title="k8s部署流程"></a>k8s部署流程</h2><p>将报表作为一个新的report服务，注册到k8s中，注意使用相同的namespace(与webapi有直接的api调用交互)</p><h3 id="镜像制作"><a href="#镜像制作" class="headerlink" title="镜像制作"></a>镜像制作</h3><p>同docker-compose部分的镜像制作流程，注意其中report.config中的 <code>REPORTER_ADAPTOR_HOST</code> 设置为访问云枢的访问域名</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>报表帮助文档中心: <a href="https://authine.yuque.com/books/share/4f55e863-ceb1-4fed-99b4-0f95e5fa7746">https://authine.yuque.com/books/share/4f55e863-ceb1-4fed-99b4-0f95e5fa7746</a></p><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/hzo079/txrh4x8sitntonxd">https://www.yuque.com/skwme4/hzo079/txrh4x8sitntonxd</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>云枢企业 AI 平台项目介绍</title>
+      <link href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9A%20AI%20%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/"/>
+      <url>/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9A%20AI%20%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/</url>
+      
+        <content type="html"><![CDATA[<h1 id="云枢企业-AI-平台项目介绍"><a href="#云枢企业-AI-平台项目介绍" class="headerlink" title="云枢企业 AI 平台项目介绍"></a>云枢企业 AI 平台项目介绍</h1><p>云枢企业 AI 平台前端 — 目录结构与依赖说明</p><p>版本标识：AI-Platform-v1.1.0（根 package.json）<br>文档用途：说明仓库目录职责、工作区内包与 npm 依赖的分类，并附带可渲染为思维导图的结构（Mermaid）。</p><h2 id="1-仓库与技术栈概览"><a href="#1-仓库与技术栈概览" class="headerlink" title="1. 仓库与技术栈概览"></a>1. 仓库与技术栈概览</h2><table><thead><tr><th>维度</th><th>说明</th></tr></thead><tbody><tr><td>形态</td><td>Yarn Workspaces + Lerna 的 Monorepo（根 workspaces 含 packages&#x2F;<em>、packages&#x2F;builtin&#x2F;</em>、packages&#x2F;plugin&#x2F;*）</td></tr><tr><td>默认 Registry</td><td>企业 Nexus：<a href="https://nexus01.authine.cn/repository/npm-all/%EF%BC%88.npmrc">https://nexus01.authine.cn/repository/npm-all/（.npmrc</a> &#x2F; .yarnrc）</td></tr><tr><td>可发布库 Registry</td><td><a href="https://nexus01.authine.cn/repository/npm-cloudpivot/%EF%BC%88%E5%90%84">https://nexus01.authine.cn/repository/npm-cloudpivot/（各</a> cloudpivot-* 的 publishConfig）</td></tr><tr><td>主框架</td><td>Vue 2.7、Vue Router 3、Vuex 3、TypeScript ~4.1</td></tr><tr><td>三端应用</td><td>admin（管理端）、portal（门户）、mobile（移动端）</td></tr></tbody></table><h2 id="2-根目录详细结构"><a href="#2-根目录详细结构" class="headerlink" title="2. 根目录详细结构"></a>2. 根目录详细结构</h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs nix">frontend<span class="hljs-symbol">/</span><br>├── .vscode<span class="hljs-symbol">/</span>                    <span class="hljs-comment"># 编辑器片段与团队约定（如 code-snippets）</span><br>├── bin<span class="hljs-symbol">/</span>                        <span class="hljs-comment"># 工程脚本：安装修复、清理、合并构建产物、路径替换等</span><br>│   ├── addNotes.js<br>│   ├── build.sh<br>│   ├── changePath.js<br>│   ├── clean.js<br>│   ├── find-large-files.js<br>│   ├── fix-antd.js<br>│   ├── fix-dynamic-Import.js<br>│   ├── generate-tree.js<br>│   ├── install-fix.js          <span class="hljs-comment"># 各子应用 scripts 中常见前置步骤</span><br>│   └── merge-item.js<br>├── config<span class="hljs-symbol">/</span>                     <span class="hljs-comment"># 提交规范、ESLint/TS 标准、本地开发代理与 dev 配置等</span><br>│   ├── commitlint-config-standard.js<br>│   ├── common-config.js<br>│   ├── cz-customizable-config-standard.js<br>│   ├── dev-config<span class="hljs-symbol">/</span>             <span class="hljs-comment"># 本地 dev 服务、代理、内嵌资源说明</span><br>│   ├── dev-token.js<br>│   ├── js-standard.js<br>│   ├── proxy.js<br>│   ├── ts-standard.js<br>│   └── vue-standard.js<br>├── packages<span class="hljs-symbol">/</span>                   <span class="hljs-comment"># 所有工作区包（应用 + 可复用库），见第 3 节</span><br>├── scripts<span class="hljs-symbol">/</span>                    <span class="hljs-comment"># 与 Git Hook / 质量相关的 Node 脚本</span><br>│   ├── find-duplicate-files.js<br>│   ├── find-locale-unused.js<br>│   └── i18n-checker.js         <span class="hljs-comment"># husky pre-commit 中调用</span><br>├── .eslintignore <span class="hljs-symbol">/</span> .eslintrc.js<br>├── .gitignore<br>├── .gitlab-ci.yml<br>├── .npmrc <span class="hljs-symbol">/</span> .yarnrc<br>├── .prettierignore <span class="hljs-symbol">/</span> .prettierrc<br>├── babel.config.js<br>├── commitlint.config.js<br>├── lerna.json                  <span class="hljs-comment"># independent 版本；发布指向 npm-cloudpivot</span><br></code></pre></td></tr></table></figure><h3 id="2-1-关键根级文件职责"><a href="#2-1-关键根级文件职责" class="headerlink" title="2.1 关键根级文件职责"></a>2.1 关键根级文件职责</h3><table><thead><tr><th>路径</th><th>作用</th></tr></thead><tbody><tr><td>package.json</td><td>全仓依赖锁定在根；scripts 统一调度三端 serve&#x2F;build&#x2F;dll；lint-staged + husky 控制提交质量</td></tr><tr><td>lerna.json</td><td>Lerna 与 Yarn Workspaces 协同；packages 字段当前为 packages&#x2F;*（builtin&#x2F;plugin 由 workspaces glob 纳入）</td></tr><tr><td>bin&#x2F;install-fix.js</td><td>子应用构建&#x2F;启动前常用修复逻辑（链接、补丁类）</td></tr><tr><td>config&#x2F;proxy.js、config&#x2F;dev-config&#x2F;</td><td>本地联调后端、代理与调试入口</td></tr></tbody></table><h2 id="3-packages-目录结构（工作区包）"><a href="#3-packages-目录结构（工作区包）" class="headerlink" title="3. packages&#x2F; 目录结构（工作区包）"></a>3. packages&#x2F; 目录结构（工作区包）</h2><h3 id="3-1-典型应用包内部（以-admin-portal-mobile-为例）"><a href="#3-1-典型应用包内部（以-admin-portal-mobile-为例）" class="headerlink" title="3.1 典型应用包内部（以 admin &#x2F; portal &#x2F; mobile 为例）"></a>3.1 典型应用包内部（以 admin &#x2F; portal &#x2F; mobile 为例）</h3><p>三端均为 Vue CLI 工程，常见子目录：</p><ul><li>public&#x2F;：静态入口、index.html、运行时 config.js 等</li><li>src&#x2F;：路由、视图、API 适配、主题、启动 main.ts &#x2F; bootstrap.ts</li><li>extends&#x2F;：主题或扩展配置（如 theme.js、api.ts）</li><li>webpack.dll.config.js（若使用）：DLL 预构建加速开发</li></ul><h2 id="4-工作区包：公有库-vs-私有应用（package-json-维度）"><a href="#4-工作区包：公有库-vs-私有应用（package-json-维度）" class="headerlink" title="4. 工作区包：公有库 vs 私有应用（package.json 维度）"></a>4. 工作区包：公有库 vs 私有应用（package.json 维度）</h2><h3 id="4-1-私有包（不对外单独发布，仅本仓构建使用）"><a href="#4-1-私有包（不对外单独发布，仅本仓构建使用）" class="headerlink" title="4.1 私有包（不对外单独发布，仅本仓构建使用）"></a>4.1 私有包（不对外单独发布，仅本仓构建使用）</h3><table><thead><tr><th>包目录</th><th>name</th><th>说明</th></tr></thead><tbody><tr><td>packages&#x2F;admin</td><td>cloudpivot-admin</td><td>管理端完整应用</td></tr><tr><td>packages&#x2F;portal</td><td>cloudpivot-portal</td><td>门户完整应用</td></tr><tr><td>packages&#x2F;mobile</td><td>cloudpivot-mobile</td><td>移动端完整应用</td></tr><tr><td>仓库根</td><td>frontend</td><td>根工程，private: true</td></tr></tbody></table><h3 id="4-2-可发布公共库（private-false，可发布至企业-npm-cloudpivot）"><a href="#4-2-可发布公共库（private-false，可发布至企业-npm-cloudpivot）" class="headerlink" title="4.2 可发布公共库（private: false，可发布至企业 npm-cloudpivot）"></a>4.2 可发布公共库（private: false，可发布至企业 npm-cloudpivot）</h3><table><thead><tr><th>包目录</th><th>name</th><th>简述</th></tr></thead><tbody><tr><td>cloudpivot</td><td>cloudpivot</td><td>公共模块总入口</td></tr><tr><td>cloudpivot-apis</td><td>cloudpivot-apis</td><td>API 与公共接口层</td></tr><tr><td>cloudpivot-utils</td><td>cloudpivot-utils</td><td>通用工具</td></tr><tr><td>cloudpivot-typings</td><td>cloudpivot-typings</td><td>公共类型定义</td></tr><tr><td>cloudpivot-locale</td><td>cloudpivot-locale</td><td>国际化语言包</td></tr><tr><td>cloudpivot-forms</td><td>cloudpivot-forms</td><td>表单控制器</td></tr><tr><td>cloudpivot-form</td><td>cloudpivot-form</td><td>表单模块</td></tr><tr><td>cloudpivot-form-extend</td><td>cloudpivot-form-extend</td><td>表单二开组件</td></tr><tr><td>cloudpivot-list</td><td>cloudpivot-list</td><td>视图&#x2F;列表模块</td></tr><tr><td>cloudpivot-flow</td><td>cloudpivot-flow</td><td>流程模块</td></tr><tr><td>cloudpivot-designer</td><td>cloudpivot-designer</td><td>设计器依赖库</td></tr><tr><td>cloudpivot-page</td><td>cloudpivot-page</td><td>页面设计器相关能力</td></tr><tr><td>cloudpivot-page-designer</td><td>cloudpivot-page-designer</td><td>自定义页面设计器</td></tr><tr><td>cloudpivot-portal-designer</td><td>cloudpivot-portal-designer</td><td>门户设计器</td></tr><tr><td>cloudpivot-admin-core</td><td>cloudpivot-admin-core</td><td>Admin 核心包</td></tr><tr><td>cloudpivot-platform</td><td>cloudpivot-platform</td><td>平台适配</td></tr><tr><td>cloudpivot-ai</td><td>cloudpivot-ai</td><td>AI 模块</td></tr><tr><td>cloudpivot-web-ide</td><td>cloudpivot-web-ide</td><td>在线开发编辑器</td></tr><tr><td>cloudpivot-mobile-vue</td><td>cloudpivot-mobile-vue</td><td>移动端基础组件库</td></tr><tr><td>cloudpivot-openwebapi</td><td>cloudpivot-openwebapi</td><td>前端 JS API SDK</td></tr><tr><td>builtin&#x2F;cloudpivot-icons</td><td>cloudpivot-icons</td><td>图标字体库</td></tr><tr><td>builtin&#x2F;cloudpivot-kindeditor</td><td>cloudpivot-kindeditor</td><td>富文本编辑器组件</td></tr><tr><td>plugin&#x2F;cloudpivot-gantt</td><td>cloudpivot-gantt</td><td>甘特图插件</td></tr><tr><td>portal-designer-toolbox</td><td>@portal-designer&#x2F;toolbox</td><td>门户设计器工具箱</td></tr><tr><td>extension-template</td><td>extension-template</td><td>二次开发示例工程（亦可作模板发布）</td></tr></tbody></table><h2 id="5-根-package-json-依赖：公用-vs-私有-企业定制"><a href="#5-根-package-json-依赖：公用-vs-私有-企业定制" class="headerlink" title="5. 根 package.json 依赖：公用 vs 私有&#x2F;企业定制"></a>5. 根 package.json 依赖：公用 vs 私有&#x2F;企业定制</h2><ul><li><strong>公用依赖</strong>：开源生态主流库，通过企业 Nexus 代理&#x2F;缓存安装，版本仍遵循 semver。</li><li><strong>私有&#x2F;企业定制依赖</strong>：@h3&#x2F;<em>、@h3print&#x2F;</em>、h3-* 等浩鲸&#x2F;云枢体系下的 UI、报表、打印、移动端组件；通常为公司内部制品。</li></ul><h3 id="5-1-生产依赖-dependencies（节选说明）"><a href="#5-1-生产依赖-dependencies（节选说明）" class="headerlink" title="5.1 生产依赖 dependencies（节选说明）"></a>5.1 生产依赖 dependencies（节选说明）</h3><table><thead><tr><th>依赖</th><th>分类</th><th>作用摘要</th></tr></thead><tbody><tr><td>vue &#x2F; vue-router &#x2F; vuex</td><td>公用</td><td>核心框架与路由、状态</td></tr><tr><td>vue-class-component &#x2F; vue-property-decorator &#x2F; vuex-class</td><td>公用</td><td>Class 风格与 Vuex 装饰器</td></tr><tr><td>vue-i18n</td><td>公用</td><td>国际化运行时</td></tr><tr><td>lodash &#x2F; moment &#x2F; decimal.js-light &#x2F; number-precision</td><td>公用</td><td>数据与日期、精度</td></tr><tr><td>core-js &#x2F; babel-polyfill</td><td>公用</td><td>运行时垫片（legacy 兼容）</td></tr><tr><td>axios</td><td>公用</td><td>HTTP</td></tr><tr><td>tinymce &#x2F; codemirror</td><td>公用</td><td>富文本、代码编辑</td></tr><tr><td>markdown-it &#x2F; turndown</td><td>公用</td><td>Markdown 与 HTML 互转</td></tr><tr><td>jsencrypt &#x2F; js-base64 &#x2F; js-cookie &#x2F; jszip</td><td>公用</td><td>安全、编码、Cookie、压缩包</td></tr><tr><td>xss</td><td>公用</td><td>防 XSS</td></tr><tr><td>dingtalk-jsapi &#x2F; gdt-jsapi &#x2F; wx-jsapi</td><td>公用</td><td>钉钉、企微、微信 JS-SDK</td></tr><tr><td>@microsoft&#x2F;fetch-event-source &#x2F; event-source-polyfill</td><td>公用</td><td>SSE 与兼容</td></tr><tr><td>recorder-core &#x2F; smooth-signature</td><td>公用</td><td>录音、手写签名</td></tr><tr><td>v-charts &#x2F; vue-amap</td><td>公用</td><td>图表、高德地图 Vue 封装</td></tr><tr><td>@h3&#x2F;antd-vue &#x2F; h3-antd-vue</td><td>企业定制</td><td>Ant Design Vue 体系（H3 维护&#x2F;定制版本）</td></tr><tr><td>@h3&#x2F;awesome-ui &#x2F; @h3&#x2F;thinking-ui &#x2F; @h3&#x2F;theme-pc</td><td>企业定制</td><td>PC 端组件与主题</td></tr><tr><td>@h3&#x2F;report &#x2F; @h3&#x2F;report-mobile</td><td>企业定制</td><td>报表与移动端报表</td></tr><tr><td>@h3print&#x2F;designer &#x2F; excellit &#x2F; runtime</td><td>企业定制</td><td>打印设计器与运行时</td></tr><tr><td>h3-mobile-vue &#x2F; h3-flow-drawer</td><td>企业定制</td><td>移动端组件、流程抽屉</td></tr></tbody></table><h3 id="5-2-开发依赖-devDependencies（归类）"><a href="#5-2-开发依赖-devDependencies（归类）" class="headerlink" title="5.2 开发依赖 devDependencies（归类）"></a>5.2 开发依赖 devDependencies（归类）</h3><table><thead><tr><th>类别</th><th>代表依赖</th><th>作用</th></tr></thead><tbody><tr><td>公用 · 构建</td><td>webpack &#x2F; webpack-cli &#x2F; @vue&#x2F;cli-service &#x2F; babel-loader &#x2F; less-loader</td><td>打包与样式</td></tr><tr><td>公用 · 语言</td><td>typescript &#x2F; @babel&#x2F;core</td><td>TS 与转译</td></tr><tr><td>公用 · 质量</td><td>eslint 全家桶 &#x2F; prettier &#x2F; stylelint &#x2F; lint-staged &#x2F; husky</td><td>规范与提交前检查</td></tr><tr><td>公用 · Monorepo</td><td>lerna</td><td>多包版本与发布流程</td></tr><tr><td>公用 · 提交</td><td>@commitlint&#x2F;* &#x2F; commitizen &#x2F; cz-customizable</td><td>规范化 commit message</td></tr></tbody></table><h2 id="6-三端应用对工作区库的依赖关系（摘要）"><a href="#6-三端应用对工作区库的依赖关系（摘要）" class="headerlink" title="6. 三端应用对工作区库的依赖关系（摘要）"></a>6. 三端应用对工作区库的依赖关系（摘要）</h2><ul><li><strong>admin</strong>：引入最全，包含 cloudpivot-admin-core、cloudpivot-ai、cloudpivot-web-ide、cloudpivot-designer、全量设计器与 monaco-editor 等。</li><li><strong>portal</strong>：不含 admin-core &#x2F; ai &#x2F; web-ide，侧重门户与设计器、列表、流程、表单等。</li><li><strong>mobile</strong>：子集依赖，无 cloudpivot-designer、cloudpivot-gantt、cloudpivot-kindeditor 等偏 PC 设计器类包。</li></ul><h2 id="7-思维导图（Mermaid-mindmap）"><a href="#7-思维导图（Mermaid-mindmap）" class="headerlink" title="7. 思维导图（Mermaid mindmap）"></a>7. 思维导图（Mermaid mindmap）</h2><p><img src="https://cdn.nlark.com/yuque/__mermaid_v3/c98f5ea6a4dfdeb151d17058221287c7.svg"></p><h2 id="8-转为外部思维导图工具的几种方式"><a href="#8-转为外部思维导图工具的几种方式" class="headerlink" title="8. 转为外部思维导图工具的几种方式"></a>8. 转为外部思维导图工具的几种方式</h2><table><thead><tr><th>方式</th><th>说明</th></tr></thead><tbody><tr><td>Mermaid Live Editor</td><td>复制第 7 节代码块到 Mermaid Live，可导出 SVG&#x2F;PNG。</td></tr><tr><td>Markdown → XMind &#x2F; MindMaster</td><td>使用支持 Markdown 大纲导入的思维导图软件，以本文第 2–3 节标题层级作为节点来源。</td></tr><tr><td>手动对照</td><td>以第 7 节 mindmap 为纲，在 XMind、MindNode、FreeMind 中逐层展开。</td></tr></tbody></table><h2 id="9-文档维护说明"><a href="#9-文档维护说明" class="headerlink" title="9. 文档维护说明"></a>9. 文档维护说明</h2><ul><li>工作区包列表以 packages&#x2F;**&#x2F;package.json 为准；新增包时请同步更新本文第 3、4 节。</li><li>根依赖以根 package.json 为准；升级大版本后请更新第 5 节表格中的「作用摘要」若行为有变。</li><li>lerna.json 中 packages 仅列 packages&#x2F;* 时，builtin&#x2F;plugin 仍由 Yarn workspaces 纳入安装，与 Lerna 命令范围可能不一致，排障时需注意。</li></ul><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/epaofp/og24po8o768xzv2z">https://www.yuque.com/skwme4/epaofp/og24po8o768xzv2z</a><br>分类: 开发者手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>云枢企业AI平台V1.1版本</title>
+      <link href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9AAI%E5%B9%B3%E5%8F%B0V1.1%E7%89%88%E6%9C%AC/"/>
+      <url>/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9AAI%E5%B9%B3%E5%8F%B0V1.1%E7%89%88%E6%9C%AC/</url>
+      
+        <content type="html"><![CDATA[<h1 id="云枢企业AI平台V1-1版本"><a href="#云枢企业AI平台V1-1版本" class="headerlink" title="云枢企业AI平台V1.1版本"></a>云枢企业AI平台V1.1版本</h1><h2 id="版本价值"><a href="#版本价值" class="headerlink" title="版本价值"></a>版本价值</h2><ul><li><strong>AI</strong>：助理支持语音播报、联网搜索；AI平台支持用户反馈机制；助理支持展示历史对话；知识库新增【知识召回测试工具】；支持提示词模板；单任务技能支持”AI统计分析”动作</li><li><strong>集团型组织支持</strong>：组织机构维护支持”经营单元、机构、员工标签”；部门、岗位支持拓展字段；组织机构数据展示优化</li><li><strong>视图配置态全面优化</strong>：新增”视图复制”、”数据限定范围”功能；配置页面样式体验优化；前台可筛选</li><li><strong>国际化优化</strong>：下拉单选、下拉多选、单选、复选框组件支持国际化；优化系统文本中英文展示样式；日期格式新增支持多种英文格式</li><li><strong>流程中台支撑</strong>：创建自定义表单时，可以选择打开方式为跳转外部链接，并支持传参数；外部系统推送待办信息、链接到云枢，云枢内可点击待办跳转第三方系统处理</li><li><strong>其他</strong>：流程预测支持按流程图形式查询；集成飞书内置审批应用的待办中心等</li></ul><h2 id="一、升级简介"><a href="#一、升级简介" class="headerlink" title="一、升级简介"></a>一、升级简介</h2><table><thead><tr><th>序号</th><th>模块</th><th>产品特性</th><th>功能简介</th><th>业务影响</th></tr></thead><tbody><tr><td>1</td><td>AI</td><td>云枢BOT优化</td><td>1. 云枢BOT页面支持个性化设计</td><td>无影响</td></tr><tr><td>2</td><td>AI</td><td>AI助理优化</td><td>1. 助理可自然语言导航到具体的系统内页面：应用列表、流程中心、应用内菜单等 2. 助理对话、执行技能支持更多系统变量 3. 助理和 BOT 回复内容支持语音播报 4. 助理支持根据用户意图自主串联并执行多技能 5. 助理支持联网搜索功能 6. AI平台支持用户反馈机制 7. 助理支持展示历史对话 8. 预设技能提升准确率，增加技能描述内容</td><td>无影响</td></tr><tr><td>3</td><td>AI</td><td>AI知识库优化</td><td>1. AI 知识库检索知识新增用户自主调优知识检索准确率的工具：【知识召回测试工具】 2. AI知识库支持多种检索模式（全文检索、语义检索、混合检索） 3. 知识库溯源支持精确到切片片段 4. AI支持提示词模板 5. AI助理内技能可作为变量插入到提示词中</td><td>无影响</td></tr><tr><td>4</td><td>AI</td><td>AI其余优化</td><td>1. 单任务技能新增”AI统计分析”动作 2. 调用大模型提示词内容支持子表、附件</td><td>无影响</td></tr><tr><td>5</td><td>组织机构</td><td>集团型组织管理</td><td>1. 组织机构维护支持”经营单元”能力 2. 组织机构维护支持”机构”能力 3. 组织机构维护支持”员工标签”能力 4. 组织机构相关模块支持拓展字段：部门、岗位 5. 组织机构数据展示优化：部门视角、角色视角聚合展示全部信息</td><td>无影响</td></tr><tr><td>6</td><td>视图</td><td>视图配置优化</td><td>1. 前台视图运行时设置展示字段、筛选条件的权限不受后台限制 2. 视图后台配置新增”数据限定范围” 3. 支持视图复制功能 4. 后台配置视图界面全面优化</td><td>无影响</td></tr><tr><td>7</td><td>国际化</td><td>国际化本地化适配</td><td>1. 下拉单选、下拉多选、单选、复选框组件支持国际化 2. 优化系统文本中英文展示样式 3. 日期格式新增支持多种英文格式 4. 多语言版本下去除国内特性功能（如身份证、手机号正则校验等）</td><td>无影响</td></tr><tr><td>8</td><td>表单</td><td>表单运行优化</td><td>1. 表单内涉及动态筛选条件的功能中，统一处理条件值为空时匹配逻辑 2. 表单复制操作支持配置数据项范围 3. 传阅节点审批记录交互优化</td><td>无影响</td></tr><tr><td>9</td><td>流程</td><td>流程中台支撑</td><td>1. 创建自定义表单时，可以选择打开方式为跳转外部链接，并支持传参数 2. 外部系统推送待办信息、链接到云枢，云枢内可点击待办跳转第三方系统处理</td><td>无影响</td></tr><tr><td>10</td><td>流程</td><td>流程消息集成</td><td>1. 集成飞书内置审批应用的待办中心</td><td>无影响</td></tr><tr><td>11</td><td>流程</td><td>流程预测优化</td><td>1. 流程预测支持按流程图形式查询</td><td>无影响</td></tr><tr><td>12</td><td>业务规则</td><td>业务规则优化</td><td>1. 批量触发业务规则时，表单留痕中存储和展示仅记录前500条 2. 定时任务，按日期字段触发，可以精确到分钟单位</td><td>无影响</td></tr><tr><td>13</td><td>导入导出</td><td>导入导出优化</td><td>1. 数据导入支持仅人员姓名</td><td>无影响</td></tr><tr><td>14</td><td>报表</td><td>报表优化</td><td>1. 指标图新增条件着色 2. 指标数值格式的百分比格式支持自定义后缀</td><td>无影响</td></tr></tbody></table><h2 id="二、升级详情"><a href="#二、升级详情" class="headerlink" title="二、升级详情"></a>二、升级详情</h2><h3 id="新增项"><a href="#新增项" class="headerlink" title="新增项"></a>新增项</h3><h4 id="一、AI相关新增项"><a href="#一、AI相关新增项" class="headerlink" title="一、AI相关新增项"></a>一、AI相关新增项</h4><h5 id="一-云枢BOT页面支持个性化设计"><a href="#一-云枢BOT页面支持个性化设计" class="headerlink" title="(一) 云枢BOT页面支持个性化设计"></a>(一) 云枢BOT页面支持个性化设计</h5><p><strong>1. 简介</strong></p><p>旧版本的云枢Bot在样式上与AI助理过于一致，用户难以理解其中的差异性。本版本丰富了云枢Bot的门户页面的样式和功能，它其和AI助理有明显的差别并且功能更完善。</p><p>当前版本的云枢BOT支持轮播图、卡片按钮、数据列表</p><p><strong>2. 配置路径</strong></p><p>一、进入云枢BOT后台管理页，点击”Bot”门户设计</p><p>二、设置轮播图的图片等配置项</p><p>三、设置卡片按钮及逻辑</p><p>卡片按钮可唤起AI助理或是跳转其他页面</p><p>四、设置数据列表</p><p>可设置展示的列表数据源，还可设置右上角的AI按钮的执行动作，执行动作可以调用AI助理里的AI技能，并将当前列表数据源作为AI技能的输入源。</p><h5 id="二-AI助理可自然语言导航到系统内页面"><a href="#二-AI助理可自然语言导航到系统内页面" class="headerlink" title="(二) AI助理可自然语言导航到系统内页面"></a>(二) AI助理可自然语言导航到系统内页面</h5><p><strong>1. 简介</strong></p><p>云枢BOT作为平台的AI门户，添加了自然语言导航功能，用户告知云枢BOT想要去的页面即可快速跳转。</p><p>助理搭载”自然语言导航”技能后，当识别到用户输入包含”去、前往、到、跳转至、跳转到、打开、进入、导航到”等关键词时，触发自然语言导航页面技能，可跳转到流程中心、应用内模型等页面。</p><p><strong>2. 配置路径</strong></p><p>在AI助理中添加系统公共技能中的”自然语言导航页面”即可</p><h5 id="三-助理对话、执行技能支持更多系统变量"><a href="#三-助理对话、执行技能支持更多系统变量" class="headerlink" title="(三) 助理对话、执行技能支持更多系统变量"></a>(三) 助理对话、执行技能支持更多系统变量</h5><p><strong>1. 简介</strong></p><p>过往使用BOT或助理时，助理无法识别当前用户的身份信息或是当前系统的时间，需要用户手动输入。因此本版本在BOT和助理运行时，会自动将用户信息、系统时间等系统变量作为上下文。此外，在AI工作流技能中的输入参数也可以选择用户信息、系统时间等系统变量</p><p><strong>2. 配置路径</strong></p><p>一、在BOT或助理中使用系统变量</p><p>无需配置，系统自动将以下变量作为AI助理和BOT的上下文：</p><ul><li>操作人身份信息：用户姓名、用户ID、手机号、当前部门ID、当前部门名称、所属角色ID、所属角色名称</li><li>操作人主部门上级信息：当前部门上级姓名、当前部门上级ID</li><li>时间及语言信息：当前时间、系统语言</li></ul><p>二、在AI工作流技能中使用系统变量</p><p>在工作流节点的输入变量中配置即可</p><h5 id="四-助理和-BOT-回复内容支持语音播报"><a href="#四-助理和-BOT-回复内容支持语音播报" class="headerlink" title="(四) 助理和 BOT 回复内容支持语音播报"></a>(四) 助理和 BOT 回复内容支持语音播报</h5><p><strong>1. 简介</strong></p><p>AI智能讲解场景中，需要AI数字人语音讲解内容。本版本的助理和BOT的回复内容支持了语音播报，点击播报按钮即可播放。此外，还支持上传语音播报的数字人头像。</p><p><strong>2. 配置路径</strong></p><p>一、在AI平台-统一配置-语音合成服务中配置接入的语音合成服务，可检测通道和试听示例文本播报效果</p><p>二、在AI助理和云枢BOT中开启语音播报，可上传数字人头像、设置自动播报</p><p>三、运行时，在AI助理回复后，可点击按钮播放语音</p><h5 id="五-助理支持根据用户意图自主串联并执行多技能"><a href="#五-助理支持根据用户意图自主串联并执行多技能" class="headerlink" title="(五) 助理支持根据用户意图自主串联并执行多技能"></a>(五) 助理支持根据用户意图自主串联并执行多技能</h5><p><strong>1. 简介</strong></p><p>随着云枢AI技能的逐渐丰富（附件类技能、MCP技能、自主编排工作流技能等），一次任务可能需要多技能串联执行，技能间的串联顺序也不是固定，而是需要大模型自主规划推理。</p><p>如上传Excel文件按需生成图表&#x2F;总结文字结果：至少需先调用”附件内容提取”技能，再调用”图表生成”技能，最终输出结果。</p><p><strong>2. 配置路径</strong></p><p>一、AI助理界面中，左上角打开”自主规划模式”</p><p>二、设定助理角色</p><p>在自主规划模式下，需要通过角色指令，约束助理的工作边界，包括助理所扮演的角色、允许执行的技能以及技能之间的串联建议、助理完成任务后的回复要求等。</p><h5 id="六-助理支持联网搜索功能"><a href="#六-助理支持联网搜索功能" class="headerlink" title="(六) 助理支持联网搜索功能"></a>(六) 助理支持联网搜索功能</h5><p><strong>1. 简介</strong></p><p>在前台使用 AI 助理的时候，有时期望能搜索互联网上的内容。在该版本中，AI助理能够切换”是否联网搜索”，如果打开联网功能，那么在搜索时，能查询到联网搜索的结果。</p><p>目前仅支持在AI助理中使用联网搜索功能。</p><p><strong>2. 配置路径</strong></p><p>一、在AI平台-统一配置-公共技能配置中，开启联网搜索，配置联网搜索接口</p><p>配置的接口可以是不带AI总结的联网搜索接口，也可以是带AI搜索的联网接口。云枢会把接口返回的结果直接返回给用户。如果使用的是不带AI总结的联网搜索接口，建议在AI助理处写入提示词让助理做总结。</p><p>二、在前台使用AI助理时打开联网搜索开关</p><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/rdxkq0/qobht0382sd6hg79">https://www.yuque.com/skwme4/rdxkq0/qobht0382sd6hg79</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>云枢开发者手册（8.5版本）</title>
+      <link href="/2026/05/21/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91%E8%80%85%E6%89%8B%E5%86%8C%EF%BC%888.5%E7%89%88%E6%9C%AC%EF%BC%89/"/>
+      <url>/2026/05/21/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91%E8%80%85%E6%89%8B%E5%86%8C%EF%BC%888.5%E7%89%88%E6%9C%AC%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<h1 id="云枢开发者手册（8-5版本）"><a href="#云枢开发者手册（8-5版本）" class="headerlink" title="云枢开发者手册（8.5版本）"></a>云枢开发者手册（8.5版本）</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li>低代码开发</li><li>后端</li><li>前端</li><li>版本升级指引</li><li>后端升级</li><li>前端升级</li><li>DevOps</li><li>云枢部署</li><li>集成服务</li><li>向量数据库部署</li><li>部署WIKI</li><li>信创适配构建</li><li>AI配置</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>关联表单映射</title>
+      <link href="/2026/05/21/%E5%85%B3%E8%81%94%E8%A1%A8%E5%8D%95%E6%98%A0%E5%B0%84/"/>
+      <url>/2026/05/21/%E5%85%B3%E8%81%94%E8%A1%A8%E5%8D%95%E6%98%A0%E5%B0%84/</url>
+      
+        <content type="html"><![CDATA[<h1 id="关联表单映射"><a href="#关联表单映射" class="headerlink" title="关联表单映射"></a>关联表单映射</h1><h2 id="单选映射与多选映射支持的区别对比"><a href="#单选映射与多选映射支持的区别对比" class="headerlink" title="单选映射与多选映射支持的区别对比"></a>单选映射与多选映射支持的区别对比</h2><h3 id="关联表单在主表"><a href="#关联表单在主表" class="headerlink" title="关联表单在主表"></a>关联表单在主表</h3><table><thead><tr><th></th><th>映射-联动模型数据项</th><th>映射-当前模型数据项</th></tr></thead><tbody><tr><td>单选</td><td>主表数据项</td><td>主表数据项</td></tr><tr><td></td><td>整个子表</td><td>整个子表</td></tr><tr><td>多选</td><td>整个子表</td><td>整个子表</td></tr></tbody></table><h3 id="关联表单在子表"><a href="#关联表单在子表" class="headerlink" title="关联表单在子表"></a>关联表单在子表</h3><table><thead><tr><th></th><th>映射-联动模型数据项</th><th>映射-当前模型数据项</th></tr></thead><tbody><tr><td>单选</td><td>整个子表</td><td>整个子表</td></tr><tr><td></td><td>主表数据项</td><td>子表数据项</td></tr><tr><td>多选</td><td>不支持映射</td><td>不支持映射</td></tr></tbody></table><h2 id="场景示例"><a href="#场景示例" class="headerlink" title="场景示例"></a>场景示例</h2><h3 id="关联单选在主表，主表映射主表"><a href="#关联单选在主表，主表映射主表" class="headerlink" title="关联单选在主表，主表映射主表"></a>关联单选在主表，主表映射主表</h3><p><strong>场景：</strong> 建立商品与供应商的联系后，需要将更多的供应商属性给到商品列表</p><p><strong>步骤：</strong></p><p>1、搭建两个表单【供应商维护】、【商品类别】，并建立关联关系</p><p>2、建立关联关系后，设置映射，将供应商的基础属性映射给商品表单</p><p>3、前端展示，映射的使用效果</p><h3 id="关联单选在主表，子表映射子表"><a href="#关联单选在主表，子表映射子表" class="headerlink" title="关联单选在主表，子表映射子表"></a>关联单选在主表，子表映射子表</h3><p><strong>场景：</strong> 建立商品与供应商的联系后，需要将更多的供应商渠道给到商品列表</p><p><strong>步骤：</strong></p><p>1、搭建两个表单【供应商维护】、【商品类别】，并建立关联关系</p><p>2、建立关联关系后，设置两个子表中数据项的数据项编码一致的子表信息</p><p>3、设置子表的映射关系</p><p>4、门户运行，子表映射展示</p><h3 id="关联多选在主表-子表映射子表"><a href="#关联多选在主表-子表映射子表" class="headerlink" title="关联多选在主表-子表映射子表"></a>关联多选在主表-子表映射子表</h3><p><strong>场景：</strong> 入库单可以直接读取采购单的多条数据</p><p><strong>步骤：</strong></p><p>1、搭建两个表单【采购单】、【入库单】，并建立关联多选关系</p><p>2、表单运行，关联多选的展示</p><p>3、关联多选映射，新建两个子表中数据项保持一致</p><p>4、设置映射关系</p><p>5、表单运行，关联多选的映射展示</p><h3 id="关联单选在子表-主表映射子表"><a href="#关联单选在子表-主表映射子表" class="headerlink" title="关联单选在子表-主表映射子表"></a>关联单选在子表-主表映射子表</h3><p><strong>场景：</strong> 人员表单可以从项目表单进行关联</p><p><strong>步骤：</strong></p><p>1、搭建两个表单【项目】、【人员】，并建立关联单选关系，关联单选拖进子表数据项</p><p>2、设置映射关系，将【项目】表单中的主表人员映射给【人员】表单中子表人员数据项</p><p>3、表单运行，关联单选在子表的展示效果</p><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/grmb6s/odce3e">https://www.yuque.com/skwme4/grmb6s/odce3e</a><br>注意：原文包含视频教程，建议访问原链接查看完整视频演示</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 其他 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>列表数据导入</title>
+      <link href="/2026/05/21/%E5%88%97%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5/"/>
+      <url>/2026/05/21/%E5%88%97%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5/</url>
+      
+        <content type="html"><![CDATA[<h1 id="列表数据导入"><a href="#列表数据导入" class="headerlink" title="列表数据导入"></a>列表数据导入</h1><p>路径：「门户」-「应用」-「模型视图」-「导入」</p><h2 id="导入方式"><a href="#导入方式" class="headerlink" title="导入方式"></a>导入方式</h2><ol><li><p>视图中的新增按钮绑定了表单时，导入方式分为三种：仅新增、仅更新、新增和更新</p><ul><li><strong>仅新增</strong>：导入数据全部新增</li><li><strong>仅更新</strong>：根据选择的字段，将导入文件数据与系统内数据匹配，若匹配字段一致，则更新系统内数据，若不一致则不更新。匹配字段需上传文件后选择，可以选择多个字段。</li><li><strong>新增和更新</strong>：根据选择的字段，将导入文件数据与系统内数据匹配，若匹配字段一致，则更新系统内数据，若不一致则将导入文件中数据新增导入系统。</li></ul></li><li><p>视图中的新增按钮绑定了流程时，导入方式仅可选择”仅新增数据”，导入数据后可选择导入流程后是立即发起流程或先保存为草稿。</p></li><li><p>下载导入模板，填写后可上传文件</p><ul><li>导入模板不再包含系统字段：数据标题、单据号</li><li>关联单选&#x2F;多选字段，可设置导入时的匹配字段，不再局限于使用显示字段匹配导入</li><li>导入模板首行增加字段编码，上传文件后，按excel首行的编码和系统内字段做匹配</li><li>地址控件支持导入：会拆分成四个字段：省份、城市、区&#x2F;县、详细地址</li><li>日期字段导入格式支持”&#x2F;“连接符，yyyy&#x2F;mm&#x2F;dd</li><li>特别说明：导入将根据关联表单自动生成映射数据、根据人员映射自动填充数据、根据计算规则自动生成数据、数据联动自动填充数据</li></ul></li><li><p>导入后，需要选择标题行。系统将会从标题行的下一行开始导入数据。</p></li><li><p>支持缩小导入弹窗，缩小后可在右下角查看导入进度列表，文件导入时可操作页面</p></li><li><p>等待文件格式校验成功</p><ul><li>校验数据量：目前导入支持导入500条数据，如果需要更大数据量需要在部署时的配置文件进行配置</li><li>校验文件模版合法性：是否为当前模型的导入模版</li><li>校验数据项必填情况、校验数据项格式、校验数据项内容（选人控件、部门控件）</li></ul></li><li><p>导入时因人员&#x2F;部门数据未在系统内匹配到唯一值的情况，会在单元格中进行红色标记，支持在线修改</p></li><li><p>支持查看近72h的导入记录，并处理导入异常的数据</p></li></ol><h2 id="数据权限校验"><a href="#数据权限校验" class="headerlink" title="数据权限校验"></a>数据权限校验</h2><p>导入数据时，会根据当前登录人的权限，校验导入的数据是否有权限、导入的部门人员是否有可见性；子表导入数据同理（版本8.1）</p><ol><li>导入关联数据时，若关联数据不在当前登录人的数据权限范围和关联的数据限定范围内，则提示找不到数据</li><li>导入的部门&#x2F;成员时，若部门&#x2F;员工对当前登录人不可见，则导入时提示部门&#x2F;成员不在权限范围内，需重新选择</li></ol><h2 id="字段类型说明"><a href="#字段类型说明" class="headerlink" title="字段类型说明"></a>字段类型说明</h2><ol><li>单行文本、长文本：直接导入文件内容，若文件内容超出字段设置的长度，不可导入</li><li>下拉单选框、下拉多选框、单选框、复选框：输入内容需与选项保持一致，多个选项值之间用”;”隔开</li><li>日期：导入输入内容，日期之间的连接符支持”-“或”&#x2F;“；如2019-05-28或2019&#x2F;05&#x2F;28 15:00:00</li><li>数值：导入输入内容，系统根据字段设置格式自动将文件中内容转换格式</li></ol><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/ht166i/wx3m9o">https://www.yuque.com/skwme4/ht166i/wx3m9o</a><br>分类: 用户操作手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>前端镜像支持brotli压缩</title>
+      <link href="/2026/05/21/%E5%89%8D%E7%AB%AF%E9%95%9C%E5%83%8F%E6%94%AF%E6%8C%81brotli%E5%8E%8B%E7%BC%A9/"/>
+      <url>/2026/05/21/%E5%89%8D%E7%AB%AF%E9%95%9C%E5%83%8F%E6%94%AF%E6%8C%81brotli%E5%8E%8B%E7%BC%A9/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前端镜像支持brotli压缩"><a href="#前端镜像支持brotli压缩" class="headerlink" title="前端镜像支持brotli压缩"></a>前端镜像支持brotli压缩</h1><p>最新的配置demo 可从ftp取最新的安装包。</p><h2 id="一-多租户openresty"><a href="#一-多租户openresty" class="headerlink" title="一.多租户openresty"></a>一.多租户openresty</h2><h3 id="1-更新最新镜像"><a href="#1-更新最新镜像" class="headerlink" title="1.更新最新镜像"></a>1.更新最新镜像</h3><p>若有二开，基于最新镜像制作。</p><h3 id="2-修改配置"><a href="#2-修改配置" class="headerlink" title="2.修改配置"></a>2.修改配置</h3><p>配置文件前段增加</p><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">load_module modules/ngx_http_brotli_filter_module.so<span class="hljs-comment">;</span><br>load_module modules/ngx_http_brotli_static_module.so<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure><p>增加brotli参数，注释或删除 gzip参数</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">brotli on;<br>brotli_comp_level 9;<br>brotli_buffers 16 8k;<br>brotli_min_length 20;<br>brotli_types<br>    text/plain<br>    text/css<br>    text/javascript<br>    application/javascript<br>    application/json<br>    application/xml<br>    text/xml<br>    text/html<br>    application/xhtml+xml<br>    application/rss+xml<br>    application/atom+xml<br>    font/ttf<br>    font/otf<br>    font/eot<br>    font/woff2<br>    image/svg+xml<br>    image/jpeg<br>    image/gif<br>    image/png<br>    application/font-woff<br>    application/font-woff2;<br>brotli_static on;<br><span class="hljs-comment">#gzip on;</span><br><span class="hljs-comment">#gzip_min_length 1k;</span><br><span class="hljs-comment">#gzip_buffers 4 16k;</span><br></code></pre></td></tr></table></figure><h2 id="二-单租户nginx"><a href="#二-单租户nginx" class="headerlink" title="二.单租户nginx"></a>二.单租户nginx</h2><p>使用单租户镜像，例如 registry.cn-hangzhou.aliyuncs.com&#x2F;cloudpivot&#x2F;front:8.6.x-x86-20260507200646</p><p>nginx.conf 参考：</p><p>docker一键运行（注意映射目录）</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>历史版本升级至v1.1.0指引</title>
+      <link href="/2026/05/21/%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E8%87%B3v1.1.0%E6%8C%87%E5%BC%95/"/>
+      <url>/2026/05/21/%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E8%87%B3v1.1.0%E6%8C%87%E5%BC%95/</url>
+      
+        <content type="html"><![CDATA[<h1 id="历史版本升级至v1-1-0指引"><a href="#历史版本升级至v1-1-0指引" class="headerlink" title="历史版本升级至v1.1.0指引"></a>历史版本升级至v1.1.0指引</h1><p>按照下列大纲顺序，逐步进行8.3到8.5的升级。</p><h2 id="1-修改二开代码"><a href="#1-修改二开代码" class="headerlink" title="1. 修改二开代码"></a>1. 修改二开代码</h2><p>相对于8.3，8.5版本在很多类路径上做了改动。所以需要把二开代码中错误的依赖更改正确</p><h2 id="2-备份数据库"><a href="#2-备份数据库" class="headerlink" title="2. 备份数据库"></a>2. 备份数据库</h2><p>升级之前务必备份user服务&#x2F;launcher服务&#x2F;报表服务的数据库！！！</p><h2 id="3-user服务数据、配置升级"><a href="#3-user服务数据、配置升级" class="headerlink" title="3. user服务数据、配置升级"></a>3. user服务数据、配置升级</h2><h3 id="3-1-升级user服务历史数据"><a href="#3-1-升级user服务历史数据" class="headerlink" title="3.1 升级user服务历史数据"></a>3.1 升级user服务历史数据</h3><p><strong>mysql:</strong></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> h_account_user CHANGE <span class="hljs-keyword">COLUMN</span> uId orgUserId <span class="hljs-type">varchar</span>(<span class="hljs-number">200</span>);<br><br><span class="hljs-operator">/</span><span class="hljs-operator">/</span> 若在升级数据之前<span class="hljs-number">8.5</span>的<span class="hljs-keyword">user</span>服务已经启动过了，<span class="hljs-number">8.5</span>会自动创建orgUserId字段，这时候执行以上<span class="hljs-keyword">sql</span>会报错，这时候可以执行以下<span class="hljs-keyword">sql</span><br><span class="hljs-keyword">UPDATE</span> h_account_user <span class="hljs-keyword">SET</span> orgUserId <span class="hljs-operator">=</span> uId <span class="hljs-keyword">WHERE</span> uId <span class="hljs-keyword">is</span> <span class="hljs-keyword">not null</span> <span class="hljs-keyword">and</span> orgUserId <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span>;<br></code></pre></td></tr></table></figure><p><strong>oracle:</strong></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> h_account_user RENAME <span class="hljs-keyword">COLUMN</span> uId <span class="hljs-keyword">TO</span> orgUserId;<br><br><span class="hljs-operator">/</span><span class="hljs-operator">/</span> 若在升级数据之前<span class="hljs-number">8.5</span>的<span class="hljs-keyword">user</span>服务已经启动过了，<span class="hljs-number">8.5</span>会自动创建orgUserId字段，这时候执行以上<span class="hljs-keyword">sql</span>会报错，这时候可以执行以下<span class="hljs-keyword">sql</span><br><span class="hljs-keyword">UPDATE</span> h_account_user<br><span class="hljs-keyword">SET</span> orgUserId <span class="hljs-operator">=</span> uId<br><span class="hljs-keyword">WHERE</span> uId <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">AND</span> orgUserId <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span>;<br></code></pre></td></tr></table></figure><p><strong>达梦:</strong></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> h_account_user RENAME <span class="hljs-keyword">COLUMN</span> uId <span class="hljs-keyword">TO</span> orgUserId;<br><br><span class="hljs-operator">/</span><span class="hljs-operator">/</span> 若在升级数据之前<span class="hljs-number">8.5</span>的<span class="hljs-keyword">user</span>服务已经启动过了，<span class="hljs-number">8.5</span>会自动创建orgUserId字段，这时候执行以上<span class="hljs-keyword">sql</span>会报错，这时候可以执行以下<span class="hljs-keyword">sql</span><br><span class="hljs-keyword">UPDATE</span> h_account_user<br><span class="hljs-keyword">SET</span> orgUserId <span class="hljs-operator">=</span> uId<br><span class="hljs-keyword">WHERE</span> uId <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">AND</span> orgUserId <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span>;<br></code></pre></td></tr></table></figure><h3 id="3-2-修改user服务中application-prod-yml配置文件"><a href="#3-2-修改user服务中application-prod-yml配置文件" class="headerlink" title="3.2 修改user服务中application-prod.yml配置文件"></a>3.2 修改user服务中application-prod.yml配置文件</h3><p>8.5的user服务更改为了自研orm，所以application-prod.yml需新加与launcher同样的datasource节点配置</p><h3 id="3-3-启动user服务"><a href="#3-3-启动user服务" class="headerlink" title="3.3 启动user服务"></a>3.3 启动user服务</h3><p>以上两个步骤执行完成后，启动user服务</p><h2 id="4-launcher服务升级"><a href="#4-launcher服务升级" class="headerlink" title="4. launcher服务升级"></a>4. launcher服务升级</h2><h3 id="4-1-通过SQL脚本升级流程审批意见、用户草稿、定时任务数据等历史数据"><a href="#4-1-通过SQL脚本升级流程审批意见、用户草稿、定时任务数据等历史数据" class="headerlink" title="4.1 通过SQL脚本升级流程审批意见、用户草稿、定时任务数据等历史数据"></a>4.1 通过SQL脚本升级流程审批意见、用户草稿、定时任务数据等历史数据</h3><h4 id="4-1-1-流程审批意见"><a href="#4-1-1-流程审批意见" class="headerlink" title="4.1.1 流程审批意见"></a>4.1.1 流程审批意见</h4><h4 id="4-1-2-用户草稿数据"><a href="#4-1-2-用户草稿数据" class="headerlink" title="4.1.2 用户草稿数据"></a>4.1.2 用户草稿数据</h4><h4 id="4-1-3-定时任务数据升级"><a href="#4-1-3-定时任务数据升级" class="headerlink" title="4.1.3 定时任务数据升级"></a>4.1.3 定时任务数据升级</h4><h3 id="4-2-启动服务，通过程序升级子表、业务规则元数据等历史数据"><a href="#4-2-启动服务，通过程序升级子表、业务规则元数据等历史数据" class="headerlink" title="4.2 启动服务，通过程序升级子表、业务规则元数据等历史数据"></a>4.2 启动服务，通过程序升级子表、业务规则元数据等历史数据</h3><h4 id="4-2-1-子表升级为标准模型升级模型字段数据"><a href="#4-2-1-子表升级为标准模型升级模型字段数据" class="headerlink" title="4.2.1 子表升级为标准模型升级模型字段数据"></a>4.2.1 子表升级为标准模型升级模型字段数据</h4><p>根据i表数据量选择以下升级方式之一：</p><ul><li><p>i表数据量少，选择启动时同步全量升级（i表数据多的时候这个升级影响比较大，可能会导致整个系统不可用，选择此方式升级需要留足充足的升级时间）：<br>配置文件添加<code>cloudpivot.full_upgrade_subschema=true</code>，引擎在启动时自动全量升级。</p></li><li><p>i表数据量多，选择启动后异步单个应用升级（接口超时不影响后端升级程序的执行，需要手动一个个触发应用升级，但不影响项目整体启动）：<br>服务启动后每个应用调用一次接口。</p></li></ul><h4 id="4-2-2-业务规则元数据升级"><a href="#4-2-2-业务规则元数据升级" class="headerlink" title="4.2.2 业务规则元数据升级"></a>4.2.2 业务规则元数据升级</h4><h5 id="4-2-2-1-调用接口触发异步全量升级"><a href="#4-2-2-1-调用接口触发异步全量升级" class="headerlink" title="4.2.2.1 调用接口触发异步全量升级"></a>4.2.2.1 调用接口触发异步全量升级</h5><p>调用以上接口触发异步升级，接口超时不影响数据升级程序的执行。若是多租户场景，需要添加下列请求参数，每个租户都触发一次接口。<br>请传递参数authorization，x-lowcode-enginecode，x-lowcode-corpid</p><h5 id="4-2-2-2-可查询异步全量升级的进度"><a href="#4-2-2-2-可查询异步全量升级的进度" class="headerlink" title="4.2.2.2 可查询异步全量升级的进度"></a>4.2.2.2 可查询异步全量升级的进度</h5><h3 id="4-3-AI升级"><a href="#4-3-AI升级" class="headerlink" title="4.3 AI升级"></a>4.3 AI升级</h3><p>在launcher服务启动后在POSTGRESQL向量数据库执行以下sql</p><h2 id="5-报表服务"><a href="#5-报表服务" class="headerlink" title="5. 报表服务"></a>5. 报表服务</h2><h3 id="5-1-升级数据"><a href="#5-1-升级数据" class="headerlink" title="5.1 升级数据"></a>5.1 升级数据</h3><p>对于ORACLE、达梦、PostgreSQL数据库，升级8.5后，需要对报表服务中的系统分析图表进行升级：</p><h4 id="5-1-1-for-ORACLE"><a href="#5-1-1-for-ORACLE" class="headerlink" title="5.1.1 for ORACLE"></a>5.1.1 for ORACLE</h4><h4 id="5-1-2-for-达梦"><a href="#5-1-2-for-达梦" class="headerlink" title="5.1.2 for 达梦"></a>5.1.2 for 达梦</h4><h4 id="5-1-3-for-PostgreSQL"><a href="#5-1-3-for-PostgreSQL" class="headerlink" title="5.1.3 for PostgreSQL"></a>5.1.3 for PostgreSQL</h4><h2 id="6-其他可能出现的问题及解决方案"><a href="#6-其他可能出现的问题及解决方案" class="headerlink" title="6. 其他可能出现的问题及解决方案"></a>6. 其他可能出现的问题及解决方案</h2><p><a href="https://authine.yuque.com/yg10gk/kgl52c/qfwz5498etbv06z4">升级问题Q&amp;A</a></p><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/epaofp/dlhst2d2bvz6x45g">https://www.yuque.com/skwme4/epaofp/dlhst2d2bvz6x45g</a><br>分类: 开发者手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>员工标签</title>
+      <link href="/2026/05/21/%E5%91%98%E5%B7%A5%E6%A0%87%E7%AD%BE/"/>
+      <url>/2026/05/21/%E5%91%98%E5%B7%A5%E6%A0%87%E7%AD%BE/</url>
+      
+        <content type="html"><![CDATA[<h1 id="员工标签"><a href="#员工标签" class="headerlink" title="员工标签"></a>员工标签</h1><p>可为员工打上”员工标签”，可以使用在人员的映射中。系统可根据标签自动为标签内的所有员工添加上不同的角色。</p><p>这样可以做到：人员业务岗位变动时，不希望每次都在云枢内调整系统权限，业务岗位和系统角色有固定映射关系，岗位变动时系统权限也相应变化。</p><h2 id="一、创建标签组"><a href="#一、创建标签组" class="headerlink" title="一、创建标签组"></a>一、创建标签组</h2><h2 id="二、新增标签组"><a href="#二、新增标签组" class="headerlink" title="二、新增标签组"></a>二、新增标签组</h2><p>如果系统内没有任意标签组，则需要先新增一组标签组。</p><p>如果需要为标签设置额外的字段用于描述当前标签的其他信息，可以点击”管理标签字段”按钮添加字段。</p><h2 id="三、添加标签成员"><a href="#三、添加标签成员" class="headerlink" title="三、添加标签成员"></a>三、添加标签成员</h2><h2 id="四、设置自动同步规则"><a href="#四、设置自动同步规则" class="headerlink" title="四、设置自动同步规则"></a>四、设置自动同步规则</h2><p>添加自动添加规则，可以由系统根据员工标签来自动添加某个标签下的成员到当前角色中。例如张三具备标签”产品负责人”，而该标签设置了自动同步到”产品经理”、”产品助理”角色下，那么张三将被系统自动添加到产品经理、产品助理角色下。</p><ul><li><strong>允许在组织角色直接移除</strong>：勾选后，系统根据员工标签自动添加角色后，可以被管理员手动移除。</li><li><strong>所属部门作为角色管理范围</strong>：勾选后，被添加的员工的所属部门，会作为该员工在当前角色的角色管理范围。</li></ul><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/ug602v/lxhiiqx25inxr8ce">https://www.yuque.com/skwme4/ug602v/lxhiiqx25inxr8ce</a><br>分类: 用户操作手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>应用导入导出</title>
+      <link href="/2026/05/21/%E5%BA%94%E7%94%A8%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/"/>
+      <url>/2026/05/21/%E5%BA%94%E7%94%A8%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/</url>
+      
+        <content type="html"><![CDATA[<h1 id="应用导入导出"><a href="#应用导入导出" class="headerlink" title="应用导入导出"></a>应用导入导出</h1><p>应用创建完成后，可导出应用再导入到不同的环境中，支持应用快速新建、快速更新，也实现应用资产的复用。</p><h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ol><li>应用导入需是低版本导入高版本系统或同版本系统</li><li>应用导出导入包括：<ul><li>业务模型、报表模型、自定义菜单及模型使用的背景图片、表单附件控件的模板</li><li>应用所用的基础数据：数据字典、业务方法、角色、高级数据源；应用导入时若当前环境已存在基础数据，导入时可选择覆盖或忽略导入；若不存在，可在当前环境新增数据</li></ul></li><li>应用导入文件校验时，如果应用编码及模型编码在系统中已存在，需要选择修改编码或直接覆盖；如果出现应用中使用的对象（部门&#x2F;员工等）不存在，需修改对象或直接导入</li><li>新增导入时，无论是否编码重复，都可修改编码</li><li>覆盖导入时，可选择是否忽略应用权限组、流程权限（流程发起配置和流程运维特权）</li><li>应用导入过程中，若有其他报错信息系统会根据实际情况返回错误说明</li></ol><h2 id="导入应用"><a href="#导入应用" class="headerlink" title="导入应用"></a>导入应用</h2><ol><li><p>上传应用包</p><ul><li>文件校验：上传文件完成后，系统会对上传的文件进行校验，如果校验通过，则可直接进行导入操作；如果校验失败，会提示错误信息。</li></ul></li><li><p>校验编码：若应用、模型或子表编码在系统已存在，弹框提示编码重复，可选择覆盖导入、修改编码后新增导入</p></li><li><p>选择修改编码并创建新应用，进入修改编码页</p><ul><li>点击”一键填充新编码”可一键修改全部的编码</li><li>调整完成后点击”保存并返回”再次校验编码是否重复</li></ul></li><li><p>编码校验通过后，校验应用包引用的基础数据在当前环境中是否存在</p><ul><li>若已存在，导入时可选择覆盖或忽略</li><li>若未存在，导入时可在当前环境新增基础数据</li></ul></li><li><p>系统会校验应用中使用的对象（部门、员工、模型等）是否存在，若不存在可以选择在导入过程中快速修改，或者直接导入后在应用中调整</p></li><li><p>选择”快速修改”，可将应用使用的对象替换为系统中存在的对象</p></li><li><p>校验通过后继续导入</p></li><li><p>应用导入完成，可立即发布应用，也可修改应用设计后再发布</p></li></ol><h2 id="导出应用"><a href="#导出应用" class="headerlink" title="导出应用"></a>导出应用</h2><p>应用导出文件格式为.zip压缩包。</p><p>应用导出时，可选择同时导出基础数据：数据字典、业务方法、角色、高级数据源</p><p><strong>注意：</strong><br>低版本导入需要先导入到6.12后导入6.16再8.2最后导入现在版本</p><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/rdxkq0/ncgnk2orhrgdfh3c">https://www.yuque.com/skwme4/rdxkq0/ncgnk2orhrgdfh3c</a><br>分类: 用户操作手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>引擎二次开发指南</title>
+      <link href="/2026/05/21/%E5%BC%95%E6%93%8E%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97/"/>
+      <url>/2026/05/21/%E5%BC%95%E6%93%8E%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97/</url>
+      
+        <content type="html"><![CDATA[<h1 id="引擎二次开发指南"><a href="#引擎二次开发指南" class="headerlink" title="引擎二次开发指南"></a>引擎二次开发指南</h1><h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>本文档主要介绍了v1.1.0引擎二次开发中扩展包的开发相关内容，包括扩展包源码工程的目录结构，自定义扩展的开发步骤，以及扩展的调试、测试和构建打包方法。</p><p>v1.1.0扩展机制说明：扩展机制基于Java SPI规范实现，开发者通过新建扩展模块，在模块中实现云枢提供的各类SPI扩展点接口，并按照规范在<code>META-INF/services</code>目录下注册实现类。开发者可在扩展中使用云枢提供的OpenEngine API或Facade API进行功能开发，也能通过工具类获取自定义的Spring Service对象，最终通过打包将扩展部署到云枢服务中生效。</p><h2 id="二、扩展包开发"><a href="#二、扩展包开发" class="headerlink" title="二、扩展包开发"></a>二、扩展包开发</h2><h3 id="1-扩展包源码工程"><a href="#1-扩展包源码工程" class="headerlink" title="1. 扩展包源码工程"></a>1. 扩展包源码工程</h3><p>扩展包源码工程将随分发包在<a href="http://packages.cloudpivot.cn/sources/">源码路径</a>中给出，解压后其目录结构如下：</p><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs clean">cloudpivot-extensions<br>├── cloudpivot-extension-debug        ##Debug模块<br>├── cloudpivot-extension-template     ##扩展工程示例模块<br>├── pom.xml                           ##Maven配置文件<br>└── README.md                         ##扩展包开发说明文档<br></code></pre></td></tr></table></figure><h3 id="2-如何写一个新的扩展"><a href="#2-如何写一个新的扩展" class="headerlink" title="2. 如何写一个新的扩展"></a>2. 如何写一个新的扩展</h3><h4 id="2-1-新建扩展模块"><a href="#2-1-新建扩展模块" class="headerlink" title="2.1 新建扩展模块"></a>2.1 新建扩展模块</h4><p>在<code>cloudpivot-extensions</code>模块下，新建一个子模块用于自定义扩展包开发，如：<code>cloudpivot-extension-my</code>。</p><p>创建子模块后，扩展工程的目录结构如下：</p><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs clean">cloudpivot-extensions<br>├── cloudpivot-extension-debug        ##Debug模块<br>├── cloudpivot-extension-template     ##扩展工程示例模块<br>├── cloudpivot-extension-my           ##自定义扩展包工程<br>├── pom.xml                           ##Maven配置文件<br>└── README.md                         ##扩展包开发说明文档<br></code></pre></td></tr></table></figure><p>依照<code>cloudpivot-extension-template</code>的pom文件配置，修改<code>cloudpivot-extension-my</code>的pom文件。</p><p>引入依赖时，注意以下两点：</p><ul><li>如果引用云枢相关的依赖包，需要将版本号设置为<code>${cloudpivot.version}</code>，以此确保在依赖包版本与<code>cloudpivot-extensions</code>中指定的云枢版本一致。</li><li>如果引用云枢相关的、或者云枢已经依赖的第三方依赖包，则需要将<code>&lt;scope&gt;</code>设置为<code>provided</code>，以此确保在打包时不会将这些依赖包打入自定义扩展包中。</li></ul><h4 id="2-2-实现云枢扩展点"><a href="#2-2-实现云枢扩展点" class="headerlink" title="2.2 实现云枢扩展点"></a>2.2 实现云枢扩展点</h4><p>下面以实现流程事件扩展点<code>WorkflowEventService</code>为例进行说明：</p><p>在<code>cloudpivot-extension-my</code>模块中，创建app包，所有二开的代码都放在该包或其子包下。</p><p>首先，创建<code>MyWorkflowEventServiceImpl</code>类，并实现<code>WorkflowEventService</code>接口。</p><p>然后，按照Java SPI规范注册上面的扩展实现：在resources目录下创建META-INF&#x2F;services目录，并在该目录下创建一个文件，文件名必须与接口的全路径名一致，文件内容为实现类的全路径名。</p><p>例如，创建名为<code>com.authine.cloudpivot.engine.workflow.spi.WorkflowEventService</code>的文件，内容为上面实现类的全路径名。</p><p>如果是组织数据源这类一个接口多个实现的SPI扩展点，则在该文件中每行写一个实现类的全路径名。</p><p>各spi扩展的介绍及讲解，详见spi<a href="https://www.yuque.com/skwme4/hzo079/kt78k43xpte225wg">扩展点列表</a>。</p><h4 id="2-3-使用云枢提供的API"><a href="#2-3-使用云枢提供的API" class="headerlink" title="2.3 使用云枢提供的API"></a>2.3 使用云枢提供的API</h4><p>在SPI扩展点的实现、自定义Controller、Service等类中，可以直接使用云枢提供的API。云枢提供了两种API：OpenEngine API和Facade API。</p><p>首先推荐使用OpenEngine API。</p><p>如果要使用Facade API，则需要在pom文件中引入以下依赖，然后使用EngineService的静态方法getEngineService()来获取各种Facade对象。</p><h4 id="2-4-使用二开自己的Spring-Service对象"><a href="#2-4-使用二开自己的Spring-Service对象" class="headerlink" title="2.4 使用二开自己的Spring Service对象"></a>2.4 使用二开自己的Spring Service对象</h4><p>由于云枢引擎内部不再依赖Spring，因此在云枢SPI扩展点的实现中，无法再通过@Autowired注解来注入Spring Bean对象。</p><p>建议的方式：编写一个用于获取Spring Bean对象的工具类，然后在需要使用Spring Bean的地方，通过<code>SpringContextUtil.getBean()</code>方法来获取对应的Bean对象。</p><h3 id="3-如何调试-测试"><a href="#3-如何调试-测试" class="headerlink" title="3. 如何调试&#x2F;测试"></a>3. 如何调试&#x2F;测试</h3><p>cloudpivot-extension-debug工程即为调试工程，其中包含启动类。</p><ol><li>插件工程开发完毕之后，进入cloudpivot-extension-debug工程，在其pom文件的dependencies中加入以下依赖项。</li><li>启动项目，并进行后续的调试。注：cloudpivot-extension-debug仅用于扩展模块与云枢的兼容性调试，不用于打包生成可执行jar包。</li></ol><h3 id="4-如何构建及打包"><a href="#4-如何构建及打包" class="headerlink" title="4. 如何构建及打包"></a>4. 如何构建及打包</h3><ol><li>在cloudpivot-extensions或者cloudpivot-extension-my工程下使用 <code>mvn -U clean package</code> 来进行构建，构建产物包含自定义扩展包jar及其引入的三方依赖包，在cloudpivot-extension工程的target目录下。</li><li>将以上构建过程中生成的自定义扩展jar包放于extensions目录，三方依赖包置于common目录中（全量覆盖模式）。</li><li>通过脚本启动云枢服务。</li></ol><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/epaofp/gpuu19f7pdlc10cg">https://www.yuque.com/skwme4/epaofp/gpuu19f7pdlc10cg</a><br>分类: 开发者手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>服务升级后数据库问题</title>
+      <link href="/2026/05/21/%E6%9C%8D%E5%8A%A1%E5%8D%87%E7%BA%A7%E5%90%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E9%97%AE%E9%A2%98/"/>
+      <url>/2026/05/21/%E6%9C%8D%E5%8A%A1%E5%8D%87%E7%BA%A7%E5%90%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h1 id="服务升级后数据库问题"><a href="#服务升级后数据库问题" class="headerlink" title="服务升级后数据库问题"></a>服务升级后数据库问题</h1><h2 id="Oracle或者达梦数据库"><a href="#Oracle或者达梦数据库" class="headerlink" title="Oracle或者达梦数据库"></a>Oracle或者达梦数据库</h2><h3 id="Varchar-Nvarchar2-Text-Clob"><a href="#Varchar-Nvarchar2-Text-Clob" class="headerlink" title="Varchar&#x2F;Nvarchar2-&gt;Text&#x2F;Clob"></a>Varchar&#x2F;Nvarchar2-&gt;Text&#x2F;Clob</h3><p>达梦&#x2F;Oracle数据库，不支持直接从Varchar&#x2F;Nvarchar2转换到Text&#x2F;Clob，因此这种转换会直接报错</p><p>处理方式为，新增字段A1定义类型，再从A复制数据至A1，删除旧字段A，将A1改名为A</p><p><strong>oracle处理为：</strong></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> &quot;h_system_setting&quot; <span class="hljs-keyword">ADD</span> (&quot;paramValue1&quot; <span class="hljs-type">CLOB</span>);<br><span class="hljs-keyword">alter table</span> &quot;h_system_setting&quot; rename <span class="hljs-keyword">column</span> &quot;paramValue1&quot; <span class="hljs-keyword">to</span> &quot;paramValue&quot;;<br></code></pre></td></tr></table></figure><p><strong>达梦处理为：</strong></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> &quot;h_system_setting&quot; <span class="hljs-keyword">ADD</span> (&quot;paramValue1&quot; TEXT);<br><span class="hljs-keyword">alter table</span> &quot;h_system_setting&quot; rename <span class="hljs-keyword">column</span> &quot;paramValue1&quot; <span class="hljs-keyword">to</span> &quot;paramValue&quot;;<br></code></pre></td></tr></table></figure><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/kdt8c4/cx6ii4x51nphg0ec">https://www.yuque.com/skwme4/kdt8c4/cx6ii4x51nphg0ec</a><br>分类: 开发者手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>模型导入导出</title>
+      <link href="/2026/05/21/%E6%A8%A1%E5%9E%8B%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/"/>
+      <url>/2026/05/21/%E6%A8%A1%E5%9E%8B%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/</url>
+      
+        <content type="html"><![CDATA[<h1 id="模型导入导出"><a href="#模型导入导出" class="headerlink" title="模型导入导出"></a>模型导入导出</h1><p>模型创建完成后，可导出模型再导入到不同的环境中，支持模型快速新建、更新，也实现模型资产的复用。</p><h2 id="导入模型"><a href="#导入模型" class="headerlink" title="导入模型"></a>导入模型</h2><p>路径：「登录」＞「管理后台」＞「应用管理」＞ 选择应用 &gt; 「导入」</p><p>导入模型功能可以节省模型、尤其是复杂模型的配置时间，实现一个配置好的模型在不同的环境的共享。</p><p>业务模型、报表模型都支持导入导出。</p><ol><li>上传模型包</li><li>校验出编码重复后，可选择覆盖导入、修改编码后新增导入</li><li>选择导入方式<ul><li>覆盖导入：校验业务模型对象在当前环境中是否存在</li><li>新增导入：选择后进入修改编码页，支持一键修改编码</li></ul></li><li>编码校验通过后，校验模型包中的引用内容；在当前环境中存在，可选择覆盖、忽略，若不存在可直接新增</li><li>校验模型包中使用的对象在当前环境中是否存在</li><li>快速修改不存在的对象</li><li>导入模型完成，可立即发布模型，也可修改模型设计后再发布</li></ol><h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol><li>导入前请将想要导入的模型从原环境导出（包括模型使用的数据字典、角色、业务方法），请确保两套环境的版本一致，否则可能导致导入失败</li><li>导入模型的模型编码不能和当前系统其他模型冲突，出现冲突需选择修改编码再导入或者覆盖导入</li><li>若子表编码重复，需要修改子表编码</li><li>模型导入时，同步导入基础数据（数据字典、角色、业务方法）<ul><li>若当前已存在基础数据，导入时可选择覆盖或忽略</li><li>若未存在，导入时可在当前环境新增基础数据</li></ul></li></ol><h3 id="覆盖导入说明"><a href="#覆盖导入说明" class="headerlink" title="覆盖导入说明"></a>覆盖导入说明</h3><ol><li>覆盖导入会在原模型上累加新导入的表单、流程、列表、数据项等</li><li>覆盖导入后新增加的表单、数据模型-数据项、流程、列表需要重新发布</li><li>如果涉及到模型已经运行过一段时间再覆盖导入，可能会对历史数据和当前未结束的流程、表单造成影响，请慎重执行覆盖导入</li></ol><h2 id="导出模型"><a href="#导出模型" class="headerlink" title="导出模型"></a>导出模型</h2><p>路径：「登录」＞「管理后台」＞「应用管理」＞ 选择应用 &gt; 选择模型 &gt; 导出模型</p><ol><li><p>业务模型导出</p><ul><li>导出业务模型为zip类型文件</li><li>导出时可选择同时导出基础数据：数据字典、业务方法、角色</li></ul></li><li><p>报表模型导出</p><ul><li>报表模型支持导出，文件类型为xml文件</li></ul></li></ol><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/rdxkq0/elvsum">https://www.yuque.com/skwme4/rdxkq0/elvsum</a><br>分类: 用户操作手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>版本AI-Platform-v1.1.0</title>
+      <link href="/2026/05/21/%E7%89%88%E6%9C%ACAI-Platform-v1.1.0/"/>
+      <url>/2026/05/21/%E7%89%88%E6%9C%ACAI-Platform-v1.1.0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="版本AI-Platform-v1-1-0"><a href="#版本AI-Platform-v1-1-0" class="headerlink" title="版本AI-Platform-v1.1.0"></a>版本AI-Platform-v1.1.0</h1><h2 id="一、后端"><a href="#一、后端" class="headerlink" title="一、后端"></a>一、后端</h2><h3 id="一-执行升级程序"><a href="#一-执行升级程序" class="headerlink" title="(一) 执行升级程序"></a>(一) 执行升级程序</h3><p>该版本升级需要执行升级程序，具体操作请参考文档：</p><p><strong>后端升级程序(upgrade-tools)相关说明</strong></p><p>8.5以上版本都有涉及详细使用说明见：<a href="https://www.yuque.com/skwme4/pmon2f/wl4c7z5d18bafow8">https://www.yuque.com/skwme4/pmon2f/wl4c7z5d18bafow8</a> 补丁日志</p><h3 id="二-AI相关"><a href="#二-AI相关" class="headerlink" title="(二) AI相关"></a>(二) AI相关</h3><h4 id="1-仅限MYSQL：更改AI日志表的DDL"><a href="#1-仅限MYSQL：更改AI日志表的DDL" class="headerlink" title="1. 仅限MYSQL：更改AI日志表的DDL"></a>1. 仅限MYSQL：更改AI日志表的DDL</h4><p>对于高版本MYSQL，不再区分utf8mb3和utf8mb4两种字符集，可以忽略本小节。</p><ul><li>修改 <code>h_agentexecutionlog</code> 表DDL，为 <code>successCriteria</code> 单独设置字符集为utf8mb4，同时修改排序规则。</li></ul><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> h_agentexecutionlog MODIFY <span class="hljs-keyword">COLUMN</span> successCriteria text <span class="hljs-keyword">CHARACTER SET</span> utf8mb4 <span class="hljs-keyword">COLLATE</span> utf8mb4_general_ci <span class="hljs-keyword">NULL</span>;<br></code></pre></td></tr></table></figure><ul><li>修改 <code>h_ai_execution_log</code> 表DDL，为 <code>input</code> 和 <code>output</code> 单独设置字符集为utf8mb4，同时修改排序规则。</li></ul><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER TABLE</span> h_ai_execution_log MODIFY <span class="hljs-keyword">COLUMN</span> `input` longtext <span class="hljs-keyword">CHARACTER SET</span> utf8mb4 <span class="hljs-keyword">COLLATE</span> utf8mb4_general_ci <span class="hljs-keyword">NULL</span>;<br><span class="hljs-keyword">ALTER TABLE</span> h_ai_execution_log MODIFY <span class="hljs-keyword">COLUMN</span> `output` longtext <span class="hljs-keyword">CHARACTER SET</span> utf8mb4 <span class="hljs-keyword">COLLATE</span> utf8mb4_general_ci <span class="hljs-keyword">NULL</span>;<br></code></pre></td></tr></table></figure><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/hzo079/li0lmg15ihl2azmr">https://www.yuque.com/skwme4/hzo079/li0lmg15ihl2azmr</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>组织信息拓展表</title>
+      <link href="/2026/05/21/%E7%BB%84%E7%BB%87%E4%BF%A1%E6%81%AF%E6%8B%93%E5%B1%95%E8%A1%A8/"/>
+      <url>/2026/05/21/%E7%BB%84%E7%BB%87%E4%BF%A1%E6%81%AF%E6%8B%93%E5%B1%95%E8%A1%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="组织信息拓展表"><a href="#组织信息拓展表" class="headerlink" title="组织信息拓展表"></a>组织信息拓展表</h1><p>钉钉组织同步到云枢系统时，钉钉独有的人员属性字段暂时无法和云枢系统完全匹配，为实现云枢系统组织人员对钉钉人员特有属性的完整性，云枢系统新增员工拓展信息表模块功能，可根据需要配置对应人员属性。</p><h2 id="员工信息拓展"><a href="#员工信息拓展" class="headerlink" title="员工信息拓展"></a>员工信息拓展</h2><ul><li>入口：组织机构 → 组织信息拓展 → 员工信息拓展</li></ul><h3 id="新增字段设置"><a href="#新增字段设置" class="headerlink" title="新增字段设置"></a>新增字段设置</h3><ul><li><strong>所属组织</strong>：当前新增字段可使用的组织范围</li><li><strong>字段编码</strong>：当前新增员工信息字段编码；「所属组织中字段编码唯一，存在相同编码时会提示报错且保存不成功」</li><li><strong>字段名称</strong>：当前新增员工信息字段名称</li><li><strong>字段类型</strong>：支持文本、人员单选</li><li><strong>所属分组</strong>：人员信息中模块划分，选择后该新增字段将会出现在所选的分组</li><li><strong>匹配字段</strong>：来自钉钉自定义拓展字段</li><li><strong>是否启用</strong>：启用时则员工信息可以看到新增的属性字段，不启用则看不到</li></ul><h2 id="部门信息拓展"><a href="#部门信息拓展" class="headerlink" title="部门信息拓展"></a>部门信息拓展</h2><ul><li>可以为部门设置拓展字段，部门的拓展字段可以作为部门的映射字段</li><li>入口：组织机构 → 组织信息拓展 → 部门信息拓展</li></ul><h3 id="新增字段设置-1"><a href="#新增字段设置-1" class="headerlink" title="新增字段设置"></a>新增字段设置</h3><ul><li><strong>所属组织</strong>：当前新增字段可使用的组织范围</li><li><strong>字段编码</strong>：当前新增部门信息字段编码；「所属组织中字段编码唯一，存在相同编码时会提示报错且保存不成功」</li><li><strong>字段名称</strong>：当前新增部门信息字段名称</li><li><strong>字段类型</strong>：支持文本、人员单选</li><li><strong>匹配字段</strong>：用于获取&#x2F;推送第三方组织时对应第三方字段</li><li><strong>是否启用</strong>：启用时则员工信息可以看到新增的属性字段，不启用则看不到</li></ul><hr><blockquote><p>来源: <a href="https://www.yuque.com/skwme4/ug602v/kk762w">https://www.yuque.com/skwme4/ug602v/kk762w</a><br>分类: 用户操作手册</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 云枢使用 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>退出系统失败</title>
+      <link href="/2026/05/21/%E9%80%80%E5%87%BA%E7%B3%BB%E7%BB%9F%E5%A4%B1%E8%B4%A5/"/>
+      <url>/2026/05/21/%E9%80%80%E5%87%BA%E7%B3%BB%E7%BB%9F%E5%A4%B1%E8%B4%A5/</url>
+      
+        <content type="html"><![CDATA[<h1 id="退出系统失败"><a href="#退出系统失败" class="headerlink" title="退出系统失败"></a>退出系统失败</h1><p>当部署完系统后，点击退出时报错，可参照下面的说明：</p><h2 id="1-https下admin端重定向丢失端口或者转入http协议"><a href="#1-https下admin端重定向丢失端口或者转入http协议" class="headerlink" title="1. https下admin端重定向丢失端口或者转入http协议"></a>1. https下admin端重定向丢失端口或者转入http协议</h2><p>如果nginx前面还有多层代理，对于https加非80端口访问系统的，可以固化 <code>X-Forwarded-Proto</code>，<code>X-Forwarded-Port</code></p><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span>   Host               <span class="hljs-variable">$host</span>;<br><span class="hljs-attribute">proxy_set_header</span>   X-Real-IP          <span class="hljs-variable">$remote_addr</span>;<br><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-For    <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Proto  https;<br><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Port   <span class="hljs-number">7080</span>;<br></code></pre></td></tr></table></figure><p>如果还有问题，把 <code>proxy_set_header Host $host;</code> 屏蔽：</p><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span>   X-Real-IP          <span class="hljs-variable">$remote_addr</span>;<br><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-For    <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Proto  https;<br><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Port   <span class="hljs-number">7080</span>;<br></code></pre></td></tr></table></figure><h2 id="2-nginx外面还有LB时，端口不一致，根目录重定向端口不一致（丢失）问题"><a href="#2-nginx外面还有LB时，端口不一致，根目录重定向端口不一致（丢失）问题" class="headerlink" title="2. nginx外面还有LB时，端口不一致，根目录重定向端口不一致（丢失）问题"></a>2. nginx外面还有LB时，端口不一致，根目录重定向端口不一致（丢失）问题</h2><ol><li><p>对外对内使用相同的端口号，如都修改成8181或者81</p></li><li><p>nginx配置添加 <code>absolute_redirect off;</code>，可以取消绝对路径的重定向</p></li></ol><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>    <span class="hljs-attribute">absolute_redirect</span> <span class="hljs-literal">off</span>;    <span class="hljs-comment">#取消绝对路径的重定向</span><br>    ...<br>&#125;<br></code></pre></td></tr></table></figure><hr><blockquote><p>原文链接: <a href="https://www.yuque.com/skwme4/rmvr0l/whp4zr">https://www.yuque.com/skwme4/rmvr0l/whp4zr</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 其他 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 云枢 </tag>
+            
+            <tag> CloudPivot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2026/05/21/hello-world/"/>
+      <url>/2026/05/21/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
