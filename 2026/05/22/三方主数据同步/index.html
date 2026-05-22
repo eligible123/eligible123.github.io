@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三方主数据同步 - 云枢技术文档</title>
+<meta property="og:title" content="三方主数据同步">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/三方主数据同步/">
+<meta name="description" content="三方主数据同步 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>三方主数据同步</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>三方主数据同步</h1></p><p><h3>场景：</h3>
+对接总部系统基础数据库实现数据源统一处理，云枢系统这边数据就有对应的备份数据，方便关联等操作。</p><p><h3>思路：</h3>
+1.由于同步的基础数据过多，建表字段工作量太大，使用产品添加字段功能实现。2.第一次同步需要全量同步，后续同步增量三天同步，减少数据处理开销。</p><p><h3>实现步骤：</h3></p><p><h4>一、表字段同步</h4>
+​</p><p>/**
+ * 同步中间库字段
+*
+ <em> <strong></em>@param </strong>*map
+*/
+@PostMapping(value = "/syncSkTableFields")
+public ResponseResult syncSkTableFields(@RequestBody Map<String, Object> map) {
+List<String> schemaCodeList = (List<String>) map.get("schemaCodeList");
+ if (CollectionUtils.<em>isEmpty</em>(schemaCodeList)) {
+throw new PortalException(-1, "schemaCodeList不能为空");
+}
+List<String> errorSchemaList = new ArrayList<>();
+List<String> successSchemaList = new ArrayList<>();
+ long s1 = System.<em>currentTimeMillis</em>();
+ for (String schemaCode : schemaCodeList) {
+try {
+long s2 = System.<em>currentTimeMillis</em>();
+String oldTableName = "BZ_" + schemaCode.toUpperCase();
+String sql = "SELECT * FROM " + oldTableName + " FETCH FIRST 1 ROWS ONLY";
+Map<String, Object> param = new HashMap<>();
+List<Map<String, Object>> mapList = skJdbcUtils.getJdbcTemplate().queryForList(sql, param);
+ if (CollectionUtils.<em>isEmpty</em>(mapList)) {
+throw new PortalException(-1, "表" + oldTableName + "不存在");
+}
+//测试调试
+/* String result = "{\"F_BH\":\"EA\",\"F_MC\":\"个\",\"F_SYZT\":\"1\",\"F_JC\":\" \",\"F_CRDATE\":\"2020-11-05 21:26:25\",\"F_CHDATE\":\"2020-11-05 21:32:37\",\"F_OPNAME\":\"管理员\",\"F_OPUSER\":\"9999\",\"F_JLFH\":\" \",\"F_BZDW\":\" \",\"F_DL\":\" \",\"F_HSBL\":0,\"F_NOTE\":\" \",\"UPDATEUSER\":null,\"F_CRUSER\":null,\"F_CHUSER\":null}";
+ Map<String, Object> data1 = JSON.parseObject(result, Map.class);
+ List<Map<String, Object>> mapList = new ArrayList<>();
+ mapList.add(data1);*/
+Map<String, Object> data = mapList.get(0);
+<em>log</em>.info("data:{}", data);
+List<BizPropertyModel> bizPropertyListByCode = getAppManagementFacade().getBizSchemaBySchemaCode(schemaCode).getProperties();
+List<String> columnList = bizPropertyListByCode.stream().map(BizPropertyModel::getCode).collect(Collectors.<em>toList</em>());
+<em>log</em>.info("columnList:{}", columnList);
+//遍历表结构执行创建字段
+for (Map.Entry<String, Object> entry : data.entrySet()) {
+long s3 = System.<em>currentTimeMillis</em>();
+String field = entry.getKey();
+Object value = entry.getValue();
+//转小写
+field = field.toLowerCase();
+ if (columnList.contains(field)) {
+//F_CRDATE F_CHDATE F_SENDTIME
+if (StringUtils.<em>equalsAny</em>(field, "f_crdate", "f_chdate","f_sendtime")) {
+this.getAppManagementFacade().removeBizPropertyByCode(schemaCode, field);
+} else {
+continue;
+}
+}
+BizPropertyModel fieldModel = new BizPropertyModel();
+fieldModel.setName(field);
+fieldModel.setCode(field);
+fieldModel.setSchemaCode(schemaCode);
+fieldModel.setPublished(true);
+fieldModel.setPropertyType(BizPropertyType.<em>SHORT_TEXT</em>);
+//如果value为int类型，则设置为数字类型
+if (value instanceof Integer || value instanceof Double || value instanceof Float) {
+fieldModel.setPropertyType(BizPropertyType.<em>NUMERICAL</em>);
+}
+if (value instanceof Timestamp|| value instanceof Date) {
+fieldModel.setPropertyType(BizPropertyType.<em>DATE</em>);
+}
+fieldModel.setPropertyIndex(false);
+//en: zh:
+String name_i18n = "{\"en\":\"" + field + "\",\"zh\":\"" + field + "1\"}";
+fieldModel.setName_i18n(name_i18n);
+fieldModel.setPropertyEmpty(Boolean.<em>FALSE</em>);
+ this.getAppManagementFacade().addBizProperty(fieldModel);
+<em>log</em>.info("同步{}表字段{}耗时：{}", schemaCode, field, (System.<em>currentTimeMillis</em>() - s3) / 1000 + "s");
+}
+<em>log</em>.info("同步{}表字段耗时：{}", schemaCode, (System.<em>currentTimeMillis</em>() - s2) / 1000 + "s");
+successSchemaList.add(schemaCode);
+} catch (Exception e) {
+<em>log</em>.error("同步{}表字段失败：{}", schemaCode, e.getMessage());
+errorSchemaList.add(schemaCode);
+}
+}
+<em>log</em>.info("同步{}表结构耗时：{}", JSON.<em>toJSONString</em>(schemaCodeList), (System.<em>currentTimeMillis</em>() - s1) / 1000 + "s");
+ return getOkResponseResult("同步成功表：" + JSON.<em>toJSONString</em>(successSchemaList) + "失败表：" + JSON.<em>toJSONString</em>(errorSchemaList), "同步成功");
+}</p><p>#### </p><p><h4>二、表数据同步</h4></p><p>#### </p><p><h4>三、表数据同步定时任务添加</h4></p><p>#### </p><p><h3>实现效果：</h3></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/dbr7tylgkbt6xz7e</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

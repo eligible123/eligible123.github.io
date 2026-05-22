@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二开-BPM(java)版组织机构新增岗位配置 - 云枢技术文档</title>
+<meta property="og:title" content="二开-BPM(java)版组织机构新增岗位配置">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/二开-BPMjava版组织机构新增岗位配置/">
+<meta name="description" content="二开-BPM(java)版组织机构新增岗位配置 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>二开-BPM(java)版组织机构新增岗位配置</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>二开-BPM(java)版组织机构新增岗位配置</h1></p><p><h6>业务场景：</h6>
+BPM系统组织机构目前只支持部门，组，人员层级，而客户的需求却是组织机构要支持部门，岗位，组，人员。并且部门之下岗位有多个，一个岗位下只能有一个人员。</p><p><h6>思路：</h6>
+针对于业务方这个需求，我们只能采用前后端二开形式来实现了。结合bpm系统添加组的方式也可以采用点击新增岗位跳转新的页面填写岗位一些信息后调用接口保存。</p><p><h6>步骤：</h6>
+1、在EditOrgUnit.html（查看/编辑部门文件）的头部代码新增岗位代码：</p><p>	并且绑定点击方法addPost()来调用产品的跳转路由方法AddOrgUnit(),并且传出二开页面文件名称，产品方法会自动在Organization目录下匹配二开页面文件地址，由此可见：二开文件地址必须放在Organization目录下。</p><p>2、在Portal\admin\Organization目录下新增EditPost.html文件：</p><p>具体效果截图：</p><p>	其中bpm  admin端是集成vue，在技术层次方面可以采用v-model进行数据双向绑定。但是如上图所示：上级岗位，所属组织，所有成员要采用产品的选人选部门控件，在这块只能采用产品的方法进行数据填写和编辑。代码方法如下：</p><p>保存岗位的时候，保存成功后需要重新刷新下组织机构。方便查看添加的岗位信息，对此产品也提供提供了方法，需要传入所属机构的机构id。</p><p>保存完成后，产品会直接返回当前路由地址，并且会直接携带岗位id和部门id：</p><p>	点击左侧岗位名称，产品就会直接匹配接口返回的路由参数（ShowPageUrl）。所以我们在页面进行初始化的时候要调用后端接口查询当前岗位信息，就可以编辑了。</p><p>同时也要注意要区分中英文，找到产品中英文配置的地方写入自己的配置。
+	中文：\Portal\lang\这个目录里的zh_CN.json里的Orgnization对象添加："AddPost": "添加岗位"配置。</p><p>英文：\Portal\lang\这个目录里的en.json里的Orgnization对象添加："AddPost": "Add Post",配置。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/icf1ezgbbvag1h9x</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

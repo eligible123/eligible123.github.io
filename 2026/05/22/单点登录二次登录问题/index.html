@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单点登录二次登录问题 - 云枢技术文档</title>
+<meta property="og:title" content="单点登录二次登录问题">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/单点登录二次登录问题/">
+<meta name="description" content="单点登录二次登录问题 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>单点登录二次登录问题</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>单点登录二次登录问题</h1></p><p><strong>单点登录二次登录问题（SSO）</strong></p><p><strong>一、需求</strong></p><p>随着人工智能技术的发展，图像识别已成为前端应用中一个重要的功能。用户希望能够通过上传图片，快速识别图片中的物体，并在界面上展示识别结果。具体需求如下：</p><p>- 统一身份认证
+用户只需登录一次，即可访问多个关联系统，无需重复输入用户名和密码。
+- 跨系统会话管理
+实现多个系统间的登录状态共享，支持单点登录和单点登出。
+- 安全性保障
+采用安全的认证机制，防止身份伪造、会话劫持等安全风险。
+- 兼容多平台
+支持Web端、移动端等多种客户端访问。
+- 用户体验优化
+登录流程简洁，响应快速，减少用户操作步骤。
+- 可扩展性和可维护性
+支持未来新增系统接入，便于维护和升级。</p><p><strong>二、思路</strong></p><p>- 集中认证服务器
+设计一个独立的认证中心（Identity Provider，IdP），负责用户身份验证和会话管理。
+- 服务提供者（Service Provider，SP）
+各业务系统作为服务提供者，依赖认证中心进行用户身份认证。
+- 认证协议选择
+采用标准化协议，如 OAuth 2.0、OpenID Connect 或 SAML，确保安全和兼容性。
+- Token机制
+认证中心颁发访问令牌（Access Token）或身份令牌（ID Token），服务提供者通过验证令牌确认用户身份。
+- 单点登出机制
+支持用户在任一系统登出后，通知其他系统同步登出，保证会话一致性。
+- 安全策略</p><p>- 使用HTTPS保障数据传输安全
+- Token签名和加密，防止篡改
+- Token过期和刷新机制
+- 防止CSRF、XSS等攻击</p><p>- 用户信息同步
+认证中心可提供用户信息接口，供业务系统获取用户详细信息。</p><p><strong>三、解决方案</strong></p><p>基由于二次登录的时候之前的缓存没有被清空 导致使用失效token,只需要在失效的情况下移除失效token就可以</p><p><strong>四、实现步骤</strong></p><p><strong>1. 找到文件</strong>packages\portal\src\bootstrap.ts</p><p><strong>2. platform.start(env.client_id, env.scope).then((result: any) => {</strong></p><p><strong>	</strong><strong>添加下列代码</strong></p><p><strong>	if(location.pathname ==='/oauth'){</strong></p><p><strong>			localStorage.removeItem('token');</strong></p><p><strong>	}</strong></p><p><strong>	添加上列代码</strong></p><p><strong>  }</strong></p><p><strong>3. 如果自定义登录页面需要特殊处理</strong></p><p><strong>	1. 找到文件packages\portal\src\config\axios.ts</strong></p><p><strong> 	2.  case 401:</strong></p><p><strong>			if(location.pathname.index0f('/customLogin')!==-1){</strong></p><p><strong>				return;</strong></p><p><strong>}</strong></p><p><em>*</em>*</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/viu7mpt79cpflggq</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

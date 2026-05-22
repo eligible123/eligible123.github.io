@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飞书集成（单点、消息、创建群组） - 云枢技术文档</title>
+<meta property="og:title" content="飞书集成（单点、消息、创建群组）">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/飞书集成单点消息创建群组/">
+<meta name="description" content="飞书集成（单点、消息、创建群组） - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>飞书集成（单点、消息、创建群组）</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>飞书集成（单点、消息、创建群组）</h1></p><p><h1>需求</h1>
+- 集成飞书单点登录：</p><li>从飞书的工作台点击应用，可以跳转到项目首页，无需再次登录。</li><li>集成飞书消息通知：</li><li>系统产生的消息通知（待办、转办、待阅、流程结束、驳回等）需要同步推送给飞书，点击飞书消息卡片可以跳转到项目对应的页面。</li><p><h1>前提条件</h1></p><p><h2>了解飞书用户身份体系</h2>
+飞书在不同的层次对用户身份做了隔离，以保证用户的数据安全。整体来说用户身份 <strong>ID</strong> 有以下几种类型：</p><p>- 物理用户身份（lark_id），即全局 ID
+- 用户在租户内的身份（user_id）
+- 用户在应用内的身份（open_id ）
+- 用户在同一应用服务商所开发的多个应用下的统一身份（ union_id）</p><p>​</p><p>考虑到一个租户下可能存在多个应用，并且应用可能涉及到组织人员管理场景（创建成员/组/角色），所以使用 <strong>user_id</strong>。</p><p>飞书相关文档<a href="https://open.feishu.cn/document/home/user-identity-introduction/introduction">https://open.feishu.cn/document/home/user-identity-introduction/introduction</a></p><p><h2>组织同步</h2>
+- 提前做好业务系统和飞书的组织架构同步，确认好业务系统使用哪个字段存储飞书的 user_id 。</p><p><h2>创建飞书应用</h2>
+- 进入飞书开发者后台，创建企业自建应用。</p><li>创建应用后可以看到应用的凭证信息，调用飞书接口时会用到。</li><li>添加网页应用能力，并配置桌面和移动端主页地址。</li><li>添加机器人能力，用于给用户发消息。</li><li>配置权限管理。</li><p>列出一些配置的权限，其余权限按需添加。</p><p>| 名称 | 代码 |  |
+| 获取通讯录基本信息 | contact:contact.base:readonly |  |
+| 获取用户 user ID | contact:user.employee_id:readonly |  |
+| 获取与更新群组信息 | im:chat |  |
+| 读取群信息 | im:chat.group_info:readonly |  |
+| 更新应用所创建群的群信息 | im:chat:operate_as_owner |  |
+| 获取群组信息 | im:chat:readonly |  |
+| 获取与发送单聊、群组消息 | im:message |  |
+| 获取用户在群组中@机器人的消息 | im:message.group_at_msg |  |
+| 获取群组中所有消息 | im:message.group_msg |  |
+| 更新应用创建群聊的信息 | im:message.groups |  |
+| 获取用户发给机器人的单聊消息 | im:message.p2p_msg |  |
+| 发送应用内加急消息 | im:message.urgent |  |
+| 发送电话加急消息 | im:message.urgent:phone |  |
+| 发送短信加急消息 | im:message.urgent:sms |  |
+| 获取单聊、群组消息 | im:message:readonly |  |
+| 以应用的身份发消息 | im:message:send_as_bot |  |
+| 给一个或多个部门的成员批量发消息 | im:message:send_multi_depts |  |
+| 给多个用户批量发消息 | im:message:send_multi_users |  |</p><li>配置安全设置。</li><li>重定向 URL</li><li>IP 白名单</li><li>创建版本与发布应用。</li><p><h1>建立飞书配置表</h1></p><p><h2>飞书应用配置表</h2>
+根据飞书应用与系统的对应关系（组织维度、应用维度、模型维度等等...）建立飞书应用配置表。</p><p>示例为一个组织对应一个飞书应用（只列出了关键字段）。</p><p><h3>建表语句</h3></p><p><h2>飞书消息模板配置表</h2>
+根据系统的消息类型，配置不同的消息标题和消息内容模板。</p><p><h3>建表语句</h3></p><p><h3>配置内容样例</h3>
+配置内容样例只是提供一种从 模板配置 转换成 具体展示给用户的文本 的方案，仅供参考。</p><p>模板的内容构成：</p><li>isDataItem（枚举值）：</li><p>0：普通字符串，<strong>code</strong> 配置什么内容，就展示给用户什么内容。</p><p>1：需要替换的字符串，<strong>code </strong>配置的内容需要替换为实际需要展示给用户的内容，通常是一个字段编码。</p><p>2：会被转换为换行符。</p><li>code：配置的内容。</li><p><h1>集成飞书接口</h1></p><p><h2>单点登录</h2>
+飞书关键接口</p><li>获取登录预授权码</li><p>飞书相关文档<a href="https://open.feishu.cn/document/server-docs/authentication-management/login-state-management/obtain-code">https://open.feishu.cn/document/server-docs/authentication-management/login-state-management/obtain-code</a></p><li>自建应用获取 app_access_token</li><p>飞书相关文档<a href="https://open.feishu.cn/document/server-docs/authentication-management/access-token/app_access_token_internal">https://open.feishu.cn/document/server-docs/authentication-management/access-token/app_access_token_internal</a></p><li>获取 user_access_token</li><p>飞书相关文档<a href="https://open.feishu.cn/document/server-docs/authentication-management/access-token/create-2">https://open.feishu.cn/document/server-docs/authentication-management/access-token/create-2</a></p><p><h3>飞书工作台单点</h3>
+在 <strong>2.3. 创建飞书应用 </strong>配置首页地址时，使用 <strong>获取登录预授权码 </strong>接口地址，该接口的 redirect_uri 参数为 Encode 处理后的项目首页地址，从飞书工作台点击应用时，会自动跳转到重定向 URL，并且携带飞书的预授权码 code，根据预授权码再调用 <strong>获取 user_access_token </strong>接口获取飞书 user_id。</p><p><h3>飞书消息卡片单点</h3>
+飞书消息卡片点击后，打开浏览器并跳转到目标页面，实现方式很多，例如消息卡片跳转地址填写 <strong>获取登录预授权码 </strong>接口地址，或者先判断项目中用户是否已经登录（浏览器中是否有 Token 信息），若未登录，再跳转至 <strong>获取登录预授权码 </strong>接口地址等等... 总体思路还是根据飞书的预授权码来获取用户信息完成单点。</p><p><h2>发送卡片消息</h2>
+飞书的消息类型分为很多种，项目中一般选择卡片消息。</p><p><a href="https://open.feishu.cn/document/common-capabilities/message-card/introduction-of-message-cards">飞书消息卡片概述</a>​</p><p><a href="https://open.feishu.cn/document/server-docs/im-v1/message/create">发送消息接口文档</a>​</p><p>在调试卡片消息内容样式时，推荐使用 <a href="https://open.feishu.cn/tool/cardbuilder?from=apireference&templateId=ctp_AAmjw1FwsHR4">消息卡片搭建工具</a> 。</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/hlc1c7culgiiu3bd</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

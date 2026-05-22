@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SM4国密加解密-祝欢 - 云枢技术文档</title>
+<meta property="og:title" content="SM4国密加解密-祝欢">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/SM4国密加解密-祝欢/">
+<meta name="description" content="SM4国密加解密-祝欢 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>SM4国密加解密-祝欢</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>SM4国密加解密-祝欢</h1></p><p><h1>SM4国密加解密</h1></p><p><h4>1、前言</h4></p><p>我们公司有时候会服务到大集团，集团旗下公司数据传递需要加密传输，这时一般选择SM4国密加解密传输。</p><p><h4>2、简介</h4></p><p>国密即国家密码局认定的国产密码算法，主要有SM1，SM2，SM3，SM4。密钥长度和分组长度均为128位SM4无线局域网标准的分组数据算法。对称加密，密钥长度和分组长度均为128位代码</p><p><h4>3、代码</h4></p><p>导入依赖</p><p><dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk15on</artifactId>
+    <version>1.56</version>
+</dependency></p><p>工具类hutool</p><p>  <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+      <version>5.7.16</version>
+  </dependency></p><p>使用工具之后的加解密代码，如下</p><p>//普通密钥解密
+    String key = "5468546854879564";//16位
+    SM4 sm4 = new SM4(key.getBytes(StandardCharsets.UTF_8));
+    String 解密结果 = sm4.decryptStr("加密的字符串");</p><p>    
+//如果涉及文件加解密
+public static String getDBFile(String path, String sm4Key, String unpackPath) throws IOException {
+        String downpath = System.getProperty("user.dir")+ File.separator+"sqlite"+File.separator+"download"+File.separator;
+        createFolder(downpath);
+        String fileName = "";//  
+        log.info("下载的文件 = "+fileName);
+        File fl = new File(downpath);
+        String[] list = fl.list();
+        if(list.length>0 && StringUtils.isNotBlank(fileName)){
+            for(String name : list){
+                if(!name.equals(fileName)){
+                    File file1 = new File(downpath+ File.separator+name);
+                    file1.delete();
+                }
+            }
+        }else{
+            fileName = list[0];
+        }
+    
+        //读取文件
+        File file = new File(downpath+ File.separator+fileName);
+        SM4 sm4 = new SM4(sm4Key.getBytes(StandardCharsets.UTF_8));
+        byte[] decrypt = sm4.decrypt(cn.hutool.core.io.FileUtil.readBytes(file));
+        //生成下载的解密zip文件
+        downDecryptionFile(decrypt,path+"wai.zip");
+        //解压文件
+        unzip(path+"wai.zip",unpackPath);
+        return fileName;
+    }</p><p>    public static void generateKey() throws NoSuchAlgorithmException {
+        // 1. bc库原始写法
+        X9ECParameters x9ECParameters = GMNamedCurves.getByName("sm2p256v1");
+        ECDomainParameters ecDomainParameters = new ECDomainParameters(x9ECParameters.getCurve(), x9ECParameters.getG(), x9ECParameters.getN());
+        ECKeyPairGenerator ecKeyPairGenerator = new ECKeyPairGenerator();
+        ecKeyPairGenerator.init(new ECKeyGenerationParameters(ecDomainParameters, SecureRandom.getInstance("SHA1PRNG")));
+        AsymmetricCipherKeyPair asymmetricCipherKeyPair = ecKeyPairGenerator.generateKeyPair();</p><p>        
+        BigInteger privatekey = ((ECPrivateKeyParameters) asymmetricCipherKeyPair.getPrivate()).getD();
+        String privateKeyHex = privatekey.toString(16);</p><p>        ECPoint ecPoint = ((ECPublicKeyParameters) asymmetricCipherKeyPair.getPublic()).getQ();
+        byte[] encoded = ecPoint.getEncoded(false);
+        String publicKeyHex = Hex.toHexString(encoded);</p><p>        System.out.println("私钥 "+privateKeyHex);
+        System.out.println("公钥 "+publicKeyHex);</p><p>        // 2. hutool写法
+        SM2 sm2 = SmUtil.sm2();
+        String hutoolPrivateKeyHex = HexUtil.encodeHexStr(BCUtil.encodeECPrivateKey(sm2.getPrivateKey()));
+        String hutoolPublicKeyHex = HexUtil.encodeHexStr(((BCECPublicKey) sm2.getPublicKey()).getQ().getEncoded(false));
+        System.out.println("私钥 = "+hutoolPrivateKeyHex);
+        System.out.println("公钥 = "+hutoolPublicKeyHex);
+    }</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/sg493839vchgro90</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

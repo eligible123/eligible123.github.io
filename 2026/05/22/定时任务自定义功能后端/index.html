@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定时任务自定义功能后端 - 云枢技术文档</title>
+<meta property="og:title" content="定时任务自定义功能后端">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/定时任务自定义功能后端/">
+<meta name="description" content="定时任务自定义功能后端 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>定时任务自定义功能后端</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>定时任务自定义功能后端</h1></p><p><strong>定时任务自定义功能后端详解</strong></p><p><strong>一、需求</strong></p><p>实际业务中客户在配置定时任务时，希望可以支持更复杂的配置，例如</p><p>1 支持每季度执行，并可以指定季度中的第1/2/3月执行</p><p>2 支持自定义 每n天执行</p><p>3 支持自定义 每n周执行，并可以指定周一至周日中的那几天执行</p><p>4 支持自定义 每n月执行，并可以指定1号至31号中的那几天执行</p><p><strong>二、思路</strong></p><p>1 每季度执行 基本和产品每月执行差不多，cron表达式根据季度的第几月控制指定月份即可，如季度的第2月执行，那就是 2，5，8，11 月执行</p><p>2 支持自定义 每n天执行，跟产品新版自定义每n天逻辑一致</p><p>3 支持自定义 每n周执行，并可以指定周一至周日中的那几天执行，用cron无法处理，整体采用每周运行的任务，然后增加监听，监听中判断本次是否运行</p><p>4 支持自定义 每n月执行，并可以指定1号至31号中的那几天执行，基本和3处理逻辑类似</p><p><strong>难点</strong>：</p><p>产品的定时任务采用是集成的QRTZ,相关内容不好更改</p><p><strong>三、解决方案</strong></p><p><strong>方案</strong>：前端增加标记，目前业务规则-定时任务这块配置采用的json格式存储，其中jobRunType=CUSTOM标记自定义状态，executeType=POLLING轮询执行区分每n天和 每n周/年。即需要处理的数据，将其单独存入一张h_custom_triggers表中，记录其每次真实运行时间，在业务规则保存和系统重启时增加加入监听动作，在监听事件中，判断属于jobRunType=CUSTOM && jobRunType=CUSTOM 则需要进行执行时间判断，判断可以执行则更新h_custom_triggers中的上次运行时间，若不执行则不做操作。</p><p><strong>四、实现步骤</strong></p><p><strong>重写BusinessRuleServiceImpl类中的buildJob方法</strong></p><p><strong>1 将相关参数增加到jsonParam中，方便之后监听事件获取</strong></p><p><strong>2 判断类型是否需要重置自定义任务表时间，即每次任务保存重置上次运行时间</strong></p><p><em>*</em>*</p><p><em>*</em>*</p><p><em>*</em>*</p><p><strong>3 定时任务保存时增加监听</strong></p><p><strong>4 启动时加入监听</strong></p><p><strong>启动时将所有不属于系统任务的qrtz任务注册监听</strong></p><p><strong>5 注册监听实现类</strong></p><p><strong>具体监听实现类中，每个被监听的任务触发时都会调用vetoJobExecution方法，此方法返回false则定时任务继续执行，如返回true则取消本次任务。固我们在此取出之前存储的字段，判断</strong>jobRunType=CUSTOM && jobRunType=CUSTOM 则 获取其上次运行时间，如可以运行则返回false，并更新上次运行时间，如不可运行则返回false，不做其他处理</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gdvpiwgler36bf88</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

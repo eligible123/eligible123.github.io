@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢6.12.5 SSO单点登录（PC端） - 云枢技术文档</title>
+<meta property="og:title" content="云枢6.12.5 SSO单点登录（PC端）">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢6125-SSO单点登录PC端/">
+<meta name="description" content="云枢6.12.5 SSO单点登录（PC端） - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢6.12.5 SSO单点登录（PC端）</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢6.12.5 SSO单点登录（PC端）</h1></p><p><h2>功能介绍</h2>
+云枢系统接入单点登录系统（SSO）进行统一身份认证</p><p><h2>交互过程</h2></p><p>登录流程描述：</p><p>- 用户在浏览器访问接入应用URL
+- 云枢系统判断用户是否有登录过
+- 如果没有登录，则需要构造SSO接入（包含SSO分配的IASID、当前时间TimeStamp、登录成功返回的SSOReturnURL地址，数据签名Authenticator），并交给浏览器进行跳转</p><p>- IASID：分配给应用的唯一标识
+- TimeStamp：当前的时间，格式为yyyy-MM-dd HH:mm:ss
+- SSOReturnURL：认证成功后需要跳转的URL
+- Authenticator：临时认证码</p><p>- 浏览器拿到登录信息后，将信息通过Form表单post到SSO登录页面
+- SSO要求用户进行登录认证
+- 在用户登录成功后，SSO系统将构造SSO接入返回信息，并交给浏览器进行跳转
+- 浏览器拿到返回信息后，将信息Post到ReturnURL地址
+- 云枢系统对SSO返回的认证码进行校验，当认证通过后需要为用户设置登录信息并登录系统</p><p>登出流程描述：</p><li>用户在云枢中主动进行“注销/登出”动作时，需要注销当前系统登录信息，并重定向到SSO登出页面。</li><p><h2>技术实现</h2>
+1、修改云枢系统登录页，构造接入请求信息，重定向到SSO登录页面</p><p>     路径：packages\portal\src\vies\login\login-new.vue</p><p>2、用户在SSO登录页输入账号密码登录之后，SSO会调用我们的returnUrl接口地址，并将用户账号及认证码作为参数传入，后台对SSO传入的认证码进行校验之后，将页面重定向到ssoindex.html</p><p>3、新增一个中转页面，接收SSO登录之后返回的信息，设置token信息登录系统并跳转到目标地址</p><p>     路径：packages\portal\public\ssoindex.html</p><p>3、登出</p><p>登出只需要找到产品登出的方法，修改登出逻辑重定向到SSO登出页即可</p><p> 前台登出：frontend\packages\cloudpivot-portal-designer\src\designerCore\ui-extensions\widgets\navigation\row-menu\menu-operation.vue  </p><p>后台登出： frontend\packages\cloudpivot-admin-core\src\components\global\header\index.vue  </p><p>退出登录的代码在公共依赖包里面，此处属于定制开发，参考：<a href="https://www.yuque.com/skwme4/hzo079/ssvayz">https://www.yuque.com/skwme4/hzo079/ssvayz</a></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/tb32qy56z4sgf2lb</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

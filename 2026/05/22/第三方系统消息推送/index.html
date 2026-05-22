@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第三方系统消息推送 - 云枢技术文档</title>
+<meta property="og:title" content="第三方系统消息推送">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/第三方系统消息推送/">
+<meta name="description" content="第三方系统消息推送 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>第三方系统消息推送</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>第三方系统消息推送</h1></p><p><h2>一、需求</h2>
+实现云枢消息对第三方推送</p><p><h2>二、解决方案</h2></p><p><h4>方案一：使用面向切面（AOP）实现应消息。</h4>
+- 优点：找到对应基类方法切面能最好的。
+- 缺点：产品升级导致基类变化，该代码需要同步升级。</p><p><h4>方案二：实现IWorkService 待办集成接口。</h4>
+- 优点：产品提供的待办集成接口，对待办非常非常友好的实现了。
+- 缺点：只能对待办实现，对待阅、已阅、评论等其他场景不能覆盖到。</p><p><h4>方案三：实现IMessageService消息集成接口。</h4>
+- 优点：能覆盖整个流程和流程以外比较重要节点周期，如下图所示：在流程或规则中可配置发送消息或在后台调用MessageRouteFacade类的方法发送消息。
+- 缺点：创建的流程表单中相关参与人需要所属对应拓展组织下。如果是多个组织都需要满足发送消息需要每个都实现。</p><p><h2>三、最终方案</h2>
+选择方案几个因素：能满足需求、又快又好实现需求开发、尽量不要影响产品后续升级。</p><p><strong>最终选择方案三</strong>。</p><p><h2>四、实现代码</h2></p><p><h4>1、实现IMessageService接口，在对应消息类型下做处理</h4></p><p><h4>2、调用产品消息类，更新消息状态</h4></p><p><h4>3、调用异常时，将异常录入产品异常信息表</h4></p><p><h2>五、参考相关文档</h2>
+参考文档：<a href="https://www.yuque.com/skwme4/hzo079/igbmpp"><strong>云枢1.8.0后版本组织、消息、待办集成文档</strong></a></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ytdy8s</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

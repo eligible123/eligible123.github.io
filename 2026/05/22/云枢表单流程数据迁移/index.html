@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢表单、流程数据迁移 - 云枢技术文档</title>
+<meta property="og:title" content="云枢表单、流程数据迁移">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢表单流程数据迁移/">
+<meta name="description" content="云枢表单、流程数据迁移 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢表单、流程数据迁移</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢表单、流程数据迁移</h1></p><p><h1>云枢表单、流程数据迁移</h1></p><p><h2>项目背景</h2></p><p>项目上需要把一个第三方系统的业务数据、已完成的流程数据迁移到云枢，包含表单数据、已办数据。</p><p><h2>实现思路</h2></p><p>弄清楚第三方系统的数据存储结构以及对应云枢数据存储结构的对应关系，将第三方系统数据表导入至云枢数据库，编写SQL脚本插入数据至云枢对应的数据表。</p><p><strong>数据核对</strong></p><p>双方数据库表核对需要注意的点：</p><li>第三方系统业务数据表字段与云枢字段对应关系。</li><li>注意第三方系统的用户、部门数据与云枢用户控件、部门控件的数据结构差异。</li><li>第三方系统流程数据表字段与云枢字段对应关系。</li><li>第三方系统流程数据与业务数据对应关系。</li><p>云枢流程数据表：</p><p>| 表名称 | 描述 |  |
+| biz_workflow_instance | 存储流程实例数据，每一条业务数据对应一条流程实例数据 |  |
+| biz_workitem_finished | 已办表，用户已经完成的待办会存储到这张表中，一个用户的一个已办任务对应这张表的一条数据，多条已办数据关联一条流程实例数据 |  |
+| biz_workitem | 待办表，用户待办会存储到这张表中，一个用户的一个待办任务对应这张表的一条数据，多条待办数据关联一条流程实例数据 |  |
+| biz_workflow_token | 审批记录表，用户对流程的审批记录会存储到这张表中，多条审批记录数据关联一条流程实例数据 |  |</p><p><strong>流程数据迁移</strong></p><p>建议流程迁移顺序：</p><li>迁移流程实例表（biz_workflow_instance）数据。</li><li>关联流程实例数据和业务表数据。</li><li>迁移已办表（biz_workitem_finished）数据。</li><li>迁移审批记录表（biz_workflow_token）数据。</li><p><h2>实现示例</h2></p><p><h3>第三方系统数据表</h3></p><p><strong>主表字段</strong></p><p><strong>审批记录表字段</strong></p><p><h3>云枢系统数据表</h3></p><p><strong>主表字段</strong></p><p><strong>子表字段</strong></p><p><h3>核对字段导入业务主表数据</h3></p><p>对比两张数据表的字段，确认字段映射关系。</p><p>云枢表单中新增一个隐藏的标识字段（bpahistory），以区分历史数据和新数据。</p><p><strong>插入主表数据SQL</strong></p><p><strong>插入子表数据SQL</strong></p><p><strong>执行sql，关联子表数据和子表数据（补充子表中的parentId字段）</strong></p><p><h3>核对字段导入云枢流程相关表数据</h3></p><p><strong>执行sql，插入流程实例表数据</strong></p><p><strong>执行sql，回写流程实例id至业务数据表 i70i2_bla</strong></p><p><strong>执行sql，插入已办数据至 biz_workitem_finished 表</strong></p><p>PS：云枢流程相关的表中，注意【workflowVersion】字段的值，需要跟实际流程版本号相同，否则前台页面会显示无数据。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/uif2us2qz5ismz7k</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

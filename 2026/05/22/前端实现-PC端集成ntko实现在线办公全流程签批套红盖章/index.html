@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章） - 云枢技术文档</title>
+<meta property="og:title" content="前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/前端实现-PC端集成ntko实现在线办公全流程签批套红盖章/">
+<meta name="description" content="前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章） - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）</h1></p><p><h2>背景</h2>
+办公室发文需要实现word文档的在线打开，编辑和对word文档进行签批，套红，盖章等一系列操作，基于客户需求引入软航科技的ntko</p><p>注:以下盖章为网络图片</p><p><h2>整体效果如图所示</h2></p><p><h2>一、项目集成ntko</h2></p><p><h4>1.服务器文件夹位置</h4>
+注:为了便于ntko调试，把ntko基础包作为静态资源文件引入，直接放入portal目录下，避免每次调试需要打包，提升开发效率,前端本地代码放在portal下,ntko文件夹需要找对接公司人要</p><p><h4>2.前端工程文件夹代码位置</h4></p><p><h2>二、使用ntko</h2></p><p><h4>1.在对应表单中增加自定义按钮</h4></p><p><h4>2.在对应的表单中引入ntkobackground.min.js，如下</h4></p><p><h4>3.点击套红按钮时先判断是否有安装对应的插件</h4>
+重点:  let ntkoed = ntkoBrowser.ExtensionInstalled();//判断是否安装插件 返回true或false</p><p>判断是否安装插件之后，把发起人上传的附件的refId传递给editindex.html中</p><p>4.在文件中拿到对应的refId,并打开正文即可</p><p>因为这里签章时需要输入用户名和密码确认，故套红和签章的逻辑需要分开，initMethod方法为判断用户进入时点击的是套红还是签章，</p><p><h4>4.ntko保存</h4></p><p><h5>1、点击保存调用后端接口逻辑如下</h5>
+点击保存后数据要回写表单，故保存时不能调用产品的upload接口，需要后端进行二开，前端入参为：业务id(objectId)、文件名称、表单编码、存储的字段名称，后端拿到ntko给的最新文件保存在数据库中，并返回新的文件信息给前端，前端需要把新值重新赋值给表单字段，否则会出现页面没有更新</p><p>后端接口返回结构如下图一</p><p>重点api如下:</p><p><h5>2、保存成功后把值回填表单，会进入监听，并把新的附件信息赋值给表单字段，如下图</h5></p><p><h4>5.套红</h4>
+套红先把套红模板用套红基础信息表维护起来，点击套红按钮，把发文类型以及是否有上行文入参传递给后端，后端拿到对应的模板信息，返回给前端，拿到对应的refId打开即可</p><p>ntko.openfromurl(ipHost + "/api/api/aliyun/download?refId="+ templateList[0].refId);</p><p><h4>6.签章</h4>
+签章和套红的逻辑一样，先用基础信息表把签章的附件维护起来，然后用调用后端接口拿到对应的refId，最后打开即可</p><p>ntko.AddPicFromURL()</p><p>7.获取表单发文号赋值word文档</p><p>发文号和签发人逻辑:</p><p>发文号和签发人需要从表单中获取数据，单独插入到基础数据的word文档中，上传附件附件中，文档要在指定位置插入书签，便于把发文号及签发人放到指定位置，    <strong>注意:赋值发文号必须要放到正文加载之后(套红中第56行之后代码)，书签要在基础数据的附件中维护好</strong></p><p><strong>重点api：ntko.SetBookmarkValue('date1', nowDate);</strong></p><p><h2>三、如何调测</h2>
+1、ntko插件弹框打开后，找到如下路径,并点击选中的文件即可</p><p><h2>四、全部代码</h2></p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ne80upz4awg7nb4c</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

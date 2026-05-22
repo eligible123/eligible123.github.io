@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金工消息中心对接文档 - 云枢技术文档</title>
+<meta property="og:title" content="金工消息中心对接文档">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/金工消息中心对接文档/">
+<meta name="description" content="金工消息中心对接文档 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>金工消息中心对接文档</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>金工消息中心对接文档</h1></p><p><h1>金工消息中心对接文档</h1>
+金工消息中心目前支持OA、钉钉、短信、邮件等消息发送。</p><p><h1>1 接入前提</h1></p><p><h2>1.1 账号申请</h2>
+接入前需要先申请对应用户和权限，提供接入方系统名、应用缩写。</p><p>新建成功后提供给接入方应用id、应用秘钥、发送消息用户和密码。</p><p><h2>1.2 认证接口</h2>
+消息中心采用oauth2.0标准进行认证，调用各消息接口前需要先认证通过，获取该用户access_token。</p><p><strong>认证接口（以测试环境为例）：</strong></p><p>POST /oauth/user/token</p><p>Request URL：<a href="http://172.16.192.41:30010/api-auth/oauth/user/token">http://172.16.192.41:30010/api-auth/oauth/user/token</a></p><p>Host:172.16.192.41:30010/api-auth</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{ "access_token": "c7beeb9f-0334-4c40-95fe-c521665baa80",
+  "token_type": "bearer",
+  "refresh_token": "9d0f8520-2321-4a63-9692-baa71d610cd9",
+  "expires_in": 12551,
+  "scope": "all"}</p><p><strong>注意：</strong>建议对接系统可以把返回access_token缓存处理，避免多次请求。</p><p><h2>1.3 应用租户</h2>
+Header参数：</p><p>注：在低代码平台，其中一些应用需要把消息的归属到划转到其他自研的业务系统，同时把菜单挂到其他自研系统里。针对这种情况，该请求头必须要指定为对应自研系统的应用ID。</p><p><h1>2 消息接口</h1></p><p><h2>2.1 OA推送</h2></p><p><h3>2.1.1 发送OA消息</h3></p><p><strong>POST</strong> /notify_oa/msg/send</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_oa/msg/send">http://172.16.192.41:30010/api-notify/notify_oa/msg/send</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p><h3>2.1.2 更新OA待办</h3></p><p><strong>POST</strong> /notify_oa/msg/update</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_oa/msg/update">http://172.16.192.41:30010/api-notify/notify_oa/msg/update</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p><h3>2.1.3 删除OA待办</h3></p><p><strong>POST</strong>/notify_oa/msg/delete</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_oa/msg/delete">http://172.16.192.41:30010/api-notify/notify_oa/msg/delete</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p><h2>2.1 短信发送</h2></p><p><h3>2.1.1 发送短信消息</h3>
+<strong>POST</strong> /notify_sms/msg/send</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_sms/msg/send">http://172.16.192.41:30010/api-notify/notify_sms/msg/send</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h3>2.1.2 根据模板发送短信消息</h3>
+<strong>POST</strong> /notify_sms/msg/sendTemplate</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_sms/msg/sendTemplate">http://172.16.192.41:30010/api-notify/notify_sms/msg/sendTemplate</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h2>2.3 邮箱发送</h2></p><p><h3>2.3.1 发送邮件</h3>
+<strong>POST</strong> /notify_email/msg/send</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_email/msg/send">http://172.16.192.41:30010/api-notify/notify_email/msg/send</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h2>2.4 钉钉推送</h2></p><p><h3>2.4.1 发送工作通知消息</h3>
+<strong>POST</strong> /notify_dingTalk/msg/sendNotice</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_dingTalk/msg/sendNotice">http://172.16.192.41:30010/api-notify/notify_dingTalk/msg/sendNotice</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h3>2.4.2 发送自定义机器人消息</h3>
+<strong>POST</strong> /notify_dingTalk/msg/sendCustomizeRobot</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_dingTalk/msg/sendCustomizeRobot">http://172.16.192.41:30010/api-notify/notify_dingTalk/msg/sendCustomizeRobot</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Body参数：</p><p>{</p><p>"atMobiles": "string",</p><p>"btnOrientation": "string",</p><p>"btnsList": [</p><p>{</p><p>"actionURL": "string",</p><p>"title": "string"</p><p>}</p><p>],</p><p>"msgType": 0,</p><p>"secret": "string",</p><p>"singleTitle": "string",</p><p>"singleURL": "string",</p><p>"text": "string",</p><p>"title": "string",</p><p>"webhook": "string"</p><p>}</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h2>2.5 站内信发送</h2></p><p><h3>2.5.1 发送站内信</h3>
+<strong>POST</strong> /notify_siteMsg/msg/send</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_siteMsg/msg/send">http://172.16.192.41:30010/api-notify/notify_siteMsg/msg/send</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h3>2.5.2 站内信状态更新</h3>
+<strong>POST</strong> /notify_siteMsg/msg/updateStatus</p><p>Request URL：<a href="http://172.16.192.41:30010/api-notify/notify_siteMsg/msg/updateStatus">http://172.16.192.41:30010/api-notify/notify_siteMsg/msg/updateStatus</a></p><p>Host:172.16.192.41:30010/api-notify</p><p>Content-Type:application/json</p><p>Query参数：</p><p>Header参数：</p><p>返回响应</p><p>OK (200)</p><p>{</p><p>"data": {},</p><p>"message": "string",</p><p>"status": 200</p><p>}</p><p>服务器错误 (500)</p><p>{</p><p>"data": {},</p><p>"message": "服务器异常",</p><p>"status": 500</p><p>}</p><p>Unauthorized（401）</p><p>{ "resp_code": "401",
+  "resp_msg": "Full authentication is required to access this resource"}</p><p><h1>3 表结构</h1>
+对于外部对接系统主要涉及两个数据表消息推送记录表和消息记录表，可以查看对应推送消息状态及推送内容。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/wr8fgc43me1mtpqp</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

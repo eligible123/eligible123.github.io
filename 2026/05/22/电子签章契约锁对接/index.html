@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电子签章（契约锁）对接 - 云枢技术文档</title>
+<meta property="og:title" content="电子签章（契约锁）对接">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/电子签章契约锁对接/">
+<meta name="description" content="电子签章（契约锁）对接 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>电子签章（契约锁）对接</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>电子签章（契约锁）对接</h1></p><p><strong>电子签章（契约锁）对接</strong></p><p><strong>一、需求</strong></p><p>1.OA系统的流程和契约锁系统的对接已经完成且已经上线运行了，故BPM的流程率先在固收一部的工作审批表中进行对接运行，待运行稳定后推广到其他部门的BPM流程中使用。</p><p><strong>二、思路</strong></p><p>1.由于BPM系统和电子章系统是独立的两个系统，二者对接需要再BPM审批流中加入电子章相关审批节点，电子章系统有一个电子章盖章流程，两个流程独立推进，BPM系统与电子章系统是通过接口进行相关的数据交互。</p><p><strong>三、解决方案</strong></p><p>1.BPM系统，用户在BPM系统在【拟稿人预签】节点，点击【用章预设】按钮会跳转到电子章系统进行预设操作，在用户点击【用章预设】按钮时，BPM系统会通过接口在电子章系统发起盖章流程、同步需盖章文件和电子章、并获取电子章系统预设链接并打开，用户在电子章系统完成预签操作后点击确定会将电子章系统的流程推进到下一个环节。同时，用户需要在BPM系统，点击【提交】按钮，将BPM系统流程推进到下一环节。代码如下：</p><p>public ResponseResult createContractByWorkflow(String instanceId, String childCode,String companyName) {
+    WorkflowInstanceModel instance = getWorkflowInstanceFacade().getWorkflowInstance(instanceId);
+    String tableName = getEngineService().getBizObjectFacade().getTableName(childCode);
+    String mainTableName = "ir12r_" + instance.getSchemaCode();
+    Map<String, Object> queryParams = new HashMap();
+    queryParams.put("parentId", instance.getBizObjectId());
+    String sql = "select fileName,refId from " + tableName + " where parentId=:parentId";
+    List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, queryParams);
+    String strSql = "select sealSigner,preContractRefIds,contractRefIds,esginid from " + mainTableName + " where id=:parentId";
+    List<Map<String, Object>> lists = jdbcTemplate.queryForList(strSql, queryParams);
+    //查询业务章签署人
+    String sealSigner = "";
+    String contractId="";
+    if (lists != null && lists.size() > 0) {
+        sealSigner = lists.get(0).get("sealSigner") == null ? "" : lists.get(0).get("sealSigner").toString();
+        //电子印章系统合同id
+        contractId=lists.get(0).get("esginid") == null ? "" : lists.get(0).get("esginid").toString();
+        if(StringUtil.<em>isNotEmpty</em>(contractId)){
+            //已存在合同时候，判断文件是否有变化。提交前的文件的个数和提交后的文件个数以及文件id是否一致，不一致需要发起新的流程
+            String preContractRefIds=lists.get(0).get("preContractRefIds") == null ? "" : lists.get(0).get("preContractRefIds").toString();
+            String contractRefIds=lists.get(0).get("contractRefIds") == null ? "" : lists.get(0).get("contractRefIds").toString();
+            if(StringUtil.<em>isNotEmpty</em>(preContractRefIds)&&StringUtil.<em>isNotEmpty</em>(contractRefIds)){
+                String[] preContractRefIdList=preContractRefIds.split(",");
+                String[] contractRefIdsList=contractRefIds.split(",");
+                boolean isChanged=false;
+                if(preContractRefIdList.length!=contractRefIdsList.length){
+                    isChanged=true;
+                }
+                else{
+                    for(int i=0;i<preContractRefIdList.length;i++){
+                        if(!preContractRefIdList[i].equals(contractRefIdsList[i])){
+                            isChanged=true;
+                            break;
+                        }
+                    }
+                }</p><p>//合同文件有变化时候，需要对之前的合同做处理
+                if(isChanged){
+                    ResponseResult detail= getContractDetail(contractId);
+                    //只对可以作废的合同和可以撤回的合同做处理，其他状态的合同不做处理
+                    if(detail.getErrcode()==0){
+                        String status=detail.getData()==null?"":detail.getData().toString();
+                        //COMPLETE(已完成)和FINISHED（未盖章，强制完成）可以作废
+                        if(status.equals("COMPLETE")||status.equals("FINISHED")){
+                            ResponseResult result=cancelContract(contractId);
+                            if(result.getErrcode() !=0){
+                                return result;
+                            }
+                        }
+                        //SIGNING（签署中）和FILLING（拟定中）可以撤回
+                        else if(status.equals("SIGNING")||status.equals("FILLING")){
+                            ResponseResult result=recallContract(contractId);
+                            if(result.getErrcode() !=0){
+                                return result;
+                            }
+                        }
+                    }
+                }
+                else{
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("contractId", contractId);
+                    String preSignUrl = getPreSignUrl(contractId);
+                    m.put("preSignUrl", preSignUrl);
+                    return getOkResponseResult(m, "成功");
+                }
+            }
+        }
+    }
+    UserModel user = getOrganizationFacade().getUser(sealSigner);
+    UserModel creator=getOrganizationFacade().getUser(instance.getOriginator());
+    Map<String, Object> map = new HashMap<>();
+    List<String> documentIds = new ArrayList<>();
+    if (list != null && list.size() > 0) {
+        for (Map<String, Object> m : list) {
+            String fileName = m.get("fileName").toString();
+            String refId = m.get("refId").toString();
+            String result = createDocumentByRefId(refId, fileName);
+            JSONObject json = JSON.<em>parseObject</em>(result);
+            if (json.getString("code").toString().equals("0")) {
+                JSONObject jb = (JSONObject) json.get("result");
+                documentIds.add(jb.getString("documentId"));
+            }
+        }
+    }
+    map.put("documentIds", documentIds);</p><p>//发起电子签章系统的合同，同时将流程的合同文件写入电子签章系统
+    String res = createContractByDocuments(StringUtil.<em>join</em>(documentIds, ","), instance.getSequenceNo(), instance.getInstanceName(), user == null ? "" : user.getUsername(),creator.getUsername(),companyName);
+    JSONObject json = JSON.<em>parseObject</em>(res);
+    if (json.getString("code").toString().equals("0")) {
+        map.put("contractId", json.getString("contractId"));
+        String preSignUrl = getPreSignUrl(json.getString("contractId"));
+        map.put("preSignUrl", preSignUrl);
+        //更新表单的字段esginid，以及更新表单的contractRefIds和preContractRefIds一致
+        String update="update " +mainTableName +" set esginid=:esginid , contractRefIds=:contractRefIds,relateContractIds=:relateContractIds where id=:id";
+        Map<String, Object> params = new HashMap();
+        params.put("esginid",json.getString("contractId"));
+        params.put("contractRefIds",lists.get(0).get("preContractRefIds"));
+        params.put("id",instance.getBizObjectId());
+        //记录所有和本流程相关的电子签章系统的流程id
+        if(StringUtil.<em>isEmpty</em>(contractId)){
+            params.put("relateContractIds", json.getString("contractId"));
+        }
+        else {
+            params.put("relateContractIds", contractId + "," + json.getString("contractId"));
+        }</p><p>    }
+    else{
+        return getErrResponseResult(999L,"发起电子签章流程失败");
+    }
+    return getOkResponseResult(map, "成功");}</p><p>}</p><p>2.BPM系统在【用章签署】通过接口获取盖章链接，点击【用章签署】按钮就跳转到电子章系统进行盖章，点击确定。电子章系统流程就自动流转到下一状态已完成。用户需返回BPM系统，点击【提交】按钮，将BPM系统流程推进到下一环节，代码如下：</p><p>//获取合同状态，非完成状态的合同才能进行签署</p><p>public ResponseResult getContractDetail(String contractId){
+    String host = getCustomSetting.getCustomSettingByKey("EsignHost");
+    String api = getCustomSetting.getCustomSettingByKey("Esign_ContractDetail");
+    String url = host + api + "?contractId=" + contractId;
+    HttpHeaders headers = setHttpHeaders(MediaType.<em>APPLICATION_JSON</em>);
+    HttpComponentsClientHttpRequestFactory httpRequestFactory=new HttpComponentsClientHttpRequestFactory();
+    if(host.indexOf("https")>-1){
+        httpRequestFactory=setHttpsRequestFactory();
+    }
+    else {
+        httpRequestFactory = setHttpRequestFactory();
+    }
+    restTemplate.setRequestFactory(httpRequestFactory);
+    Map<String,Object> map=new HashMap<>();
+    HttpEntity<Map<String,Object>> httpEntity=new HttpEntity<>(map,headers);
+    String res=restTemplate.exchange(url, HttpMethod.<em>GET</em>,httpEntity,String.class).getBody();
+    <em>log</em>.info("获取合同详情结果:"+res);
+    JSONObject json=JSON.<em>parseObject</em>(res);
+    String result="";
+    String code=json.getString("code");
+    if("0".equals(code)){
+        JSONObject contract=json.getJSONObject("contract");
+        result=contract.getString("status");
+    }
+    return getOkResponseResult(result,"成功");}</p><p>/**
+ * 获取查看合同的url
+ *
+ <em> <strong></em>@param </strong>*contractId
+ <em>* </em>@return
+ <em>*/</em>@GetMapping("/getSignUrl")public ResponseResult getSignUrl(String contractId){
+    String url=getCustomSetting.getCustomSettingByKey("EsignOperatorHost")+"/sign/"+contractId;
+    return getOkResponseResult(url,"成功");}</p><p>3.BPM系统在【盖章确认】提交后通过接口获取盖章后的文件，代码如下：</p><p>public ResponseResult downloadByWorkflow(String instanceId, String childCode, String fileChildCode) {
+        WorkflowInstanceModel instance = getWorkflowInstanceFacade().getWorkflowInstance(instanceId);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("bizObjectId", instance.getBizObjectId());//        String tableName = "ir12r_" + childCode;
+        String subTableName = getEngineService().getBizObjectFacade().getTableName(childCode);
+        String sql = "select fileName,refId from " + subTableName + " where parentId=:bizObjectId order by sortKey";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, queryParams);//        String mainTableName = "ir12r_" + instance.getSchemaCode();
+        String tableName = getEngineService().getBizObjectFacade().getTableName(instance.getSchemaCode());
+        String strSql = "select documentIds from " + tableName + " where id=:bizObjectId";
+        List<Map<String, Object>> lists = jdbcTemplate.queryForList(strSql, queryParams);
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("id", instance.getBizObjectId());
+        List<Map<String, Object>> childMap = new ArrayList<>();
+        updateMap.put(fileChildCode, childMap);
+        //先删除子表的数据
+        String fileSubTableName=getBizObjectFacade().getTableName(fileChildCode);
+        String deleteSql="delete from "+fileSubTableName+" where parentId=:bizObjectId";
+        jdbcTemplate.update(deleteSql,queryParams);
+        //删除附件字段的数据
+        String deleteAtt="delete from h_biz_attachment where bizObjectId=:bizObjectId and BizPropertyCode='esignFile'";
+        int rows= jdbcTemplate.update(deleteAtt,queryParams);
+        BizObject biz = new BizObject(instance.getSchemaCode(), instance.getBizObjectId(), updateMap);
+        if (list != null && list.size() > 0) {
+            String[] documents = lists.get(0).get("documentIds").toString().split(",");
+            for (int i = 0; i < list.size(); i++) {
+                String fileName = list.get(i).get("fileName").toString();
+                String documentId = documents[i];
+                fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf";
+                //下载合同文件到BPM系统中  </p><p>downloadFile(documentId, fileName, instance.getBizObjectId(), instance.getSchemaCode(), "esignFile", childMap);
+            }
+        }
+        getBizObjectFacade().updateBizObject(biz);
+        return getOkResponseResult("获取电子签章附件成功");
+    }</p><p>4.对接契约锁的接口代码如下：</p><p>//根据文档id创建电子签章系统合同</p><p>@PostMapping("/createContractByDocuments")public String createContractByDocuments(String documents, String sn, String subject, String sealSingerNumber,String creatorNumber,string companyName) {
+    String categoryId = getCustomSetting.getCustomSettingByKey("Esign_CategoryId");//合同流程模板id
+    String[] documentList = documents.split(",");
+    String sealId = getCustomSetting.getCustomSettingByKey("Esign_SealId");//印章id
+    Map<String, Object> map = new HashMap<>();
+    map.put("subject", subject);
+    map.put("sn", sn);
+    map.put("descriptio", subject);
+    map.put("send", "true");
+    map.put("categoryId", categoryId);
+    map.put("creatorName", "BPM");
+    Map<String, Object> m = new HashMap<>();
+    m.put("number",creatorNumber);//使用用户的工号
+    map.put("creatorInfo", m);
+    map.put("tenantName", companyName);
+    map.put("documents", Arrays.<em>asList</em>(documentList));
+    List<Map<String, Object>> signatories = new ArrayList<>();
+    map.put("signatories", signatories);
+    Map<String, Object> signatorie = new HashMap<>();
+    signatories.add(signatorie);
+    signatorie.put("tenantType", "CORPORATE");
+    signatorie.put("tenantName", companyName);
+    signatorie.put("serialNo", "1");
+    List<Map<String, Object>> actions = new ArrayList<>();
+    signatorie.put("actions", actions);
+    Map<String, Object> action = new HashMap<>();
+    actions.add(action);
+    action.put("type", "CORPORATE");
+    action.put("name", "公司公章");
+    action.put("serialNo", "1");
+    action.put("sealIds", "[" + sealId + "]");
+    List<Map<String, Object>> locations = new ArrayList<>();
+    for (int i = 0; i < documentList.length; i++) {
+        Map<String, Object> location = new HashMap<>();
+        location.put("documentId", documentList[i]);
+        location.put("rectType", "SEAL_CORPORATE");
+        location.put("page", 0);
+        location.put("offsetX", 0.5);
+        location.put("offsetY", 0.5);
+        location.put("actionName", "公司公章");
+        locations.add(location);
+    }
+    action.put("locations", locations);
+    List<Map<String, Object>> operators = new ArrayList<>();
+    Map<String, Object> operator = new HashMap<>();
+    operators.add(operator);
+    operator.put("operatorNumber",sealSingerNumber);//员工编号
+    <em>log</em>.info("创建电子签章合同参数:" + JSON.<em>toJSONString</em>(map));
+    HttpHeaders headers = setHttpHeaders(MediaType.<em>APPLICATION_JSON</em>);
+    HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+    String host = getCustomSetting.getCustomSettingByKey("EsignHost");
+    String api = getCustomSetting.getCustomSettingByKey("Esign_Create_Contract");
+    String url = host + api;
+    HttpComponentsClientHttpRequestFactory httpRequestFactory=new HttpComponentsClientHttpRequestFactory();
+    if(host.indexOf("https")>-1){
+        httpRequestFactory=setHttpsRequestFactory();
+    }
+    else {
+        httpRequestFactory = setHttpRequestFactory();
+    }
+    restTemplate.setRequestFactory(httpRequestFactory);
+    String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
+    <em>log</em>.info("创建电子签章合同结果:"+result);
+    return result;}</p><p>//根据文件refId将BPM的文件写入电子签章系统@PostMapping("/createDocumentByRefId")public String createDocumentByRefId(String refId, String fileName) {
+    String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+    String filePath = UUID.<em>randomUUID</em>().toString().replace("-", "") + "." + fileExtension;
+    File file = new File(CommonInfo.<em>checkFilePath</em>(filePath));
+    try {
+        ByteArrayInputStream stream = s3Service.downloadFile(refId);
+        byte[] data = new byte[stream.available()];
+        int bytesRead;
+        int offset = 0;
+        while ((bytesRead = stream.read(data, offset, data.length - offset)) != -1) {
+            offset += bytesRead;
+        }
+        try (FileOutputStream fos = new FileOutputStream(CommonInfo.<em>checkFilePath</em>( filePath))) {
+            fos.write(data); // 将byte数组写入文件
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    } catch (Exception ex) {
+        <em>log</em>.info("获取bpm附件失败:"+ex.getMessage()+ex.getStackTrace());
+        ex.printStackTrace();
+    }
+    String host = getCustomSetting.getCustomSettingByKey("EsignHost");
+    String api = getCustomSetting.getCustomSettingByKey("Esign_Create_Document");
+    String url = host + api;
+    FileSystemResource sysFile = new FileSystemResource(CommonInfo.<em>checkFilePath</em>(file));
+    HttpHeaders headers = setHttpHeaders(MediaType.<em>MULTIPART_FORM_DATA</em>);
+    HttpComponentsClientHttpRequestFactory httpRequestFactory=new HttpComponentsClientHttpRequestFactory();
+    if(host.indexOf("https")>-1){
+        httpRequestFactory=setHttpsRequestFactory();
+    }
+    else {
+        httpRequestFactory = setHttpRequestFactory();
+    }
+    restTemplate.setRequestFactory(httpRequestFactory);
+    MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+    map.add("file", sysFile);
+    map.add("title", fileName.substring(0, fileName.lastIndexOf(".")));
+    map.add("fileType", fileExtension);
+    HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+    ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, httpEntity, String.class);
+    //删除临时文件
+    file.delete();
+    String result= responseEntity.getBody();
+    <em>log</em>.info("创建电子签章文档结果:"+result);
+    return result;}</p><p>//下载电子签章系统的合同文件到BPM系统中</p><p>@PostMapping("/downloadFile")public ResponseResult downloadFile(String documentId, String fileName, String bizObjectId, String schemaCode, String dataField, List<Map<String, Object>> childMap) {
+    String host = getCustomSetting.getCustomSettingByKey("EsignHost");
+    String api = getCustomSetting.getCustomSettingByKey("Esign_DownloadFile");
+    String url = host + api + "?documentId=" + documentId;
+    try {
+        URL u = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+        String accessToken = getCustomSetting.getCustomSettingByKey("Esign_AccessToken");
+        String appSecret = getCustomSetting.getCustomSettingByKey("Esign_AppSecret");
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("x-qys-timestamp", "0");
+        connection.setRequestProperty("x-qys-accesstoken", accessToken);
+        connection.setRequestProperty("x-qys-signature", MD5Util.<em>MD5</em>(accessToken + appSecret + "0"));
+        connection.connect();
+        InputStream inputStream = connection.getInputStream();
+        // 创建输出流
+        OutputStream outputStream = new FileOutputStream(UUID.<em>randomUUID</em>().toString().replace("-", "") + ".pdf");        String s3StorageFileName = UUID.<em>randomUUID</em>().toString();
+        String s3StoragePath = getFilePath();
+        String uuid=UUID.<em>randomUUID</em>().toString();
+        String refId = s3StoragePath + "/" + s3StorageFileName;
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);        AttachmentS3Model resourceModel = new AttachmentS3Model();
+        resourceModel.setRefId(refId);
+        resourceModel.setName(fileName);
+        resourceModel.setFileExtension(".".concat(suffix));
+        resourceModel.setFileSize(inputStream.available());
+        // 设置S3的相关信息开始
+        resourceModel.setS3StorageFileName(s3StorageFileName);
+        resourceModel.setS3StoragePath(s3StoragePath);
+        if (".jpg.JPG.png.PNG.jpeg.JPEG".contains(suffix)) {
+            if (".jpg.JPG".contains(suffix)) {
+                suffix = "jpeg";
+            }</p><p>            resourceModel.setMimeType("image/".concat(suffix));
+        } else {
+            resourceModel.setMimeType("application/".concat(suffix));
+        }
+        s3Service.fileUpload(refId, inputStream);
+        this.redisTemplate.boundHashOps("cloudpivot:fileupload:workflow_attachment").putIfAbsent(refId, resourceModel);
+        this.redisTemplate.expire("cloudpivot:fileupload:workflow_attachment", 24L, TimeUnit.<em>HOURS</em>);
+        Map<String, Object> map = new HashMap<>();
+        List<Object> att = new ArrayList<>();
+        att.add(JSON.<em>toJSON</em>(resourceModel));
+        map.put(dataField, att);
+        BizObject bizObject = new BizObject(schemaCode, bizObjectId, map);
+        //更新附件字段的数据
+        getBizObjectFacade().updateBizObject(bizObject);        Map<String, Object> m = new HashMap<>();
+        m.put("fileName", fileName);
+        m.put("refId",refId);
+        childMap.add(m);
+        inputStream.close();
+    } catch (Exception ex) {
+        <em>log</em>.info("下载电子签章文件异常:"+ex.getMessage()+ex.getStackTrace());
+        ex.printStackTrace();;
+    }
+    return getOkResponseResult("成功");}</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/hgv94nm2r7n63f75</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

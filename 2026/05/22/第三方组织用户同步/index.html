@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第三方组织用户同步 - 云枢技术文档</title>
+<meta property="og:title" content="第三方组织用户同步">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/第三方组织用户同步/">
+<meta name="description" content="第三方组织用户同步 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>第三方组织用户同步</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>第三方组织用户同步</h1></p><p><h2>场景：第三方系统提供数据查询接口，调用接口获取数据，进行组织同步</h2></p><p><h2>思路：</h2>
+分析：根据云枢系统的组织表之间关系，确定数据的插入顺序；</p><p>1、部门数据；注意：部门数据存在村级结构，需要注意插入的先后顺序；</p><p>2、角色组数据：</p><p>3、角色数据：注意：角色数据需要有角色组数据需要先插入角色组数据</p><p>4、用户数据：</p><p>5、部门用户关系表：注意：需要部门id和用户id，所以需要在用户和部门的数据存在</p><p>6、角色用户关系表：注意：需要角色id和用户id，所以需要在用户和部门的数据存在</p><p>​</p><p><strong><em>注意点： </strong></em></p><p><strong><em>1、部门表中虽然有不少字段显示为非必填，如queryCode ,sourceId，leaf等字段，但是在产品其他场景中有使用到，甚至会影响产品其他共工</strong></em></p><p><strong><em>例如：queryCode 字段对 根据部门查询人员接口有影响，当queryCode 为空时，接口会抛出控制正异常。</strong></em></p><p><strong><em>leaf 字段对部门树形结构显示存在影响，需要根据是不是最低级部门判断是否为目录节点</strong></em></p><p><strong><em>sourceid 字段需要保存，第二次同步时，需要根据sourceid来确定，当前数据和数据中历史插入数据的数据关系。</strong></em></p><p><h2>实现步骤：</h2></p><p><h3>1、对部门数据要求，对方的数据接口：</h3>
+(1) 尽可能要求对方的数据接口返回数据中可以带上部门等级</p><p>(2) 尽可能要求对方的数据接口可以根据部门等级排序（由高到低；或是由低到高）；</p><p>​</p><p>​</p><p><h3>2、如果对方这两个都不能满足，可以借鉴以下方案</h3></p><p><h4>数据字段映射关系确定</h4>
+可以通过配置的原属性集合和目标属性集合，快速将原始数据中的属性转化为目标属性；</p><p><h4>1、部门数据插入调整服务</h4>
+因部门数据量不大,采取全量查询，在内存中处理的方式，减少数据库的频繁交互；</p><p>(1) 、先将对方返回的数据集合，转成树结构，  </p><p>(2) 、递归遍历树，将数据按部门先后顺序插入数据</p><p>在递归过程中，操作queryCode 和  leaf 字段</p><p>(3)、插入时判断数据是否已经存在，存在则修改，不存在则插入</p><p><h4>2、角色组数据据插入</h4>
+通过接口插查询到数据后赋值id后直接插入</p><p><h4>3、角色数据插入</h4>
+（1）、先查询角色组数据，根据原始角色组队id以及云枢数据id确定关系。（具体操作如用户和用户关系）</p><p>​</p><p>（2）、更具数据关系关联，关联角色组数据id后插入数据。</p><p>​</p><p><h4>4、用户及用户关系数据插入（用部门数据举例）；同步思路，存在数据</h4>
+（1）、查询部门及角色数据</p><p>（2）、根据原始数据id（sourceId） 和云枢表中数据id确定关系，</p><p>（3）、根据数据关系，在内存中建立用户与部门、角色关系，插入用户数据是同步插入对应关系数据,当原始数据存在时，保存数据，当数据不存在时，新增数据。</p><p>> ​
+​</p><p>工具类:</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/uuo7nc</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

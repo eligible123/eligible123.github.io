@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关联单选映射数据后被调整打开表单label标红悬浮展示关联数据 - 云枢技术文档</title>
+<meta property="og:title" content="关联单选映射数据后被调整打开表单label标红悬浮展示关联数据">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/关联单选映射数据后被调整打开表单label标红悬浮展示关联数据/">
+<meta name="description" content="关联单选映射数据后被调整打开表单label标红悬浮展示关联数据 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>关联单选映射数据后被调整打开表单label标红悬浮展示关联数据</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>关联单选映射数据后被调整打开表单label标红悬浮展示关联数据</h1></p><p><h3>业务场景：客户有几个指定表单，通过关联单选字段携带数据，如果数据调整再次打开表单需要label标红处理，以及悬浮展示关联单选该字段的原数据。</h3>
+<strong>实现效果：</strong></p><p><strong>实现思路：</strong></p><p>新增一个配置表单，配置对比的流程表单以及被关联的表单模型，以及表单中的关联单选字段编码和需要对比的表单字段编码，在打开表单详情的时候去查询当前表单是否需要进行对比，查到需要进行对比的表单再调用对比数据接口，通过给控件添加自定义属性进行功能处理，添加自定义属性该思路可用于其他各种场景。</p><p><strong>实现过程：</strong></p><p><h4>1 新增配置表单配置需要对比字段以及相关表单和关联单选编码</h4></p><p><h4>2 在打开表单详情时，获取到控件属性的controls，根据对比接口返回在对应的属性中添加自定义属性</h4></p><p><h4>3 根据自定义属性在渲染时处理</h4></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/cdpa1m62fhq7in01</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

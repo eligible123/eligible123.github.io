@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢角色导入导出 - 云枢技术文档</title>
+<meta property="og:title" content="云枢角色导入导出">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢角色导入导出/">
+<meta name="description" content="云枢角色导入导出 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢角色导入导出</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢角色导入导出</h1></p><p><h1>云枢角色导入导出</h1></p><p>场景：用 excel 对单个角色组下的角色导入导出。</p><p><h2>实现方案</h2></p><p>操作 excel 使用 poi。</p><p><strong>模板导出</strong></p><li>因为导入导出的 excel 标头都是固定的，所以预先构建好导入导出 excel 模板，提供下载模板接口，不需要每次导出都使用代码从头构造模板。</li><li>将设置好的 excel 模板文件放置在后端项目的 resource/templates/excel/ 目录下。</li><li>根据条件查询到需要导出的数据列表。</li><li>使用 excel 模板操作工具来将数据列表放置到对应的 excel 表格下标中。（excel 工具代码会在代码附录中给出）。</li><p> </p><p>- 将文件流写入响应体，导出模板。
+- 模板文件参考：</p><p><strong>数据导入</strong></p><li>通过文件流来获取操作 excel 的对象 workbook。</li><li>获取开始行下标和结束行下标，循环处理导入的数据。</li><p> </p><li>调用保存方法批量插入 h_org_role 表、h_org_role_group 表中。</li><p><h2>代码附录</h2></p><p>Excel 操作工具类</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/eeugqg</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

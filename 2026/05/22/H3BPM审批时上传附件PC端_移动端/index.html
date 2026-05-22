@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H3BPM审批时上传附件【PC端_移动端】 - 云枢技术文档</title>
+<meta property="og:title" content="H3BPM审批时上传附件【PC端_移动端】">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/H3BPM审批时上传附件PC端_移动端/">
+<meta name="description" content="H3BPM审批时上传附件【PC端_移动端】 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>H3BPM审批时上传附件【PC端_移动端】</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>H3BPM审批时上传附件【PC端/移动端】</h1></p><p><h2>功能最终显示案例：</h2>
+1、发起时展示</p><p>2、一般任务查看审批附件展示</p><p>3、移动端显示</p><p><h2>PC端上传以及展示审批附件相关代码【可直接复用】</h2>
+<strong>代码路径：</strong></p><p>H3BPM\Portal\WFRes\_Scripts\MVCSheet\Controls\SheetComment.js</p><p>H3BPM\OThinker.H3.Controller\MvcSheet\MvcController.cs</p><p>1、加载时初始化上传附件控件</p><p>2、新增附件ID对象，作为后台接受参数</p><p>3、通过后台范围对应审批附件，追加到审批意见对象中</p><p>4、流程view状态时预览审批附件，添加对应的table标签以及调用附件控件创建方法</p><p>5、审批中获取接口返回审批附件对象</p><p>6、后台代码OThinker.H3.Controller/Controllers/MvcController</p><p>1、加载表单数据DoPageLoad()</p><p>2、保存数据SaveData</p><p>3、新增添加审批附件对象以及方法</p><p>4、新增保存审批意见附件方法</p><p><h2>移动端展示审批附件代码【可直接复用】</h2>
+<strong>修改代码路径</strong>：
+H3BPM\Portal\Mobile\form\templates\flowStatus.html
+H3BPM\Portal\Mobile\form\formControllers.js</p><p>OThinker.H3.Controller/Controllers/Mobile/MobileAccess.cs
+1、添加移动端显示附件html</p><p>2、添加附件下载、预览方法</p><p>3、后台Controllers修改，构造返回前端审批附件对象</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/phff08wxvb9h9xlu</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自定义步骤条组件 - 云枢技术文档</title>
+<meta property="og:title" content="自定义步骤条组件">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/自定义步骤条组件/">
+<meta name="description" content="自定义步骤条组件 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>自定义步骤条组件</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>自定义步骤条组件</h1></p><p><h3>业务场景：</h3>
+客户需求定制化开发--需要在二开页面通过步骤条一步一步填写数据后发起流程，并且步骤条下方页面需要高度定制化开发。</p><p><h3>实现思路：</h3>
+使用ant-vue-desgin的步骤条进行二次开发，首先改写原生组件的样式，接受外部传入的数据渲染步骤条个数，并且将步骤条点击事件向父组件抛出以便触发后续点击事件需要进行的操作，还需要监听步骤条激活节点来判断后续节点的状态，是否是可点击节点。</p><p><h3>实现过程：</h3>
+子组件：</p><p>改写原生组件的样式，用iocn插槽渲染文字：</p><p>将已完成、进行中、等待中状态对应的步骤条颜色进行定义：</p><p>接受父组件数据渲染步骤条个数，并且将步骤条点击事件向父组件抛出以便触发后续点击事件需要进行的操作，还需要监听步骤条激活节点来判断后续节点的状态：</p><p>父组件：</p><p>步骤条组件应用以及change事件：</p><p>引入需要用到的组件以及下方展示的内容组件：</p><p><h3>效果图：</h3></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ipw4lwmrhlxsczci</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

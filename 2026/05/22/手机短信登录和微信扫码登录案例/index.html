@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手机短信登录和微信扫码登录案例 - 云枢技术文档</title>
+<meta property="og:title" content="手机短信登录和微信扫码登录案例">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/手机短信登录和微信扫码登录案例/">
+<meta name="description" content="手机短信登录和微信扫码登录案例 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>手机短信登录和微信扫码登录案例</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>手机短信登录和微信扫码登录案例</h1></p><p><h3>场景：</h3>
+某客户需求外部用户注册和登录，在云枢默认登录外，还需要支持微信扫码和手机短信登录两种方式；外部用户采用关联组织架构来保存外部用户的注册和登录；以达到内部用户和外部用户的登录隔离。</p><p><h3>思路：</h3>
+创建外部用户关联组织，关联新增外部用户申请和注册，填写用户基本信息，实现用户新增；新增微信扫码登录，绑定用户手机号和openId；新增手机号校验短信验证码登录，校验拖拽图形验证码。</p><p><h3>实现步骤：</h3></p><p><h4>一、创建关联组织</h4></p><p>ps：云枢系统默认没有开启关联组织可创建开关，需要修改服务器配置文件。</p><p><h4>二、外部用户注册</h4>
+1、新增外部关联组织新用户注册入口，使用手机号+手机短信验证码，且发送短信验证码，校验拖拽图形验证码。</p><p>2、校验手机用户为未注册用户后，进入密码/确认密码界面，进行密码配置；采用加解密处理用户密码，实现新用户的注册；如果用户存在则重定向到登录界面。</p><p>示例代码：</p><p>1、新用户注册</p><p>2、同步关联组织新用户注册到组织架构</p><p>​</p><p><h4>三、外部用户微信扫码登录</h4>
+1、客户完成微信网站应用审核注册后，使用所需微信应用访问必要参数（appId/appSecret/redirectUri）等，并定义csrfKey校验编码，防止网站csrf攻击。</p><p>2、引入微信外部api依赖</p><p>3、通过wxMpService.buildQrConnectUrl(redirectUri, scope, state)，获取微信登陆二维码地址。</p><p>4、微信扫码回调处理，通过微信扫码用户的openId，查询该用户是否存在，存在则返回登录token；不存在则校验手机号查询用户是否存在。都不存在，则完成微信扫码新用户的注册。</p><p><h4>四、外部用户手机号校验短信和图形验证码登录</h4>
+1、新增用户手机号短信验证登录入口。</p><p>2、发送手机短信验证码，校验图形验证码（雷同注册拖拽图形验证码），并判断短信验证码是否有效期内等逻辑。</p><p>2.1、发送验证码</p><p>​</p><p>2.2、校验短验证码</p><p>​</p><p>3、通过手机号查询用户信息，并校验短信验证码，完成用户token返回，实现登录操作。</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/sx4gfrhrdx7rzgnc</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

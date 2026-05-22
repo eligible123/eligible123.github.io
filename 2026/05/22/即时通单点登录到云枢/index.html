@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>即时通单点登录到云枢 - 云枢技术文档</title>
+<meta property="og:title" content="即时通单点登录到云枢">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/即时通单点登录到云枢/">
+<meta name="description" content="即时通单点登录到云枢 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>即时通单点登录到云枢</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>即时通单点登录到云枢</h1></p><p>​业务场景：即时通手机端和pc端点击应用和待办待阅实现一键登录云枢平台</p><p>实现思路：由于本身云枢产品集成企业微信，需要在后台管理里面配置集成微信，配置正确后，开启企业消息集成</p><p>​</p><p><strong>1、待办待阅等单点登录</strong></p><p>开启消息发送设置</p><p>实现微信消息发送并初始化类型为 CorpRelatedType.WECHAT.toString()</p><p>        每当生成待办或待阅时，对应接收人就能收到待办和待阅等，可通过消息链接获取code。</p><p>代码待阅链接地址格式和示例如下</p><p>https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&agentid=AGENTID&state=STATE#wechat_redirect</p><p>https://open.weixin.qq.com/connect/oauth2/authorize?appid=wl6e538311bc&redirect_uri=http%3A%2F%2F127.0.0.1%2F%3FmessageId%3D3e06fd4885a74a7ebe4d22baf7affcbc%26corpId%3Dwl6e538311bc%26agentId%3D1000539&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect</p><p>        点击后会重定向到服务器地址后面带code参数和messageId，通过messageId 前端可以进入对应页面，在此之前需要通过访问后端单点登录接口获取云枢token</p><p>​</p><p><strong>2、单点登录接口</strong></p><p>        这里通过前端get请求/login/pcsso 获取参数code参数值和拿到调用接口凭证请求微信的获取用户的接口拿到用户信息并校验，校验成功返回云枢token</p><p>主要调用即时通2个接口</p><p><h3>1）获取access_token</h3>
+<strong>请求方式：</strong>GET
+<strong>请求URL：</strong>http://wwlocal.qq.com/cgi-bin/gettoken?corpid=id&corpsecret=secrect</p><p><strong>参数说明：</strong></p><p>| <strong>参数</strong> | <strong>必须</strong> | <strong>说明</strong> |  |
+| corpid | 是 | 企业ID |  |
+| corpsecret | 是 | 应用的凭证密钥 |  |</p><p><strong>权限说明：</strong></p><p>每个应用有独立的secret，所以每个应用的access_token应该分开来获取</p><p><strong>返回结果：</strong></p><p>{   "errcode":0，   "errmsg":"ok"，   "access_token": "accesstoken000001",   "expires_in": 7200}</p><p>| <strong>参数</strong> | <strong>说明</strong> |  |
+| errcode | 出错返回码，为0表示成功，非0表示调用失败 |  |
+| errmsg | 返回码提示语 |  |
+| access_token | 获取到的凭证，最长为512字节 |  |
+| expires_in | 凭证的有效时间（秒） |  |</p><p><strong>出错返回示例</strong>：</p><p>{
+“errcode”:40091,
+“errmsg”:”provider_secret is invalid”
+}</p><p>​</p><p><h3>2）通过code获取用户信息</h3>
+<strong>请求方式：</strong>GET
+<strong>请求地址：</strong>http://wwlocal.qq.com/cgi-bin/user/getuserinfo?access_token=ACCESS_TOKEN&code=CODE</p><p><strong>参数说明：</strong></p><p>| <strong>参数</strong> | <strong>必须</strong> | <strong>说明</strong> |  |
+| access_token | 是 | 调用接口凭证 |  |
+| code | 是 | 通过成员授权获取到的code，每次成员授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期 |  |</p><p><strong>返回结果：</strong></p><p>{   "UserId":"USERID"}</p><p>| <strong>参数</strong> | <strong>说明</strong> |  |
+| UserId | 成员UserID |  |</p><p><strong>出错返回示例：</strong></p><p>{   "errcode": 40029,   "errmsg": "invalid code"}</p><p>​</p><p>这是后端就能顺利返回云枢的token给前端，前端把token保存,并存储用户信息就能正常访问页面</p><p>​</p><p>返回示例：</p><p>{"errcode":0,"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sImNvcnBJZCI6bnVsbCwidXNlcl9pZCI6IjAxZmFlNTdhYmU5NjQ5MWNiOTlmNGQ5N2I4NWRmNDRiIiwidXNlcl9uYW1lIjoiNjIyODI3MTk5NDA1MTA0NzE2Iiwic2NvcGUiOlsicmVhZCJdLCJtb2JpbGUiOmZhbHNlLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjYzMjAwMzcwLCJpc0FwcEFkbWluIjpmYWxzZSwiYXV0aG9yaXRpZXMiOlsiVVNFUiIsIkFVVEhfU1lTVEVNX01BTkFHRSJdLCJqdGkiOiJhZWJlMmMwYS0wY2EyLTQ5MGQtYWI1NS00NzFmZGIyNWE0ZWQiLCJjbGllbnRfaWQiOiJhcGkifQ.h8b2McGqWOUWu3Fo7Ppec_fgq7FEktQ29Y1XBeQONgaPPrXMRlfVcBw_rhz1MpYsIbzNOGIjwh1XRbIe31BjUTbvI5hdccaNutTKJfNfdvFTq7Jv4NfnEvNq5aV8qcMFRYENil5Xd3_OiRe4t7eigUFvW-EO4RwCfj8-A3co__96UjnuYw3InpUNwX27gJ_jczUzi2CjI_rcB7akbMU7R9Ti2J9RGZoGegl9uvsgCvIcClw5FNkK6HU7W2qMsYN3_Sgzd-rLYou--iivyY78XvRM4vEGxOyr11IQhNB9Q80Z3sWBMdUbPEH08qhZEaU5pvCfWaJjkDwAnpH4dp9o2g","refresh_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3JwSWQiOm51bGwsInVzZXJfbmFtZSI6IjYyMjgyNzE5OTQwNTEwNDcxNiIsIm1vYmlsZSI6ZmFsc2UsImlzQWRtaW4iOmZhbHNlLCJhdXRob3JpdGllcyI6WyJVU0VSIiwiQVVUSF9TWVNURU1fTUFOQUdFIl0sImNsaWVudF9pZCI6ImFwaSIsImF1ZCI6WyJhcGkiXSwidXNlcl9pZCI6IjAxZmFlNTdhYmU5NjQ5MWNiOTlmNGQ5N2I4NWRmNDRiIiwic2NvcGUiOlsicmVhZCJdLCJhdGkiOiJhZWJlMmMwYS0wY2EyLTQ5MGQtYWI1NS00NzFmZGIyNWE0ZWQiLCJleHAiOjE2NjMyMDAzNzAsImlzQXBwQWRtaW4iOmZhbHNlLCJqdGkiOiJkZTEzNzY2OC0yNTNmLTQ3MTItYTRmOC04OGIyMGNlN2Q3YzgifQ.uh6G-lFXsSl06ViYA-8v18LcJ6qDQsTPuhcx1dxKPKeBWOKQ-yncFPn0JWmnFNfuQRa-S5S8W8aYNGAPL9glUK3j1v25y5E6VJJsNZugK5MNbuWWSBjdNaLqtwIRnKmCdthtyuYZUgmYcbUMrFSewdvLKv7aDjBY180fivvl6Rl5tcd37Nc0ZePRZKamRVnr_Tbb_xtagBZQClM14HSYyQgntbPpauo_qdE_TiWntr1ZrYJRqmWIeGrFq1oCUzp0D5vm8OXcPnF7Q41MBwIDmggCnlrij9a2AErXg-EfnNUVdTVZIO5jBF2adHJwKbsv91O9M9MRrF4dl5ETf7TItg","user_id":"01fae57abe96491cb99f4d97b85df44b","scope":["read"],"mobile":"13524095524","expiration":1663200370886,"token_type":"bearer","expires_in":28799,"userinfo":{"corpId":"wl6e538311bc","departmentId":"8280808182aefbfb0182aeff4fcd00e7","departmentName":"支持队伍","id":"01fae57abe96491cb99f4d97b85df44b","name":"杨新宇","username":"622827199405104716"}}</p><p><strong>3、扫一扫登录</strong></p><p>    扫一扫同样是重定向到授权页面调用获取token接口进行单点登录</p><p>需要接入xx企业即时通信网页登录授权的页面加入一个跳转链接引导，链接地址如下：</p><p><a href="http://wwlocal.qq.com/wwopen/sso/qrConnect?appid=ww100000a5f2191&agentid=1000000&redirect_uri=http%3A%2F%2Fwww.oa.com&state=web_login@gyoss9">http://wwlocal.qq.com/wwopen/sso/qrConnect?appid=ww100000a5f2191&agentid=1000000&redirect_uri=http%3A%2F%2Fwww.oa.com&state=web_login@gyoss9</a></p><p>若提示“该链接无法访问”，请检查参数是否填写错误，如redirect_uri的域名与网页应用的可信域名不一致</p><p><strong>参数说明</strong></p><p>| <strong>参数</strong> | <strong>必须</strong> | <strong>说明</strong> |  |
+| appid | 是 | XX企业即时通信的cropID，在 XX企业即时通信管理端->我的企业 中查看 |  |
+| agentid | 是 | 授权方的网页应用ID，在具体的网页应用中查看 |  |
+| redirect_uri | 是 | 重定向地址，需要进行UrlEncode |  |
+| state | 否 | 用于保持请求和回调的状态，授权请求后原样带回给第三方。该参数可用于防止csrf攻击（跨站请求伪造攻击），建议第三方带上该参数，可设置为简单的随机数加session进行校验 |  |</p><p><strong>返回说明</strong>
+用户允许授权后，将会重定向到redirect_uri的网址上，并且带上code和state参数</p><p>redirect_uri?code=CODE&state=STATE</p><p>若用户禁止授权，则重定向后不会带上code参数，仅会带上state参数</p><p>redirect_uri?state=STATE</p><p><strong>4、即时通配置：</strong></p><p>登录具有应用管理权限账号配置授权回调</p><p>1）工作台主页地址：</p><p><a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wl6e538311bc&redirect_uri=http%3A%2F%2F27.115.77.44%3A8089%2Foauth&response_type=code&scope=snsapi_base&agentid=1000539&state=STATE#wechat_redirect">https://open.weixin.qq.com/connect/oauth2/authorize?appid=wl6e5383XX&redirect_uri=http%3A%2F%2F27.115.77.44%3A8089%2Foauth&response_type=code&scope=snsapibase&agentid=10005XX&state=STATE#wechat_redirect</a></p><p>这是一个引导跳转页面，redirect_uri 重定向地址，需要进行UrlEncode，跳转到前端鉴权页面，具体见扫一扫，</p><p>2）网页授权及JS-SDK 设置可信域名：27.115.77.44:8089</p><p>3）使用xx企业即时通信扫一扫登录  扫一扫27.115.77.44:8089</p><p>注意: 云枢OAuth2登录的ClientId  具体体现在base_security_client表中，registeredRedirectUris字段要加入前端鉴权页面的地址</p><p><h2>术语介绍</h2>
+- corpid：每个企业都拥有唯一的corpid，获取此信息可在管理后台“我的企业”－“企业信息”下查看（需要有管理员权限）。
+- secret：secret是企业应用里面用于保障数据安全的“钥匙”，每一个应用都有一个独立的访问密钥，为了保证数据的安全。
+- 目前secret有两种：1. 通讯录管理secret； 2. 应用secret。</p><p>- 通讯录管理secret。在“管理工具”-“通讯录同步及内部登录集成”里面查看（需开启“API接口同步”）；
+- 应用secret。在管理后台->“企业应用”->点进应用，即可看到。</p><p>- access_token：access_token是企业后台去xx企业即时通信的后台获取信息时的重要票据，所有接口在通信时都需要携带此信息用于验证接口的访问权限。
+- 调用域名： http://wwlocal.qq.com 此示例域名，在调用接口时，应修改为企业接入机的域名或ip。假设企业的接入机域名为work.oa.com，那么API的专用域名为api.work.oa.com.
+- userid： 每个成员都有唯一的userid，即所谓“帐号”。在管理后台->“通讯录”->点进某个成员的详情页，可以看到。
+- 部门id： 每个部门都有唯一的id，在管理后台->“通讯录”->“组织架构”->点击某个部门右边的小圆点可以看到。
+- tagid：每个标签都有唯一的标签id，在管理后台->“通讯录”->“标签”，选中某个标签，在右上角会有“标签详情”按钮，点击即可看到。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/aho6c4</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第三方服务调用云枢 openApi(授权) - 云枢技术文档</title>
+<meta property="og:title" content="第三方服务调用云枢 openApi(授权)">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/第三方服务调用云枢-openApi授权/">
+<meta name="description" content="第三方服务调用云枢 openApi(授权) - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>第三方服务调用云枢 openApi(授权)</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>第三方服务调用云枢 openApi(授权)</h1></p><p><h1>第三方服务调用云枢 openApi</h1></p><p><h2>场景</h2></p><p>	第三方服务需要调用云枢 openApi，使用云枢配置实现。配置完成后，客户端使用设置好的 clientId 和生成好的 clientSecret 请求云枢接口获取 token。</p><p><h2>方法与步骤</h2></p><li>使用 admin 账号登录云枢，后台管理——》系统管理——》API接口配置，新增一条数据。</li><p>	<strong>参数说明</strong></p><p>	authorities：表示第三方需要请求的接口类型</p><p>	clientId：标识第三方客户端</p><p>	ClientSecret：生成好的密钥，需要保存在第三方客户端</p><p>	authorizedGrantTypes：授权类型</p><p>	registeredRedirectUris：重定向url</p><p>    accessTokenValiditySeconds： 访问令牌有效时间</p><p>	refreshTokenValiditySeconds：刷新令牌有效时间</p><li>配置完成后，请求token接口获取token（接口不用开发，云枢自带）</li><p><strong>请求说明</strong></p><p>| <strong>字段</strong> | <strong>值</strong> | <strong>描述</strong> |  |
+| 请求类型 | POST |  |  |
+| 请求地址 | /api/oauth/token |  |  |
+| 响应类型 | JSON |  |  |</p><p><strong>请求示例</strong></p><p><strong>响应示例</strong></p><li>用获取到的 token 请求云枢 openApi。</li><p><h2>注意事项</h2></p><p>参数设置中， accessTokenValiditySeconds（访问令牌有效时间 ）和 refreshTokenValiditySeconds（刷新令牌有效时间）的设置应当遵循：刷新令牌有效时间 >= 访问令牌有效时间，由于 Oauth2 的令牌机制，访问令牌 过期后，只需要使用 刷新令牌 和 clientSecret 重新获取一个 访问令牌 就可以继续访问资源，而只有当 刷新令牌 过期后，用户才需要重新登录系统，过长的访问令牌有效时间可能导致访问令牌泄露，从而引起安全问题，所以尽量不要将访问令牌的有效时间设置的过长。</p><p>ps：云枢 openApi 代码路径</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/cv3a1s</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

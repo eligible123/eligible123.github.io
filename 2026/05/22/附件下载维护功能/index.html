@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>附件下载维护功能 - 云枢技术文档</title>
+<meta property="og:title" content="附件下载维护功能">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/附件下载维护功能/">
+<meta name="description" content="附件下载维护功能 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>附件下载维护功能</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>附件下载维护功能</h1></p><p><strong>附件下载维护功能</strong></p><p><strong>一、需求</strong></p><p>1.目前的工作审批表的流程中的下载模板都是在对应的表单中配置的固定的文件路径，每次需要修改下载模板需要先将文件放到前段工作的固定目录中，然后在各个流程表单中修改对应的配置文件路径，这样每次修改都需要开发修改，还需要发版前段代码工程，显得每次修改都比较麻烦。</p><p>2.需要工作审批表的附件下载模板可以用户手工进行维护，且可按照部门进行权限控制。</p><p><strong>二、思路</strong></p><p>1.将工作审批表的模板下载功能做成一个维护页面，用户可以对不同的部门的模板数据根据角色权限进行数据的处理。</p><p><strong>三、解决方案</strong></p><p>1.增加附件模板下载的功能，代码如下。</p><p><em>/</em>**
+ * 添加附件模板
+ <em> <strong></em>@param </strong>*params
+ <em>* </em>@return
+ <em>*/</em>@PostMapping("/addAttachment")public ResponseResult addAttachment(@RequestBody Map<String,String> params){
+    Map<String,Object> map=new HashMap();
+    String userId=getUserId();
+    String fileName=params.get("fileName");
+    String refId=params.get("refId");
+    map.put("fileName",fileName);
+    map.put("refId",refId);
+    map.put("state","0");
+    map.put("sortIndex","0");
+    BizObjectModel model = new BizObjectModel(SCHEMACODE,map,false);
+    getEngineService().getBizObjectFacade().saveBizObject(userId,model,false);
+    String operateType="新增附件模板";
+    String detail="附件模板名称："+params.get("fileName")+"，  附件模板id："+params.get("refId");
+    addLog(operateType,detail);
+    return getOkResponseResult("保存数据成功");}</p><p>2.查询附件模板的数据，代码如下。</p><p><em>/</em>**
+ * 获取附件模板的数据
+ * @return
+ <em>*/</em>@GetMapping("/getAttachment")public ResponseResult getAttachment(){
+    Map<String,Object> result=new HashMap<>();
+    String userId=getUserId();
+    UserModel user=getOrganizationFacade().getUser(userId);
+    boolean isAdmin=getIsAdmin(userId);
+    List<Map<String,Object>> parents=getDepartmentsByDeptId(user.getDepartmentId());
+    String sql="select fileName,refId,c.name deptName,c.extend2 deptCode,c.id deptId,a.workflowCode,b.workflowName,sortIndex,a.state,a.createdTime from i898i_docTemplate a" +
+            " left join h_workflow_header b on a.workflowCode=b.workflowCode left join h_org_department c on a.dept=c.id where (a.state=0 or a.state=1) ";
+    List<Map<String,Object>> queryList=jdbcTemplate.queryForList(sql);
+    Map<String,List<Map<String,Object>>> li=queryList.stream().collect(Collectors.<em>groupingBy</em>(s->s.get("refId").toString()));
+    List<Map<String,Object>> list=new ArrayList<>();
+    result.put("isAdmin",isAdmin);
+    result.put("parents",parents);
+    for(String key:li.keySet()){
+        Map<String,Object> map=new HashMap<>();
+        map.put("refId",key);
+        List<Map<String,Object>> data=li.get(key);
+        map.put("fileName",data.get(0).get("fileName"));
+        map.put("createdTime",data.get(0).get("createdTime"));
+        List<String> workflowNameList=data.stream().map(s->s.get("state").toString().equals("1")?(s.get("workflowName")==null?"":s.get("workflowName").toString()):"").collect(Collectors.<em>toList</em>());
+        List<String> workflowCodeList=data.stream().map(s->s.get("state").toString().equals("1")?(s.get("workflowCode")==null?"":s.get("workflowCode").toString()):"").collect(Collectors.<em>toList</em>());
+        List<String> deptNameList=data.stream().map(s->s.get("state").toString().equals("1")?(s.get("deptName")==null?"":s.get("deptName").toString()):"").collect(Collectors.<em>toList</em>());
+        List<String> deptCodeList=data.stream().map(s->s.get("state").toString().equals("1")?(s.get("deptCode")==null?"":s.get("deptCode").toString()):"").collect(Collectors.<em>toList</em>());
+        List<String> deptIdList=data.stream().map(s->s.get("state").toString().equals("1")?(s.get("deptId")==null?"":s.get("deptId").toString()):"").collect(Collectors.<em>toList</em>());
+        workflowNameList=workflowNameList.stream().filter(s->StringUtil.<em>isNotEmpty</em>(s)).collect(Collectors.<em>toList</em>());
+        workflowCodeList=workflowCodeList.stream().filter(s->StringUtil.<em>isNotEmpty</em>(s)).collect(Collectors.<em>toList</em>());
+        deptNameList=deptNameList.stream().filter(s->StringUtil.<em>isNotEmpty</em>(s)).collect(Collectors.<em>toList</em>());
+        deptCodeList=deptCodeList.stream().filter(s->StringUtil.<em>isNotEmpty</em>(s)).collect(Collectors.<em>toList</em>());
+        deptIdList=deptIdList.stream().filter(s->StringUtil.<em>isNotEmpty</em>(s)).collect(Collectors.<em>toList</em>());
+        map.put("workflowName", String.<em>join</em>(";",workflowNameList));
+        map.put("workflowCode", workflowCodeList);
+        map.put("deptName", deptNameList);
+        map.put("deptCode", deptCodeList);
+        map.put("deptId", deptIdList);
+        list.add(map);
+    }
+    list=list.stream().sorted(Comparator.<em>comparing</em>(s->(Timestamp)s.get("createdTime"))).collect(Collectors.<em>toList</em>());
+    result.put("data",list);
+    result.put("isAdmin",isAdmin);
+    result.put("parents",parents);
+    return getOkResponseResult(result,"获取数据成功");}</p><p>3.修改附件模板绑定的流程模板，代码如下。</p><p>/**
+ * 绑定/解绑附件的流程模板
+ <em> <strong></em>@param </strong>*params
+ <em>* </em>@return
+ <em>*/</em>@PostMapping("/addWorkflowData")public ResponseResult addWorkflowData(@RequestBody Map<String,Object> params){
+    String userId=getUserId();
+    UserModel user=getOrganizationFacade().getUser(userId);
+    String refId=params.get("refId").toString();
+    String fileName=params.get("fileName").toString();
+    List<Map<String,Object>> data=(ArrayList)params.get("data");
+    //普通用户对非自己部门的数据不做任何处理
+    List<Map<String,Object>> newData=new ArrayList<>();
+    boolean isAdmin=getIsAdmin(userId);
+    List<String> addWorkflowCode= data.stream().map(s->s.get("workflowCode").toString()).collect(Collectors.<em>toList</em>());
+    List<String> addWorkflowName= data.stream().map(s->s.get("workflowName").toString()).collect(Collectors.<em>toList</em>());
+    List<String> deleteWorkflowCode=new ArrayList<>();
+    List<String> deleteWorkflowName=new ArrayList<>();
+    String sql="select count(1) from i898i_docTemplate where refId=? and workflowName is not null";
+    int num=jdbcTemplate.queryForObject(sql,new Object[]{refId},Integer.class);
+    //没有关联流程模板
+    if(num==0){
+        //无勾选数据不做任何处理
+        if(CollectionUtil.<em>isNotEmpty</em>(data)) {
+            String update = "update i898i_docTemplate set workflowCode=?,workflowName=?,dept=?,state=1,sortIndex=(" +
+                    " select count(1) from i898i_docTemplate a where a.workflowCode=?) where refId=?";
+            jdbcTemplate.update(update, new Object[]{data.get(0).get("workflowCode"), data.get(0).get("workflowName"),
+                    data.get(0).get("deptId"), data.get(0).get("workflowCode"), refId,
+            });
+            if (data.size() > 1) {
+                List<Object[]> objects = new ArrayList<>();
+                String insert = "insert into i898i_docTemplate(id,name,creater,createdTime,createdDeptId,priority,owner,ownerDeptId,modifier,modifiedTime" +
+                        ",workflowName,workflowCode,dept,sortIndex,state,refId,fileName) " +
+                        " select ?,'工作审批表下载模板配置',?,SYSDATE(),?,0,?,?,?,SYSDATE(),?,?,?," +
+                        " count(1) ,1,?,? from i898i_docTemplate where workflowCode=?";
+                for (int i = 0; i < data.size(); i++) {
+                    if (i > 0) {
+                        String uid = UUID.<em>randomUUID</em>().toString().replace("-", "");
+                        Object[] obj = {uid, userId, user.getDepartmentId(), userId, user.getDepartmentId(), userId, data.get(i).get("workflowName"), data.get(i).get("workflowCode"), data.get(i).get("deptId"), refId, fileName, data.get(i).get("workflowCode")};
+                        objects.add(obj);
+                    }
+                }
+                jdbcTemplate.batchUpdate(insert, objects);
+            }
+        }
+    }
+    else {
+        String insertUpdate="begin" +
+                " if exists (select 1 from i898i_docTemplate where refId=? and workflowCode=?)" +
+                " then update i898i_docTemplate set state=1, modifiedTime=SYSDATE(),modifier=? where refId=? and workflowCode=?;" +
+                " else insert into i898i_docTemplate(id,name,creater,createdTime,createdDeptId,priority,owner,ownerDeptId,modifier,modifiedTime" +
+                " ,workflowName,workflowCode,dept,sortIndex,state,refId,fileName) " +
+                " select ?,'工作审批表下载模板配置',?,SYSDATE(),?,0,?,?,?,SYSDATE(),?,?,?," +
+                " count(1) ,1,?,? from i898i_docTemplate b where b.workflowCode=? ;" +
+                " end if;" +
+                " end";
+        List<String> workflowCodes=new ArrayList<>();
+        List<Object[]> objects=new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            String uid = UUID.<em>randomUUID</em>().toString().replace("-", "");
+            Object[] obj = {refId,data.get(i).get("workflowCode"),userId,refId,data.get(i).get("workflowCode"),uid, userId, user.getDepartmentId(), userId, user.getDepartmentId(), userId,
+                    data.get(i).get("workflowName"), data.get(i).get("workflowCode"), data.get(i).get("deptId"),refId,fileName,data.get(i).get("workflowCode")};
+            objects.add(obj);
+            workflowCodes.add(data.get(i).get("workflowCode").toString());
+        }
+        //已经勾选的数据进行处理，已经有该模板数据的进行更新，没有该模板数据的进行插入
+        //没有勾选数据的不做任何处理
+        if(CollectionUtil.<em>isNotEmpty</em>(data)) {
+            jdbcTemplate.batchUpdate(insertUpdate, objects);
+        }</p><p>        String strSql="select workflowCode,workflowName from i898i_docTemplate where refId=? and state=1 and workflowCode not in('"+String.<em>join</em>("','",workflowCodes)+"')";
+        List<Map<String,Object>> queryList=jdbcTemplate.queryForList(strSql,new Object[]{refId});
+        for(Map<String,Object> m:queryList){
+            deleteWorkflowName.add(m.get("workflowName").toString());
+            deleteWorkflowCode.add(m.get("workflowCode").toString());
+        }
+        //不在勾选范围的数据进行标记为取消
+        String update="update i898i_docTemplate set state=0 where refId=? and workflowCode not in('"+String.<em>join</em>("','",workflowCodes)+"')";
+        jdbcTemplate.update(update,new Object[]{refId});
+    }
+    String operateType="绑定模板/解除绑定";
+    String detail="附件模板名称:"+fileName+",  附件模板id："+refId;
+    detail +=",  绑定模板名称："+String.<em>join</em>(",",addWorkflowName);
+    detail +=",   绑定模板编码："+String.<em>join</em>(",",addWorkflowCode);
+    detail +=",  解绑模板名称："+String.<em>join</em>(",",deleteWorkflowName);
+    detail +=",  绑定模板名称："+String.<em>join</em>(",",deleteWorkflowCode);
+    addLog(operateType,detail);
+    return getOkResponseResult("更新数据成功");}</p><p>4.查询配置的流程模板的数据，代码如下。</p><p>/**
+ * 获取配置的流程模板的数据
+ <em> <strong></em>@param </strong>*page
+ <strong> </strong><strong>@param </strong>*size
+ <em>* </em>@return
+ <em>*/</em>@GetMapping("/getWorkflowData")public ResponseResult getWorkflowData(Integer page,Integer size){
+    String sql="select c.name deptName,c.extend2 deptCode,c.id deptId,a.workflowCode,b.workflowName,a.typeName from i898i_docRelateTypeAndDept " +
+            " a left join h_workflow_header b on a.workflowCode=b.workflowCode left join h_org_department c on a.dept=c.id order by a.createdTime desc";
+    List<Map<String,Object>> queryList=jdbcTemplate.queryForList(sql);
+    int defaultPage = page==null ? 1: page;
+    int defaultSize = size==null ? 5: size;
+    int startIndex=(defaultPage-1)*defaultSize;
+    int endIndex=defaultPage*defaultSize;
+    List<Map<String,Object>> list=new ArrayList<>();
+    String userId=getUserId();
+    UserModel user=getOrganizationFacade().getUser(userId);
+    boolean isAdmin=getIsAdmin(userId);
+    List<Map<String,Object>> parents=new ArrayList<>();
+    if(!isAdmin){
+        parents=getDepartmentsByDeptId(user.getDepartmentId());
+    }
+    for(int i=0;i<queryList.size();i++){
+        if(!isAdmin){
+            int index=i;
+            List<Map<String,Object>> filter=parents.stream().filter(s->s.get("id").toString().equals(queryList.get(index).get("deptId").toString())).collect(Collectors.<em>toList</em>());
+            if(CollectionUtil.<em>isEmpty</em>(filter)){
+                queryList.get(i).put("disabled",true);
+            }
+        }
+        //if(i>=startIndex && i<endIndex){
+            list.add(queryList.get(i));
+        //}
+    }
+    Map<String,Object> result=new HashMap<>();
+    result.put("data",list);
+    result.put("total",queryList.size());
+    return getOkResponseResult(result,"获取数据成功");}</p><li>查询配置的流程模板的数据，代码如下。</li><p>/**
+ * 获取流程模板关联的附件数据
+ <em> <strong></em>@param </strong>*workflowCode
+ <em>* </em>@return
+ <em>*/</em>@GetMapping("/getWorkflowFileData")public ResponseResult getWorkflowFileData(String workflowCode){
+    String sql="select fileName,refId,c.name deptName,c.extend2 deptCode,c.id deptId,a.workflowCode,b.workflowName,sortIndex from i898i_docTemplate a" +
+            " left join h_workflow_header b on a.workflowCode=b.workflowCode left join h_org_department c on a.dept=c.id where a.workflowCode=? and state=1 order by sortIndex";
+    List<Map<String,Object>> queryList=jdbcTemplate.queryForList(sql,new Object[]{workflowCode});
+    return getOkResponseResult(queryList,"获取数据成功");}</p><li>实现效果</li><li>附件模板的上传</li><p>首先点击上传本地文件，点击确认后可以会将文件存储到对应的表中，后续可以选择流程模板与之关联，在流程中就可以看到该附件，可以下载查看，上传附件的效果如下。</p><p> </p><li>查询附件模板</li><p>所有的启用状态的附件模板所有人员都可以看到，绑定了流程模板的附件不能删除，删除了的附件模板不再展示，实现效果如下。</p><li>编辑流程模板</li><p>所有人都可以查看所有部门的数据，普通用户默认勾选上自己部门（不可点击），普通用户只能编辑自己部门的数据，其他部门的数据不可编辑，超级管理员可以查询编辑和筛选所有部门的数据，点击确认后根据勾选的流程模板重新绑定附件，实现效果如下。</p><li>附件模板排序</li><p>点击对应的流程模板右侧的排序功能，可以对该模板关联的附件进行排序（附件包含绑定了了的数据以及当前勾选的流程模板的数据），排序页面可以上移和下移调整上下顺序，对应的流程表单上的顺序也会一起改变，实现效果如下。</p><li>流程表单的下载附件</li><p>根据配置的附件模板数据，流程表单可以对应的查看和下载相应的附件模板，实现效果如下。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/xtdku7zgtppcsole</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

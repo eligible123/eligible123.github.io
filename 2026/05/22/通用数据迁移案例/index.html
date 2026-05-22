@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通用数据迁移案例 - 云枢技术文档</title>
+<meta property="og:title" content="通用数据迁移案例">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/通用数据迁移案例/">
+<meta name="description" content="通用数据迁移案例 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>通用数据迁移案例</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>通用数据迁移案例</h1></p><p><h3>场景：</h3>
+某院在信创平台需求同步历史BPM原系统数据迁移，该院以数据中台作为资源数据输出，通过配置化模式，使用统一通用接口进行历史数据同步；因客户不认可基于不同业务多次编写迁移代码，且要求部门/人员/关联选项/子表等控件统一适配。因此，需要开发统一的数据接收和适配关键控件的接口，去适配此次数据迁移任务。</p><p><h3>思路：</h3>
+通过定义云枢控件对应的入参规范，规定并控制不同字段控件对应的入参规范，采用Map树结构体，key对应字段编码，value对应规范的源数据值；不同控件匹配不同属性的源数据value，人员和部门控件，通过guid匹配extend1字段进行匹配，关联单选通过源数据标识ID和目标模型进行匹配，子表的的同步在主表同步之后再行同步；主表采用存在更新，不存在执行新增逻辑；子表采用覆盖更新操作；其他各关键节点统一校验并响应给予提示。</p><p><h3>实现步骤：</h3></p><p><h4>1、定义云枢控件入参规范</h4>
+本次数据迁移采用基于产品模型数据基础规范延申，并简化数据体的封装；便于数据中台只通过sql配置方式，实现数据的入参传递和接口的联调。</p><p><h5>1.1、文本类</h5>
+<strong>多选，复选采用英文分号“;”分割</strong></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 单行文本 | SHORT_TEXT | String | "测试" |  |
+| 长文本 | LONG_TEXT | String | "测试测试" |  |
+| 电话 | SHORT_TEXT | String | "13111111111" |  |
+| 单选框 | RADIO | String | "是" |  |
+| 复选框 | CHECKBOX | String | "是;否" |  |
+| 下拉单选框 | DROPDOWN_BOX | String | "真" |  |
+| 下拉多选框 | DROPDOWN_MULTI_BOX | String | "真;假" |  |</p><p><h5>1.2、日期类</h5></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 日期 | DATE | String | "2026-01-01 12:12:12" |  |
+| 时间 | TIME | String | "12:12:12" |  |</p><p><h5>1.3、人员部门类</h5>
+<strong>type：人员=3，部门=1；备注：只考虑用户/部门guid类型,多选按照英文“;”分号</strong></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 人员单选 | STAFF_SELECTOR | String | "aa""aa;bb" |  |
+| 人员多选 | STAFF_MULTI_SELECTOR | String | "aa""aa;bb" |  |
+| 部门单选 | DEPARTMENT_SELECTOR | String | "aa""aa;bb" |  |
+| 部门多选 | DEPARTMENT_MULTI_SELECTOR | String | "aa""aa;bb" |  |
+| 混合选人 | SELECTION | String | "aa""aa;bb" |  |</p><p><h5>1.4、附件类</h5>
+待定，可自定义上传后的refId或者附件url地址去实现</p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 图片 | ATTACHMENT | String | "aa"或"aa;bb" |  |
+| 附件 | ATTACHMENT | String | "aa"或"aa;bb" |  |
+| 手写签名 | ATTACHMENT | String | "aa"或"aa;bb" |  |</p><p><h5>1.5、子表</h5>
+<strong>备注：单独迁移；配置mainSchemaCode；及对应子表数据(包含原数据主表的mainFromCode)</strong></p><p>ps：子表内字段类型同步对标其他控件类型</p><p><h5>1.6、逻辑</h5></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 逻辑 | LOGICAL | boolean | true/false |  |</p><p><h5>1.7、数值</h5></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 数值 | NUMERICAL | BigDecimal | 11 |  |</p><p><h5>1.8、超链接</h5></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 超链接 | HYPER_LINK | String | "aa" |  |</p><p><h5>1.9、关联类</h5>
+<strong>备注:只需要被关联的表的原数据主键id,自动配置控件目标模型</strong></p><p>| <strong>propertyName</strong> | <strong>propertyType</strong> | <strong>propertyValue</strong> | <strong>demo</strong> |  |
+| 关联单选 | WORK_SHEET | String | "aa""aa;bb" |  |
+| 关联多选 | MULT_WORK_SHEET | String | "aa""aa;bb" |  |</p><p><h4>2、定义接口VO入参及接口规范</h4></p><p><h5>2.1、接口参数规范</h5></p><p><h5>2.2、VO对象</h5></p><p><h4>3、主表同步逻辑和子表独立同步逻辑</h4></p><p><h5>3.1、主表同步逻辑</h5>
+	通过关键参数schemaCode和mainFromCode来控制需要同步的当前模型及对应的源数据标识字段ID字段；采用list集合封装需要同步的模型字段key和value对象（基于模型控件字段封装规范）；另外如果该模型存在关联单/多选控件的设计时，则需要配置relativeMap封装关联控件的编码和被关联模型的标识字段编码对象。数据保存逻辑会通过标识ID字段编码和值查询列表是否存在已迁移的数据；如果存在，则执行更新；否则，执行新增。</p><p>具体代码逻辑如下：</p><p><h5>3.2、子表同步逻辑</h5>
+	通过关键参数schemaCode标识需要迁移的子表模型编码，mainSchemaCode和mainFromCode来控制需要同步的当前模型主表及主表标识ID字段编码；采用list集合封装需要同步的模型字段key和value对象（基于模型控件字段封装规范），并且封装对应的子表数据的主表mainID；另外如果该模型存在关联单/多选控件的设计时，则需要配置relativeMap封装关联控件的编码和被关联模型的标识字段编码对象。数据保存逻辑会判断主表标识ID的编码和值查询主表诗句是否存在，如果存在，则执行主表对应的当前子表数据标记delete状态，执行子表行数据覆盖更新操作。</p><p>具体代码逻辑如下：</p><p><h5>3.3、数据模型各控件类型值的处理</h5></p><p><h6>3.3.1、各控件类型处理值的细节代码：</h6></p><p><h6>3.3.2、动态参数查询数据列表逻辑代码：</h6></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gy5fk3dcqxrg73n0</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

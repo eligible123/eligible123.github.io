@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>制造企业物料辅料成本（科目维度）高性能归集 - 云枢技术文档</title>
+<meta property="og:title" content="制造企业物料辅料成本（科目维度）高性能归集">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/制造企业物料辅料成本科目维度高性能归集/">
+<meta name="description" content="制造企业物料辅料成本（科目维度）高性能归集 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>制造企业物料辅料成本（科目维度）高性能归集</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>制造企业物料辅料成本（科目维度）高性能归集</h1></p><p><h2>业务场景</h2>
+在制造型企业的成本核算系统中，需要基于<strong>物料BOM结构</strong>对顶层产品进行多级辅料成本（会计科目02）爆破，最终按<strong>父件编码 + 末级科目</strong>维度归集成本明细。典型应用包括：</p><p>- 月末全量核算：计算上月所有产品的辅料成本，按末级会计科目（如“辅助材料-油漆”、“辅助材料-胶水”）分摊。
+- 单产品实时查询：快速查看指定物料的多级辅料成本明细。
+- 动态报表导出：支持按期间、单位、物料过滤，将长格式明细转为宽表（动态科目列）导出Excel，便于财务分析。</p><p>数据量级：顶层物料数万、BOM节点数十万、末级科目几十到上百个。传统递归逐个计算方式极易导致重复查询、内存溢出、耗时过长。本方案通过<strong>生产单元级全量预加载 + 记忆化DFS + 并行计算 + 动态行转列</strong>，实现全量初始化高效运行，单物料秒级响应，并支持大结果集安全导出。</p><p>（上图：典型的多级BOM树状结构示意）</p><p>（上图：多级BOM成本爆破（Explosion）与归集过程）</p><p><h2>核心需求</h2>
+- 正确处理多级BOM展开，累计用量乘以父件需求量（倍率传递）。
+- 按末级会计科目归集成本，支持科目元数据（名称、层级）正确映射。
+- 同一半成品在不同产品中共享计算结果。
+- 支持路径记录调试（生产可关闭）。
+- 全量/单物料计算 + 幂等清理历史数据。
+- 动态导出：长表转宽表（科目动态列），支持过滤与大批量安全导出。</p><p><h2>实现思路</h2></p><p>- 按一级生产单元分组：最大化BOM与辅料成本共享机会。
+- 全量预加载：</p><p>- SQL窗口函数取最新版BOM。
+- 构建全局parent → children映射。
+- 批量查询该单位所有辅料成本（科目02）。</p><li>记忆化DFS爆破：</li><p>- 从顶层向下传递累计倍率。
+- memoKey = current + processNo 实现子件跨产品共享。
+- 路径构建统一初始为空，修复拼接错误。</p><p>- 并行加速：动态线程池并行处理同单位顶层物料，共享ConcurrentHashMap memo。
+- 末级科目元数据处理：优先取第一条记录作为样本，记录不一致时告警。
+- 动态导出：</p><p>- 查询动态科目列。
+- 行转列生成宽表。
+- EasyExcel流式写入，避免内存爆炸。</p><p>（上图：DFS深度优先遍历在BOM树上的执行路径）</p><p>Multithreading and Latency Hiding - GeeksforGeeks</p><p>（上图：多线程并行计算不同顶层物料，共享子件结果）</p><p><h2>实现步骤与代码亮点</h2></p><p><h1>制造企业物料辅料成本（科目维度）高性能归集与动态导出实现方案</h1></p><p><h2>业务场景</h2>
+制造型企业的成本核算系统基于<strong>物料BOM结构</strong>对顶层产品进行多级辅料成本（会计科目02）爆破，最终按<strong>父件编码 + 末级科目</strong>维度归集成本明细。典型应用包括：</p><p>- 月末全量核算：计算上月所有产品的辅料成本，按末级会计科目（如“辅助材料-油漆”、“辅助材料-胶水”）分摊。
+- 单产品实时查询：快速查看指定物料的多级辅料成本明细。
+- 动态报表导出：支持按期间、单位、物料过滤，将长格式明细转为宽表（动态科目列）导出Excel，便于财务分析。</p><p>数据量级：顶层物料数万、BOM节点数十万、末级科目几十到上百个。传统方式导致重复查询、内存溢出、耗时过长。本方案通过<strong>生产单元级全量预加载 + 记忆化DFS + 并行计算 + 动态行转列</strong>，实现高效全量初始化、单物料秒级响应和大结果集安全导出。</p><p>（上图：典型的多级BOM树状结构与成本爆破过程示意）</p><p><h2>核心需求</h2>
+- 正确处理多级BOM展开，累计用量乘以父件需求量（倍率传递）。
+- 按末级会计科目归集成本，支持科目元数据（名称、层级）正确映射。
+- 同一半成品在不同产品中共享计算结果。
+- 支持路径记录调试（生产可关闭）。
+- 全量/单物料计算 + 幂等清理历史数据。
+- 动态导出：长表转宽表（科目动态列），支持过滤与大批量安全导出。</p><p><h2>实现思路与步骤（代码说明）</h2></p><p><h3>1. 按一级生产单元分组 + 全量预加载（initMonthData → processUnitBatch）</h3>
+先查询所有顶层物料，按firstProdUnitCode分组，逐单位处理以最大化共享。</p><p>Java</p><p>在processUnitBatch中：</p><p>- 使用窗口函数SQL一次性加载该单位最新版BOM，构建全局parent → children映射。
+- 批量查询辅料成本，构建parent → lastSubject → cost直接成本映射。
+- 单独构建lastSubjectCode → CostTotalSettingReportPO元数据映射（取第一条样本，记录不一致告警）。</p><p>（上图：并行多线程处理不同顶层物料，共享子件计算结果）</p><p><h3>2. 记忆化DFS爆破计算（dfsCalculate）</h3>
+核心算法：从顶层开始，初始倍率=1、路径为空。</p><p>Java</p><p><strong>关键优化</strong>：倍率正确传递 + 跨产品子件共享 + 路径统一初始为空 + 环路检测。</p><p>（上图：DFS深度优先遍历在BOM树上的执行过程）</p><p><h3>3. 并行加速 + 结果落库</h3>
+使用动态线程池（4~16线程）并行计算每个顶层物料，所有线程共享ConcurrentHashMap memo。</p><p>计算完成后，按单位+期间清理历史，分批（5000条）保存明细。</p><p>​</p><p><h3>4. 单物料实时计算（buildInternal）</h3>
+复用批量全套逻辑，仅加载当前BOM及成本，秒级响应。</p><p>​</p><p><h2>实现效果</h2>
+- 全量初始化：数万顶层物料、数十万BOM节点，高效稳定运行。
+- 单物料实时：秒级返回完整科目明细。
+- 路径调试：DETAIL_MODE=true时记录完整归集路径，便于审计。
+- 导出体验：支持动态科目列、大结果集流式导出，无内存风险。
+- 准确性：倍率传递 + 科目元数据一致性检查，确保财务级精确。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/urgklz85x0a7lthd</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

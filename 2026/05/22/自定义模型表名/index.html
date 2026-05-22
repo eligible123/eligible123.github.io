@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自定义模型表名 - 云枢技术文档</title>
+<meta property="og:title" content="自定义模型表名">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/自定义模型表名/">
+<meta name="description" content="自定义模型表名 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>自定义模型表名</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>自定义模型表名</h1></p><p><strong>流程分组</strong></p><p><strong>一、需求</strong></p><p>为了实现应用模型数据库表名可以自定义，以及规范应用模型数据库表名，便于方案文档的编写和IT人员对数据库表数据的操作，需要改造应用模型数据库表名的实现规则。</p><p>当前系统应用模型数据库表的表名，存在以下不满足客户要求的问题。</p><p>- 表名是系统自动生成，不能按照一定的客户需求规则生成；
+- 表名的生成是没有规律的；</p><p><strong>二、思路</strong></p><p>系统内置的物理表名生产规则是固定的，二开实现接口TableNameStrategy即可。</p><p><strong>三、解决方案</strong></p><p>由于之前的流程模型使用的表名称还是原来的逻辑，故自定义表名方案需要兼容之前的数据。</p><p>1.增加模型表名配置表，配置模型和自定义表名的关系，对之前的表名做手工修改表名处理，配置表如下。</p><p>2.增加配置表，配置应用下的模型的表名是否使用原来的命名规则，在修改表名完成之前，配置该应用下的模型不做处理，使用原来的命名规则，配置表如下。</p><li>新创建的模型的表名就是模型的编码，获取表名称优先根据模型表名配置表，其次根据应用配置表，最后是默认的最新的规则。</li><p>4.TableNameStrategy实现代码如下</p><p><strong>private </strong>String getPhysicalTableName(String logicName) {
+    <strong>this</strong>.<strong>engineModelService</strong>.ensureInitNamespace(logicName);
+    String nameSpace = <strong>this</strong>.getNameSpaceFromRedis(logicName);
+    <strong>try </strong>{
+        String tableNameKey = nameSpace+<strong>"-"</strong>+logicName.toUpperCase();</p><p>／／缓存处理
+        String tableName =  <strong>this</strong>.<strong>redisTemplate</strong>.opsForValue().get(tableNameKey);
+        <strong>if</strong>(StringUtils.<em>isNotBlank</em>(tableName)){
+            <strong>return </strong>tableName;
+        }<strong>else </strong>{</p><p>／／查询模型和表名的配置数据记录
+            FormRecordEntity formRecord = <strong>formRecordService</strong>.getFormRecord(logicName.toUpperCase());
+            <strong>if </strong>(formRecord!=<strong>null</strong>){
+                tableName = formRecord.getTableName();
+                <strong>this</strong>.<strong>redisTemplate</strong>.opsForValue().set(tableNameKey,tableName);
+                <strong>return </strong>tableName ;
+            }
+        }
+    } <strong>catch </strong>(Exception e) {
+        e.printStackTrace();
+        <strong><em>log</strong></em>.error(e.getStackTrace().toString());
+    }
+    <strong>if </strong>(StringUtils.<em>isBlank</em>(nameSpace)){
+        <strong><em>log</strong></em>.info(<strong>"nameSpace:{},logicName:{}"</strong>,nameSpace,logicName);
+    }
+    <strong>int </strong>cnt = getAppPakage(nameSpace);
+    <strong>if</strong>(cnt<1){
+        <strong>return </strong>logicName;
+    }
+    <strong>if </strong>(StringUtils.<em>isNotEmpty</em>(nameSpace) && !<strong>"-"</strong>.equals(nameSpace)) {
+        <strong>return </strong><strong>"i" </strong>+ nameSpace + String.<em>format</em>(<strong>"_%s"</strong>, logicName);
+    } <strong>else </strong>{
+        nameSpace = <strong>this</strong>.getNameSpaceFromRedis(logicName);
+        <strong>return </strong>StringUtils.<em>isNotEmpty</em>(nameSpace) && !<strong>"-"</strong>.equals(nameSpace) ? <strong>"i" </strong>+ nameSpace + String.<em>format</em>(<strong>"_%s"</strong>, logicName) : String.<em>format</em>(<strong>"%s_%s"</strong>, <strong>"i"</strong>, logicName);
+    }
+}
+@Override<strong>public </strong>String getPhysicalTableName(String logicName, String nameSpace) {
+    <strong>return  this</strong>.getPhysicalTableName(logicName);
+}
+<strong>private </strong>String getNameSpaceFromRedis(String schemaCode) {
+    <strong>return </strong>(String)<strong>this</strong>.<strong>redisTemplate</strong>.opsForValue().get(schemaCode + <strong>"_NAMESPACE"</strong>);
+}</p><p>／／查询应用配置表数据记录<strong>private int </strong>getAppPakage(String nameSpace){
+    <strong>if</strong>(StringUtils.<em>isBlank</em>(nameSpace)){
+        <strong>return </strong>0;
+    }</p><p>    String  flag = <strong>this</strong>.<strong>redisTemplate</strong>.opsForValue().get(nameSpace+<strong>"-"</strong>+<strong>"modify"</strong>);
+    <strong>if</strong>(StringUtils.<em>isBlank</em>(flag)){
+        String queryAppCode = <strong>"select code,appnamespace from h_app_package where appnamespace='"</strong>+nameSpace+<strong>"'"</strong>;
+        List<Map<String,Object>> appCodeList = <strong>jdbcTemplate</strong>.queryForList(queryAppCode);
+        String appCode = Objects.<em>toString</em>(appCodeList.get(0).get(<strong>"CODE"</strong>));
+        String sql = <strong>"select </strong><em>count<strong></em>(</strong><strong><em></strong>) cnt from CT_SYS_APP_UPDATE where is_table_name=0 and app_code='"<strong>+appCode+</strong>"'"</em>*;
+        List<Map<String,Object>> list = <strong>jdbcTemplate</strong>.queryForList(sql);
+        BigDecimal cnt = (BigDecimal) list.get(0).get(<strong>"cnt"</strong>);
+        <strong>this</strong>.<strong>redisTemplate</strong>.opsForValue().set(nameSpace+<strong>"-"</strong>+<strong>"modify"</strong>,Objects.<em>toString</em>(cnt));
+        <strong>return  </strong>cnt.intValue();
+    }<strong>else </strong>{
+        <strong>return </strong>Integer.<em>parseInt</em>(flag);
+    }</p><p>}</p><p>5.模型和表单发布时增加表名重复校验</p><p>二开修改接口（api/app/bizproperty/publish）和接口（api/app/bizsheet</p><p>/publish），第一次发布时增加表名是否重复的验证逻辑，代码逻辑如下</p><p>/**
+ * 判断表名称是否重复
+ <em> <strong></em>@param </strong>*tableName
+ <em>* </em>@return
+ <em>*/</em></p><p><strong>public boolean </strong>isTableExists(String tableName){
+    String sql=<strong>"SELECT TABLE_NAME FROM ALL_TABLES WHERE TABLE_NAME =?'"</strong>;
+    List<Map<String,Object>> queryList=<strong>jdbcTemplate</strong>.queryForList(sql,<strong>new </strong>Object[]{tableName});
+    <strong>if</strong>(CollectionUtils.<em>isNotEmpty</em>(queryList)){
+        <strong>return true</strong>;
+    }
+    <strong>else</strong>{
+        <strong>return false</strong>;
+    }
+}</p><p>String tableName=getBizObjectFacade().getTableName(schemaCode);<strong>boolean </strong>isExists=isTableExists(tableName);<strong>if</strong>(isExists){
+    <strong>return </strong>getErrResponseResult(999L,<strong>"数据库表名已存在"</strong>);
+}</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/wt5g4alvylgtphyo</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

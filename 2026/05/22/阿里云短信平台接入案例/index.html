@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿里云短信平台接入案例 - 云枢技术文档</title>
+<meta property="og:title" content="阿里云短信平台接入案例">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/阿里云短信平台接入案例/">
+<meta name="description" content="阿里云短信平台接入案例 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>阿里云短信平台接入案例</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>阿里云短信平台接入案例</h1></p><p><h3>场景：</h3>
+本场景基于短信服务采用阿里云短信平台来实现短信推送服务，实现不同模板不同业务的短信发送外部用户；实现限流，限次等控制方式，避免冲突和资源浪费；实现一个公共推送工具，其他场景可直接复用。</p><p><h3>思路：</h3>
+通过接入阿里云短信平台SDK依赖，调用sendSms方法，配置不同的短信模板发送不同的业务短信，通过redis缓存短信有效期；配置发送次数实现限流限次。</p><p><h3>实现步骤：</h3></p><p><h4>一、导入依赖</h4>
+导入依赖阿里云短信平台在pom文件中</p><p><h4>二、创建utils类</h4>
+包含初始化阿里云短信平台配置、创建阿里云短信请求客户端、生成并发送短信验证码、计算当前时间至次日凌晨的剩余秒数过期时间等。</p><p><h4>三、请求示例</h4>
+通过获取当天剩余有效时间限制当日限流次数；通过redis缓存获取有效期内的短信验证码；并累计请求发送短信次数达到限流次数。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/bvuc6ugkwdl4mg2p</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

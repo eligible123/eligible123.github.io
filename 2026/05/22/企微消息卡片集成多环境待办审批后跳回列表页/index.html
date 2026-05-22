@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企微消息卡片集成多环境待办审批后跳回列表页 - 云枢技术文档</title>
+<meta property="og:title" content="企微消息卡片集成多环境待办审批后跳回列表页">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/企微消息卡片集成多环境待办审批后跳回列表页/">
+<meta name="description" content="企微消息卡片集成多环境待办审批后跳回列表页 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>企微消息卡片集成多环境待办审批后跳回列表页</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>企微消息卡片集成多环境待办审批后跳回列表页</h1></p><p><h3>业务场景：客户移动端有消息卡片集成多环境待办消息，希望在审批后直接返回列表页面并刷新列表页数据，同时不影响产品本身消息推送审批的逻辑。</h3></p><p><strong>实现思路：</strong></p><p>找到产品在表单审批后的逻辑，将审批完成跳转逻辑根据特殊标识进行特殊处理。</p><p>​</p><p><strong>实现过程：</strong></p><p><h4>1 让后端在url上添加特殊标识，然后在packages\cloudpivot-form\form\src\runtime\components\form-detail.ts里找到doAction逻辑，在移动端form-detail.vue goto方法内处理跳转逻辑</h4></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/habfo7rny80qugl7</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

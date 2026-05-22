@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bpm表单流程迁移云枢 - 云枢技术文档</title>
+<meta property="og:title" content="bpm表单流程迁移云枢">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/bpm表单流程迁移云枢/">
+<meta name="description" content="bpm表单流程迁移云枢 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>bpm表单流程迁移云枢</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>bpm表单流程迁移云枢</h1></p><p><h1>一．业务场景</h1>
+- 原有bpm系统需要将表单和流程迁移到云枢中，达到原有的功能一样能在云枢中使用</p><p><h1>解决方案</h1>
+如果基础的表单和流程可以通过云枢迁移工具实现就是用工具，如果因为现实情况工具使用不了，就手动迁移云枢表单流程，然后将需要配业务规则，和二开接口，js 写进云枢项目</p><p><h1>具体实现方案</h1></p><li>手动迁移表单流程需要按原来bpm表单的字段属性名一样搬过去，在表单字段上有几个特殊的点像原有的申请人，部门在bpm是文本，在云枢上需要建人员单选和部门单选，设置默认值为创建人，然后将创建人基础属性映射到表单字段</li><p>   </p><li>搭建流程的时候注意点不能原模原样复制bpm里流程的判断条件的公式，在云枢是不能使用的，得按bpm的公式意思用云枢的公式，简单的不要使用公式，直接用选择字段配置即可（因为过程中有不生效的情况，防止公式不生效），部门逐级审批人设置</li><p>也不能按原有的复制</p><li>所有表单流程中所用到的业务规则，都整理到文档中对应到归属的表单，开发方便按照文档进行业务规则的接口逻辑开发，有些字段是配置表获取的使用关联单选</li><p>像下图中这种需要注意，有的是关联单选，取配置表数据，有的是通过接口赋值</p><li>前端开发js，需要识别出js中有哪些地方调用了业务规则的，然后整理出来同样对应表单，因为对应云枢的js不能直接调用业务规则，所以需要将业务规则转成接口对接</li><li>对于有些字段得审批人是在表单的隐藏字段中，原bpm里很多都是通过拿页面上的入参去js里调用业务规则，然后sql去获取配置表的审批人赋值到原表单页面上，但是为了迁移的效率，所以先确认好哪些字段是可以通过配置表获取的，通过云枢的关联单选控件，映射和数据联动功能，将原有bpm通过js实现的功能以配置的方式实现</li><p>设置查询条件将两个关联单选的数据联动</p><p>根据分类，部门区域，工厂去配置表获取到审批人，赋值到下面的隐藏字段中</p><p>注意点：由于关联单选当查询条件，取到的是object，无法匹配，所以页面上要加一个隐藏字段，前端需要加js获取关联单选数据赋值到隐藏字段，查询条件用隐藏字段</p><p>6.最后其他需要二开js，和接口的对接完后，配到对应的业务规则里</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/rzdlk0ag2l16x2rf</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代办任务去除周末和节假日审批耗时功能简述 - 云枢技术文档</title>
+<meta property="og:title" content="代办任务去除周末和节假日审批耗时功能简述">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/代办任务去除周末和节假日审批耗时功能简述/">
+<meta name="description" content="代办任务去除周末和节假日审批耗时功能简述 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>代办任务去除周末和节假日审批耗时功能简述</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>代办任务去除周末和节假日审批耗时功能简述</h1></p><p><h3>场景：</h3>
+某项目中客户要求代办任务需要剔除周六、周日、节假日、特殊节日、请假记录的时间段内的代办耗时功能，因产品的待办任务描述存在开始时间是流程实例的发起时间，流程里的耗时计算逻辑无法满足客户的需求，因此针对该功能作以特殊处理，采用配置节假日和特殊节日表，剔除代办任务耗时，进而判断超时的标准。</p><p><h3>思路：</h3>
+根据条件查询获取对应的代办任务，筛选出接收时间超时逻辑天数的所有数据；根据接收时间和当前时间的年份，查询节假日配置表，周六，周日判断是否补班，以及节假日和特殊节日的休假日期时间。根据当前时间减去接收时间范围内的天数，遍历判断该时间段内是否存在补班、节假日；查询代办审批人的请假记录；存在则减去相应的代办任务耗时，最后判断是否满足超时逻辑天数，成功筛选符合逻辑的代办数据。</p><p><h3>实现步骤：</h3></p><p><h4>一、新建节假日配置表，填充补班、节假日、特殊接日年度数据</h4>
+1、节假日配置表</p><p><h4>二、根据部门查询部门所有的代办数据</h4>
+1、查询部门下的用户</p><p>2、查询部门下的代办任务</p><p><h4>三、查询节假日配置表，并遍历筛选数据</h4>
+1、过滤节假日的代办数据</p><p>ps：判断接收时间和当前时间是否是同一年，非同一年都则查询相邻的两年节假日配置表数据</p><p>2、过滤请假记录中的代办数据</p><p><h4>四、返回数据至前端，进行页面渲染</h4>
+1、主页面渲染效果</p><p>2、点击数字，弹窗流程简介信息</p><p>ps：点击流程标题，跳转表单详情页面</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/zgw4y0bapnz9oevp</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

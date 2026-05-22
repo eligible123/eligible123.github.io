@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>防抖函数接口响应速度差异过大展示数据处理 - 云枢技术文档</title>
+<meta property="og:title" content="防抖函数接口响应速度差异过大展示数据处理">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/防抖函数接口响应速度差异过大展示数据处理/">
+<meta name="description" content="防抖函数接口响应速度差异过大展示数据处理 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>防抖函数接口响应速度差异过大展示数据处理</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>防抖函数接口响应速度差异过大展示数据处理</h1></p><p><h3>业务场景：客户移动端使用人员单选控件涉及层级嵌套太深，需要使用简单输入框+下拉框展示选择处理，在使用人员单选搜索接口时发现，通过工号搜索时，只输入一位数字查询接口达接近3s左右，输入三位数字之后则只需要300ms，会导致防抖之后展示第二次接口响应数据之后，会跳转回第一次接口响应的数据。</h3>
+<strong>实现效果</strong></p><p> </p><p><strong>实现思路：</strong></p><p><h4>1.移动端实时输入搜索数据肯定是和防抖函数一起使用的，先将查询方法做防抖处理</h4></p><p><h4>2.通常防抖函数配置时间为300-500ms左右，正常接口响应无需做其他处理，由于前后接口响应数据差距过大，导致防抖后第二次接口结果已经返回，第一次调用的接口还未有返回结果，此时已经将后面的接口返回的数据已经展示了，短暂时间过后又展示了第一次接口的返回结果，下面是处理方式。</h4></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gr4lbrlqyhbxbh1z</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

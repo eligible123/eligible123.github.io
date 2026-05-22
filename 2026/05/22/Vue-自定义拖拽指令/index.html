@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vue 自定义拖拽指令 - 云枢技术文档</title>
+<meta property="og:title" content="Vue 自定义拖拽指令">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Vue-自定义拖拽指令/">
+<meta name="description" content="Vue 自定义拖拽指令 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>Vue 自定义拖拽指令</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>Vue 自定义拖拽指令</h1></p><p><h2>一、业务场景</h2>
+在课程中心项目里，为了给用户提供更优质的交互体验，需要在页面上添加一个倒计时组件，用于显示完成课程学习还需的时间。并且，这个倒计时组件应该支持用户手动拖拽，方便用户根据自己的需求调整其在页面上的位置。例如，当用户在观看视频或者阅读文档时，可以将倒计时组件拖拽到不影响视线的位置，同时又能随时看到剩余的学习时间。</p><p><h2>二、实现思路</h2>
+为了实现倒计时组件的拖拽功能，我们采用Vue 自定义指令的方式。自定义指令可以将拖拽逻辑封装起来，提高代码的可复用性和可维护性。具体思路如下：</p><p>​</p><p><strong>1.</strong><strong> </strong><strong>注册自定义指令</strong>：在 index.vue 组件中注册一个名为 drag-countdown 的自定义指令。</p><p><strong>2.</strong><strong> </strong><strong>监听鼠标</strong><strong>/ 触摸事件</strong>：在指令的 inserted 钩子函数中，为组件添加鼠标和触摸事件监听器，以便捕获用户的拖拽操作。</p><p><strong>3.</strong><strong> </strong><strong>计算偏移量和位置</strong>：在用户开始拖拽时，计算鼠标或触摸点相对于组件的偏移量。在拖拽过程中，根据偏移量和鼠标或触摸点的位置，计算组件的新位置。</p><p><strong>4.</strong><strong> </strong><strong>限制组件位置</strong>：确保组件在拖拽过程中不会超出其父容器的范围。</p><p><strong>5.</strong><strong> </strong><strong>清理事件监听器</strong>：在组件解绑时，移除所有的事件监听器，避免内存泄漏。</p><p><h2>三、实现过程</h2></p><p><h3>1. 注册自定义指令</h3>
+在 index.vue 文件中，我们从 ./utils/drag 导入 dragCountdown 指令，并在组件的 directives 选项中注册它：</p><p><h3>2. 使用自定义指令</h3>
+在模板中，我们将 drag-countdown 指令应用到倒计时组件上：</p><p><h3>3. 实现自定义指令</h3>
+自定义指令的实现代码位于 courseCenter/utils/drag.ts 文件中：</p><p><h3>4. 代码解释</h3>
+<strong>·</strong><strong> </strong><strong>获取容器和拖拽手柄</strong>：通过 binding.arg 获取自定义的容器元素，如果没有提供，则使用父元素作为容器。通过 binding.modifiers.handle 判断是否指定了拖拽手柄。</p><p><strong>·</strong><strong> </strong><strong>获取容器边界</strong>：通过 getContainerBounds 函数获取容器的边界信息，用于限制元素的拖拽范围。</p><p><strong>·</strong><strong> </strong><strong>限制元素位置</strong>：通过 constrainToContainer 函数将元素的位置限制在容器内。</p><p><strong>·</strong><strong> </strong><strong>更新元素位置</strong>：通过 updatePosition 函数根据鼠标或触摸事件的位置更新元素的位置。</p><p><strong>·</strong><strong> </strong><strong>事件处理</strong>：通过 startDrag、drag 和 endDrag 函数处理鼠标和触摸事件，实现元素的拖拽功能。</p><p><strong>·</strong><strong> </strong><strong>初始化样式</strong>：为元素添加 transform: translate3d(0,0,0) 样式，开启硬件加速，提高拖拽的流畅度。</p><p><strong>·</strong><strong> </strong><strong>添加事件监听</strong>：为拖拽手柄添加 mousedown 和 touchstart 事件监听器，开始拖拽操作。</p><p><strong>·</strong><strong> </strong><strong>清理函数</strong>：定义 el.__draggableCleanup 函数，用于在元素解绑时清理事件监听器。</p><p><h2>四、效果图</h2></p><p><strong>​</strong></p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/eg7ynhypn7s7vtbm</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考勤功能 - 云枢技术文档</title>
+<meta property="og:title" content="考勤功能">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/考勤功能/">
+<meta name="description" content="考勤功能 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>考勤功能</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>考勤功能</h1></p><p><strong>考勤模块功能的实现</strong></p><p><strong>一、需求</strong></p><p>    实现考勤打卡功能、查询历史打卡记录、缺卡补卡功能等功能，同时可以将打卡信息记录在自己的服务器上。</p><p><strong>二、思路</strong></p><p>使用百度地图、高德地图等地图的api接口实现打卡功能，同时记录下打卡时候的数据存储到自己的服务器上，然后可以对这些数据进行处理，实现查询历史打卡记录和缺卡补卡功能。</p><p><strong>三、解决方案</strong></p><p><h3>1.考勤打卡签到、签退功能设计</h3>
+在移动端中，打开手机定位功能，点击签到，记录当前打卡时间和当前定位的位置，签到实现效果如下（签退功能实现效果同下）：</p><p>获取签到签退信息的代码如下：</p><p>​</p><p>打卡功能的实现代码如下：</p><p>注意：通过实践得出，使用个人账号注册的百度、高德、腾讯实现打卡功能，可能会出现定位精度不准确的问题，会出现差别几公里的现象，最后使用了钉钉的打卡api，精度误差不会超过200m。</p><p><h3>2.打卡记录页面设计</h3>
+打卡完成之后，根据每天打卡情况记录签到、签退的时间和异常情况，如有异常情况的，显示为未打卡，需填写补充说明,打卡记录展示及筛选功能页面实现效果如下：</p><p>代码如下：</p><p><h3>3. 打卡异常补充说明功能设计</h3>
+对于异常记录，填写补充说明，【提交】即可完成异常处理。打开异常补充页面实现效果如下：</p><p>代码如下：</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/zoq1ugn9w6ay0iym</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

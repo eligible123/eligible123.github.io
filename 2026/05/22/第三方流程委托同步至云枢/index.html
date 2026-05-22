@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第三方流程委托同步至云枢 - 云枢技术文档</title>
+<meta property="og:title" content="第三方流程委托同步至云枢">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/第三方流程委托同步至云枢/">
+<meta name="description" content="第三方流程委托同步至云枢 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>第三方流程委托同步至云枢</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>第三方流程委托同步至云枢</h1></p><p><h2>业务场景</h2>
+客户需要通过oa进行流程委托同步到云枢的流程委托，避免oa委托后再次在云枢上进行重复的流程委托操作，并进行流程委托的历史记录</p><p><h2>效果展示：</h2></p><p>## </p><p>​</p><p>​</p><p>​</p><p><h2>解决方案</h2>
+oa通过kafka消息中间件发送消息到云枢，云枢接收到消息后处理消息内容，然后通过aop切面的方式对产品的流程委托接口做切面处理，进行把oa的委托信息同步到云枢上，并进行日志历史记录</p><p><h2>具体实现方案</h2>
+1. 创建消费kafka消息的消费者，对oa发送的消息体做解析处理，并根据不同情况调用产品的创建委托，更新委托，删除委托的方法</p><p>​</p><p>2. 创建流程委托切面，处理在调用产品的流程委托方法后，进行流程委托历史记录的新增处理</p><p>3. 流程委托历史记录的新增具体处理接口</p><p>​</p><p>​</p><p>​</p><p>​</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ivzglhpaf709i881</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

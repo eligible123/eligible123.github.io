@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢自维护组织实现企业微信单点登录 - 云枢技术文档</title>
+<meta property="og:title" content="云枢自维护组织实现企业微信单点登录">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢自维护组织实现企业微信单点登录/">
+<meta name="description" content="云枢自维护组织实现企业微信单点登录 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢自维护组织实现企业微信单点登录</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢自维护组织实现企业微信单点登录</h1></p><p><h1>业务场景</h1>
+某个项目中由于集成企业微信某些业务实现有问题，需使用云枢自维护组织，并且能从企业微信单点过来。</p><p><h1>实现思路</h1>
+前端开发一个自定义页面，在企业微信应用的首页配置里配置上这个自定义页面，企业微信重定向会带上能获取企业微信userId的code，自定义页面获取code，调用后端单点登录接口，后端拿code调用企业微信服务获取到企业微信userId，直接用userId或者根据userId再次去企业微信获取用户详细信息，拿到能跟子维护组织架构中用户关联的唯一标识，本次案例用使用的就是userId。</p><p><h1>实现代码</h1>
+- 使用产品的登录扩展点自定义登录接口，构造方法中定义接口路径，并重写getSourceId获取用于查询云枢系统用户的唯一标识，重写getUser根据getSourceId获取到的唯一标识查询用户。</p><p>企业微信应用首页地址配置：</p><p>- 回调地址：<code>https://域名/自定义页面路由?自定义参数</code>
+需先申请域名，并且域名一定要配置为企业微信可信域名。跳转到自定义页面自定义参数中corpId一定不能传，产品前端对corpId参数做了特殊判断，传了会导致跳转之后卡死在空白页，连登录页都进不去。
+- 将回调地址进行UrlEncode编码
+编码工具地址： http://tool.chinaz.com/tools/urlencode.aspx
+- 应用主页地址：<code>https://open.weixin.qq.com/connect/oauth2/authorize?appid=企业ID&redirect_uri=回调地址&state=STATE#wechat_redirect</code>
+应用主页地址中的企业ID替换成真实的企业ID，回调地址替换成UrlEncode编码后的回调地址
+- 完整URL示例：https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxc1fd1bc14955814c&redirect_uri=http%3A%2F%2Fbpm.baudau.com%2Fwechatloginnew%3Fagentid%3D1000071%26appCode%3DWX&response_type=code&scope=snsapi_privateinfo&agentid=1000071&state=STATE#wechat_redirect
+- 将完整的URL设置到主页地址，保存</p><p>​</p><p>正常企业微信集成参考：<a href="https://www.yuque.com/skwme4/hzo079/wh5o1y">https://www.yuque.com/skwme4/hzo079/wh5o1y</a></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/fi8cymsqz75323ym</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

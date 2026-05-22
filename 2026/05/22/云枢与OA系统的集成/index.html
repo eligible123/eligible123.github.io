@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢与OA系统的集成 - 云枢技术文档</title>
+<meta property="og:title" content="云枢与OA系统的集成">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢与OA系统的集成/">
+<meta name="description" content="云枢与OA系统的集成 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢与OA系统的集成</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢与OA系统的集成</h1></p><p><strong>一、需求</strong></p><p>为了统一各个业务系统对接OA系统，希望云枢系统可以实现SSO的单点登录。</p><p><strong>二、思路</strong></p><p>1.云枢的登录和登录对接SSO系统。</p><p>2.推送到OA系统的待办、已办、待阅、已阅任务可以通过SSO单点登录到云枢系统。</p><p><strong>三、解决方案</strong></p><p><h3>1.云枢的登录登出集成SSO</h3>
+云枢系统登录时候，跳转到SSO认证中心登录授权后，SSO登录成功后，跳转到云枢的单点登录接口并且在url中增加SSO授权的code，通过授权code调用SSO的接口获取到SSO的人员信息，然后转换为云枢的人员信息，获取云枢的token返回给前端，前端然后存储到缓存中，跳转到云枢系统的首页，完成云枢系统的登录。</p><p>（1）云枢系统的单点登录</p><p>实现云枢系统自己的单点登录接口，获取token等信息。</p><p>​</p><p>（2）对接sso单点登录的接口</p><p>（3）根据授权code获取云枢登录名</p><p>​</p><p>（4）获取云枢的token</p><p>​</p><p><h3>2. 统一待办已办待阅已阅推送</h3>
+云枢系统生成待办、已办、待阅、已阅任务之后，调用推送数据的接口，推送到OA系统。</p><p>1.推送待办已办</p><p>（1）云枢产品提供了ExtProcessTaskServcie类，实现类中的方法，即可在云枢创建待办和已办的时候，实现待办已办任务相关自定义的业务逻辑。</p><p>（2）在实现的接口方法中，封装接口所需的一般参数。</p><p>（3）调用sso提供的获取ad账号的接口，将云枢系统的账号转换成接口所需的ad账号。</p><p>（4）第三方系统根据提供的待办已办的链接地址，进行sso的登录验证，再进行云枢的登录验证，云枢登录成功后跳转到最终的流程待办已办任务表单。</p><p>​</p><p>2.推送待阅已阅</p><p>（1）由于云枢产品没有提供类似待办已办的接口方法，所以使用切面的方式，来实现推送待阅已阅的功能。</p><p>（2）分别监听com.authine.cloudpivot.engine.service.runtime.RuntimeService.save方法com.authine.cloudpivot.engine.service.runtime.BizCirculateitemFinishedService.save来实现对待阅和已阅数据的处理。</p><p>（3）在实现的接口方法中，封装接口所需的一般参数。</p><p>（4）调用sso提供的获取ad账号的接口，将云枢系统的账号转换成接口所需的ad账号。</p><p>（5）第三方系统根据提供的待办已办的链接地址，进行sso的登录验证，再进行云枢的登录验证，云枢登录成功后跳转到最终的流程待阅已阅任务表单。</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ipl1fnbfmncf4w8r</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

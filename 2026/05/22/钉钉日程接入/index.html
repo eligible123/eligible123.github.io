@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>钉钉日程接入 - 云枢技术文档</title>
+<meta property="og:title" content="钉钉日程接入">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/钉钉日程接入/">
+<meta name="description" content="钉钉日程接入 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>钉钉日程接入</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>钉钉日程接入</h1></p><p><strong>业务场景：企业内部应用集成钉钉，需要给企业内部人员发送日程通知</strong>
+<strong>实现思路：由于本身云枢产品钉钉，集成钉钉配置，进行定制开发</strong></p><p><strong>​</strong></p><p>首先做好云枢钉钉集成配置</p><p>系统管理- 组织配置 进行钉钉内置使用</p><p>​</p><p>日程提供了丰富的接口开放能力，开发者通过API接口可以实现日程和企业业务系统打通。</p><p>创建日程的具体步骤</p><p><h2>1、创建日程</h2>
+调用本接口，创建一个日程。</p><p>调用本接口，可创建日程。接口调用成功后，与下图操作实现效果一致。</p><p>请求方法</p><p><h3>Header参数</h3></p><p>| <strong>名称</strong> | <strong>类型</strong> | <strong>是否必填</strong> | <strong>描述</strong> |  |
+| x-acs-dingtalk-access-token | String | 是 | 调用该接口的访问凭证。</p><p>· </p><p>企业内部应用，调用<a href="https://open.dingtalk.com/document/orgapp-server/obtain-the-access_token-of-an-internal-app">获取企业内部应用的accessToken</a>接口获取。</p><p>· </p><p>· </p><p>第三方企业应用，调用<a href="https://open.dingtalk.com/document/isvapp-server/obtain-the-access_token-of-the-authorized-enterprise">获取第三方应用授权企业的accessToken</a>接口获取。</p><p>· </p><p>· </p><p>第三方个人应用，调用<a href="https://open.dingtalk.com/document/personalapp-server/obtain-user-token">获取用户token</a>接口获取。</p><p>·  |  |</p><p><h3>Path参数</h3></p><p>| <strong>名称</strong> | <strong>类型</strong> | <strong>是否必填</strong> | <strong>描述</strong> |  |
+| userId | String | 是 | 日程组织者的unionId。</p><p>· </p><p>企业内部应用，调用<a href="https://open.dingtalk.com/document/orgapp-server/query-user-details">查询用户详情</a>接口获取unionid参数值。</p><p>· </p><p>· </p><p>第三方企业应用，调用<a href="https://open.dingtalk.com/document/isvapp-server/query-user-details">查询用户详情</a>接口获取unionid参数值。</p><p>· </p><p>· </p><p>第三方个人应用，调用<a href="https://open.dingtalk.com/document/personalapp-server/retrieve-user-information">获取用户通讯录个人信息</a>接口获取unionId参数值。</p><p>·  |  |
+| calendarId | String | 是 | 日程所属的日历ID，统一为<strong>primary</strong>，表示用户的主日历。 |  |</p><p><h3>Body参数</h3></p><p>| <strong>名称</strong> | <strong>类型</strong> | <strong>是否必填</strong> | <strong>描述</strong> |  |
+| summary | String | 是 | 日程标题，最大不超过2048个字符。 |  |
+| description | String | 否 | 日程描述，最大不超过5000个字符。 |  |
+| start | Object | 是 | 日程开始时间。 |  |
+| end | Object | 否 | 日程结束时间。 |  |
+| isAllDay | Boolean | 否 | 是否全天日程。</p><p>· </p><p><strong>true</strong>：是</p><p>· </p><p>· </p><p><strong>false</strong>：不是</p><p>·  |  |
+| recurrence | Object | 否 | 日程循环规则。 |  |
+| attendees | Array | 否 | 日程参与人列表，最多支持500个参与人。 |  |
+| location | Object | 否 | 日程地点。 |  |
+| reminders | Array | 否 | 日程提醒，可以添加多个。</p><p>· </p><p>如果不传默认提醒时间为：</p><p>· </p><p>· </p><p><strong>非全天日程</strong>：开始前15分钟提醒</p><p>· </p><p>· </p><p><strong>全天日程</strong>：开始前一天9点提醒</p><p>· </p><p>· </p><p>如果传空数据表示不创建任何提醒。</p><p>·  |  |
+| onlineMeetingInfo | Object | 否 | 创建日程同时创建线上会议。 |  |
+| extra | Map<String, String> | 否 | JSON格式的扩展能力开关，选填，具体属性定义如下。</p><p><strong>·</strong><strong> </strong><strong>noPushNotification</strong>：创建日程时是否向关联人员发送钉钉推送通知。</p><p><strong>·</strong><strong> </strong><strong>true</strong>：不发送</p><p><strong>·</strong><strong> </strong><strong>false</strong>：发送</p><p><strong>·</strong><strong> </strong><strong>noChatNotification</strong>：创建日程时是否向参与人发送单聊卡片。</p><p><strong>·</strong><strong> </strong><strong>true</strong>：不发送</p><p><strong>·</strong><strong> </strong><strong>false</strong>：发送 |  |</p><p><h3>返回参数</h3></p><p>| <strong>名称</strong> | <strong>类型</strong> | <strong>描述</strong> |  |
+| id | String | 日程ID。 |  |
+| summary | String | 日程标题。 |  |
+| description | String | 日程描述。 |  |
+| start | Object | 日程开始时间。 |  |
+| end | Object | 日程结束时间。 |  |
+| isAllDay | Boolean | 是否全天日程。</p><p>· </p><p><strong>true</strong>：是</p><p>· </p><p>· </p><p><strong>false</strong>：不是</p><p>·  |  |
+| recurrence | Object | 日程循环规则。 |  |
+| attendees | Array | 参与人列表。 |  |
+| organizer | Object | 日程组织者。 |  |
+| location | Object | 日程地点。 |  |
+| reminders | Array | 日程提醒。 |  |
+| createTime | String | 创建时间。 |  |
+| updateTime | String | 更新时间。 |  |
+| onlineMeetingInfo | Object | 线上会议信息。 |  |</p><p><h3>示例</h3>
+<strong>返回示例</strong></p><p>查看以上文档得知</p><p>要调取钉钉日程接口需要拿到token</p><p>​</p><p><h2>2、获取企业内部应用的accessToken</h2>
+企业内部应用调用本接口获取accessToken。调用服务端API获取应用资源时，需要通过accessToken来鉴权调用者身份进行授权。</p><p>​</p><p><strong>说明</strong></p><p>在使用accessToken时，请注意：</p><p>accessToken的有效期为7200秒（2小时），有效期内重复获取会返回相同结果并自动续期，过期后获取会返回新的accessToken。</p><p>开发者需要缓存accessToken，用于后续接口的调用。因为每个应用的accessToken是彼此独立的，所以进行缓存时需要区分应用来进行存储。</p><p>不能频繁调用gettoken接口，否则会受到频率拦截。</p><p>​</p><p>在获取accessToken前，需要在开发者后台查看应用的AppKey和AppSecret：</p><p>​</p><p>(1) 登录钉钉<a href="https://open-dev.dingtalk.com/">开发者后台</a>。</p><p>(2) 在<strong>应用开发</strong>页面，单击目标应用进入应用详情页面。</p><p>(3) 在<strong>基础信息</strong>页面，复制应用的AppKey和AppSecret。</p><p><h3>请求方法</h3></p><p><h3>Body参数</h3></p><p>| 名称 | 类型 | 是否必填 | 描述 |  |
+| appKey | String | 是 | 已创建的企业内部应用的AppKey。 |  |
+| appSecret | String | 否 | 已创建的企业内部应用的AppSecret。 |  |</p><p><h3>返回参数</h3></p><p>| 名称 | 类型 | 描述 |  |
+| accessToken | String | 生成的accessToken。 |  |
+| expireIn | Long | accessToken的过期时间，单位秒。 |  |</p><p><h3>示例</h3></p><p><h3>返回示例</h3>
+项目代码</p><p>//由于token取用时间为两小时，最好设置缓存，重复频繁调用可能调用不到</p><p>云枢钉钉配置存在h_related_corp_setting 可以查询</p><p>拿到token之后，调用创建日程接口</p><p>所有人员id转化为钉钉的unionId</p><p><h2>删除日程</h2></p><p><h3>示例</h3>
+ </p><p><h3>取消考试日程通知</h3></p><p><h4>此外、还要修改日程、查询日程单个日程详情、查询日程列表、查询日程视图</h4></p><p><h4>可查看钉钉文档</h4>
+<a href="https://open.dingtalk.com/document/orgapp-server/create-event">https://open.dingtalk.com/document/orgapp-server/create-event</a></p><p><h2>要点：</h2></p><p><h3>1、对接的时候获取到钉钉的unionId</h3>
+本项目sourceId对应的是钉钉的unionId</p><p><h3>2、创建日程通知成功之后，只要组织者可以取消，所以要存储起来组织者的id，和日程id，方便后续业务的处理。</h3></p><p><h3>3、处理报错</h3>
+可以抛出异常或是记录日志，也可以记录到云枢日志里面</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/htcq9ecafmdyt59b</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

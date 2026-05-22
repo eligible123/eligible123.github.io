@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>应用维度管控微信和邮箱消息 - 云枢技术文档</title>
+<meta property="og:title" content="应用维度管控微信和邮箱消息">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/应用维度管控微信和邮箱消息/">
+<meta name="description" content="应用维度管控微信和邮箱消息 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>应用维度管控微信和邮箱消息</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>应用维度管控微信和邮箱消息</h1></p><p><h1>一．业务场景</h1>
+1. 以应用为维度，模型为颗粒度去管控微信和邮箱消息，实现只开启和关闭。</p><p>​</p><p>效果展示：</p><p>​</p><p><h1>解决方案</h1>
+找到微信消息和邮箱消息发送的同一入口，分别对其进行统一的做aop切面，拦截消息，获取出消息的流程id，找到对应表里设置的开关，进行权限管控</p><p>​</p><p>​</p><p><h1>具体实现方案</h1>
+1. 建一个设置消息管控表，存appcode和模型code，以及对应的微信和邮箱消息开关标识</p><p>​</p><p>设置开关，将设置数据入库</p><p>​</p><p>​</p><p>2. 找到对应微信和邮箱消息发送的统一的实现类，进行切面，拦截管控</p><p>​</p><p>​</p><p>​</p><p>3. 切面处理</p><p>​</p><p>​</p><p>拦截微信和邮箱消息，如果开关未开启，则抛出异常，不往下进行发消息</p><p>​</p><p>​</p><p>​</p><p>​</p><p>​</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/hm30wyf7pqt3lhb6</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

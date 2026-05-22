@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H3BPM达梦数据库适配改造 - 云枢技术文档</title>
+<meta property="og:title" content="H3BPM达梦数据库适配改造">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/H3BPM达梦数据库适配改造/">
+<meta name="description" content="H3BPM达梦数据库适配改造 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>H3BPM达梦数据库适配改造</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>H3BPM达梦数据库适配改造</h1></p><p><strong>H3BPM达梦数据库适配改造</strong></p><p><strong>一、需求</strong></p><p>某集团有国产化要求，数据库层面统一采购为达梦数据库。原有的H3BPM需要与达梦数据库对接适配。</p><p><strong>二、思路</strong></p><p>1、后端代码中涉及到数据库交互部分新增达梦驱动，适配不同控件格式对应的字段类型。</p><p>2、原数据库数据需要同步迁移到达梦中，通过达梦自带的迁移工具即可实现，部分特殊函数和特殊格式特殊处理即可。</p><p><strong>三、解决方案</strong></p><p><strong>1.数据库安装</strong></p><p>达梦的默认安装即可，数据库连接：(达梦db在可通过dmmanager工具代理访问，默认管理员：SYSDBA/SYSDBA)</p><p><strong>2.数据迁移</strong></p><p>本地安装达梦数据库服务工具就有DTS服务，拿到达梦数据库和原来数据库连接的相关信息，并保证本地网络可以连接双方数据库。新建迁移测试工程后，迁移管理可以看到我们新建的工程，展开工程项，可以看到工程包含数据类型映射，调度，作业，迁移，迁移数据可能的报错记录下来，数据超长等问题，单独处理后重新迁移即可。</p><p><strong>2.后端数据库类型连接适配</strong></p><p>对h3bpm-engine/h3bpm-common修改源码，增加对dmdb的数据库适配，相关改造细节较多，且需要改造产品jar中源码，由产品改造后提供，如有项目需要可向产品申请。</p><p>数据库类型选择：</p><p>字段格式转换处理：</p><p><strong>四、迁移注意事项：</strong></p><li>引擎配置表数据需清空连接信息后重建。</li><li>使用dts迁移工具时，需注意勾选保留表名大小写</li><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/rvcc4i9g7fhw5qcm</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

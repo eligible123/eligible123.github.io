@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>流程迁移运维小工具 - 云枢技术文档</title>
+<meta property="og:title" content="流程迁移运维小工具">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/流程迁移运维小工具/">
+<meta name="description" content="流程迁移运维小工具 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>流程迁移运维小工具</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>流程迁移运维小工具</h1></p><p><strong>流程迁移运维小工具</strong></p><p><strong>一、需求</strong></p><p>1.流程从H3迁移到云枢的时候，采用的是导入导出的方式，且H3的的组织架构和云枢的组织架构没有做同步，导致每次迁移新的流程时候，需要手工去把原H3的流程涉及的工作组手工在云枢系统上对照重新配置一边，但是这种方式容易出现遗漏和错误，需要一个可以自动同步的工具。</p><p>2.流程做需求变更时候，需要去掉表单上的某些字段，但是原来的流程的分支条件和审批人配置上可能会有与该字段相关的配置，去掉了可能会导致流程审批出现问题，需要一个可以查询相关配置的工具。</p><p><strong>二、思路</strong></p><p>1.提供一个接口，将流程涉及到的的工作组从H3同步到云枢，在迁移新的流程的时候，就不用人工对比操作，这样既减少出错的概率也提高了工作效率。</p><p>2.提供一个接口，对比H3的流程和云枢的流程涉及到的工作组的差别，可以对上线的流程进行查漏补缺。</p><p>3.提供一个接口，将涉及到的字段的分支条件和审批人配置查询出来。</p><p><strong>三、解决方案</strong></p><li>实现同步H3的流程涉及到的工作组到云枢，代码如下。</li><p>public ResponseResult asyncWorkflowRoleUser(String workflowCode) {
+    WorkflowTemplateModel template = getWorkflowManagementFacade().getLastWorkflowTemplate(workflowCode);
+    if (template == null) {
+        return getErrResponseResult(ErrCode.<em>WORKFLOW_NOT_EXIST</em>.getErrCode(), "同步数据失败");
+    }
+    try {
+        String companyId = getCompanyId();
+        List<Activity> acts = template.getActivities();
+        //云枢角色id
+        List<String> roleIds = new ArrayList<>();
+        //角色编码
+        List<String> roleCodes;
+        if (acts != null && acts.size() > 0) {
+            for (Activity act : acts) {
+                String participant = "";
+                if (act.getActivityType() == ActivityType.<em>PARTICIPANT </em>|| act.getActivityType() == ActivityType.<em>CIRCULATE</em>) {
+                    if (act.getActivityType() == ActivityType.<em>PARTICIPANT</em>) {
+                        ParticipantActivity p = (ParticipantActivity) act;
+                        participant = p.getParticipant();
+                    } else {
+                        CirculateActivity p = (CirculateActivity) act;
+                        participant = p.getParticipant();
+                    }
+                    //匹配以"[{"开始，以"}]"结束的字符串
+                    String match = "\\[\\{(.*?)\\}\\]";
+                    Pattern pattern = Pattern.<em>compile</em>(match);
+                    Matcher matcher = pattern.matcher(participant);
+                    while (matcher.find()) {
+                        String unitReg = matcher.group(1);
+                        JSONObject json = JSONObject.<em>parseObject</em>("{" + unitReg + "}");
+                        String id = json.getString("id");
+                        String type = json.getString("type");
+                        //2表示角色
+                        if (type.equals("2")) {
+                            if (!roleIds.contains(id)) {
+                                roleIds.add(id);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (roleIds.size() > 0) {
+            List<RoleModel> roleList = getOrganizationFacade().getRolesByIds(roleIds);
+            roleCodes = roleList.stream().map(s -> s.getCode()).collect(Collectors.<em>toList</em>());
+            //通过角色编码查询对应的h3的工作组的人员
+            String sql_bpm = String.<em>format</em>(<em>SELECT_GROUP_USER</em>, "'" + StringUtil.<em>join</em>(roleCodes, "','") + "'");
+            List<Map<String, Object>> result = <em>GetDbFactoryFromSystem</em>(ConnectionPoolConstant.<em>BPM_TH</em>).queryForList(sql_bpm);
+            //用户编码
+            List<String> userCodes = new ArrayList<>();
+            //记录H3系统的角色编码和人员
+            Map<String, List<String>> roles = new HashMap();
+            if (result != null && result != null) {
+                List<RoleUserModel> roleUserModels = new ArrayList<>();
+                for (Map<String, Object> m : result) {
+                    String roleCode = m.get("roleCode") == null ? "" : m.get("roleCode").toString();
+                    String userCode = m.get("userCode") == null ? "" : m.get("userCode").toString();
+                    List<RoleModel> list = roleList.stream().filter(s -> s.getCode().equals(roleCode)).collect(Collectors.<em>toList</em>());
+                    if (!roles.containsKey(roleCode)) {
+                        roles.put(roleCode, new ArrayList<>());
+                        //先删除角色中的人员数据
+                        //不需要重复删除
+                        getOrganizationFacade().removeRoleUserByRoleId(list.get(0).getId());
+                    }
+                    if (StringUtil.<em>isNotEmpty</em>(userCode)) {
+                        if (!userCodes.contains(userCode)) {
+                            userCodes.add(userCode);
+                        }
+                        //添加人员数据
+                        roles.get(roleCode).add(userCode);
+                    }
+                }
+            }
+            //通过人员编码查询云枢系统对应的人员
+            String sql_user = String.<em>format</em>(<em>SELECT_USER_BY_CODES</em>, "'" + StringUtil.<em>join</em>(userCodes, "','") + "'");
+            List<Map<String, Object>> userInfo = jdbcTemplate.queryForList(sql_user);
+            List<RoleUserModel> roleUserModels = new ArrayList<>();
+            if (userInfo != null && userInfo.size() > 0) {
+                for (String key : roles.keySet()) {
+                    List<RoleModel> list = roleList.stream().filter(s -> s.getCode().equals(key)).collect(Collectors.<em>toList</em>());
+                    RoleUserModel roleUser = new RoleUserModel();
+                    roleUser.setRoleId(list.get(0).getId());
+                    roleUser.setUnitType(UnitType.<em>USER</em>);
+                    roleUser.setOuScope("[\"" + companyId + "\"]");//S73594210
+                    roleUser.setUsScope("[\"" + companyId + "\"]");//S73594210
+                    roleUserModels.add(roleUser);
+                    roleUser.setCreatedTime(new Date());
+                    roleUser.setModifiedTime(new Date());
+                    getOrganizationFacade().addRoleUser(roleUser);
+                    //按照H3的人员顺序进行添加
+                    for (String u : roles.get(key)) {
+                        for (Map<String, Object> m : userInfo) {
+                            String id = m.get("id").toString();
+                            String username = m.get("username").toString();
+                            if (u.equals(username)) {
+                                roleUser.setUserId(id);
+                                getOrganizationFacade().addRoleUser(roleUser);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } catch (Exception ex) {
+        <em>log</em>.info("同步流程角色异常:" + ex.getMessage() + ex.getStackTrace());
+        <em>log</em>.error(ex.getMessage(), ex);
+        ex.printStackTrace();
+        return getErrResponseResult(ErrCode.<em>UNKNOW_ERROR</em>.getErrCode(), "系统异常");
+    }
+    return getOkResponseResult("同步数据成功");}</p><li>实现比较H3流程涉及的工作组和云枢流程的人员对比，代码如下。</li><p>public ResponseResult compareWorkflowRoleUser(String workflowCode){
+    List<Map<String,Object>> res=new ArrayList<>();
+    WorkflowTemplateModel template = getWorkflowManagementFacade().getLastWorkflowTemplate(workflowCode);
+    if (template == null) {
+        return getErrResponseResult(ErrCode.<em>WORKFLOW_NOT_EXIST</em>.getErrCode(), "同步数据失败");
+    }
+    try {
+        List<Activity> acts = template.getActivities();
+        //云枢角色id
+        List<String> roleIds = new ArrayList<>();
+        //角色编码
+        List<String> roleCodes;
+        if (acts != null && acts.size() > 0) {
+            for (Activity act : acts) {
+                String participant = "";
+                if (act.getActivityType() == ActivityType.<em>PARTICIPANT </em>|| act.getActivityType() == ActivityType.<em>CIRCULATE</em>) {
+                    if (act.getActivityType() == ActivityType.<em>PARTICIPANT</em>) {
+                        ParticipantActivity p = (ParticipantActivity) act;
+                        participant = p.getParticipant();
+                    } else {
+                        CirculateActivity p = (CirculateActivity) act;
+                        participant = p.getParticipant();
+                    }
+                    //匹配以"[{"开始，以"}]"结束的字符串
+                    String match = "\\[\\{(.*?)\\}\\]";
+                    Pattern pattern = Pattern.<em>compile</em>(match);
+                    Matcher matcher = pattern.matcher(participant);
+                    while (matcher.find()) {
+                        String unitReg = matcher.group(1);
+                        JSONObject json = JSONObject.<em>parseObject</em>("{" + unitReg + "}");
+                        String id = json.getString("id");
+                        String type = json.getString("type");
+                        //2表示角色
+                        if (type.equals("2")) {
+                            if (!roleIds.contains(id)) {
+                                roleIds.add(id);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (roleIds.size() > 0) {
+            List<RoleModel> roleList = getOrganizationFacade().getRolesByIds(roleIds);
+            roleCodes = roleList.stream().map(s -> s.getCode()).collect(Collectors.<em>toList</em>());
+            List<String> roleNames=roleList.stream().map(s -> s.getName()).collect(Collectors.<em>toList</em>());
+            //通过角色编码查询对应的h3的工作组的人员
+            String sql_bpm = String.<em>format</em>(<em>SELECT_GROUP_USER</em>, "'" + StringUtil.<em>join</em>(roleCodes, "','") + "'");
+            List<Map<String, Object>> result = <em>GetDbFactoryFromSystem</em>(ConnectionPoolConstant.<em>BPM_TH</em>).queryForList(sql_bpm);
+            //记录H3系统的角色编码和人员
+            Map<String,Object> h3RoleUsers=new HashMap<>();
+            if (result != null && result != null) {
+                for (Map<String, Object> m : result) {
+                    String roleCode = m.get("roleCode") == null ? "" : m.get("roleCode").toString();
+                    String userCode = m.get("userCode") == null ? "" : m.get("userCode").toString();
+                    String roleName=  m.get("roleName") == null ? "" : m.get("roleName").toString();
+                    String userName=  m.get("userName") == null ? "" : m.get("userName").toString();
+                    if (!h3RoleUsers.containsKey(roleCode)) {
+                        Map<String,Object> map=new HashMap<>();
+                        String userInfo=userName+"["+userCode+"]";
+                        map.put("roleName",roleName);
+                        if(StringUtil.<em>isNotEmpty</em>(userCode)) {
+                            map.put("userInfo", userInfo);
+                        }
+                        h3RoleUsers.put(roleCode, map);
+                    }
+                    else{
+                        if(StringUtil.<em>isNotEmpty</em>(userCode)) {
+                            Map<String, Object> value = (Map<String, Object>) h3RoleUsers.get(roleCode);
+                            String userInfo = value.get("userInfo").toString() + "," + userName + "[" + userCode + "]";
+                            value.put("userInfo", userInfo);
+                        }
+                    }
+                }
+            }
+            //查询云枢的角色人员
+            String sql = String.<em>format</em>(<em>SELECT_ROLE_USERS</em>, "'" + StringUtil.<em>join</em>(roleIds, "','") + "'");
+            List<Map<String, Object>> queryList = jdbcTemplate.queryForList(sql);
+            //记录云枢系统的角色编码和人员
+            Map<String,Object> roleUsers=new HashMap<>();
+            if (queryList != null && queryList != null) {
+                for (Map<String, Object> m : queryList) {
+                    String roleCode = m.get("roleCode") == null ? "" : m.get("roleCode").toString();
+                    String userCode = m.get("userCode") == null ? "" : m.get("userCode").toString();
+                    String roleName=  m.get("roleName") == null ? "" : m.get("roleName").toString();
+                    String userName=  m.get("userName") == null ? "" : m.get("userName").toString();
+                    if (!roleUsers.containsKey(roleCode)) {
+                        Map<String,Object> map=new HashMap<>();
+                        String userInfo=userName+"["+userCode+"]";
+                        map.put("roleName",roleName);
+                        if(StringUtil.<em>isNotEmpty</em>(userCode)) {
+                            map.put("userInfo", userInfo);
+                        }
+                        roleUsers.put(roleCode, map);
+                    }
+                    else{
+                        if(StringUtil.<em>isNotEmpty</em>(userCode)) {
+                            Map<String, Object> value = (Map<String, Object>) roleUsers.get(roleCode);
+                            String userInfo = value.get("userInfo").toString() + "," + userName + "[" + userCode + "]";
+                            value.put("userInfo", userInfo);
+                        }
+                    }
+                }
+            }
+            for(String roleCode:roleCodes){
+                Map<String,Object> map=new HashMap<>();
+                map.put("roleCode",roleCode);
+                Map<String,Object> h3Filter= (Map<String, Object>) h3RoleUsers.get(roleCode);
+                if(h3Filter!=null){
+                    map.put("h3RoleName",h3Filter.get("roleName"));
+                    map.put("h3UserInfo",h3Filter.get("userInfo"));
+                }
+                Map<String,Object> filter= (Map<String, Object>) roleUsers.get(roleCode);
+                if(h3Filter!=null){
+                    map.put("bpmRoleName",filter.get("roleName"));
+                    map.put("bpmUserInfo",filter.get("userInfo"));
+                }
+                res.add(map);
+            }
+        }
+    } catch (Exception ex) {
+        <em>log</em>.info("比较h3和云枢流程角色人员异常:" + ex.getMessage());
+        <em>log</em>.error(ex.getMessage(), ex);
+        ex.printStackTrace();
+        return getErrResponseResult(ErrCode.<em>UNKNOW_ERROR</em>.getErrCode(), "系统异常:"+ex.getMessage()+JSON.<em>toJSONString</em>(ex.getStackTrace()));
+    }
+    return getOkResponseResult(res,"获取数据成功");}</p><li>实现将流程涉及到的字段的分支条件和审批人配置查询出来，代码如下。</li><p>public Map<String,Object> queryRelateDataFieldByWorkflow(String workflowCode,String dataField){
+    Map<String,Object> result=new HashMap<>();
+    List<Map<String,Object>> activities=new ArrayList<>();
+    List<Map<String,Object>> conditions=new ArrayList<>();
+    result.put("activity",activities);
+    result.put("condition",conditions);
+    WorkflowTemplateModel template= getWorkflowManagementFacade().getLastWorkflowTemplate(workflowCode);
+    List<Activity> activityList= template.getActivities();
+    for(Activity act : activityList){
+        //传阅节点和用户节点
+        if(act.getActivityType()== ActivityType.<em>PARTICIPANT</em>||act.getActivityType()== ActivityType.<em>CIRCULATE</em>){
+            String participant = "";
+            if (act.getActivityType() == ActivityType.<em>PARTICIPANT</em>) {
+                ParticipantActivity p = (ParticipantActivity) act;
+                participant = p.getParticipant();
+            } else {
+                CirculateActivity p = (CirculateActivity) act;
+                participant = p.getParticipant();
+            }
+            if(StringUtil.<em>isNotEmpty</em>(participant)&&participant.indexOf("{"+dataField+"}")>-1){
+                Map<String,Object> map=new HashMap<>();
+                map.put("code",act.getActivityCode());
+                map.put("name",act.getActivityName());
+                map.put("participant",participant);
+                activities.add(map);
+            }
+        }
+    }
+    //分支条件
+    List<Rule> rules= template.getRules();
+    for(Rule r:rules){
+        if(!r.isUtilizeElse()){
+            String text=r.getFormula()==null?"":r.getFormula();
+            if(text.indexOf("{"+dataField +"}")>-1){
+                Map<String,Object> map=new HashMap<>();
+                List<Activity> preAct= activityList.stream().filter(s->s.getActivityCode().equals(r.getPreActivityCode())).collect(Collectors.<em>toList</em>());
+                List<Activity> postAct= activityList.stream().filter(s->s.getActivityCode().equals(r.getPostActivityCode())).collect(Collectors.<em>toList</em>());
+                map.put("preActivityCode",r.getPreActivityCode());
+                map.put("preActivityName",preAct.get(0).getActivityName());
+                map.put("postActivityCode",r.getPostActivityCode());
+                map.put("postActivityName",postAct.get(0).getActivityName());
+                map.put("text",text);
+                conditions.add(map);
+            }
+        }
+    }
+    return result;}</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/yumrplqkn2vaz635</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

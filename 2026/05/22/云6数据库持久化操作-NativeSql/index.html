@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云6数据库持久化操作-NativeSql - 云枢技术文档</title>
+<meta property="og:title" content="云6数据库持久化操作-NativeSql">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云6数据库持久化操作-NativeSql/">
+<meta name="description" content="云6数据库持久化操作-NativeSql - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云6数据库持久化操作-NativeSql</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云6数据库持久化操作-NativeSql</h1></p><p><h2>背景</h2>
+云6使用Hibernate这种基于元数据的轻量级的ORM框架，在此基础上对其他数据库二开的支持，主要体现有</p><p>- JPA方言支持
+- NativeSql适配支持
+- 动态表ddl、dml二开支持</p><p><h3>产品帮助中心示例</h3>
+Hibernate中的原生sql分为两种，其中JPQL方式的HQL属于标准化sql，实际操作的是java类实体，与具体的数据库类型无关不用特殊处理。</p><p>另一种是云6针对不同的数据库类型做了特殊优化，该部分原生sql直接使用Hibernate的entityManager执行拼凑的sql进行特异化处理</p><p>目前这些扩展点在BizWorkitemServiceImpl、BizWorkflowinstanceServiceImpl、BatchManagerImpl中存在</p><p>这部分扩展点需要二开方针对自己的数据库类型生成自己的sql语句，实现类通过orm层实现的spi接口插件化集成进云6，完成该部分对其他数据库类型的支持</p><p>可以dm扩展实现为模板，简单修改适配实现对应的Provider即可</p><p><strong>具体参考链接：</strong><a href="https://www.yuque.com/skwme4/hzo079/ehbbtp"><strong>云枢-数据库扩展支持</strong></a></p><p><h3>离岸实战示例</h3></p><p><h4>实施背景</h4>
+         因为项目的邮件模板在后台管理，仅限管理员等操作，故要本人选择同系统表一样，不选择使用模型的方式搭建表及持久化操作。</p><p><h4>建表</h4>
+          1.书写SQL脚本并执行，最后将脚本上传至db\migration\mysql\dev\6.10路径下，与产品自建表逻辑一致。</p><p><h4>建实体类及持久化操作</h4>
+           Hibernate将数据库表和java实体类做了映射，该映射基于对应的数据库方言由JPA底层实现，之后在不使用NativeSql的情况下实际上执行的sql查询操作的是java类实体，对后端数据库类型无感。</p><p> 实体类代码截图示例：持久化操作截图示例：</p><p>示例代码：</p><p><h4>NativeSql使用</h4>
+     为满足部分查询复杂的场景，选择使用NativeSql，提高开发效率，且不用引入其他持久化操作的框架。</p><p>      使用步骤及demo：拼接SQL (参数占位)->构建nativeQuery->设置SQL参数值->查询</p><p>参考代码含Hibernate操作实体类及NativeSql:</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/qlqkql</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

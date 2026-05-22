@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关联表单树形结构使用与统计优化 - 云枢技术文档</title>
+<meta property="og:title" content="关联表单树形结构使用与统计优化">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/关联表单树形结构使用与统计优化/">
+<meta name="description" content="关联表单树形结构使用与统计优化 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>关联表单树形结构使用与统计优化</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>关联表单树形结构使用与统计优化</h1></p><p><h3>1、关联表单树形结构的背景及构造原理</h3>
+      背景：项目有树形需求，为满足此需求特定制化关联表单树形结构也为云枢后续版本的关联表单的展示样式添加了新的类型——树形结构，同时优化统计以树形节点及子节点分类统计的需求。
+     原理：后端根据parent_id与自身数据ID左右父子关系构成树形结构用于亲段渲染。（parent_id作为关联自身的关联表单控件）
+<a href="https://authine.yuque.com/zhangfeng-6ivdb/vbtsir/rg7gsz">树形控件支持方案</a></p><p><h3>2、树形控件的创建方法及应用</h3></p><p><h4>创建方法步骤：</h4>
+ 1.创建业务模型：</p><p>2.建立字段</p><p>3.发布模型初始化数据</p><p>4. 应用树形控件配置：关联表单字段，关联刚刚初始化后的模型。选择方式选择树形弹框</p><p>5.应用树形控件效果图：</p><p><h3>3、基于树形控件统计方面优化</h3>
+<strong>背景：</strong></p><p>在统计分析时，需要统计分析树形接口中某一节点下所有子节点的所有数据。常规统计逻辑是找到所有子节点id,然后通过 in （ids）来处理，当数据量大，同时SQL复杂的情况，会降低查询速率。此时通过加一个冗余字段，构建全路径查询码，可通过模糊匹配 like 该节点的查询码即可一步查询所有该节点及该节点的子节点数据。</p><p>举例：</p><p>A  -- A1---A11 </p><p>     |--A2 ---A21 </p><p>           |   ---A22</p><p>上图要查询A2节点及其所有子节点（A2 ,A21,A22)常规是要in（A2 ,A21,A22）的id。</p><p>构建查询码</p><p>此时只需要模糊匹配 like '#a#a2%'即可查询A2节点及其所有子节点（A2 ,A21,A22)。</p><p><strong>实现举例：（补充具体示例）</strong></p><p>        由于很多时候，树的层级关系很重要，为了便于查询树的节点及其所有子节点，我们可以在数据新增的时候利用JS去赋值冗余字段（类似于部门queryCode）,则可以快速通过categoryCode识别树形节点下的所有子节点，SQL通过模糊匹配categoryCode即可。</p><p>> //渲染完成后</p><p> form.on('onRendered',function(data){</p><p>               var that = this;</p><p> that.parentCode.valueChange.subscribe((change)=>{</p><p>if(change.oldValue == null || change.value != change.oldValue) {</p><p>var parentCode = that.parentCode.value;</p><p>if(parentCode == "" || parentCode == "undefined" || parentCode=="null"){</p><p> that.categoryCode.value = data.id;</p><p> that.categoryParentId.value = parentCode;</p><p> } else {</p><p> that.categoryCode.value = parentCode + "_" + data.id; </p><p> }</p><p> }</p><p> });</p><p> });
+<strong>效果示例图：（补充）</strong></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/wu5rfe</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

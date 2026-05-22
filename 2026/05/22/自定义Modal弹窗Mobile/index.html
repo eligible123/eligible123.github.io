@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自定义Modal弹窗(Mobile) - 云枢技术文档</title>
+<meta property="og:title" content="自定义Modal弹窗(Mobile)">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/自定义Modal弹窗Mobile/">
+<meta name="description" content="自定义Modal弹窗(Mobile) - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>自定义Modal弹窗(Mobile)</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>自定义Modal弹窗(Mobile)</h1></p><p><h2>一、业务场景</h2>
+在目前前端的开发过程中，经常遇到需要表单详情或者列表页面点击按钮需要弹窗的情况。目前产品的this.$confirm方法只能实现一些简单的弹窗提示文字，如果涉及到稍微复杂的场景就不能使用，需要在对应的详情页或者列表页面进行弹窗的二开了，并且随着开发弹窗的数量增加很容易形成冗余的代码，影响代码可读性。</p><p>基于以上原因，需要考虑能否使用类似于this.$confirm的形式实现可自定义的Modal弹窗实现复杂场景的开发。</p><p><h2>二、实现思路</h2>
+1、参考this.$confirm的实现方法进行开发</p><p>2、考虑弹窗内容的高度自定义化，使用component标签进行动态渲染。</p><p>3、通过传参自定义弹窗的类名等一些可配置项（具体参考thinking-ui中配置项）以及点击按钮的回调方法，动态渲染的组件名。</p><p>thinking-ui：<a href="http://thinking-ui-doc-alpha.devoa.h3yun.net/components/zh-cn/h3-modal.html#%25E4%25BD%25BF%25E7%2594%25A8%25E6%258C%2587%25E5%258D%2597">http://thinking-ui-doc-alpha.devoa.h3yun.net/components/zh-cn/h3-modal.html#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97</a></p><p><h2>三、实现过程</h2></p><p><h3>1. 开发自定义弹窗部分</h3></p><p><h4>将弹窗的一些可配置属性抽离以便通过传参实现自定义配置，但是由于这些属性较多，我们还需要设置默认值。</h4></p><p><h4>将弹窗的点击事件通过传入的方法进行触发实现点击事件的回调，并且在component标签上我们设置的ref属性，可以将自定义内容中的输入的值等等其他属性获取到通过回调函数传出，以便我们进行后续开发。</h4>
+由于使用的component动态渲染组件，因此，我们需要将对应的组件开发好进行引入，然后通过传参来规定渲染哪一个组件。</p><p>以下是完整代码</p><p><h3>2. 引入自定义弹窗</h3></p><p><h4>2.1 在h3-mobile.js中将自定义弹窗挂载在Vue原型上</h4>
+packages\mobile\src\config\h3-mobile.js</p><p><h4>2.2 在表单详情页面中定义方法展示弹窗</h4>
+packages\mobile\src\views\form\form-detail.vue</p><p><h4>2.3 在表单详情页面的代理方法中进行弹窗方法的监听代理并且传入对应的参数，这样我们就能在在线开发中使用this.showMyModal方法来展示弹窗了。</h4>
+packages\cloudpivot-form\form\src\runtime\components\form-detail.ts</p><p><h3>3.使用弹窗</h3></p><p><h4>3.1在使用是需要先确定弹窗中展示什么，然后在本地开发对应组件并进行组件的注册和引入。</h4></p><p><h4>3.2在后台在线开发中使用this.showMyModal显示弹窗，通过component参数来定义弹窗内容渲染的组件，props参数将表单中的数据传递给我们自定义的组件或者自定义都行。</h4>
+<strong>注：移动端弹窗的使用与PC端是一样的，只是PC端与移动端的option配置项参数有所不同。</strong></p><p><strong>因为移动端弹窗组件部分配置项与PC端不同，因此移动端配置项可以参考云枢移动端弹窗的配置项进行配置使用。</strong></p><p><strong>如果配置了customActions属性那么会以customActions中的配置项为主</strong></p><p><h2>四、效果图</h2>
+表单详情</p><p>提交按钮触发</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/mw6mib0tt15qu8rp</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

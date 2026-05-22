@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企微单点登录云枢 - 云枢技术文档</title>
+<meta property="og:title" content="企微单点登录云枢">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/企微单点登录云枢/">
+<meta name="description" content="企微单点登录云枢 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>企微单点登录云枢</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>企微单点登录云枢</h1></p><p><h1>企微单点登录云枢</h1></p><p><h4>业务场景：某项目需求是从企微单点登录到云枢（PC,移动端）。</h4></p><p><h5>企业配置：只能配置一个携带code的地址，通过code去获取token,登录。</h5>
+解决思路：</p><p>1.设置空白页(不需要token)</p><p>注* 只需要设置portal端即可，因为portal 和 移动端的路由差异</p><p>2.通过code调用接口拿到token
+3.解决一个地址区分跳转PC，移动端</p><p>	</p><p>代码：</p><p>1.portal：</p><p>1) 根据二开规范新增空白页，进行通过code获取token</p><p>注*：设置放行这个路由</p><p>1.获取地址参数</p><p>   getCode(name: any) {</p><p>        let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");</p><p>        let r = window.location.search.substr(1).match(reg);</p><p>        if (r != null) {</p><p>            return unescape(r[2]);</p><p>        };</p><p>        return null;</p><p>    }</p><p>2.移除token,refreshe_token,expireTime,再通过code获取最新的token等信息</p><p>async getBycode(){</p><p>    localStorage.removeItem('token')</p><p>    localStorage.removeItem('refresh_token')</p><p>    localStorage.removeItem('expireTime')</p><p>        let code: any = this.getCode('code') </p><p>        if(code){</p><p>            let parmas = {</p><p>                        code: code</p><p>                    }</p><p>        let res: any = await OAuthApi.getWxcode(parmas)</p><p>            if(res.errcode === 0){</p><p>               </p><p>                    const token:any = (res as any).access_token;</p><p>                    const refresh_tokens:any = (res as any).refresh_token;</p><p>                    localStorage.setItem('refresh_token', refresh_tokens);</p><p>                    localStorage.setItem('token', token);</p><p>                    </p><p>                    //携带token 做跳转</p><p>                    this.getCodeUrl(token);</p><p>                 </p><p>            }</p><p>        }</p><p>    }</p><p>    async getCodeUrl(token) {</p><p>        let theUrl: any = `<code></p><p>        let workflowInstanceId: any = this.getCode('workflowInstanceId')</p><p>        let workitemId: any = this.getCode('workitemId')</p><p>            if(token){</p><p>                if (workflowInstanceId && workitemId) {</p><p>                theUrl = </code>${env.portalHost}/form/detail?<code>;</p><p>                    theUrl += </code>workflowInstanceId=${workflowInstanceId}&workitemId=${workitemId || ''}<code>;</p><p>                }</p><p>                window.location.href  = theUrl</p><p>            }else{</p><p>                this.$router.push({ name: 'login' }).catch((err: any) => {</p><p>                console.error(err);</p><p>                });</p><p>            }</p><p>    }</p><p>2.mobile:</p><p>文件地址:baodao_frontEnd\frontend\packages\mobile\src\main.ts</p><p>1.在移动端入口的地方进行地址参数识别</p><p>2.如图</p><p>export function init() {</p><p>  if (window.location.href.indexOf('appCode=WX')>-1) {</p><p>    getCodeUrl();</p><p>  }else if(window.location.href.indexOf('code') >-1 && window.location.href.indexOf('workflowInstanceId') >-1  && window.location.href.indexOf('workitemId') >-1 && window.location.href.indexOf('extend_msg_code=wxTodo') >-1){</p><p>    getCodeMessag();</p><p>  }else {</p><p>    platform.start(env.client_id, env.scope).then((result: any) => {</p><p>      const { query } = result;</p><p>      const token = localStorage.getItem('token');</p><p>      if (!token && query.messageId) {</p><p>        localStorage.setItem(</p><p>          'isShowEmailResquest',</p><p>          </code>${env.portalHost}/mobile/?messageId=${query.messageId}<code>,</p><p>        );</p><p>        const theUrl = </code>${env.portalHost}/mobile/#/login`;</p><p>        window.location.href = theUrl;</p><p>      }</p><p>      window.Environment = query;</p><p>      OAuthApi.getUserInfo().then((res: any) => {</p><p>        if (res.errcode === 0) {</p><p>          setUserInfo(res.data);</p><p>        }</p><p>      });</p><p>      if (query.messageId) {</p><p>        getMessageUrl(query.messageId);</p><p>      } else {</p><p>        // alert('开始请求消息参数:消息id：'+window.Environment.messageId);</p><p>        startApp();</p><p>      }</p><p>      initMapSecret();</p><p>      initFileListTypes();</p><p>    });</p><p>  }</p><p>}</p><p>3.自定义函数，拿到地址code,通过调用接口获取token,进行登录</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/roz1lggp5gqw8wd4</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

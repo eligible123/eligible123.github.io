@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tcs部署 - 云枢技术文档</title>
+<meta property="og:title" content="tcs部署">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/tcs部署/">
+<meta name="description" content="tcs部署 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>tcs部署</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>tcs部署</h1></p><p><strong>TCS部署</strong></p><p><strong>一、需求</strong></p><p>需要在客户TCS平台进行产品部署。</p><p><strong>二、思路</strong></p><p>参考客户文档，进行tcs部署</p><p><strong>三、解决方案</strong></p><p><strong>方案</strong>：研究客户文档，类似于k8s模式，编写dockerfile打包镜像，然后采用流水线进行部署</p><p><strong>四、实现步骤</strong></p><p><strong>1、需要客户先新建应用和部署组，然后登录develop平台，新建开发流水线，上传产品包，编写dockerfile生成镜像文件，上传到镜像仓库，然后根据新增配置文件，进行部署。</strong></p><p>1 上传产品包，获取制品库地址</p><p>2 新建流水线，根据制品库地址，编写dockerfile构建镜像，相关镜像打包dockerfile文件在下方</p><p>3 新增文件配置，启动时引入配置</p><p>其中 shenpi为web服务，shenpi1为前端ng服务，report为报表服务，web-nginx为nginx跳转服务，目的是从web集群跳到app集群。</p><p>4 部署应用</p><p>点击部署组，选中对应应用进行部署，镜像地址从流水线生成的镜像出获取，注意启动参数和配置文件挂载</p><p>5 查看日志</p><p>点击进入具体的部署组，点击登录进入容器化服务器，可用命令查看日志文件，日志文件目前存放在/applog目录下</p><p>6 生产环境部署更新</p><p>在develop平台上，依次运行dev-sit-prod流水线，注意有些环境需要人为审批，最终会把生成的镜像推送至生产镜像仓库，然后复制镜像链接，通知运维人员部署。注意修改测试流水线的交付时间，一个交付流水线只能使用一次。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/hnywlei75rlhy6ih</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

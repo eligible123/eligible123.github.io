@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>流程中发送外链给第三方填写数据并回填 - 云枢技术文档</title>
+<meta property="og:title" content="流程中发送外链给第三方填写数据并回填">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/流程中发送外链给第三方填写数据并回填/">
+<meta name="description" content="流程中发送外链给第三方填写数据并回填 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>流程中发送外链给第三方填写数据并回填</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>流程中发送外链给第三方填写数据并回填</h1></p><p><h1>需求</h1>
+客户有一套设计流程，流程中有一个节点需要反馈给第三方外包上传设计好的文件</p><p><h1>思路</h1>
+目前我们产品的公开外链只能支持发起和新增，无法在流程中进行数据的填写，因此需要做一些二开</p><p><h1>步骤</h1></p><p><h2>再创建一个外包反馈表单，表单中拖入关联单选，去关联设计流程模型，再拖入子表控件，把设计流程中的数据映射到子表，把附件控件可写打开。然后把外包反馈表单的外链模式打开</h2></p><p><h2>来到设计流程表单，在需要外包反馈的节点拖入一个单行文本，名称设计为外包外链地址，打开表单js编辑，当控件没值时赋值上外包反馈的外链地址，并在结尾拼接上当前表单id</h2></p><p><h2>回到外包反馈表单在在线js开发里获取jumpId并赋值给关联单选</h2></p><p><h2>回到设计流程，在外包反馈节点同意时，需要判断外包工单是否被外链赋值上</h2></p><p><h2>当外包反馈表单提交时，通过业务规则数据新增，把外包上传的附件回填回设计流程，筛选条件通过我们赋值的关联表单</h2></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/wye441agt0sx449g</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>某马逻辑删除 - 云枢技术文档</title>
+<meta property="og:title" content="某马逻辑删除">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/某马逻辑删除/">
+<meta name="description" content="某马逻辑删除 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>某马逻辑删除</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>某马逻辑删除</h1></p><p><h1>​</h1></p><p><h2>背景：在某马项目中，客户想改造产品的删除逻辑，期望我们产品的业务单据删除可拓展为真删除和假删除，现阶段为真删除。</h2></p><p><h2>分析：最开始的想法是想跟某马一样，在创建表单的时候，默认生成是否删除字段作为标记，但是因为项目已经上线的应用有一百多个，如果采用该方案，之前的业务单据都需要手动创建字段，返工时间长，且作为一个标准产品，随意增加字段对业务端来说不友好，也没有实现可随意选择真删除和假删除。</h2></p><p><h2>实现：我们最后采用外挂表的方式，重写产品的业务相关表查询，删除相关方法。</h2></p><p><h3>创建两个表：</h3>
+1.表单创建：</p><p>一个表用来设置是否开启逻辑删除</p><p>另一个表在我们设置了开启逻辑删除后，记录我们在调用产品的业务单据删除方法：api/runtime/query/delete_data时记录表单和表单相关联的objectId</p><p><h3>2.修改代码：</h3>
+需要修改的接口和代码如下：</p><p>delete_data​</p><p>产品逻辑开始后，判断如果开启逻辑删除 ，则我们不走产品真删除逻辑，而是走保存到中间表逻辑</p><p>注意，因为我们业务单据跟流程相关，所以如果单据有绑定流程，也需要同步处理流程相关三个表单。把他们也隐藏。</p><p>/list接口：</p><p>在查询的时候把关联表ID加入查询条件，过滤查询</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/sdfb8hn08cu9mqzb</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

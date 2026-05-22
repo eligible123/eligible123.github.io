@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>子表数据通过接口返回数据填充 - 云枢技术文档</title>
+<meta property="og:title" content="子表数据通过接口返回数据填充">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/子表数据通过接口返回数据填充/">
+<meta name="description" content="子表数据通过接口返回数据填充 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>子表数据通过接口返回数据填充</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>子表数据通过接口返回数据填充</h1></p><p><h2>子表数据通过接口返回数据填充</h2></p><p><h2>1.背景</h2>
+<strong>1.1.</strong></p><p><strong>项目背景：</strong>供应商管理考核。</p><p><strong>指引初衷：</strong>在供应商管理考核打分整个需求流程中涉及到8个不同的数据模型，其中一半以上存在获取二开接口数据，并将数据填充至子表，进行点击详情或待办时子表数据的展示功能，并且还存在一个模型中有多个子表需要基于不同接口获取数据并填充子表回显数据的情况。</p><p><strong>1.2</strong><strong>子表数据回显需求背景：</strong></p><p>v 考核打分发起一条流程时，存在子表进行数据展示阶段需要调用二开接口进行填充；</p><p>v 子流程子表数据依赖主流程映射数据项后通过接口进行查询；</p><p>v 需要根据不同流程节点，不同待办审批人，子表填充展示不同数据项；</p><p>v 不同子表回显数据内容与条数不一致，因此每个子表需对应不同的二开接口。</p><p><h2>2.二开模块</h2>
+v 二开后端接口编写；</p><p>v 前端js编写。</p><p><h2>3. 实现过程</h2></p><p><h4>3.1二开接口返回数据</h4>
+此处后台接口仅为根据条件参数进行显示数据查询后返回。为子表填充做数据支撑。</p><p>​</p><p><h4>3.2 js回显数据</h4>
+写在表单设计->html->渲染完成后，在条件控件有值时，通过js调用接口，获取结果数据后，基于赋值规则进行数据填充操作。</p><p><strong>注意点：</strong></p><p>当数据模型code与接口返回的key名一一对应时，可直接使用 <strong>that.</strong><strong>子表</strong><strong>code.Value = </strong><strong>接口返回数据</strong><strong>.data</strong>,进行数据填充显示。</p><p><h2>4. 最终效果</h2></p><p><h2>5. 注意事项：</h2>
+当子表中存在人员控件与部门控件时，返回的数据格式需如下图一同格式，即子表中人员与部门控件数据显示才会正确，如图二。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/km97vo4t1l6bdhwf</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

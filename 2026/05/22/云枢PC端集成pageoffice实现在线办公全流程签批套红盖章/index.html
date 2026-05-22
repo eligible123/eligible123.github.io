@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章） - 云枢技术文档</title>
+<meta property="og:title" content="云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢PC端集成pageoffice实现在线办公全流程签批套红盖章/">
+<meta name="description" content="云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章） - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）</h1></p><p><h1>背景</h1>
+政府项目需要实现word文档的在线打开，编辑和对word文档进行签批，套红，盖章等一系列操作，所以为了快速实现所需功能就需要引入在线办公软件，这次项目我们采用了pageoffice做实验</p><p><h1>项目搭建</h1></p><p><h2>配置config</h2>
+因为pageoffice不兼容ts和ES6语法因此不能把它集成到云枢里，我们采取的方式是新创建vue2+js项目，语法上尽量不采用新语法；部署上采用服务器配置node环境，开放一个端口号用来访问pageoffice端；本地项目需要开放端口，具体代码如下</p><p>（1：环境地址；2：开放访问；3：开放访问端口）；</p><p><h2>引入pageoffice.js</h2>
+pageoffice的引入：后端把pageoffice包引入后可以通过接口获取到pageoffice.js文件，这个文件需要在新建项目的index.html下映入</p><p>因为需要在云枢中对pageoffice进行启动所以也需要在云枢的pc端下的html里进行pageoffice.js的引入，方式同上；</p><p><h2>创建pageoffice页面</h2></p><p><h2>创建盖章，签批，查看</h2>
+原理逻辑：页面所需基础信息主体由后端接口返回html形成，页面按钮控制由前端写方法获取后并在页面初始化时绑定到全局属性中，当又不同种类的打开模式时，比如套红，签批个人建议复制不同页面进行区分</p><p>各页面之间的区别为后端接口的不同以及绑定的全局属性的不同；</p><p><h2>云枢中使用</h2>
+做好了以上工作，就可以在云枢中进行使用了</p><p>定义不同功能的按钮：</p><p>然后通过用户点击按钮，把相关需要打开的word附件的id携带到url参数中，并通过window.POBrowser.openWindowModeless打开pageoffice软件；</p><p><h2>效果</h2></p><p><h2>参考文件</h2></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gak0z0</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

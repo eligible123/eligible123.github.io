@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人员单选映射逻辑与拓展映射思路分享 - 云枢技术文档</title>
+<meta property="og:title" content="人员单选映射逻辑与拓展映射思路分享">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/人员单选映射逻辑与拓展映射思路分享/">
+<meta name="description" content="人员单选映射逻辑与拓展映射思路分享 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>人员单选映射逻辑与拓展映射思路分享</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>人员单选映射逻辑与拓展映射思路分享</h1></p><p><h3>业务场景：客户的组织机构数据从第三方同步过来，有一些字段想要通过映射处理，整理出人员单选拓展映射思路分享。</h3>
+<strong>实现效果：</strong></p><p> </p><p><strong>实现思路：</strong></p><p>找到产品配置映射逻辑以及处理映射逻辑代码的地方，了解产品映射逻辑，根据原有逻辑进行字段拓展以及数据映射处理。</p><p><strong>实现过程：</strong></p><p><h4>1 了解分析标准产品人员单选映射逻辑</h4>
+首先要在表单设计页面去配置人员单选映射字段，从而找到相关配置文件位置</p><p>Packages\cloudpivot-form\form\src\typings\form-modals-map.ts</p><p>然后再表单设计页面人员单选配置映射弹窗内容文件</p><p>packages\cloudpivot-form\form\src\common\components\user-selection-map.vue</p><p>最后去了解人员单选控件值改变时触发相关映射逻辑</p><p>人员单选选择数据时触发change方法，会对当前控件进行setValue</p><p>packages\cloudpivot-form\form\src\common\components\form-staff-selector\pc\index.vue</p><p>packages\cloudpivot-form\form\src\common\controls\base-control.ts</p><p>setValue后会触发staff-selector-control.ts文件handleValueChange</p><p>packages\cloudpivot-form\form\src\common\components\form-staff-selector\controls\staff-selector-control.ts</p><p><h4>2.在熟悉产品的人员单选映射逻辑后，拓展一些自定义字段的可配置化处理</h4>
+第一种方式，是通过产品自带的员工信息拓展表功能处理，目前通过此方式处理的为需要在组织机构用户信息里面统一维护，在这里配置的数据信息启用后可以直接在映射那部分配置，拓展字段目前支持文本和人员单选类型数据。</p><p>第二种方式，用户不希望在组织机构用户信息部分透露过多信息，且会有一些日期格式的数据需要进行映射，根据产品人员单选映射逻辑进行拓展。</p><p>通过映射逻辑方法解读之后，最好的实现方案是新增方法逻辑处理，不会修改产品映射逻辑，只需要额外新增方法获取数据就会触发映射逻辑</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/wfz81cxsxr0qxgsn</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

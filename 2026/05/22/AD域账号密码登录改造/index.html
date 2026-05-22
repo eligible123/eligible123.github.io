@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD域账号密码登录改造 - 云枢技术文档</title>
+<meta property="og:title" content="AD域账号密码登录改造">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/AD域账号密码登录改造/">
+<meta name="description" content="AD域账号密码登录改造 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>AD域账号密码登录改造</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>AD域账号密码登录改造</h1></p><p><strong>AD域账号密码登录改造</strong></p><p><strong>一、需求</strong></p><p>客户业务希望减少各个平台用户记忆密码的重复操作，希望能通过云枢平台登录页面的时候用的也是他们组织的AD域的账号密码。</p><p><strong>二、思路</strong></p><p>功能实现：改造登录接口的登录逻辑，在云枢本身的基础之上做AD域服务连接验证。</p><p><strong>难点</strong>：</p><p>1、云枢本身的校验逻辑、相关的验证和token颁发，都是标准的框架，不宜大动。</p><p>2、同步组织AD域那边的密码又不可能被同步过来。</p><p>3、两套密码逻辑并行：AD域校验用的时候是AD域的密码，回归云枢本身的时候又要用云枢的密码。</p><p>4、新项目不宜找前端二开什么功能，减少影响面。</p><p><strong>分析</strong>：云枢本身的登录逻辑在get_code的接口中，才是我们验证账号密码校验的关键，AD域这里的验证可以在get_code的接口中做一次认证拓展。</p><p><strong>三、解决方案</strong></p><p><strong>方案</strong>：按照产品标准的拓展接口的逻辑重写get_code方法，根据用户是否为AD域同步过来的用户来做AD域认证的校验，校验完成后将password和加密index修改为默认的密码。</p><p><strong>四、实现步骤</strong></p><p>1、AD域账号密码连接认证逻辑，这个需要一个单独的方法完成，要包含域DN、host、post等信息，这个在做组织同步的时候就写好的，只需要有相关服务信息connection不报错就是成功了。</p><p>2、不同来源的数据要做好区分判断，AD域验证也最好有个标识来做是否启用。</p><p>3、getCode方法中要对前端给过来的密码进行解密，验证后再提供加密信息到后续认证体系用。</p><p>4、二次加密需要用到publicKey，这里可以让前端二开将publicKey传过来，但为了减少项目复杂度，这边重新获取了一次加密用的公钥和私钥重新给接口后续逻辑中的password和index赋值</p><p><strong>其他相关代码：私钥解密密码、ad账密认证</strong></p><p><strong>五、效果展示</strong></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/nfhsaqodx8i2g3t9</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

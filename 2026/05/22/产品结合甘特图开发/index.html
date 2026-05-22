@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品结合甘特图开发 - 云枢技术文档</title>
+<meta property="og:title" content="产品结合甘特图开发">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/产品结合甘特图开发/">
+<meta name="description" content="产品结合甘特图开发 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>产品结合甘特图开发</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>产品结合甘特图开发</h1></p><p><h1>背景</h1>
+项目需要把一些数据展示为甘特图的形式，原型图如下</p><p>为了实现这一需求，我采用了改造结合dhtmlx-gantt组件的开发形式</p><p><h2>dhtmlx-gantt的基础使用</h2></p><p><h3>下载</h3>
+npm i dhtmlx-gantt --save下载好组件</p><p><h3>调用</h3></p><p><h3>配置</h3>
+先绘制一个专属id的甘特图盒子</p><p><code> <div id="gantt_here" class="left-container"></div></code></p><p>在需要显示甘特图的时候通过对刚刚引入的gantt进行配置就可以显示出甘特图</p><p><h2>根据需求对甘特图进行的二开配置</h2></p><p><h3>数据来源二开</h3>
+电建项目甘特图数据来源于后端返回数据，这里我选择在初始化的时候调用接口，接口获取到值后再对甘特图进行初始化</p><p><h3>把后端数据转化为gant图的接收值</h3>
+this.dataSouce为从后端获取到的数据，甘特图获取的时间参数必须为YYYY-DD-MM格式，而云枢产品给过来的数据一般是标准时间格式，因此需要把时间统一进行格式化，格式化方法为</p><p>把所有数据按规则pash到this.tasks里后，通过调用 gantt.parse(this.tasks);来让甘特图接收所有值；</p><p><h3>里程碑节点切换</h3>
+电建项目有控制里程碑节点是否显示的操作，所以要对里程碑节点进行控制</p><p>控制方法的html</p><p>点击swatch按钮后，会走change方法，进而改变Milestone的值，再重新调用gantt方法重新渲染；重新渲染前需要调用一下gantt.clearAll()，把之前生成的里程碑或者其他标记给清空；</p><p><h3>年月切换</h3>
+电建项目需要对甘特图的时间坐标单位进行年月的切换；</p><p>html代码</p><p>用户切换选择后会触发changeitem方法，这时根据选择的值重新改变listvalue，然后重新渲染；同理重新渲染前需要调用gantt.clearAll()清除一下；</p><p><h3>左侧表格自定义效果</h3>
+电建项目需要根据后端type判断是否为关键节点，是关键节点需要把文字置为红色</p><p>这里直接通过columns数组里的return方法进行自定义</p><p><h2>最终效果</h2></p><p><h1>总结：甘特图使用需要注意以下几点</h1></p><p><h2>1.甘特图接收的数据格式需要专门格式化</h2></p><p><h2>2.对甘特图做重新渲染前需要调用清除方法</h2></p><p><h1>​</h1></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/kdk900yd2f1wggw3</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

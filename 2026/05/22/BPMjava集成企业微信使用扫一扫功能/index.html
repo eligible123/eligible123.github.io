@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BPM(java)集成企业微信使用扫一扫功能 - 云枢技术文档</title>
+<meta property="og:title" content="BPM(java)集成企业微信使用扫一扫功能">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/BPMjava集成企业微信使用扫一扫功能/">
+<meta name="description" content="BPM(java)集成企业微信使用扫一扫功能 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>BPM(java)集成企业微信使用扫一扫功能</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>BPM(java)集成企业微信使用扫一扫功能</h1></p><p>背景：在企业微信使用BPM时需要扫描二维码获取信息填充到表单字段中。（每个流程都需要）</p><p><h3>具体开发及思路可以参考如下代码：</h3></p><p><h4>1：在Portal\Mobile\js目录下添加jweixin.js文件</h4></p><p><h4>2：在\Portal目录下的MvcDefaultSheet.jsp文件中添加如下代码：</h4>
+<scripttype="text/javascript"charset="utf-8"src="Mobile/js/jweixin.js?v=201901241023"></script></p><p>具体代码位置如下图：</p><p><h4>3：在Portal\Mobile\form\templates目录下的flowStatus.html添加如下代码：</h4>
+<divclass="menu-bar progress-picture hasBorderBottom"class="qr-btn"ng-if="!QCShow"ng-	         		click="QRCode($event)"></p><p>    <divclass="menu-bar-left"></p><p>          <imgsrc="/Portal/Mobile/img/details/code.png"class="progress mr10"></p><p>        <spanclass="f16">二维码扫描</span></p><p>    </div></p><p>    <divclass="menu-bar-right"></p><p>        <iclass="icon ion-ios-arrow-right"style="color: #ccc;font-size: 20px; margin-right:10px;"></i></p><p>    </div></p><p></div></p><p>具体代码位置如下图：</p><p>图标存放在Portal\Mobile\img\details目录里：</p><p><h4>4：在Portal\Mobile\form目录下的formControllers.js里如下两个方法：</h4>
+1：此方法调用企业微信扫一扫时先判断该流程中是否有scanContent字段，并且该字段是可写权限。如果该条件成立就会调用获取签名接口，获取成功后调用jsSDKReady（第二个步骤）方法；</p><p>2：此方法是调用签名成功时的回调并且认证企业微信，认证成功才会调用企业微信的scanQRCode（扫一扫），扫描成功后执行回调SetControlValue方法（BPM系统方法）;</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ck0e09</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

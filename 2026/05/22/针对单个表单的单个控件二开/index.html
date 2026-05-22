@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>针对单个表单的单个控件二开 - 云枢技术文档</title>
+<meta property="og:title" content="针对单个表单的单个控件二开">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/针对单个表单的单个控件二开/">
+<meta name="description" content="针对单个表单的单个控件二开 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>针对单个表单的单个控件二开</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>针对单个表单的单个控件二开</h1></p><p><h3>业务场景：</h3>
+客户需要针对某个表单的下拉框控件进行改造成树形下拉框，并且对选择的数据进行映射</p><p><h3>实现思路：</h3>
+1.在产品的下拉框控件中进行表单的schemaCode以及单个下拉框控件编码判断
+2.进行树形组件的开发
+3.将树形组件选择的值用产品的方法进行赋值，并且进行表单控件的映射赋值</p><p><h3>实现过程：</h3>
+在产品的下拉框控件中进行表单的schemaCode以及单个下拉框控件编码判断</p><p>进行树形组件的开发</p><p>树形组件中需要接收并且监听父级传下来的value值进行回显数据</p><p>并且将change事件向父级传递</p><p>将树形组件选择的值用产品的方法进行赋值，并且进行表单控件的映射赋值</p><p>因为本次的数据映射只针对于单个固定的控件，所以可以指定控件编码进行赋值。</p><p><h3>效果图：</h3></p><p><h3>补充：</h3>
+后续需求需要改造子表中某个下拉多选控件为树形弹窗并且进行数据映射，主要逻辑还是一样，但数据赋值和数据映射的时候需要注意。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/rst561631thfb564</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

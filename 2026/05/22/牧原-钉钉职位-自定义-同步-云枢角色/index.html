@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>牧原 钉钉职位 自定义 同步 云枢角色 - 云枢技术文档</title>
+<meta property="og:title" content="牧原 钉钉职位 自定义 同步 云枢角色">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/牧原-钉钉职位-自定义-同步-云枢角色/">
+<meta name="description" content="牧原 钉钉职位 自定义 同步 云枢角色 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>牧原 钉钉职位 自定义 同步 云枢角色</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>牧原 钉钉职位 自定义 同步 云枢角色</h1></p><p><h2>项目背景</h2>
+ 客户需要钉钉职位人员同步至云枢角色中用于业务操作。</p><p><h2>原方案</h2></p><p>## </p><p><h2>现方案</h2>
+不对产品组织同步代码产生侵入。通过定时任务读取一定部门范围生成职位及角色。同时新增实时调用接口避免实效问题</p><p>缺点 实效性不够，性能相对于改造产品会损耗高些，需要每次都全量获取范围内的组织人员角色</p><p>优点 不依赖产品，不影响产品升级，特别是牧原产品本身组织架构增量同步存在问题的情况下</p><p>​</p><p><h2>相关模型</h2></p><p><h3>1、岗位表</h3>
+字段 岗位名称 同步于组织人员的岗位字段</p><p><h3>2、角色岗位表</h3>
+主表字段</p><p>角色名称  后台角色的名称</p><p>角色ID 后天角色的ID</p><p>子表字段</p><p>岗位名称 关联岗位表</p><p>管理范围 单选 本人 / 本部门 用于角色赋值管理范围</p><p>​</p><p><h3>相关代码</h3></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/tmhuzgi1bpht0yxs</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

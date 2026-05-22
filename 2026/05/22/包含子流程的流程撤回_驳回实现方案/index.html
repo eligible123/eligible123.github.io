@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>包含子流程的流程撤回_驳回实现方案 - 云枢技术文档</title>
+<meta property="og:title" content="包含子流程的流程撤回_驳回实现方案">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/包含子流程的流程撤回_驳回实现方案/">
+<meta name="description" content="包含子流程的流程撤回_驳回实现方案 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>包含子流程的流程撤回_驳回实现方案</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>包含子流程的流程撤回/驳回实现方案</h1></p><p><strong>业务场景/背景：</strong></p><p>某模块需要在进入子流程后，在所有子流程未审批的情况下，发起者可以在主流程列表页中点击按钮进行撤回，主流程撤回到提交节点，子流程将被删除。</p><p><strong>实现思路</strong></p><p>1.判断子流程的进行状态，如全部子流程都未开始，则删除子流程（业务需求）</p><p>2.获取上述接口中的返回值，判断false则继续执行取消主流程代码</p><p>3.构建评论实体参数</p><p>4.构建WorkflowOperationModel对象​</p><p>说明：本质为删除所有子流程数据（等于删除待办任务），取消掉主流程的当前流程，以免发生流程错误，最后调用产品的操作流程方法激活提交节点。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gihhgcpeim16s1bw</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

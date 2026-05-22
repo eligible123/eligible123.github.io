@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字段映射表数据同步技术方案 - 云枢技术文档</title>
+<meta property="og:title" content="字段映射表数据同步技术方案">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/字段映射表数据同步技术方案/">
+<meta name="description" content="字段映射表数据同步技术方案 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>字段映射表数据同步技术方案</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>字段映射表数据同步技术方案</h1></p><p><h2>业务场景</h2>
+在企业信息化系统中，需要将表 A 的数据根据字段映射规则同步到表 B，以实现数据迁移、转换或整合。字段映射规则定义了源表字段与目标表字段的对应关系，并支持不同数据类型的转换（如文本、日期、人员选择等）。同步过程需确保数据完整性、支持主表和子表处理，并记录详细日志以便于调试和审计。</p><p><h2>核心需求</h2>
+- 字段映射配置：根据配置表（<code>FIELD_MAPPING_CONFIG</code> 和 <code>FIELD_MAPPING_DETAIL</code>）获取源表和目标表的字段映射规则。
+- 数据查询与转换：从源表查询数据，按照映射规则转换为目标表格式，支持多种数据类型（如文本、日期、人员、部门、附件等）。
+- 主表与子表处理：支持主表数据和子表数据的同步，保持主子表关系（通过 <code>refId</code> 和 <code>parentId</code>）。
+- 数据保存：将转换后的数据保存到目标表，设置状态为“已完成”（<code>COMPLETED</code>）。
+- 异常与日志管理：记录详细日志，捕获异常并返回明确的错误信息。</p><p><h2>实现思路</h2>
+- 查询字段映射配置：</p><p>- 从 <code>FIELD_MAPPING_CONFIG</code> 表获取主配置信息（源表编码 <code>sourceSchemaCode</code>、目标表编码 <code>targetSchemaCode</code>、子表配置等）。
+- 从 <code>FIELD_MAPPING_DETAIL</code> 表获取字段映射规则（源字段、目标字段、类型）。</p><li>查询源表数据：</li><p>- 使用 SQL 查询源表（<code>sourceSchemaCode</code>）的所有数据。
+- 若存在子表，查询子表配置和数据，并根据 <code>refId</code> 关联主表。</p><li>数据转换：</li><p>- 对主表数据，遍历字段映射规则，调用特定类型转换方法（如文本、日期、人员等）。
+- 对子表数据，基于主表 ID 映射（<code>idMappingMap</code>），生成子表数据并设置 <code>parentId</code>。</p><li>数据保存：</li><p>- 将转换后的主表和子表数据封装为 <code>BizObjectModel</code>，保存到目标表。
+- 使用原创建人 ID 或默认用户 ID 保存数据。</p><li>性能优化：</li><p>- 使用批量查询和分区处理（如 <code>Lists.partition</code>）减少数据库交互。
+- 缓存字段映射配置（<code>detailBySourceCodeMap</code>）以避免重复查询。</p><li>异常与日志：</li><p>- 记录每条数据的处理过程（批次、ID、成功/失败）。
+- 捕获异常并返回明确的错误信息（如配置缺失、数据为空）。</p><p><h2>实现步骤与代码</h2></p><p><h3>1. 数据同步主逻辑</h3>
+负责整体同步流程，包括配置查询、数据处理和保存。</p><p><strong>说明</strong>：</p><p>- 使用 <code>BizObjectCreatedModel</code> 获取字段映射配置。
+- 通过 <code>dataSyncHandler</code> 处理数据转换，<code>dataSyncForSave</code> 保存数据。
+- 记录同步开始和结束时间，计算耗时，便于性能监控。</p><p><h3>2. 数据保存</h3>
+将转换后的数据保存到目标表。</p><p><strong>说明</strong>：</p><p>- 将数据转换为 <code>BizObjectModel</code> 列表，逐条保存到目标表。
+- 检查创建人信息，若缺失则使用默认用户 ID。
+- 捕获保存异常并记录日志，避免中断整体流程。</p><p><h3>3. 数据转换处理</h3>
+处理主表和子表数据的字段映射和类型转换。</p><p><strong>说明</strong>：</p><p>- 查询源表数据和字段映射配置。
+- 使用 <code>detailBySourceCodeMap</code> 缓存字段映射规则，优化性能。
+- 调用 <code>dataSyncForFieldHandler</code> 处理主表和子表数据转换。</p><p><h3>4. 字段转换与子表处理</h3>
+实现字段映射和数据类型转换，支持主表和子表。</p><p><strong>说明</strong>：</p><p>- 主表数据按批次（<code>Constant.BATCH_SIZE</code>）处理，生成新 ID 并存储映射关系（<code>idMappingMap</code>）。
+- 子表数据通过 <code>refId</code> 关联主表 ID，设置 <code>parentId</code> 后保存。
+- 使用缓存（<code>detailBySourceCodeMap</code> 和 <code>childrenDetailBySourceCodeMap</code>）优化字段映射查询。</p><p><h3>5. 字段类型转换</h3>
+根据字段类型执行特定转换逻辑。</p><p><strong>说明</strong>：</p><p>- 根据字段类型（如“单行文本”、“日期”、“人员单选”）调用对应的转换方法。
+- 支持空值检查和默认转换（<code>convertString</code>）。
+- 示例转换方法（如 <code>convertDate</code>）支持多种日期格式的规范化。</p><p><h3>6. 示例类型转换 - 日期</h3>
+处理多种日期格式的转换。</p><p><strong>说明</strong>：</p><p>- 支持多种日期格式（如 <code>dd/MM/yyyy HH:mm:ss</code>、<code>yyyy/MM/dd HH:mm:ss</code>）的规范化。
+- 使用正则表达式处理特殊格式（如补零）。</p><p><h2>实现效果</h2></p><p>###</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/vwqdkyekidgum8wi</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

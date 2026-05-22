@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自定义实现权限系统 - 云枢技术文档</title>
+<meta property="og:title" content="自定义实现权限系统">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/自定义实现权限系统/">
+<meta name="description" content="自定义实现权限系统 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>自定义实现权限系统</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>自定义实现权限系统</h1></p><p>从头实现权限系统</p><p><strong>一、需求：</strong></p><p>用户不想用系统自带的权限系统，需要从头写一个树形的权限控制系统，这就需要重新设计表单，通过前端二开页面，完成权限系统的设置。</p><p>左侧为角色，点击左侧某个角色，右侧权限实时显示角色对应的角色权限。</p><p><strong>2、实现方式：</strong></p><p>2.1后端设计权限逻辑</p><p>2.1.1 角色表</p><p>2.1.2 菜单表</p><p>应用名称为关联表单，决定该菜单是哪个应用下的数据，菜单编码唯一，上级目录为关联表单，如果该菜单为一级目录，且下面没有二级目录，则上级目录为空，上级目录编码为0，菜单类型为非目录，如果该菜单为一级目录，且下面有二级目录，则菜单类型为目录，则上级目录为空，上级目录编码为0；如果为子菜单，则选择对应的上级目录。</p><p>2.1.3 角色权限表</p><p>此表关联角色表与菜单表，菜单名称为关联菜单表，映射出选择的菜单编码，如果菜单类型为非目录，则展示权限子表，可以输入按钮权限，按钮权限编码唯一。如果菜单类型为目录，则不显示权限子表。角色名称关联角色表，确定该条权限为哪个角色的权限。</p><p>2.2 前端显示</p><p>2.2.1 数据获取</p><p>通过当前选中角色ID与应用ID 获取菜单表与角色权限表相关数据。</p><p>菜单表中存有当前系统所有菜单的数据，角色权限表中存有角色权限的数据。</p><p>2.2.2 数据处理</p><p>将获取到的角色权限表数据进行处理，处理成antd tree组件中想要的数据，下面为一个可以处理的代码</p><p>forPermissions(menu) {</p><p>    let returnPermissionList = ([] as any)</p><p>    this.originMenuData.forEach(item => {</p><p>      if(item.superiorFolderCode ===  menu.menuCode && item.menuTypeCode !== 'Folder') {</p><p>        let orgPermission = this.originPermissionsData.filter(ele => {</p><p>          return ele.menuCode === item.menuCode</p><p>        })[0]</p><p>        let permission = {</p><p>          name: '',</p><p>          id: '',</p><p>          key: '',</p><p>          isActive: true,</p><p>          children: ([] as any)</p><p>        };</p><p>        if(orgPermission) {</p><p>          orgPermission.permission_sheet.forEach(ele => {</p><p>            ele.name = ele.permissionsName;</p><p>            ele.code = ele.permissionsCode;</p><p>            ele.key = ele.code;</p><p>            if(!ele.isActive){</p><p>              permission.isActive = false</p><p>            }</p><p>          });</p><p>        </p><p>          permission.name = orgPermission.menuName.menuNameChinese;</p><p>          permission.id = orgPermission.id;</p><p>          // permission.isActive = orgPermission.folderIsView;</p><p>          permission.children = orgPermission.permission_sheet;</p><p>          permission.key = orgPermission.menuCode;</p><p>          returnPermissionList.push(permission);</p><p>        }</p><p>      }</p><p>      else if (item.menuTypeCode === 'Folder' && item.superiorFolderCode === menu.menuCode) {</p><p>        let orgPermission = this.originPermissionsData.filter(ele => {</p><p>          return ele.menuCode === item.menuCode</p><p>        })[0];</p><p>        if (orgPermission) {</p><p>          let permission = {</p><p>            name: '',</p><p>            key: '',</p><p>            isActive: false,</p><p>            children: ([] as any)</p><p>          };</p><p>          permission.name = orgPermission.menuName.menuNameChinese;</p><p>          permission.key = orgPermission.menuCode;</p><p>          permission.children = this.forPermissions(orgPermission);</p><p>          returnPermissionList.push(permission);</p><p>        }</p><p>      }</p><p>    })</p><p>    return returnPermissionList;</p><p>  }</p><p>代码实现的路有很多条，这个只是一个小参考</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gr38vp</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>页面埋点，收集信息 - 云枢技术文档</title>
+<meta property="og:title" content="页面埋点，收集信息">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/页面埋点收集信息/">
+<meta name="description" content="页面埋点，收集信息 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>页面埋点，收集信息</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>页面埋点，收集信息</h1></p><p><h1>页面埋点，收集信息</h1></p><p><h2>业务场景：某项目在用户做页面操作，进行信息搜集，信息监测。</h2></p><p><h2>开发思路:</h2>
+<strong>以下为简易使用说明，详细接入使用说明请阅读</strong></p><p><strong>wiki文档: <a href="http://wiki.htzq.htsc.com.cn/pages/viewpage.action?pageId=83590608">http://wiki.htzq.htsc.com.cn/pages/viewpage.action?pageId=83590608</a></strong></p><p><strong>一.web-sdk原生JS接入</strong></p><p><strong>1.将feedback.js放入需要接入的项目文件中，在单页面应用中可以在index.html main.js 或者其它合理入口位置将其引入，多页面应用尽量在js考前的位置上引入。引入web-sdk后，可以在引入位置之后的js执行中打印myTrack如console.log("test--myTrack",myTrack),若打印结果为一个对象，则引入成功。</strong></p><p><strong>2.初始化操作，调用myTrack.init(params = {})对sdk进行初始化启用;相应初始化参数及配置请参照 web埋点数据接入文档。初始化时机尽里与引用地址靠近，在项目靠前位置，避免调用埋点方法时初始化尚未完成造成数据丢失。</strong></p><p><strong>3.设置登录，调用mytrack.user_set("login","用户名/工号"，{user_name:"张三"})，对用户登录的匿名id进行用户名/工号替换，第三个参数用于上报用户的相关信息，如果没有可不传，目前采集用户信息为用户姓名，字段为user_name。设置退出，调用myTrack.user_set("logout"),对登录的用户名或工号进行销毁。设置公共属性，调用myTrack .user_set("common",params = {}),如字段有定制化采集的值,调用此方法对默认采集的值进行覆盖;</strong></p><p><strong>4.开启全面点，此操作需要在初始化时在init入参时将is_auto_track配置项的值设置为true。此时除需要设置登入，登出以及设置或上报覆盖相关公共属性的值外，将自动采集页面事件，a标签，button标签，input标签和textarea标签的点击事件;</strong></p><p><strong>5.自定义埋点，调用myTrack.event_report(params = {}),可以根据埋点事件的不同类型如system, page,webclick等，详细传参说明请参阅文档。如需采集非已定义的事件类型，可使用other类型，自定义采集内容可通过param预留字段进行上报，param为一个对象。</strong></p><p><strong>二.web-sdkes6接入</strong></p><p><strong>1.将feedback.es6.js放入需要接入的项目文件中,在项目考前位置通过import 或者require方式引入。</strong></p><p><strong>2.具体埋点方法使用与原生方式的方法一样。如自定义别名 如 import OwnAliasTrack from"xx/ feedback.es6.js” 则使用OwnAliasTrack.init();</strong></p><p><h2>实现方式：</h2>
+- 文件地址 ： packages\extends-common\src\websdk\websdk.api.ts</p><p>//对流程进行埋点</p><li>文件地址：packages\potal\src\startup.ts</li><p>//表单详情埋点</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/kdqw081gofxqowdm</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

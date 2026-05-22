@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>树形视图-左树右表数据一一对应 - 云枢技术文档</title>
+<meta property="og:title" content="树形视图-左树右表数据一一对应">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/树形视图-左树右表数据一一对应/">
+<meta name="description" content="树形视图-左树右表数据一一对应 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>树形视图-左树右表数据一一对应</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>树形视图-左树右表数据一一对应</h1></p><p><h2>一、项目背景</h2></p><p><h4>主线业务需要通过项目相关信息，构建一个树形结构的视图，并且需要实现对节点的增加、删除、移动等相关节点操作。</h4></p><p><h2>二、实现思路</h2></p><p><h4>1、引入ant-design vue 中 Tree 组件，根据后端返回结构，递归生成符合Tree组件的树形接口，完成左侧Tree布局</h4></p><p><h4>2、引入ant-design vue中 Table 组件，使用 table组件中的树形table的方法，通过slot生成右侧视图列表。</h4></p><p><h4>3、调整左右侧的每行的高度，保持一致。调整css样式，使表头固定在顶部</h4></p><p><h4>4、绑定ref,使用dom元素，计算左侧树形结构滚动的高度，赋值给右侧table滚动的高度，同理计算右侧滚动的高度，赋值给左侧Tree滚动的高度。</h4></p><p><h4>5、节点的删除、添加、上移、下移操作的原理：每次拿到操作节点的Node元素，用一个变量去接收它，或者用list集合去存储展开的父级节点。这个时候我们可以通过，需要变化位置节点的parentId,去匹配父节点，通过修改父节点的children属性就可以实现节点的添加、上移、下移的操作了。然后对整个tree解构。(注意:千万不用对节点进行深拷贝，那么节点的数据就无法正常改变了）。</h4></p><p><h2>三、实现步骤</h2></p><p><h4>1、引入ant-design vue中的Tree组件，递归生成Tree结构。</h4></p><p><h4>2、引入ant-design vue中 Table 组件</h4></p><p><h4>3、调整左右侧的每行的高度，保持一致。调整css样式，使表头固定在顶部</h4></p><p><h4>4、绑定ref,使用dom元素，计算滚动的高度</h4></p><p><h4>5、节点的删除、添加、上移、下移操作</h4></p><p><h2>四、效果展示</h2></p><p><h4>1、引入组件，调整样式，使左右两边一一对应。</h4></p><p><h4>2、固定顶部表头，计算滚动高度，赋值给需要滚动的组件，左右两边同步滚动。</h4></p><p><h4>3、添加节点，通过iframe,引入产品的详情页面，放到弹框中，当表单点击按钮的时候，通过标签页之间的消息传递，控制弹框的显示影藏。</h4></p><p><h4>4、降级操作，点击当前节点，获取同级节点信息，选择需要降级到的同级节点，调整数据，完成降级操作。</h4></p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/aqbg9lhp8zxpd5ax</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

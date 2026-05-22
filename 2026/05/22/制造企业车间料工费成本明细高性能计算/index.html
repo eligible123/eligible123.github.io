@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>制造企业车间料工费成本明细高性能计算 - 云枢技术文档</title>
+<meta property="og:title" content="制造企业车间料工费成本明细高性能计算">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/制造企业车间料工费成本明细高性能计算/">
+<meta name="description" content="制造企业车间料工费成本明细高性能计算 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>制造企业车间料工费成本明细高性能计算</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>制造企业车间料工费成本明细高性能计算</h1></p><p><h2>业务场景</h2>
+在制造型企业的成本管理系统中，需要根据物料BOM（Bill of Materials，物料清单）结构，对顶层产品进行多级成本爆破计算，最终归集到各个责任单位（车间/工段）的<strong>工时、经费、材料费、工资成本</strong>等明细。典型场景包括：</p><p>- 月度成本核算：全量计算上月所有产品的车间辅料包工时成本。
+- 单产品实时查询：输入物料编码 + 成本期间，快速返回完整多级成本明细。
+- 数据量级：顶层物料5~10万种，总BOM节点30~50万条，甚至更多。</p><p>传统实现方式（逐个物料递归查BOM + 查成本）会导致大量重复查询和计算，单产品几秒、全量跑几天的现象普遍存在。本方案通过<strong>生产单元级全量预加载 + 共享子件计算 + 并行DFS爆破</strong>，将全量初始化时间控制在30~50分钟以内，单物料实时计算提升至300~800ms。</p><p><h2>核心需求</h2>
+- 支持单物料实时计算和生产单元级全量初始化。
+- 正确处理多级BOM展开，累计用量乘以父件需求量（倍率传递）。
+- 同一半成品在不同产品中共享计算结果，避免重复。
+- 输出所有层级节点成本（包括中间半成品），每责任单位一行，便于追溯。
+- 支持路径记录（调试用），生产环境可关闭以节省内存。
+- 数据落库前清理历史，支持幂等重跑。
+- 高性能：支撑10万级顶层物料、百万级BOM节点。</p><p><h2>实现思路</h2>
+- 按一级生产单元分组处理：同一单位内BOM结构相对独立，避免跨单位干扰，同时最大化共享机会。
+- 全量预加载BOM和辅料成本：</p><p>- 一次性查询该单位下所有有效BOM记录（SQL窗口函数去重取最新版本）。
+- 构建全局parentCode → List<children>映射。
+- 批量查询该单位下所有涉及物料的辅料成本记录。</p><li>共享记忆化DFS计算：</li><p>- 使用DFS从顶层向下递归，传递累计倍率（prefixMultiplier）。
+- 同一物料+同一工序（processNo）的结果通过ConcurrentHashMap缓存共享。
+- 环路检测防止死递归。</p><li>并行加速：</li><p>- 每个生产单元内，并行计算旗下所有顶层物料（动态线程池）。
+- 共享全局memo，确保跨线程子件复用安全。</p><li>结果转换与落库：</li><p>- 将累计成本按责任单位（lastUnitCode）展开为明细行。
+- 分批清理历史 + 分批保存，避免事务过大。</p><p>（上图：典型的多级BOM树状结构与单级展平对比）</p><p>（上图：DFS深度优先遍历在BOM树上的执行过程）</p><p><h2>实现步骤与代码亮点</h2></p><p><h3>1. 全量初始化主流程（initMonthData）</h3>
+Java</p><p><h3>2. 单位级批量核心处理（processUnitBatch）</h3>
+关键性能优化全部集中在此方法：</p><p>- 步骤1：加载该单位全量BOM（SQL ROW_NUMBER() 取最新版本）。
+- 步骤2：构建全局父子映射 + 收集所有涉及物料编码。
+- 步骤3：批量查询辅料成本。
+- 步骤4：构建多维度成本Map（工时、经费、材料、工资）。
+- 步骤5：动态线程池并行计算每个顶层物料，共享ConcurrentHashMap memo。</p><p><a href="https://fiveable.me/advanced-computer-architecture/unit-10/thread-level-parallelism-tlp-techniques/study-guide/pghVi3Z1yzsSoSbm">fiveable.me</a></p><p>Thread-Level Parallelism (TLP) Techniques | Advanced Computer ...</p><p>（上图：多线程并行处理不同顶层物料，共享子件计算结果）</p><p><h3>3. 记忆化DFS核心计算（dfsCalculate）</h3>
+Java</p><p><h3>4. 单物料实时计算（buildInternal）</h3>
+复用同一套核心逻辑，仅加载当前物料BOM及相关成本，极大提升响应速度。</p><p><h3>5. 结果落库与清理</h3>
+- 先按单位+期间清理历史数据。
+- 分批（5000条）保存，防止内存/事务问题。</p><p><h2>实现效果</h2>
+- 全量初始化：5~10万顶层物料、30~50万BOM节点，整体耗时30~50分钟（视服务器配置）。
+- 单物料实时：300~800ms 返回完整多级明细（原方案3~15秒）。
+- 内存可控：生产环境关闭路径记录（DETAIL_MODE=false），峰值内存稳定。
+- 准确性：倍率传递 + 记忆化确保多级累计完全正确，支持复杂共用件场景。</p><p>BOM explosion with SAP - transparency and cost savings</p><p>（上图：多级BOM成本爆破计算流程示意）</p><p>这份实现已在生产环境稳定运行，是制造企业成本系统高性能多级BOM归集的优秀实践。如果需要进一步扩展（如支持幻影BOM、替代料、损耗率），只需在DFS中增加相应逻辑即可。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/thw9psynu7g253zv</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

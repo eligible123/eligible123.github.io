@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自定义应用企业微信待办消息推送 - 云枢技术文档</title>
+<meta property="og:title" content="自定义应用企业微信待办消息推送">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/自定义应用企业微信待办消息推送/">
+<meta name="description" content="自定义应用企业微信待办消息推送 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>自定义应用企业微信待办消息推送</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>自定义应用企业微信待办消息推送</h1></p><p><h3>需求场景</h3>
+xx集团自维护组织在实现企业微信自建应用对接之后，想实现云枢待办消息推送到企业微信应用内。</p><p><h3>实现思路</h3>
+最开始使用<a href="https://www.yuque.com/skwme4/hzo079/xgdwzo5s2o7opogo">云枢待办扩展</a>，重写消息推送方法pushWorkMsg，但是由于是自维护组织，扩展点触发有问题，只有部分流程触发。修改方案为监听流程事件，重写WorkflowItemEventService，监听待办创建事件WorkItemCreatedEvent，监听到待办创建事件后推送卡片消息到企业微信。</p><p>​</p><p><h3>实现代码</h3></p><p>实现效果：</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/thwwk9rpmoksa3m4</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

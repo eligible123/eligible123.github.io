@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vue 多页签导航组件开发 - 云枢技术文档</title>
+<meta property="og:title" content="Vue 多页签导航组件开发">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Vue-多页签导航组件开发/">
+<meta name="description" content="Vue 多页签导航组件开发 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>Vue 多页签导航组件开发</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>Vue 多页签导航组件开发</h1></p><p><h2>一、业务场景</h2>
+在前端应用开发中，多页签导航（Tags View）是提升用户体验的重要功能。它通过可视化标签展示已访问路由，支持快速切换、关闭、刷新等操作，适用于后台管理系统、多页面应用等场景。</p><p><h2>二、实现思路</h2>
+组件基于Vue框架开发，结合Vuex管理路由标签状态，利用<code>router-link</code>实现路由跳转，通过右键菜单（ContextMenu）提供丰富操作。核心功能包括：</p><p>- 标签渲染：动态展示已访问路由标签，区分激活状态与固钉标签。
+- 交互操作：支持左键点击跳转、中键关闭、右键菜单（刷新/关闭/批量操作）。
+- 滚动控制：左右箭头按钮实现标签栏滚动，适配多标签场景。
+- 状态管理：通过Vuex维护标签列表（<code>visitedViews</code>），支持添加、删除、更新标签。</p><p><h2>三、实现过程</h2></p><p><h3>1. 组件结构设计（模板部分）</h3></p><p><h3>2. 逻辑实现（脚本部分）</h3></p><p><h4>2.1 依赖与状态声明</h4></p><p><h4>2.2 核心功能方法</h4>
+- 路由监听与标签更新</p><li>标签激活状态判断</li><li>右键菜单操作</li><li>标签关闭与导航逻辑</li><p><h3>3. 样式设计（CSS部分）</h3></p><p><h2>四、关键功能说明</h2></p><p><h3>1. 标签交互逻辑</h3>
+- 左键点击：跳转至对应路由（<code>router-link</code>默认行为）。
+- 中键点击：关闭非固钉标签（<code>@click.middle.native</code>事件）。
+- 右键点击：弹出操作菜单，支持刷新、关闭当前/其他/左侧/右侧/全部标签。</p><p><h3>2. 固钉标签（Affix Tags）</h3>
+- 通过路由元信息<code>meta.affix: true</code>标记固钉标签，不可直接关闭。
+- 初始化时添加默认固钉标签（如“我的待办”）：</p><p><h3>3. 滚动与布局优化</h3>
+- 平滑滚动：左右箭头按钮通过<code>scrollBy({ behavior: 'smooth' })</code>实现动画效果。
+- 自适应宽度：标签容器<code>scroll-container</code>使用<code>max-width: calc(100vw - 310px)</code>，避免遮挡其他界面元素。</p><p><h2>五、效果图</h2></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/mmfv8xkb2fpsykrp</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

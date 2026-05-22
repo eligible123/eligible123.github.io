@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bpm流程迁移云枢配置 - 云枢技术文档</title>
+<meta property="og:title" content="bpm流程迁移云枢配置">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/bpm流程迁移云枢配置/">
+<meta name="description" content="bpm流程迁移云枢配置 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>bpm流程迁移云枢配置</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>bpm流程迁移云枢配置</h1></p><p><h1>1 业务场景</h1></p><p><h1>原有bpm系统流程中复杂公式迁移云枢，需要达到原有的功能一样能在云枢中使用</h1></p><p><h1>解决方案</h1>
+Bpm里面复杂公式直接迁移复用bpm上的逻辑可能导致流程异常（if函数嵌套角色函数的相加云枢6.0暂时不支持），这时候我们可以把这块逻辑进行拆分，通过连接点去拆分逻辑达到和bpm一样的效果。</p><p><h1>具体实现方案</h1>
+- bpm里面if里面的判断条件我们可以使用连接线去拆分
+- 
+- 把结果分为两个节点，多层嵌套判断就拆分多个连接点去判断
+- 配置表的表单流程之类的，有的可能无需用到流程，我们可以只配置表单，因为需要取配置表的字段所以不会用到配置表的流程
+- 在bpm中像这种的类似于关联单选，但其实是数据字典，在bpm迁移到云枢的过程中可能在云枢不需要数据字典，我们可以建立一个配置表后把内容放入其中。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/hy85a3976ebesmhg</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

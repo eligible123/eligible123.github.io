@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢6.10文件存储-分应用存储不同文件服务器 - 云枢技术文档</title>
+<meta property="og:title" content="云枢6.10文件存储-分应用存储不同文件服务器">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢610文件存储-分应用存储不同文件服务器/">
+<meta name="description" content="云枢6.10文件存储-分应用存储不同文件服务器 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢6.10文件存储-分应用存储不同文件服务器</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢6.10文件存储-分应用存储不同文件服务器</h1></p><p><h2>项目背景</h2>
+       产品配方管理应用作为项目业务下的核心业务-产品的管理应用，本应用下的附件特别是配方附件则是重中之中的，故产品配方管理应用的文件服务器需要独立一个安全级别更高的文件服务器。</p><p> （注：下文所指FIT应用为产品配方管理应用简称）</p><p><h2>实施思路方案</h2></p><p><h3>第一步：根据需求结合目前项目情况确认思路</h3></p><p><h4>1、确认如何区分不同应用的文件请求</h4>
+         通过对于产品的应用，我们会发现页面上的附件操作的接口均为产品源码的OSSController。因此我们只需要改造OSSController，在产品接口的请求体增加非必传的参数schemaCode，用于获取目前调用页面的表单是否属于FIT应用。</p><p><h4>2、确认目前系统所用的文件存储及FIT应用所要应用的文件存储</h4>
+       系统已二开文件服务为MINIO，需求为FIT应用独立使用S3文件服务，而MINIO的SDK是兼容AWS S3的，故可以复用原代码逻辑。</p><p><h4>3、确认实现方案</h4>
+        结合1、2，我们可以得到了Controller和service的大致实现，目前就是Controller和service的结合。由于目前产品OSSController的实现逻辑目前是直接调用的fileStoreFacade，也就是底层调用二开后的FileStoreService。原系统的二开的MINIO已经实现FileStoreService，fileStoreFacade的方法参数是没有的schemaCode。</p><p>        最简单的实现方式就是新建S3的服务类，修改产品的OSSController，修改目前已知的文件上传、下载、批量下载接口逻辑增加传参schemaCode（用于得知目前调用页面的表单是否属于FIT应用），直接调用S3 service，而不通过进一步改造fileStoreFacade，在FileStoreService处理阶段选择不同的实现类！</p><p>相关资料附件</p><p><a href="http://docs.minio.org.cn/docs/master/java-client-api-reference">MINIO中文文档</a>
+<a href="https://www.yuque.com/skwme4/hzo079/snzfz7">云枢  文件服务二次开发向导</a></p><p><h3>第二步 具体的实现步骤</h3></p><p><h4>1、获取到S3文件服务器参数配置到YML文件中</h4>
+   </p><p><h4>2、编写S3Client（本项目直接继承产品的SFTPClient）</h4>
+       因为在本项目系统配置的文件服务方式为SFTP，故直接继承产品的SFTPClient，重写其中的方法即可，S3可直接使用MINIO SDK。</p><p><h4>3、编写S3Service</h4>
+     方案中没有修改fileStoreFacade的逻辑，在原系统已有二开文件服务实现FileStoreService，故我们的S3Service不按产品二开逻辑直接implements FileStoreService。避免出现FileStoreService的服务实现类调用不符合预期的情况。如果修改了fileStoreFacade逻辑，则可以显示的调用不同的FileStoreService的不同实现类！</p><p><h4>4、修改产品OSSController</h4>
+       按方案修改产品的OSSController，修改目前已知的文件上传、下载、批量下载接口逻辑增加传参schemaCode（用于得知目前调用页面的表单是否属于FIT应用），直接调用S3 service，而不通过进一步改造fileStoreFacade，在FileStoreService处理阶段选择不同的实现类！
+    此处仅仅举例文件上传接口</p><p>​</p><p><h3>第三步  部署自测</h3>
+       本项目文件服务器在内网，故本地无法自测，可以部署后，可以通过调用接口，查看内网服务器日志进行确认。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/ixc5o55crcc8am99</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

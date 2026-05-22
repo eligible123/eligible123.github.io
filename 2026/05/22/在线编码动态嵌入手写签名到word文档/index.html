@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线编码动态嵌入手写签名到word文档 - 云枢技术文档</title>
+<meta property="og:title" content="在线编码动态嵌入手写签名到word文档">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/在线编码动态嵌入手写签名到word文档/">
+<meta name="description" content="在线编码动态嵌入手写签名到word文档 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>在线编码动态嵌入手写签名到word文档</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>在线编码动态嵌入手写签名到word文档</h1></p><p><h3>场景：</h3>
+某客户需求将个人签名动态传入到word文档，并适配签名大小格式，达到实现自动填充效果；并生成对应附件文件供下载存档使用。</p><p><h3>思路：</h3>
+通过固定word模板，获取指定表单手写签名图片流，压缩并处理图片，填充到指定word模板位置；保存相关附件文件，并上传到服务器和保存对应附件信息到表单附件控件字段。编写公共出口，实现在线编码调用接口。</p><p><h3>实现步骤：</h3></p><p><h4>1、上传并制定word模板</h4>
+使用word表格方式进行模板填充字段排版，调整所需的列行间距，如下图：</p><p><h4>2、获取手写签名图片附件</h4>
+通过表单id查询手写签名附件信息，获取签名图片文件流</p><p><h4>3、处理并填充手写签名</h4>
+通过poi框架，处理并压缩图片，填充到临时模板文件进行保存。</p><p><h4>4、上传附件并保存附件文件</h4>
+上传临时文件到服务器，并保存到表单附件字段，供后续使用</p><p><h4>5、实现公共util类，便捷接入在线编码调用</h4>
+后端util类代码</p><p>在线编码调用接口代码示例，触发在线编码模式，导入CreditInvestigationUtil类，调用getCreditInvestigationService()方法，执行动态填充手写签名并生成上传模板文件。</p><p>实际效果展示：</p><p>ps：相关依赖</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/xa96dn20289u5z8g</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

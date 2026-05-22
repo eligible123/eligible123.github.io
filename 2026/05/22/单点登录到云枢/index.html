@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单点登录到云枢 - 云枢技术文档</title>
+<meta property="og:title" content="单点登录到云枢">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/单点登录到云枢/">
+<meta name="description" content="单点登录到云枢 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>单点登录到云枢</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>单点登录到云枢</h1></p><p><h1>一．业务场景</h1>
+1. 进入第三方系统，点击菜单，免密登录到低代码平台</p><p>​</p><p>​</p><p>​</p><p>​</p><p><h1>解决方案</h1>
+通过获取到第三方的token，使用第三方的token走第三方dubbo接口，获取到第三方的用户信息和租户信息，将用户信息和租户信息入库，走低代码的单点登录逻辑授权并返回低代码平台token用于登录低代码平台</p><p>​</p><p>​</p><p><h1>具体实现方案</h1>
+1. Pom引入第三方的包</p><p>2. 登录接口使用第三方的dubbo接口，从请求的地址中取出code，code为token或者第三方的用户唯一标识</p><p>、</p><p>​</p><p>此处传的是用第三方的token去获取的用户信息，可根据具体需求，用不同的方式获取用户信息</p><p>​</p><p>3. 接口请求示例，code传第三方用户唯一标识，getsourceId方法将第三方用户和租户信息入库 ，获取到低代码的token返回给前端</p><p>、</p><p>​</p><p>这是后端就能顺利返回云枢的token给前端，前端把token保存,并存储用户信息就能正常访问页面</p><p>返回示例：</p><p>{"errcode":0,"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sImNvcnBJZCI6bnVsbCwidXNlcl9pZCI6IjAxZmFlNTdhYmU5NjQ5MWNiOTlmNGQ5N2I4NWRmNDRiIiwidXNlcl9uYW1lIjoiNjIyODI3MTk5NDA1MTA0NzE2Iiwic2NvcGUiOlsicmVhZCJdLCJtb2JpbGUiOmZhbHNlLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjYzMjAwMzcwLCJpc0FwcEFkbWluIjpmYWxzZSwiYXV0aG9yaXRpZXMiOlsiVVNFUiIsIkFVVEhfU1lTVEVNX01BTkFHRSJdLCJqdGkiOiJhZWJlMmMwYS0wY2EyLTQ5MGQtYWI1NS00NzFmZGIyNWE0ZWQiLCJjbGllbnRfaWQiOiJhcGkifQ.h8b2McGqWOUWu3Fo7Ppec_fgq7FEktQ29Y1XBeQONgaPPrXMRlfVcBw_rhz1MpYsIbzNOGIjwh1XRbIe31BjUTbvI5hdccaNutTKJfNfdvFTq7Jv4NfnEvNq5aV8qcMFRYENil5Xd3_OiRe4t7eigUFvW-EO4RwCfj8-A3co__96UjnuYw3InpUNwX27gJ_jczUzi2CjI_rcB7akbMU7R9Ti2J9RGZoGegl9uvsgCvIcClw5FNkK6HU7W2qMsYN3_Sgzd-rLYou--iivyY78XvRM4vEGxOyr11IQhNB9Q80Z3sWBMdUbPEH08qhZEaU5pvCfWaJjkDwAnpH4dp9o2g""user_id":"01fae57abe96491cb99f4d97b85df44b","scope":["read"],"mobile":"13524095524","expiration":1663200370886,"token_type":"bearer","expires_in":28799,"userinfo":{"corpId":"wl6e538311bc","departmentId":"8280808182aefbfb0182aeff4fcd00e7","departmentName":"支持队伍","id":"01fae57abe96491cb99f4d97b85df44b","name":"杨新宇","username":"622827199405104716"}}</p><p>​</p><p>4. 第三方的系统平台通过跳转到一个空白html页面，页面初始化的时候，请求这个单点登录接口，返回token，页面会拿这个低代码的token重定向到我们低代码平台完成免登陆，html页面路径放在前端portal/websso 下</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/sygzwvggvaa6743i</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

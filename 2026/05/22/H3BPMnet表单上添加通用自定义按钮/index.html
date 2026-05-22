@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H3BPM(.net)表单上添加通用自定义按钮 - 云枢技术文档</title>
+<meta property="og:title" content="H3BPM(.net)表单上添加通用自定义按钮">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/H3BPMnet表单上添加通用自定义按钮/">
+<meta name="description" content="H3BPM(.net)表单上添加通用自定义按钮 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>H3BPM(.net)表单上添加通用自定义按钮</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>H3BPM(.net)表单上添加通用自定义按钮</h1></p><p><strong>表单上添加通用自定义按钮</strong></p><p><strong>一、业务场景</strong></p><p> 表单上添加通用自定义按钮，如：表单流程复制、流程传阅撤回等</p><p><strong>二、解决方案</strong></p><p><strong>方案一：  按照产品表单功能按钮逻辑进行添加</strong></p><p><strong>1、前端按钮渲染过程：</strong></p><p>1）MvcSheet.js 在表单加载数据时会初始化工具栏</p><p> 2）往Actions中添加按钮定义，并在SheetToolbar.js中进行初始化按钮</p><p>3）SheetToolbar.js 通过后台返回的sheetInfo中按钮的权限，控制按钮的显示隐藏</p><p><strong>2、前端自定义按钮添加：</strong></p><p>1）/WFRes/_Script/MvcSheet/Controls/MvcSheet.js中包含所有表单功能按钮的定义，添加上自定义按钮的定义</p><p> 2）在AddDefaultActions方法中添加上自定义按钮</p><p>      3） /WFRes/_Script/MvcSheet/Controls/SheetToolbar.js 包含所有表单功能按钮的初始化及按钮事件的定义，按照产品按钮的定义，添加上自定义按钮的初始化和事件</p><p>4）按钮事件一般写在MvcSheet.js中，调用MvcPage.cs中的方法，可仿照产品方法进行添加，也可自行实现</p><p><strong>2、后端：</strong></p><p>1）在按钮权限类PermittedActions.cs中添加自定义的按钮，名称与MvcSheet.js中定义的保持一致       </p><p>2）产品在MvcController.cs的GetPermittedActions方法中加载按钮操作权限，在该方法中添加上自定义按钮的权限控制</p><p>         2）产品按钮事件的方法后台入口在MvcPage.cs中，可仿照产品方法进行自定义按钮的事件方法实现</p><p><strong>方案二：  在流程表单母版页上进行添加</strong></p><p>      产品表单都基于MvcSheet.master母版页，可以在母版页中进行自定义通用按钮的添加，产品按钮工具栏有固定的id="divTopBars"</p><p>     在 执行入口 $.MvcSheet.Init(); 前添加自定义按钮的html</p><p>var  Btn</p><p>     setTimeout(function () {</p><p>          $("#divTopBars li").eq(2).after(Btn);//添加到第二个按钮</p><p>     }, 1000)；</p><p>按钮权限及按钮事件都需要在自行通过ajax去实现</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/tns43v</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

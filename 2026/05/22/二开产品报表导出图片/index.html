@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二开产品报表导出图片 - 云枢技术文档</title>
+<meta property="og:title" content="二开产品报表导出图片">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/二开产品报表导出图片/">
+<meta name="description" content="二开产品报表导出图片 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>二开产品报表导出图片</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>二开产品报表导出图片</h1></p><p><h2>一、业务场景</h2>
+客户需要将产品的报表导出，但是由于报表数据超长导致原生报表功能不能展示所有数据，不满足客户要求，因此需要二开产品报表导出图片功能。</p><p><h2>二、实现思路</h2>
+1. 功能权限控制：通过报表标识和模块标识的双重判断，仅对目标报表显示下载按钮，避免功能滥用。</p><p>2. DOM 内容提取：定位并复制报表的表头和表体 DOM 元素，创建临时容器用于渲染，避免干扰原页面结构。</p><p>3. 图片生成：基于html2canvas库将临时容器中的 DOM 内容转换为 canvas 图像，通过设置缩放比例提升图片清晰度，并支持跨域资源处理。</p><p>4. 图片下载：将canvas 转换为图片 URL，通过动态创建下载链接实现图片保存，同时生成包含时间戳的唯一文件名，确保文件区分度。</p><p>5. 用户体验优化：添加加载提示反馈下载进度，通过样式调整确保下载按钮与报表页面布局协调。</p><p><h2>三、实现过程</h2></p><p><h4>1. 下载入口渲染（模板层）</h4>
+在Vue 模板中，通过v-if="showDownload"条件渲染下载按钮容器，绑定downloadImage点击事件，同时引入 Ant Design Vue 的Icon组件显示下载图标：</p><p>同时通过样式类.showDownload调整报表容器高度，为下载按钮预留空间：</p><p><h4>2. 下载事件触发</h4>
+用户点击按钮后，<code>downloadImage</code>方法首先初始化加载提示，避免用户感知延迟，随后提取报表 DOM 元素并计算尺寸：</p><p><h4>3.临时 DOM 创建与隔离</h4>
+为避免修改原报表 DOM 结构，代码通过<code>cloneNode(true)</code>复制表头和表体，创建临时容器并挂载到<code>body</code>，作为<code>html2canvas</code>的渲染目标：</p><p><h4>4.canvas 渲染与图片转换</h4>
+通过<code>html2canvas</code>将临时 DOM 转为 canvas，再将 canvas 转为<code>dataURL</code>格式的图片地址，核心配置如下：</p><p><h4>5.图片下载与辅助方法</h4>
+通过<code>download</code>方法动态创建<code><a></code>标签触发下载，<code>getUrlBase64</code>处理图片格式，<code>getFormatDate</code>生成唯一文件名：</p><li>下载核心方法：</li><li>图片格式处理方法：</li><li>时间格式化方法：</li><p><h2>四、效果图</h2>
+页面效果：</p><p>下载效果：</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/sumnowarrvck3hlg</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

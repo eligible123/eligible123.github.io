@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端前端打包批量下载 - 云枢技术文档</title>
+<meta property="og:title" content="移动端前端打包批量下载">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/移动端前端打包批量下载/">
+<meta name="description" content="移动端前端打包批量下载 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>移动端前端打包批量下载</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>移动端前端打包批量下载</h1></p><p><h1>背景</h1>
+目前产品移动端的批量下载是依靠阿里云提供的接口把附件所有内容在后端进行打包后传输到前端进行下载，这种方式对后端服务器资源消耗极大，因此有需求需要前端自主进行打包并下载</p><p><h1>实现方法</h1>
+为了实现需求，我在产品里引入了jszip插件，提供jszip插件可以把文件在前端进行整合压缩并下载，大大缓解了后端服务器资源消耗</p><p>​</p><p><h1>实现步骤</h1>
+npm i jszip --save</p><p>下载jszip插件到本地项目</p><p>​</p><p>打开</p><p>frontend/packages/mobile/src/config/h3-form/file-service.ts</p><p>文件</p><p>并进行引入</p><p>找到移动端点击批量下载的方法，对批量下载方法进行拦截，通过循环直调阿里云单个下载接口把所有文件依次下载</p><p>定义阿里云直接下载接口</p><p><h1>完整代码文件</h1></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/inez64kony2m2d6d</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

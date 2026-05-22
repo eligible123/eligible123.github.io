@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云7-身份认证 - 云枢技术文档</title>
+<meta property="og:title" content="云7-身份认证">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云7-身份认证/">
+<meta name="description" content="云7-身份认证 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云7-身份认证</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/第三方集成/">第三方集成</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云7-身份认证</h1></p><p>获取access_token接口</p><p><strong>1. </strong>使用企业id+用户账号</p><p><a href="https://beta.cloudpivot.cn/api/webapi/login/authorization/extension?code=&corpId=&loginType=&bizParams=">GET https://host:port/api/webapi/login/authorization/extension?</a></p><p><a href="https://beta.cloudpivot.cn/api/webapi/login/authorization/extension?code=&corpId=&loginType=&bizParams=">code=&corpId=&type=&bizParams=</a></p><p>●    如果type=username时， code传入云枢的用户账号， 其他参数可为空， 适用于自维护或第三方自维 护同步到云枢的组织用户；</p><p>●    如果type=adapter时， code传入第三方平台的临时授权码， corpId传入第三方的企业id（此方式适 用于从钉钉 、企业微信同步过来的账号）</p><p>●     如果是多租户版本url需要添加“&tenantCode=租户编码”参数</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/kv6yyb2w34135y0l</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

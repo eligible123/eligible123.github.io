@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录接入极验功能 - 云枢技术文档</title>
+<meta property="og:title" content="登录接入极验功能">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/登录接入极验功能/">
+<meta name="description" content="登录接入极验功能 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>登录接入极验功能</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>登录接入极验功能</h1></p><p><h3>业务场景：客户的组织机构要新增外部用户访问，在登录时发送验证码处接入极验，防止恶意攻击多次发送验证码。</h3>
+<strong>实现效果：</strong></p><p> </p><p><strong>实现思路：</strong></p><p>后台部署相应SDK后，前端再去引入初始化函数，后续根据相关文档进行开发以及调试。</p><p><strong>实现过程：</strong></p><p><h4>1 服务端部署完成，客户端引入初始化js文件</h4></p><p><h4>2 点击发送验证码时，先触发极验验证，验证通过后再去发送验证码</h4></p><p><a href="https://docs.geetest.com/sensebot/apirefer/api/web/#%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">https://docs.geetest.com/sensebot/apirefer/api/web/#%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0</a></p><p>这个是极验官方文档配置参数的地方，有一个特别需要注意的点在于：</p><p>当验证展示形式配置为bind时，在初始化ready之后一定要调用verify()实例进行验证，否则是不会展示极验弹窗</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/wy1553aauct5zhgf</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

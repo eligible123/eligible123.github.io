@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>更新导入支持只导入表单部分字段 - 云枢技术文档</title>
+<meta property="og:title" content="更新导入支持只导入表单部分字段">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/更新导入支持只导入表单部分字段/">
+<meta name="description" content="更新导入支持只导入表单部分字段 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>更新导入支持只导入表单部分字段</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>更新导入支持只导入表单部分字段</h1></p><p><h2>业务场景</h2>
+客户需要对更新导入的Excel不仅支持随便排序，还需要支持客户只选取自己想导入的部门字段，如果模板中保留了x列，则该字段会被覆盖更新;如果某一列不在模板中，该字段不会被更新，更不会被清空。</p><p><h2>效果展示：</h2></p><p>## </p><p>​</p><p>Excel中没有表单中有的某些列，同样可以成功更新导入</p><p>​</p><p><h2>解决方案</h2>
+去掉原有验证，在获取到表单的字段属性信息后，与拿到Excel读取的字段做对比，保证Excel取到的字段是表单里包含的字段，调整顺序，在最终进入数据插入前组成产品方法需要的map结构，以保证数据准确更新导入</p><p><h2>具体实现方案</h2>
+1. 处理对应表单code的字段，并根据queryField 来判断是否需要对子表进行验证处理</p><p>​</p><p>​</p><p>2. 更新时需要增加id列</p><p>3. 更新导入时处理表单字段与Excel读取的字段对应，筛选出中有excel有的字段</p><p>​</p><p>​</p><p>4. 验证excel第一列需要为id，并处理获取的excel数据项，组成产品后续方法可以接收的map，并进行数据更新</p><p>​</p><p>​</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/dgbwoy7rk72etdab</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

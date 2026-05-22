@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云6融合网页数据爬取 - 云枢技术文档</title>
+<meta property="og:title" content="云6融合网页数据爬取">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云6融合网页数据爬取/">
+<meta name="description" content="云6融合网页数据爬取 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云6融合网页数据爬取</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/特殊场景方案/">特殊场景方案</a></span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云6融合网页数据爬取</h1></p><p><strong>一、背景</strong></p><p>在新烽光电项目中，甲方（政府单位）需要爬取中国武汉网和武汉在线两个网站的新闻数据，以关键字看海、淹了、淹水、积水、干旱、臭水沟等来过滤新闻信息，以此来快速识别舆情信息。</p><p><strong>二、方案</strong></p><p>1.选型框架 SeimiCrawler。原因：支持springboot框架；重构<a href="https://github.com/zhegexiaohuozi/JsoupXpath">JsoupXpath</a>提供更为完善的语法支持；基本只需要注重业务逻辑处理，网页解析这块封装比较完善。依赖和版本如下</p><p>2.SeimiCrawler配置文件说明（#注释部分在项目中没有用到，可忽略）</p><p>3.实现步骤</p><p>a创建爬取网页数据类（以中国武汉网举例）->b类名上加注解@Crawler(name = "cnWuHanCrawler")->c集成网页数据爬取基类（BaseSeimiCrawler）->d重写基类方法;如图：</p><p>相关代码</p><p>4.说明：</p><p>a.startUrls 为要访问网页的地址。</p><p>b.response包含网页信息，但是是框架封装的Response,要和servletResponse区分开来。</p><p>c.List<Object> urls = doc.sel("//ul[@class='txt_list']");</p><p>双斜杠（//）匹配标签，中括号里面内容为标签属性。</p><p>d.html里面获取的一部分还可以通过JXDocument.create(s.toString())创建document树，继续获取里面的元素。</p><p>e.业务实现逻辑：</p><p>获取中国武汉网新闻界面html->抓取新闻标题和对应新闻连接->满足条件的新闻标题去访问对应新闻连接内容html->获取新闻标题、发布时间、来源、内容->讲前一步获取的信息存入数据库。（新闻内容需要用富文本字段）。如图</p><p><strong>5.坑点：</strong></p><p>此处回调如果不request.setSkipDuplicateFilter(true)，那么回调只会在项目启动时回调一次，或许会一直不会回调。原因是再次startRequest是会检查请求，如果是已经请求过则不会再次请求。如图：</p><p>参考资料：<a href="https://github.com/zhegexiaohuozi/SeimiCrawler">https://github.com/zhegexiaohuozi/SeimiCrawler</a></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/gqs85s</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>
