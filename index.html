@@ -3,2171 +3,1785 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>云枢技术文档 - 李阳的技术博客</title>
-<meta name="description" content="云枢(Authine)低代码平台技术文档，包含通用方案、特殊场景方案、第三方集成、经验技巧分享等内容">
+<title>张三的个人博客</title>
+<meta name="description" content="张三的个人博客 - 技术分享与学习笔记">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+:root {
+    --primary: #2563eb;
+    --primary-light: #3b82f6;
+    --secondary: #1e40af;
+    --accent: #f59e0b;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #f5f5f5; color: #333; }
-.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-header { background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%); color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 0 0 20px 20px; }
-header h1 { text-align: center; font-size: 2.5em; margin-bottom: 10px; }
-header p { text-align: center; font-size: 1.2em; opacity: 0.9; }
-.stats { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
-.stat { text-align: center; }
-.stat-num { font-size: 2em; font-weight: bold; }
-.stat-label { font-size: 0.9em; opacity: 0.8; }
-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
-nav a { padding: 10px 20px; background: white; border-radius: 25px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s; }
-nav a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-nav a.active { background: #1890ff; color: white; }
-.category { margin-bottom: 40px; }
-.category-title { font-size: 1.5em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid; display: flex; align-items: center; gap: 10px; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* 导航栏 */
+.navbar {
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.logo span { color: var(--text); }
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--primary); }
+
+/* Hero区域 */
+.hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 1.2em;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hero .stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 30px;
+}
+
+.hero .stat-item {
+    text-align: center;
+}
+
+.hero .stat-num {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.hero .stat-label {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* 主内容区 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* 关于我 */
+.about-section {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.about-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+
+.about-content {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    color: white;
+    flex-shrink: 0;
+}
+
+.about-text p {
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+/* 实习经历卡片 */
+.internship-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px solid var(--accent);
+}
+
+.internship-card h2 {
+    color: #92400e;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.internship-card .company {
+    font-size: 1.2em;
+    color: #78350f;
+    margin-bottom: 15px;
+}
+
+.internship-card .desc {
+    color: #92400e;
+    opacity: 0.8;
+}
+
+/* 分类网格 */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.category-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+}
+
+.category-icon {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+}
+
+.category-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+}
+
+.category-card .count {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.category-card .desc {
+    color: var(--text-light);
+    font-size: 0.9em;
+    margin-top: 8px;
+}
+
+/* 文章区域 */
+.section-header {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--primary);
+    display: inline-block;
+}
+
+.category-section {
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
 .category-title .icon { font-size: 1.2em; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
-.card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer; text-decoration: none; color: #333; display: block; }
-.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-.card h3 { font-size: 1.1em; margin-bottom: 10px; line-height: 1.4; }
-.card .meta { font-size: 0.85em; color: #666; display: flex; justify-content: space-between; }
-footer { text-align: center; padding: 30px; color: #666; font-size: 0.9em; }
-footer a { color: #1890ff; text-decoration: none; }
-.search-box { text-align: center; margin-bottom: 30px; }
-.search-box input { padding: 12px 24px; width: 100%; max-width: 500px; border: 2px solid #e8e8e8; border-radius: 25px; font-size: 16px; outline: none; transition: border-color 0.3s; }
-.search-box input:focus { border-color: #1890ff; }
+.category-title .count { 
+    margin-left: auto; 
+    background: var(--primary); 
+    color: white; 
+    padding: 2px 12px; 
+    border-radius: 20px; 
+    font-size: 0.8em; 
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+}
+
+.article-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+}
+
+.article-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.article-card h4 {
+    font-size: 1em;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: var(--text);
+}
+
+.article-card .meta {
+    font-size: 0.85em;
+    color: var(--text-light);
+}
+
+/* 搜索 */
+.search-box {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.search-box input {
+    padding: 12px 24px;
+    width: 100%;
+    max-width: 500px;
+    border: 2px solid var(--border);
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* 页脚 */
+footer {
+    background: var(--text);
+    color: white;
+    text-align: center;
+    padding: 30px;
+    margin-top: 50px;
+}
+
+footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2em; }
+    .hero .stats { gap: 30px; }
+    .about-content { flex-direction: column; text-align: center; }
+    .articles-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+}
 </style>
 </head>
 <body>
-<header>
+
+<nav class="navbar">
 <div class="container">
-<h1>📚 云枢技术文档</h1>
-<p>云枢(Authine)低代码平台技术方案与集成指南</p>
-<div class="stats">
-<div class="stat">
-<div class="stat-num">254</div>
-<div class="stat-label">篇文档</div>
+<a href="/" class="logo">张三<span>'s Blog</span></a>
+<ul class="nav-links">
+<li><a href="#about">关于我</a></li>
+<li><a href="#internship">实习经历</a></li>
+<li><a href="#articles">技术文章</a></li>
+</ul>
 </div>
-<div class="stat">
+</nav>
+
+<section class="hero">
+<div class="container">
+<h1>👋 你好，我是张三</h1>
+<p>一名热爱技术的开发者，喜欢探索新技术、解决复杂问题、分享学习心得</p>
+<div class="stats">
+<div class="stat-item">
+<div class="stat-num">254</div>
+<div class="stat-label">篇文章</div>
+</div>
+<div class="stat-item">
 <div class="stat-num">4</div>
 <div class="stat-label">个分类</div>
 </div>
+<div class="stat-item">
+<div class="stat-num">1</div>
+<div class="stat-label">段实习经历</div>
 </div>
 </div>
-</header>
+</div>
+</section>
 
 <div class="container">
+
+<section id="about" class="about-section">
+<h2>👨‍💻 关于我</h2>
+<div class="about-content">
+<div class="avatar">张</div>
+<div class="about-text">
+<p>大家好，我是张三，一名软件工程专业的学生。</p>
+<p>我对编程充满热情，尤其对后端开发、低代码平台和企业级应用开发有浓厚兴趣。</p>
+<p>在这里，我会分享我的学习笔记、项目经验和实习心得，希望能帮助到更多志同道合的朋友。</p>
+<p>📫 联系方式：zhangsan@example.com</p>
+</div>
+</div>
+</section>
+
+<section id="internship" class="internship-card">
+<h2>💼 实习经历</h2>
+<div class="company">🏢 奥哲网络科技有限公司 (Authine)</div>
+<div class="desc">
+<p>在奥哲实习期间，我参与了云枢低代码平台的开发与实施工作，积累了丰富的企业级应用开发经验。</p>
+<p>以下是我实习期间整理的技术文档，涵盖了通用方案、特殊场景处理、第三方系统集成等多个方面。</p>
+</div>
+</section>
+
+<section id="articles">
+<h2 class="section-header">📚 技术文章</h2>
+
 <div class="search-box">
-<input type="text" id="search" placeholder="🔍 搜索文档标题..." oninput="filterDocs()">
+<input type="text" id="search" placeholder="🔍 搜索文章标题..." oninput="filterArticles()">
 </div>
 
-<nav>
-<a href="#" class="active" onclick="showAll()">全部</a>
-<a href="#通用方案" onclick="scrollToCat('通用方案')">🔧 通用方案 (58)</a>
-<a href="#特殊场景方案" onclick="scrollToCat('特殊场景方案')">⚡ 特殊场景方案 (59)</a>
-<a href="#第三方集成" onclick="scrollToCat('第三方集成')">🔗 第三方集成 (32)</a>
-<a href="#经验技巧分享" onclick="scrollToCat('经验技巧分享')">💡 经验技巧分享 (105)</a>
-</nav>
-
-<div id="docs">
-
-<div class="category" id="通用方案">
-<h2 class="category-title" style="border-color: #1890ff">
-<span class="icon">🔧</span> 通用方案
-<span style="font-size:0.6em; color:#666; font-weight:normal">(58篇)</span>
-</h2>
-<div class="grid">
-
-<a href="/2026/05/22/BPM发起流程/" class="card" data-title="BPM发起流程">
-<h3>BPM发起流程</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<div class="categories-grid">
+
+<a href="#cat-通用方案" class="category-card" onclick="scrollToCat('cat-通用方案')">
+<div class="category-icon">📋</div>
+<h3>通用方案</h3>
+<div class="count">58 篇文章</div>
+<div class="desc">通用技术方案与最佳实践</div>
 </a>
 
-<a href="/2026/05/22/DOP统一权限控制/" class="card" data-title="DOP统一权限控制">
-<h3>DOP统一权限控制</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="#cat-特殊场景方案" class="category-card" onclick="scrollToCat('cat-特殊场景方案')">
+<div class="category-icon">⚡</div>
+<h3>特殊场景方案</h3>
+<div class="count">59 篇文章</div>
+<div class="desc">特殊业务场景解决方案</div>
 </a>
 
-<a href="/2026/05/22/DOP统一登陆方案/" class="card" data-title="DOP统一登陆方案">
-<h3>DOP统一登陆方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="#cat-第三方集成" class="category-card" onclick="scrollToCat('cat-第三方集成')">
+<div class="category-icon">🔗</div>
+<h3>第三方集成</h3>
+<div class="count">32 篇文章</div>
+<div class="desc">第三方系统集成方案</div>
 </a>
 
-<a href="/2026/05/22/EasyExcel合并单元格数据读取/" class="card" data-title="EasyExcel合并单元格数据读取">
-<h3>EasyExcel合并单元格数据读取</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="#cat-经验技巧分享" class="category-card" onclick="scrollToCat('cat-经验技巧分享')">
+<div class="category-icon">💡</div>
+<h3>经验技巧分享</h3>
+<div class="count">105 篇文章</div>
+<div class="desc">开发经验与技巧总结</div>
 </a>
 
-<a href="/2026/05/22/H3BPMnet表单上添加通用自定义按钮/" class="card" data-title="H3BPM(.net)表单上添加通用自定义按钮">
-<h3>H3BPM(.net)表单上添加通用自定义按钮</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
 </div>
+
+<div id="articles-list">
+
+<div class="category-section" id="cat-通用方案">
+<h3 class="category-title">
+<span class="icon">📋</span>
+通用方案
+<span class="count">58 篇</span>
+</h3>
+<div class="articles-grid">
+
+<a href="/2026/05/22/BPM发起流程/" class="article-card" data-title="BPM发起流程">
+<h4>BPM发起流程</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/H3BPM审批时上传附件PC端_移动端/" class="card" data-title="H3BPM审批时上传附件【PC端_移动端】">
-<h3>H3BPM审批时上传附件【PC端_移动端】</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/DOP统一权限控制/" class="article-card" data-title="DOP统一权限控制">
+<h4>DOP统一权限控制</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/SM4国密加解密-祝欢/" class="card" data-title="SM4国密加解密-祝欢">
-<h3>SM4国密加解密-祝欢</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/DOP统一登陆方案/" class="article-card" data-title="DOP统一登陆方案">
+<h4>DOP统一登陆方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/bpm流程迁移云枢配置/" class="card" data-title="bpm流程迁移云枢配置">
-<h3>bpm流程迁移云枢配置</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/EasyExcel合并单元格数据读取/" class="article-card" data-title="EasyExcel合并单元格数据读取">
+<h4>EasyExcel合并单元格数据读取</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/bpm表单流程迁移云枢/" class="card" data-title="bpm表单流程迁移云枢">
-<h3>bpm表单流程迁移云枢</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/H3BPMnet表单上添加通用自定义按钮/" class="article-card" data-title="H3BPM(.net)表单上添加通用自定义按钮">
+<h4>H3BPM(.net)表单上添加通用自定义按钮</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/业务全周期二开流程图vue-super-flow/" class="card" data-title="业务全周期二开流程图（vue-super-flow）">
-<h3>业务全周期二开流程图（vue-super-flow）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/H3BPM审批时上传附件PC端_移动端/" class="article-card" data-title="H3BPM审批时上传附件【PC端_移动端】">
+<h4>H3BPM审批时上传附件【PC端_移动端】</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/两个系统公用一个数据源/" class="card" data-title="两个系统公用一个数据源">
-<h3>两个系统公用一个数据源</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/SM4国密加解密-祝欢/" class="article-card" data-title="SM4国密加解密-祝欢">
+<h4>SM4国密加解密-祝欢</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/二开-BPMjava版组织机构新增岗位配置/" class="card" data-title="二开-BPM(java)版组织机构新增岗位配置">
-<h3>二开-BPM(java)版组织机构新增岗位配置</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/bpm流程迁移云枢配置/" class="article-card" data-title="bpm流程迁移云枢配置">
+<h4>bpm流程迁移云枢配置</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云6数据库持久化操作-NativeSql/" class="card" data-title="云6数据库持久化操作-NativeSql">
-<h3>云6数据库持久化操作-NativeSql</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/bpm表单流程迁移云枢/" class="article-card" data-title="bpm表单流程迁移云枢">
+<h4>bpm表单流程迁移云枢</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云7-执行sql-二开方案/" class="card" data-title="云7 执行sql 二开方案">
-<h3>云7 执行sql 二开方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/业务全周期二开流程图vue-super-flow/" class="article-card" data-title="业务全周期二开流程图（vue-super-flow）">
+<h4>业务全周期二开流程图（vue-super-flow）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢-app-生成/" class="card" data-title="云枢 app 生成">
-<h3>云枢 app 生成</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/两个系统公用一个数据源/" class="article-card" data-title="两个系统公用一个数据源">
+<h4>两个系统公用一个数据源</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢-webservice-api接口/" class="card" data-title="云枢 webservice api接口">
-<h3>云枢 webservice api接口</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/二开-BPMjava版组织机构新增岗位配置/" class="article-card" data-title="二开-BPM(java)版组织机构新增岗位配置">
+<h4>二开-BPM(java)版组织机构新增岗位配置</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢6配置参数说明/" class="card" data-title="云枢6配置参数说明">
-<h3>云枢6配置参数说明</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云6数据库持久化操作-NativeSql/" class="article-card" data-title="云6数据库持久化操作-NativeSql">
+<h4>云6数据库持久化操作-NativeSql</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢登录在三方系统认证账号密码/" class="card" data-title="云枢登录在三方系统认证账号密码">
-<h3>云枢登录在三方系统认证账号密码</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云7-执行sql-二开方案/" class="article-card" data-title="云7 执行sql 二开方案">
+<h4>云7 执行sql 二开方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢表单流程数据迁移/" class="card" data-title="云枢表单、流程数据迁移">
-<h3>云枢表单、流程数据迁移</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢-app-生成/" class="article-card" data-title="云枢 app 生成">
+<h4>云枢 app 生成</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢角色导入导出/" class="card" data-title="云枢角色导入导出">
-<h3>云枢角色导入导出</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢-webservice-api接口/" class="article-card" data-title="云枢 webservice api接口">
+<h4>云枢 webservice api接口</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢调用sap接口/" class="card" data-title="云枢调用sap接口">
-<h3>云枢调用sap接口</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢6配置参数说明/" class="article-card" data-title="云枢6配置参数说明">
+<h4>云枢6配置参数说明</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢默认登录拓展邮箱登录案例/" class="card" data-title="云枢默认登录拓展邮箱登录案例">
-<h3>云枢默认登录拓展邮箱登录案例</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢登录在三方系统认证账号密码/" class="article-card" data-title="云枢登录在三方系统认证账号密码">
+<h4>云枢登录在三方系统认证账号密码</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/人员单选映射逻辑与拓展映射思路分享/" class="card" data-title="人员单选映射逻辑与拓展映射思路分享">
-<h3>人员单选映射逻辑与拓展映射思路分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢表单流程数据迁移/" class="article-card" data-title="云枢表单、流程数据迁移">
+<h4>云枢表单、流程数据迁移</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/人员同步个人信息扩展/" class="card" data-title="人员同步个人信息扩展">
-<h3>人员同步个人信息扩展</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢角色导入导出/" class="article-card" data-title="云枢角色导入导出">
+<h4>云枢角色导入导出</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/制造企业物料辅料成本科目维度高性能归集/" class="card" data-title="制造企业物料辅料成本（科目维度）高性能归集">
-<h3>制造企业物料辅料成本（科目维度）高性能归集</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢调用sap接口/" class="article-card" data-title="云枢调用sap接口">
+<h4>云枢调用sap接口</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/制造企业车间料工费成本明细高性能计算/" class="card" data-title="制造企业车间料工费成本明细高性能计算">
-<h3>制造企业车间料工费成本明细高性能计算</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/云枢默认登录拓展邮箱登录案例/" class="article-card" data-title="云枢默认登录拓展邮箱登录案例">
+<h4>云枢默认登录拓展邮箱登录案例</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/包含子流程的流程撤回_驳回实现方案/" class="card" data-title="包含子流程的流程撤回_驳回实现方案">
-<h3>包含子流程的流程撤回_驳回实现方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/人员单选映射逻辑与拓展映射思路分享/" class="article-card" data-title="人员单选映射逻辑与拓展映射思路分享">
+<h4>人员单选映射逻辑与拓展映射思路分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/在线编码动态嵌入手写签名到word文档/" class="card" data-title="在线编码动态嵌入手写签名到word文档">
-<h3>在线编码动态嵌入手写签名到word文档</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/人员同步个人信息扩展/" class="article-card" data-title="人员同步个人信息扩展">
+<h4>人员同步个人信息扩展</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/基于产品模型校验拓展自定义数据项案例分享/" class="card" data-title="基于产品模型校验拓展自定义数据项案例分享">
-<h3>基于产品模型校验拓展自定义数据项案例分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/制造企业物料辅料成本科目维度高性能归集/" class="article-card" data-title="制造企业物料辅料成本（科目维度）高性能归集">
+<h4>制造企业物料辅料成本（科目维度）高性能归集</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/塔比星第三方开放平台接入工具类/" class="card" data-title="塔比星第三方开放平台接入工具类">
-<h3>塔比星第三方开放平台接入工具类</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/制造企业车间料工费成本明细高性能计算/" class="article-card" data-title="制造企业车间料工费成本明细高性能计算">
+<h4>制造企业车间料工费成本明细高性能计算</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/子表数据通过接口返回数据填充/" class="card" data-title="子表数据通过接口返回数据填充">
-<h3>子表数据通过接口返回数据填充</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/包含子流程的流程撤回_驳回实现方案/" class="article-card" data-title="包含子流程的流程撤回_驳回实现方案">
+<h4>包含子流程的流程撤回_驳回实现方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/字段映射表数据同步技术方案/" class="card" data-title="字段映射表数据同步技术方案">
-<h3>字段映射表数据同步技术方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/在线编码动态嵌入手写签名到word文档/" class="article-card" data-title="在线编码动态嵌入手写签名到word文档">
+<h4>在线编码动态嵌入手写签名到word文档</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/应用维度管控微信和邮箱消息/" class="card" data-title="应用维度管控微信和邮箱消息">
-<h3>应用维度管控微信和邮箱消息</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/基于产品模型校验拓展自定义数据项案例分享/" class="article-card" data-title="基于产品模型校验拓展自定义数据项案例分享">
+<h4>基于产品模型校验拓展自定义数据项案例分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/手机短信登录和微信扫码登录案例/" class="card" data-title="手机短信登录和微信扫码登录案例">
-<h3>手机短信登录和微信扫码登录案例</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/塔比星第三方开放平台接入工具类/" class="article-card" data-title="塔比星第三方开放平台接入工具类">
+<h4>塔比星第三方开放平台接入工具类</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/接口入参出参加密并验签/" class="card" data-title="接口入参出参加密并验签">
-<h3>接口入参出参加密并验签</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/子表数据通过接口返回数据填充/" class="article-card" data-title="子表数据通过接口返回数据填充">
+<h4>子表数据通过接口返回数据填充</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/更新导入支持只导入表单部分字段/" class="card" data-title="更新导入支持只导入表单部分字段">
-<h3>更新导入支持只导入表单部分字段</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/字段映射表数据同步技术方案/" class="article-card" data-title="字段映射表数据同步技术方案">
+<h4>字段映射表数据同步技术方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/流程中发送外链给第三方填写数据并回填/" class="card" data-title="流程中发送外链给第三方填写数据并回填">
-<h3>流程中发送外链给第三方填写数据并回填</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/应用维度管控微信和邮箱消息/" class="article-card" data-title="应用维度管控微信和邮箱消息">
+<h4>应用维度管控微信和邮箱消息</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/流程开始节点多个发起人实现/" class="card" data-title="流程开始节点多个发起人实现">
-<h3>流程开始节点多个发起人实现</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/手机短信登录和微信扫码登录案例/" class="article-card" data-title="手机短信登录和微信扫码登录案例">
+<h4>手机短信登录和微信扫码登录案例</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/流程迁移运维小工具/" class="card" data-title="流程迁移运维小工具">
-<h3>流程迁移运维小工具</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/接口入参出参加密并验签/" class="article-card" data-title="接口入参出参加密并验签">
+<h4>接口入参出参加密并验签</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/测试第三方平台SSL认证接口请求解禁/" class="card" data-title="测试第三方平台SSL认证接口请求解禁">
-<h3>测试第三方平台SSL认证接口请求解禁</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/更新导入支持只导入表单部分字段/" class="article-card" data-title="更新导入支持只导入表单部分字段">
+<h4>更新导入支持只导入表单部分字段</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/牧原-钉钉职位-自定义-同步-云枢角色/" class="card" data-title="牧原 钉钉职位 自定义 同步 云枢角色">
-<h3>牧原 钉钉职位 自定义 同步 云枢角色</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/流程中发送外链给第三方填写数据并回填/" class="article-card" data-title="流程中发送外链给第三方填写数据并回填">
+<h4>流程中发送外链给第三方填写数据并回填</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/生成历史表单数据/" class="card" data-title="生成历史表单数据">
-<h3>生成历史表单数据</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/流程开始节点多个发起人实现/" class="article-card" data-title="流程开始节点多个发起人实现">
+<h4>流程开始节点多个发起人实现</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/电子签章契约锁对接/" class="card" data-title="电子签章（契约锁）对接">
-<h3>电子签章（契约锁）对接</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/流程迁移运维小工具/" class="article-card" data-title="流程迁移运维小工具">
+<h4>流程迁移运维小工具</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/第三方接口新增表单数据加默认值/" class="card" data-title="第三方接口新增表单数据加默认值">
-<h3>第三方接口新增表单数据加默认值</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/测试第三方平台SSL认证接口请求解禁/" class="article-card" data-title="测试第三方平台SSL认证接口请求解禁">
+<h4>测试第三方平台SSL认证接口请求解禁</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/第三方数据-转化-云枢业务数据/" class="card" data-title="第三方数据 转化 云枢业务数据">
-<h3>第三方数据 转化 云枢业务数据</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/牧原-钉钉职位-自定义-同步-云枢角色/" class="article-card" data-title="牧原 钉钉职位 自定义 同步 云枢角色">
+<h4>牧原 钉钉职位 自定义 同步 云枢角色</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/第三方流程委托同步至云枢/" class="card" data-title="第三方流程委托同步至云枢">
-<h3>第三方流程委托同步至云枢</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/生成历史表单数据/" class="article-card" data-title="生成历史表单数据">
+<h4>生成历史表单数据</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义实现权限系统/" class="card" data-title="自定义实现权限系统">
-<h3>自定义实现权限系统</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/电子签章契约锁对接/" class="article-card" data-title="电子签章（契约锁）对接">
+<h4>电子签章（契约锁）对接</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/表单批量打包附件/" class="card" data-title="表单批量打包附件">
-<h3>表单批量打包附件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/第三方接口新增表单数据加默认值/" class="article-card" data-title="第三方接口新增表单数据加默认值">
+<h4>第三方接口新增表单数据加默认值</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/表单详情添加全局方法实现字段自动赋值/" class="card" data-title="表单详情添加全局方法，实现字段自动赋值">
-<h3>表单详情添加全局方法，实现字段自动赋值</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/第三方数据-转化-云枢业务数据/" class="article-card" data-title="第三方数据 转化 云枢业务数据">
+<h4>第三方数据 转化 云枢业务数据</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/递归新增树形数据结构以及入参格式转换思路/" class="card" data-title="递归新增树形数据结构以及入参格式转换思路">
-<h3>递归新增树形数据结构以及入参格式转换思路</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/第三方流程委托同步至云枢/" class="article-card" data-title="第三方流程委托同步至云枢">
+<h4>第三方流程委托同步至云枢</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/通用数据迁移案例/" class="card" data-title="通用数据迁移案例">
-<h3>通用数据迁移案例</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/自定义实现权限系统/" class="article-card" data-title="自定义实现权限系统">
+<h4>自定义实现权限系统</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/通用的前端调用产品业务规则实现/" class="card" data-title="通用的前端调用产品业务规则实现">
-<h3>通用的前端调用产品业务规则实现</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/表单批量打包附件/" class="article-card" data-title="表单批量打包附件">
+<h4>表单批量打包附件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/通过Word模板动态生成Word文档/" class="card" data-title="通过Word模板动态生成Word文档">
-<h3>通过Word模板动态生成Word文档</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/表单详情添加全局方法实现字段自动赋值/" class="article-card" data-title="表单详情添加全局方法，实现字段自动赋值">
+<h4>表单详情添加全局方法，实现字段自动赋值</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/防抖函数接口响应速度差异过大展示数据处理/" class="card" data-title="防抖函数接口响应速度差异过大展示数据处理">
-<h3>防抖函数接口响应速度差异过大展示数据处理</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/递归新增树形数据结构以及入参格式转换思路/" class="article-card" data-title="递归新增树形数据结构以及入参格式转换思路">
+<h4>递归新增树形数据结构以及入参格式转换思路</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/阿里云短信平台接入案例/" class="card" data-title="阿里云短信平台接入案例">
-<h3>阿里云短信平台接入案例</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/通用数据迁移案例/" class="article-card" data-title="通用数据迁移案例">
+<h4>通用数据迁移案例</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/附件下载维护功能/" class="card" data-title="附件下载维护功能">
-<h3>附件下载维护功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/通用的前端调用产品业务规则实现/" class="article-card" data-title="通用的前端调用产品业务规则实现">
+<h4>通用的前端调用产品业务规则实现</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/页面埋点收集信息/" class="card" data-title="页面埋点，收集信息">
-<h3>页面埋点，收集信息</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/通过Word模板动态生成Word文档/" class="article-card" data-title="通过Word模板动态生成Word文档">
+<h4>通过Word模板动态生成Word文档</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/高版本产品代码引入所需依赖/" class="card" data-title="高版本产品代码引入所需依赖">
-<h3>高版本产品代码引入所需依赖</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>通用方案</span>
-</div>
+<a href="/2026/05/22/防抖函数接口响应速度差异过大展示数据处理/" class="article-card" data-title="防抖函数接口响应速度差异过大展示数据处理">
+<h4>防抖函数接口响应速度差异过大展示数据处理</h4>
+<div class="meta">📅 2026-05-22</div>
+</a>
+
+<a href="/2026/05/22/阿里云短信平台接入案例/" class="article-card" data-title="阿里云短信平台接入案例">
+<h4>阿里云短信平台接入案例</h4>
+<div class="meta">📅 2026-05-22</div>
+</a>
+
+<a href="/2026/05/22/附件下载维护功能/" class="article-card" data-title="附件下载维护功能">
+<h4>附件下载维护功能</h4>
+<div class="meta">📅 2026-05-22</div>
+</a>
+
+<a href="/2026/05/22/页面埋点收集信息/" class="article-card" data-title="页面埋点，收集信息">
+<h4>页面埋点，收集信息</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
+<a href="/2026/05/22/高版本产品代码引入所需依赖/" class="article-card" data-title="高版本产品代码引入所需依赖">
+<h4>高版本产品代码引入所需依赖</h4>
+<div class="meta">📅 2026-05-22</div>
+</a>
+
 </div>
 </div>
 
-<div class="category" id="特殊场景方案">
-<h2 class="category-title" style="border-color: #722ed1">
-<span class="icon">⚡</span> 特殊场景方案
-<span style="font-size:0.6em; color:#666; font-weight:normal">(59篇)</span>
-</h2>
-<div class="grid">
-
-<a href="/2026/05/22/85定制二开发送邮件功能/" class="card" data-title="8.5定制二开发送邮件功能">
-<h3>8.5定制二开发送邮件功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<div class="category-section" id="cat-特殊场景方案">
+<h3 class="category-title">
+<span class="icon">⚡</span>
+特殊场景方案
+<span class="count">59 篇</span>
+</h3>
+<div class="articles-grid">
+
+<a href="/2026/05/22/85定制二开发送邮件功能/" class="article-card" data-title="8.5定制二开发送邮件功能">
+<h4>8.5定制二开发送邮件功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/AD域账号密码登录改造/" class="card" data-title="AD域账号密码登录改造">
-<h3>AD域账号密码登录改造</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/AD域账号密码登录改造/" class="article-card" data-title="AD域账号密码登录改造">
+<h4>AD域账号密码登录改造</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/H3BPM达梦数据库适配改造/" class="card" data-title="H3BPM达梦数据库适配改造">
-<h3>H3BPM达梦数据库适配改造</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/H3BPM达梦数据库适配改造/" class="article-card" data-title="H3BPM达梦数据库适配改造">
+<h4>H3BPM达梦数据库适配改造</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/PC端右下角浮标快捷工具/" class="card" data-title="PC端右下角浮标快捷工具">
-<h3>PC端右下角浮标快捷工具</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/PC端右下角浮标快捷工具/" class="article-card" data-title="PC端右下角浮标快捷工具">
+<h4>PC端右下角浮标快捷工具</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/SAP接口数组入参调用/" class="card" data-title="SAP接口数组入参调用">
-<h3>SAP接口数组入参调用</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/SAP接口数组入参调用/" class="article-card" data-title="SAP接口数组入参调用">
+<h4>SAP接口数组入参调用</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Vue-多页签导航组件开发/" class="card" data-title="Vue 多页签导航组件开发">
-<h3>Vue 多页签导航组件开发</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/Vue-多页签导航组件开发/" class="article-card" data-title="Vue 多页签导航组件开发">
+<h4>Vue 多页签导航组件开发</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Vue-自定义拖拽指令/" class="card" data-title="Vue 自定义拖拽指令">
-<h3>Vue 自定义拖拽指令</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/Vue-自定义拖拽指令/" class="article-card" data-title="Vue 自定义拖拽指令">
+<h4>Vue 自定义拖拽指令</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/antd级联控件与原生下拉加载数据方法/" class="card" data-title="antd级联控件与原生下拉加载数据方法">
-<h3>antd级联控件与原生下拉加载数据方法</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/antd级联控件与原生下拉加载数据方法/" class="article-card" data-title="antd级联控件与原生下拉加载数据方法">
+<h4>antd级联控件与原生下拉加载数据方法</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/docker-部署云枢需要连接互联网/" class="card" data-title="docker 部署云枢（需要连接互联网）">
-<h3>docker 部署云枢（需要连接互联网）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/docker-部署云枢需要连接互联网/" class="article-card" data-title="docker 部署云枢（需要连接互联网）">
+<h4>docker 部署云枢（需要连接互联网）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/excel代替子表/" class="card" data-title="excel代替子表">
-<h3>excel代替子表</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/excel代替子表/" class="article-card" data-title="excel代替子表">
+<h4>excel代替子表</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/tcs部署/" class="card" data-title="tcs部署">
-<h3>tcs部署</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/tcs部署/" class="article-card" data-title="tcs部署">
+<h4>tcs部署</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/三方主数据同步/" class="card" data-title="三方主数据同步">
-<h3>三方主数据同步</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/三方主数据同步/" class="article-card" data-title="三方主数据同步">
+<h4>三方主数据同步</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/不二开页面巧妙在表单详情页面内嵌页面/" class="card" data-title="不二开页面，巧妙在表单详情页面内嵌页面">
-<h3>不二开页面，巧妙在表单详情页面内嵌页面</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/不二开页面巧妙在表单详情页面内嵌页面/" class="article-card" data-title="不二开页面，巧妙在表单详情页面内嵌页面">
+<h4>不二开页面，巧妙在表单详情页面内嵌页面</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/二开云枢数据字典存值模式/" class="card" data-title="二开云枢数据字典存值模式">
-<h3>二开云枢数据字典存值模式</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/二开云枢数据字典存值模式/" class="article-card" data-title="二开云枢数据字典存值模式">
+<h4>二开云枢数据字典存值模式</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/二开产品报表导出图片/" class="card" data-title="二开产品报表导出图片">
-<h3>二开产品报表导出图片</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/二开产品报表导出图片/" class="article-card" data-title="二开产品报表导出图片">
+<h4>二开产品报表导出图片</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云6融合网页数据爬取/" class="card" data-title="云6融合网页数据爬取">
-<h3>云6融合网页数据爬取</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/云6融合网页数据爬取/" class="article-card" data-title="云6融合网页数据爬取">
+<h4>云6融合网页数据爬取</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢PC端集成pageoffice实现在线办公全流程签批套红盖章/" class="card" data-title="云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）">
-<h3>云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/云枢PC端集成pageoffice实现在线办公全流程签批套红盖章/" class="article-card" data-title="云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）">
+<h4>云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢mobile端集成ntko实现办公全流程/" class="card" data-title="云枢mobile端集成ntko实现办公全流程">
-<h3>云枢mobile端集成ntko实现办公全流程</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/云枢mobile端集成ntko实现办公全流程/" class="article-card" data-title="云枢mobile端集成ntko实现办公全流程">
+<h4>云枢mobile端集成ntko实现办公全流程</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢打印添加水印/" class="card" data-title="云枢打印添加水印">
-<h3>云枢打印添加水印</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/云枢打印添加水印/" class="article-card" data-title="云枢打印添加水印">
+<h4>云枢打印添加水印</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢表单引用外部文件/" class="card" data-title="云枢表单引用外部文件">
-<h3>云枢表单引用外部文件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/云枢表单引用外部文件/" class="article-card" data-title="云枢表单引用外部文件">
+<h4>云枢表单引用外部文件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/产品二开实现二进制流转换为二维码图片excel下载功能/" class="card" data-title="产品二开实现二进制流转换为二维码、图片、excel下载功能">
-<h3>产品二开实现二进制流转换为二维码、图片、excel下载功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/产品二开实现二进制流转换为二维码图片excel下载功能/" class="article-card" data-title="产品二开实现二进制流转换为二维码、图片、excel下载功能">
+<h4>产品二开实现二进制流转换为二维码、图片、excel下载功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/产品结合甘特图开发/" class="card" data-title="产品结合甘特图开发">
-<h3>产品结合甘特图开发</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/产品结合甘特图开发/" class="article-card" data-title="产品结合甘特图开发">
+<h4>产品结合甘特图开发</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/产品表单页面实现点击文字展示二维码功能/" class="card" data-title="产品表单页面实现点击文字展示二维码功能">
-<h3>产品表单页面实现点击文字展示二维码功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/产品表单页面实现点击文字展示二维码功能/" class="article-card" data-title="产品表单页面实现点击文字展示二维码功能">
+<h4>产品表单页面实现点击文字展示二维码功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/代办任务去除周末和节假日审批耗时功能简述/" class="card" data-title="代办任务去除周末和节假日审批耗时功能简述">
-<h3>代办任务去除周末和节假日审批耗时功能简述</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/代办任务去除周末和节假日审批耗时功能简述/" class="article-card" data-title="代办任务去除周末和节假日审批耗时功能简述">
+<h4>代办任务去除周末和节假日审批耗时功能简述</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/企微消息卡片集成多环境待办审批后跳回列表页/" class="card" data-title="企微消息卡片集成多环境待办审批后跳回列表页">
-<h3>企微消息卡片集成多环境待办审批后跳回列表页</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/企微消息卡片集成多环境待办审批后跳回列表页/" class="article-card" data-title="企微消息卡片集成多环境待办审批后跳回列表页">
+<h4>企微消息卡片集成多环境待办审批后跳回列表页</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/关联单选映射数据后被调整打开表单label标红悬浮展示关联数据/" class="card" data-title="关联单选映射数据后被调整打开表单label标红悬浮展示关联数据">
-<h3>关联单选映射数据后被调整打开表单label标红悬浮展示关联数据</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/关联单选映射数据后被调整打开表单label标红悬浮展示关联数据/" class="article-card" data-title="关联单选映射数据后被调整打开表单label标红悬浮展示关联数据">
+<h4>关联单选映射数据后被调整打开表单label标红悬浮展示关联数据</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/关联表单树形结构使用与统计优化/" class="card" data-title="关联表单树形结构使用与统计优化">
-<h3>关联表单树形结构使用与统计优化</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/关联表单树形结构使用与统计优化/" class="article-card" data-title="关联表单树形结构使用与统计优化">
+<h4>关联表单树形结构使用与统计优化</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端读取配置表生成图片自适应以及下载功能/" class="card" data-title="前端读取配置表生成图片自适应以及下载功能">
-<h3>前端读取配置表生成图片自适应以及下载功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/前端读取配置表生成图片自适应以及下载功能/" class="article-card" data-title="前端读取配置表生成图片自适应以及下载功能">
+<h4>前端读取配置表生成图片自适应以及下载功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端项目私仓地址更换说明/" class="card" data-title="前端项目私仓地址更换说明">
-<h3>前端项目私仓地址更换说明</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/前端项目私仓地址更换说明/" class="article-card" data-title="前端项目私仓地址更换说明">
+<h4>前端项目私仓地址更换说明</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/单点登录二次登录问题/" class="card" data-title="单点登录二次登录问题">
-<h3>单点登录二次登录问题</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/单点登录二次登录问题/" class="article-card" data-title="单点登录二次登录问题">
+<h4>单点登录二次登录问题</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/后台操作拦截/" class="card" data-title="后台操作拦截">
-<h3>后台操作拦截</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/后台操作拦截/" class="article-card" data-title="后台操作拦截">
+<h4>后台操作拦截</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/基于Oauth2的云枢流程触发业务服务接口配置/" class="card" data-title="基于Oauth2的云枢流程触发业务服务接口配置">
-<h3>基于Oauth2的云枢流程触发业务服务接口配置</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/基于Oauth2的云枢流程触发业务服务接口配置/" class="article-card" data-title="基于Oauth2的云枢流程触发业务服务接口配置">
+<h4>基于Oauth2的云枢流程触发业务服务接口配置</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/定时任务自定义功能后端/" class="card" data-title="定时任务自定义功能后端">
-<h3>定时任务自定义功能后端</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/定时任务自定义功能后端/" class="article-card" data-title="定时任务自定义功能后端">
+<h4>定时任务自定义功能后端</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/应用角色组实现/" class="card" data-title="应用角色组实现">
-<h3>应用角色组实现</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/应用角色组实现/" class="article-card" data-title="应用角色组实现">
+<h4>应用角色组实现</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/开放草稿数据查询/" class="card" data-title="开放草稿数据查询">
-<h3>开放草稿数据查询</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/开放草稿数据查询/" class="article-card" data-title="开放草稿数据查询">
+<h4>开放草稿数据查询</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/无流程表单数据唯一性同步/" class="card" data-title="无流程表单数据唯一性同步">
-<h3>无流程表单数据唯一性同步</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/无流程表单数据唯一性同步/" class="article-card" data-title="无流程表单数据唯一性同步">
+<h4>无流程表单数据唯一性同步</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/某马---角标分享/" class="card" data-title="某马 - 角标分享">
-<h3>某马 - 角标分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/某马---角标分享/" class="article-card" data-title="某马 - 角标分享">
+<h4>某马 - 角标分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/某马逻辑删除/" class="card" data-title="某马逻辑删除">
-<h3>某马逻辑删除</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/某马逻辑删除/" class="article-card" data-title="某马逻辑删除">
+<h4>某马逻辑删除</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/树形报表数据统计/" class="card" data-title="树形报表数据统计">
-<h3>树形报表数据统计</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/树形报表数据统计/" class="article-card" data-title="树形报表数据统计">
+<h4>树形报表数据统计</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/树形视图-左树右表数据一一对应/" class="card" data-title="树形视图-左树右表数据一一对应">
-<h3>树形视图-左树右表数据一一对应</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/树形视图-左树右表数据一一对应/" class="article-card" data-title="树形视图-左树右表数据一一对应">
+<h4>树形视图-左树右表数据一一对应</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/树形视图支持方案/" class="card" data-title="树形视图支持方案">
-<h3>树形视图支持方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/树形视图支持方案/" class="article-card" data-title="树形视图支持方案">
+<h4>树形视图支持方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/登录接入极验功能/" class="card" data-title="登录接入极验功能">
-<h3>登录接入极验功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/登录接入极验功能/" class="article-card" data-title="登录接入极验功能">
+<h4>登录接入极验功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/移动端前端打包批量下载/" class="card" data-title="移动端前端打包批量下载">
-<h3>移动端前端打包批量下载</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/移动端前端打包批量下载/" class="article-card" data-title="移动端前端打包批量下载">
+<h4>移动端前端打包批量下载</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/移动端考勤打卡/" class="card" data-title="移动端考勤打卡">
-<h3>移动端考勤打卡</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/移动端考勤打卡/" class="article-card" data-title="移动端考勤打卡">
+<h4>移动端考勤打卡</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/移动端调起导航软件/" class="card" data-title="移动端调起导航软件">
-<h3>移动端调起导航软件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/移动端调起导航软件/" class="article-card" data-title="移动端调起导航软件">
+<h4>移动端调起导航软件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/箭头样式步骤条/" class="card" data-title="箭头样式步骤条">
-<h3>箭头样式步骤条</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/箭头样式步骤条/" class="article-card" data-title="箭头样式步骤条">
+<h4>箭头样式步骤条</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/给子表中的控件添加离焦事件/" class="card" data-title="给子表中的控件添加离焦事件">
-<h3>给子表中的控件添加离焦事件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/给子表中的控件添加离焦事件/" class="article-card" data-title="给子表中的控件添加离焦事件">
+<h4>给子表中的控件添加离焦事件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/考勤功能/" class="card" data-title="考勤功能">
-<h3>考勤功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/考勤功能/" class="article-card" data-title="考勤功能">
+<h4>考勤功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义Modal弹窗Mobile/" class="card" data-title="自定义Modal弹窗(Mobile)">
-<h3>自定义Modal弹窗(Mobile)</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义Modal弹窗Mobile/" class="article-card" data-title="自定义Modal弹窗(Mobile)">
+<h4>自定义Modal弹窗(Mobile)</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义Modal弹窗PC/" class="card" data-title="自定义Modal弹窗(PC)">
-<h3>自定义Modal弹窗(PC)</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义Modal弹窗PC/" class="article-card" data-title="自定义Modal弹窗(PC)">
+<h4>自定义Modal弹窗(PC)</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义模型表名/" class="card" data-title="自定义模型表名">
-<h3>自定义模型表名</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义模型表名/" class="article-card" data-title="自定义模型表名">
+<h4>自定义模型表名</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义步骤条组件/" class="card" data-title="自定义步骤条组件">
-<h3>自定义步骤条组件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义步骤条组件/" class="article-card" data-title="自定义步骤条组件">
+<h4>自定义步骤条组件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义竖向时间轴组件/" class="card" data-title="自定义竖向时间轴组件">
-<h3>自定义竖向时间轴组件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义竖向时间轴组件/" class="article-card" data-title="自定义竖向时间轴组件">
+<h4>自定义竖向时间轴组件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义视图样式二级视图展示/" class="card" data-title="自定义视图样式，二级视图展示">
-<h3>自定义视图样式，二级视图展示</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义视图样式二级视图展示/" class="article-card" data-title="自定义视图样式，二级视图展示">
+<h4>自定义视图样式，二级视图展示</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义页面使用产品idocview预览功能/" class="card" data-title="自定义页面使用产品idocview预览功能">
-<h3>自定义页面使用产品idocview预览功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/自定义页面使用产品idocview预览功能/" class="article-card" data-title="自定义页面使用产品idocview预览功能">
+<h4>自定义页面使用产品idocview预览功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/表单当前审批人/" class="card" data-title="表单当前审批人">
-<h3>表单当前审批人</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/表单当前审批人/" class="article-card" data-title="表单当前审批人">
+<h4>表单当前审批人</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/访问连接添加二级目录/" class="card" data-title="访问连接添加二级目录">
-<h3>访问连接添加二级目录</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/访问连接添加二级目录/" class="article-card" data-title="访问连接添加二级目录">
+<h4>访问连接添加二级目录</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/递归实现树形导图/" class="card" data-title="递归实现树形导图">
-<h3>递归实现树形导图</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/递归实现树形导图/" class="article-card" data-title="递归实现树形导图">
+<h4>递归实现树形导图</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/针对单个表单的单个控件二开/" class="card" data-title="针对单个表单的单个控件二开">
-<h3>针对单个表单的单个控件二开</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>特殊场景方案</span>
-</div>
+<a href="/2026/05/22/针对单个表单的单个控件二开/" class="article-card" data-title="针对单个表单的单个控件二开">
+<h4>针对单个表单的单个控件二开</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
 </div>
 </div>
 
-<div class="category" id="第三方集成">
-<h2 class="category-title" style="border-color: #52c41a">
-<span class="icon">🔗</span> 第三方集成
-<span style="font-size:0.6em; color:#666; font-weight:normal">(32篇)</span>
-</h2>
-<div class="grid">
-
-<a href="/2026/05/22/BPMjava集成企业微信使用扫一扫功能/" class="card" data-title="BPM(java)集成企业微信使用扫一扫功能">
-<h3>BPM(java)集成企业微信使用扫一扫功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<div class="category-section" id="cat-第三方集成">
+<h3 class="category-title">
+<span class="icon">🔗</span>
+第三方集成
+<span class="count">32 篇</span>
+</h3>
+<div class="articles-grid">
+
+<a href="/2026/05/22/BPMjava集成企业微信使用扫一扫功能/" class="article-card" data-title="BPM(java)集成企业微信使用扫一扫功能">
+<h4>BPM(java)集成企业微信使用扫一扫功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云6集成WPS附件在线编辑/" class="card" data-title="云6集成WPS附件在线编辑">
-<h3>云6集成WPS附件在线编辑</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云6集成WPS附件在线编辑/" class="article-card" data-title="云6集成WPS附件在线编辑">
+<h4>云6集成WPS附件在线编辑</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云7-身份认证/" class="card" data-title="云7-身份认证">
-<h3>云7-身份认证</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云7-身份认证/" class="article-card" data-title="云7-身份认证">
+<h4>云7-身份认证</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢610文件存储-分应用存储不同文件服务器/" class="card" data-title="云枢6.10文件存储-分应用存储不同文件服务器">
-<h3>云枢6.10文件存储-分应用存储不同文件服务器</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云枢610文件存储-分应用存储不同文件服务器/" class="article-card" data-title="云枢6.10文件存储-分应用存储不同文件服务器">
+<h4>云枢6.10文件存储-分应用存储不同文件服务器</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢6125-SSO单点登录PC端/" class="card" data-title="云枢6.12.5 SSO单点登录（PC端）">
-<h3>云枢6.12.5 SSO单点登录（PC端）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云枢6125-SSO单点登录PC端/" class="article-card" data-title="云枢6.12.5 SSO单点登录（PC端）">
+<h4>云枢6.12.5 SSO单点登录（PC端）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢与OA系统的集成/" class="card" data-title="云枢与OA系统的集成">
-<h3>云枢与OA系统的集成</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云枢与OA系统的集成/" class="article-card" data-title="云枢与OA系统的集成">
+<h4>云枢与OA系统的集成</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢第三方数据源为第三方数据库集成/" class="card" data-title="云枢第三方数据源为第三方数据库集成">
-<h3>云枢第三方数据源为第三方数据库集成</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云枢第三方数据源为第三方数据库集成/" class="article-card" data-title="云枢第三方数据源为第三方数据库集成">
+<h4>云枢第三方数据源为第三方数据库集成</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢自维护组织实现企业微信单点登录/" class="card" data-title="云枢自维护组织实现企业微信单点登录">
-<h3>云枢自维护组织实现企业微信单点登录</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云枢自维护组织实现企业微信单点登录/" class="article-card" data-title="云枢自维护组织实现企业微信单点登录">
+<h4>云枢自维护组织实现企业微信单点登录</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢集成第三方扫码登录/" class="card" data-title="云枢集成第三方扫码登录">
-<h3>云枢集成第三方扫码登录</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/云枢集成第三方扫码登录/" class="article-card" data-title="云枢集成第三方扫码登录">
+<h4>云枢集成第三方扫码登录</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/企微单点登录云枢/" class="card" data-title="企微单点登录云枢">
-<h3>企微单点登录云枢</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/企微单点登录云枢/" class="article-card" data-title="企微单点登录云枢">
+<h4>企微单点登录云枢</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/企查查第三方接入应用/" class="card" data-title="企查查第三方接入应用">
-<h3>企查查第三方接入应用</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/企查查第三方接入应用/" class="article-card" data-title="企查查第三方接入应用">
+<h4>企查查第三方接入应用</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/低代码rpa融合/" class="card" data-title="低代码rpa融合">
-<h3>低代码rpa融合</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/低代码rpa融合/" class="article-card" data-title="低代码rpa融合">
+<h4>低代码rpa融合</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/删除流程同步外部系统/" class="card" data-title="删除流程同步外部系统">
-<h3>删除流程同步外部系统</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/删除流程同步外部系统/" class="article-card" data-title="删除流程同步外部系统">
+<h4>删除流程同步外部系统</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端实现-PC端集成ntko实现在线办公全流程签批套红盖章/" class="card" data-title="前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）">
-<h3>前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/前端实现-PC端集成ntko实现在线办公全流程签批套红盖章/" class="article-card" data-title="前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）">
+<h4>前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/单点登录云6到钉钉/" class="card" data-title="单点登录云6到钉钉">
-<h3>单点登录云6到钉钉</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/单点登录云6到钉钉/" class="article-card" data-title="单点登录云6到钉钉">
+<h4>单点登录云6到钉钉</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/单点登录到云枢/" class="card" data-title="单点登录到云枢">
-<h3>单点登录到云枢</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/单点登录到云枢/" class="article-card" data-title="单点登录到云枢">
+<h4>单点登录到云枢</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/即时通单点登录到云枢/" class="card" data-title="即时通单点登录到云枢">
-<h3>即时通单点登录到云枢</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/即时通单点登录到云枢/" class="article-card" data-title="即时通单点登录到云枢">
+<h4>即时通单点登录到云枢</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/尘锋SCRM开放平台对接案例/" class="card" data-title="尘锋SCRM开放平台对接案例">
-<h3>尘锋SCRM开放平台对接案例</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/尘锋SCRM开放平台对接案例/" class="article-card" data-title="尘锋SCRM开放平台对接案例">
+<h4>尘锋SCRM开放平台对接案例</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/帆软报表控件js赋值/" class="card" data-title="帆软报表控件js赋值">
-<h3>帆软报表控件js赋值</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/帆软报表控件js赋值/" class="article-card" data-title="帆软报表控件js赋值">
+<h4>帆软报表控件js赋值</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/待办待阅扩展第三方集成/" class="card" data-title="待办、待阅扩展（第三方集成）">
-<h3>待办、待阅扩展（第三方集成）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/待办待阅扩展第三方集成/" class="article-card" data-title="待办、待阅扩展（第三方集成）">
+<h4>待办、待阅扩展（第三方集成）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/监听产品附件控件实现阿里云OCR身份证识别及数据映射/" class="card" data-title="监听产品附件控件实现阿里云OCR身份证识别及数据映射">
-<h3>监听产品附件控件实现阿里云OCR身份证识别及数据映射</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/监听产品附件控件实现阿里云OCR身份证识别及数据映射/" class="article-card" data-title="监听产品附件控件实现阿里云OCR身份证识别及数据映射">
+<h4>监听产品附件控件实现阿里云OCR身份证识别及数据映射</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/移动端list列表页调起导航软件/" class="card" data-title="移动端list列表页调起导航软件">
-<h3>移动端list列表页调起导航软件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/移动端list列表页调起导航软件/" class="article-card" data-title="移动端list列表页调起导航软件">
+<h4>移动端list列表页调起导航软件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/移动端高德地图的使用/" class="card" data-title="移动端高德地图的使用">
-<h3>移动端高德地图的使用</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/移动端高德地图的使用/" class="article-card" data-title="移动端高德地图的使用">
+<h4>移动端高德地图的使用</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/第三方服务调用云枢-openApi授权/" class="card" data-title="第三方服务调用云枢 openApi(授权)">
-<h3>第三方服务调用云枢 openApi(授权)</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/第三方服务调用云枢-openApi授权/" class="article-card" data-title="第三方服务调用云枢 openApi(授权)">
+<h4>第三方服务调用云枢 openApi(授权)</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/第三方系统消息推送/" class="card" data-title="第三方系统消息推送">
-<h3>第三方系统消息推送</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/第三方系统消息推送/" class="article-card" data-title="第三方系统消息推送">
+<h4>第三方系统消息推送</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/第三方组织用户同步/" class="card" data-title="第三方组织用户同步">
-<h3>第三方组织用户同步</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/第三方组织用户同步/" class="article-card" data-title="第三方组织用户同步">
+<h4>第三方组织用户同步</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/自定义应用企业微信待办消息推送/" class="card" data-title="自定义应用企业微信待办消息推送">
-<h3>自定义应用企业微信待办消息推送</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/自定义应用企业微信待办消息推送/" class="article-card" data-title="自定义应用企业微信待办消息推送">
+<h4>自定义应用企业微信待办消息推送</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/金工消息中心对接文档/" class="card" data-title="金工消息中心对接文档">
-<h3>金工消息中心对接文档</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/金工消息中心对接文档/" class="article-card" data-title="金工消息中心对接文档">
+<h4>金工消息中心对接文档</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/钉钉待办推送调整至旧版待办任务/" class="card" data-title="钉钉待办推送调整至旧版待办任务">
-<h3>钉钉待办推送调整至旧版待办任务</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/钉钉待办推送调整至旧版待办任务/" class="article-card" data-title="钉钉待办推送调整至旧版待办任务">
+<h4>钉钉待办推送调整至旧版待办任务</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/钉钉日程接入/" class="card" data-title="钉钉日程接入">
-<h3>钉钉日程接入</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/钉钉日程接入/" class="article-card" data-title="钉钉日程接入">
+<h4>钉钉日程接入</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/集成邮件带附件发送/" class="card" data-title="集成邮件带附件发送">
-<h3>集成邮件带附件发送</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/集成邮件带附件发送/" class="article-card" data-title="集成邮件带附件发送">
+<h4>集成邮件带附件发送</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/飞书集成单点消息创建群组/" class="card" data-title="飞书集成（单点、消息、创建群组）">
-<h3>飞书集成（单点、消息、创建群组）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>第三方集成</span>
-</div>
+<a href="/2026/05/22/飞书集成单点消息创建群组/" class="article-card" data-title="飞书集成（单点、消息、创建群组）">
+<h4>飞书集成（单点、消息、创建群组）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
 </div>
 </div>
 
-<div class="category" id="经验技巧分享">
-<h2 class="category-title" style="border-color: #fa8c16">
-<span class="icon">💡</span> 经验技巧分享
-<span style="font-size:0.6em; color:#666; font-weight:normal">(105篇)</span>
-</h2>
-<div class="grid">
-
-<a href="/2026/05/22/Asposewords物理分页/" class="card" data-title="Aspose.words物理分页">
-<h3>Aspose.words物理分页</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<div class="category-section" id="cat-经验技巧分享">
+<h3 class="category-title">
+<span class="icon">💡</span>
+经验技巧分享
+<span class="count">105 篇</span>
+</h3>
+<div class="articles-grid">
+
+<a href="/2026/05/22/Asposewords物理分页/" class="article-card" data-title="Aspose.words物理分页">
+<h4>Aspose.words物理分页</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Aspose部分高级用法/" class="card" data-title="Aspose部分高级用法">
-<h3>Aspose部分高级用法</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/Aspose部分高级用法/" class="article-card" data-title="Aspose部分高级用法">
+<h4>Aspose部分高级用法</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Bpm数据导入将excel中的数据解析成目标对象集合/" class="card" data-title="Bpm数据导入，将excel中的数据解析成目标对象集合">
-<h3>Bpm数据导入，将excel中的数据解析成目标对象集合</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/Bpm数据导入将excel中的数据解析成目标对象集合/" class="article-card" data-title="Bpm数据导入，将excel中的数据解析成目标对象集合">
+<h4>Bpm数据导入，将excel中的数据解析成目标对象集合</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Linux服务器上mysql定时备份/" class="card" data-title="Linux服务器上mysql定时备份">
-<h3>Linux服务器上mysql定时备份</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/Linux服务器上mysql定时备份/" class="article-card" data-title="Linux服务器上mysql定时备份">
+<h4>Linux服务器上mysql定时备份</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/MYSQL常用JSON操作/" class="card" data-title="MYSQL常用JSON操作">
-<h3>MYSQL常用JSON操作</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/MYSQL常用JSON操作/" class="article-card" data-title="MYSQL常用JSON操作">
+<h4>MYSQL常用JSON操作</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Mysql数据迁移分享/" class="card" data-title="Mysql数据迁移分享">
-<h3>Mysql数据迁移分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/Mysql数据迁移分享/" class="article-card" data-title="Mysql数据迁移分享">
+<h4>Mysql数据迁移分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/SpringBoot参数校验最佳实践总结/" class="card" data-title="SpringBoot参数校验最佳实践总结">
-<h3>SpringBoot参数校验最佳实践总结</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/SpringBoot参数校验最佳实践总结/" class="article-card" data-title="SpringBoot参数校验最佳实践总结">
+<h4>SpringBoot参数校验最佳实践总结</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Sqlserver修改人大金仓数据库适配/" class="card" data-title="Sqlserver修改人大金仓数据库适配">
-<h3>Sqlserver修改人大金仓数据库适配</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/Sqlserver修改人大金仓数据库适配/" class="article-card" data-title="Sqlserver修改人大金仓数据库适配">
+<h4>Sqlserver修改人大金仓数据库适配</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/WebService-配置与设置发布/" class="card" data-title="WebService 配置与设置，发布">
-<h3>WebService 配置与设置，发布</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/WebService-配置与设置发布/" class="article-card" data-title="WebService 配置与设置，发布">
+<h4>WebService 配置与设置，发布</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/activiti流程引擎入门/" class="card" data-title="activiti流程引擎入门">
-<h3>activiti流程引擎入门</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/activiti流程引擎入门/" class="article-card" data-title="activiti流程引擎入门">
+<h4>activiti流程引擎入门</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/aop监听记录云枢前后台操作日志/" class="card" data-title="aop监听记录云枢前后台操作日志">
-<h3>aop监听记录云枢前后台操作日志</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/aop监听记录云枢前后台操作日志/" class="article-card" data-title="aop监听记录云枢前后台操作日志">
+<h4>aop监听记录云枢前后台操作日志</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/asposewords-设置文字格式以及空白页操作/" class="card" data-title="aspose.words 设置文字格式以及空白页操作">
-<h3>aspose.words 设置文字格式以及空白页操作</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/asposewords-设置文字格式以及空白页操作/" class="article-card" data-title="aspose.words 设置文字格式以及空白页操作">
+<h4>aspose.words 设置文字格式以及空白页操作</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/camunda流程引擎人工干预流程流转/" class="card" data-title="camunda流程引擎人工干预流程流转">
-<h3>camunda流程引擎人工干预流程流转</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/camunda流程引擎人工干预流程流转/" class="article-card" data-title="camunda流程引擎人工干预流程流转">
+<h4>camunda流程引擎人工干预流程流转</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/easyexcel-实现导入数据校验/" class="card" data-title="easyexcel 实现导入+数据校验">
-<h3>easyexcel 实现导入+数据校验</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/easyexcel-实现导入数据校验/" class="article-card" data-title="easyexcel 实现导入+数据校验">
+<h4>easyexcel 实现导入+数据校验</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/i-Doc-view在线文档预览安装/" class="card" data-title="i Doc view在线文档预览安装">
-<h3>i Doc view在线文档预览安装</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/i-Doc-view在线文档预览安装/" class="article-card" data-title="i Doc view在线文档预览安装">
+<h4>i Doc view在线文档预览安装</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/js执行线程/" class="card" data-title="js执行线程">
-<h3>js执行线程</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/js执行线程/" class="article-card" data-title="js执行线程">
+<h4>js执行线程</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/mysql升级数据迁移/" class="card" data-title="mysql升级数据迁移">
-<h3>mysql升级数据迁移</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/mysql升级数据迁移/" class="article-card" data-title="mysql升级数据迁移">
+<h4>mysql升级数据迁移</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/redis哨兵模式部署/" class="card" data-title="redis哨兵模式部署">
-<h3>redis哨兵模式部署</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/redis哨兵模式部署/" class="article-card" data-title="redis哨兵模式部署">
+<h4>redis哨兵模式部署</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/redis监听定时事件任务/" class="card" data-title="redis监听定时事件任务">
-<h3>redis监听定时事件任务</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/redis监听定时事件任务/" class="article-card" data-title="redis监听定时事件任务">
+<h4>redis监听定时事件任务</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/window开启ssh安全访问/" class="card" data-title="window开启ssh安全访问">
-<h3>window开启ssh安全访问</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/window开启ssh安全访问/" class="article-card" data-title="window开启ssh安全访问">
+<h4>window开启ssh安全访问</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/不同对象属性值复制/" class="card" data-title="不同对象属性值复制">
-<h3>不同对象属性值复制</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/不同对象属性值复制/" class="article-card" data-title="不同对象属性值复制">
+<h4>不同对象属性值复制</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云六高版本甘特图配置左树右表配置分享/" class="card" data-title="云六高版本甘特图配置、左树右表配置分享">
-<h3>云六高版本甘特图配置、左树右表配置分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/云六高版本甘特图配置左树右表配置分享/" class="article-card" data-title="云六高版本甘特图配置、左树右表配置分享">
+<h4>云六高版本甘特图配置、左树右表配置分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢8视图设计页面开发/" class="card" data-title="云枢8视图设计页面开发">
-<h3>云枢8视图设计页面开发</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/云枢8视图设计页面开发/" class="article-card" data-title="云枢8视图设计页面开发">
+<h4>云枢8视图设计页面开发</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢与OA系统集成/" class="card" data-title="云枢与OA系统集成">
-<h3>云枢与OA系统集成</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/云枢与OA系统集成/" class="article-card" data-title="云枢与OA系统集成">
+<h4>云枢与OA系统集成</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢子表按钮以及字段不同状态的处理/" class="card" data-title="云枢子表按钮以及字段不同状态的处理">
-<h3>云枢子表按钮以及字段不同状态的处理</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/云枢子表按钮以及字段不同状态的处理/" class="article-card" data-title="云枢子表按钮以及字段不同状态的处理">
+<h4>云枢子表按钮以及字段不同状态的处理</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢定时任务统一维护/" class="card" data-title="云枢定时任务统一维护">
-<h3>云枢定时任务统一维护</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/云枢定时任务统一维护/" class="article-card" data-title="云枢定时任务统一维护">
+<h4>云枢定时任务统一维护</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/人大金仓项目本地环境部署/" class="card" data-title="人大金仓项目本地环境部署">
-<h3>人大金仓项目本地环境部署</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/人大金仓项目本地环境部署/" class="article-card" data-title="人大金仓项目本地环境部署">
+<h4>人大金仓项目本地环境部署</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/低代码rpa融合/" class="card" data-title="低代码rpa融合">
-<h3>低代码rpa融合</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/低代码rpa融合/" class="article-card" data-title="低代码rpa融合">
+<h4>低代码rpa融合</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/使用云7开发点赞卡/" class="card" data-title="使用云7开发点赞卡">
-<h3>使用云7开发点赞卡</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/使用云7开发点赞卡/" class="article-card" data-title="使用云7开发点赞卡">
+<h4>使用云7开发点赞卡</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/关联接口数据信息-/" class="card" data-title="关联接口数据信息 ">
-<h3>关联接口数据信息 </h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/关联接口数据信息-/" class="article-card" data-title="关联接口数据信息 ">
+<h4>关联接口数据信息 </h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/利用高德地图实现实时天气/" class="card" data-title="利用高德地图实现实时天气">
-<h3>利用高德地图实现实时天气</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/利用高德地图实现实时天气/" class="article-card" data-title="利用高德地图实现实时天气">
+<h4>利用高德地图实现实时天气</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端-接口入参出参加密并验签/" class="card" data-title="前端-接口入参出参加密并验签">
-<h3>前端-接口入参出参加密并验签</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/前端-接口入参出参加密并验签/" class="article-card" data-title="前端-接口入参出参加密并验签">
+<h4>前端-接口入参出参加密并验签</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端埋点实现方案/" class="card" data-title="前端埋点实现方案">
-<h3>前端埋点实现方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/前端埋点实现方案/" class="article-card" data-title="前端埋点实现方案">
+<h4>前端埋点实现方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端对接流式输出实现AI对话效果/" class="card" data-title="前端对接流式输出实现AI对话效果">
-<h3>前端对接流式输出实现AI对话效果</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/前端对接流式输出实现AI对话效果/" class="article-card" data-title="前端对接流式输出实现AI对话效果">
+<h4>前端对接流式输出实现AI对话效果</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端数据库indexDBDemo案例-赵才旺/" class="card" data-title="前端数据库indexDB(Demo案例)-赵才旺">
-<h3>前端数据库indexDB(Demo案例)-赵才旺</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/前端数据库indexDBDemo案例-赵才旺/" class="article-card" data-title="前端数据库indexDB(Demo案例)-赵才旺">
+<h4>前端数据库indexDB(Demo案例)-赵才旺</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前端结合阿里云实现上传文件夹功能/" class="card" data-title="前端结合阿里云实现上传文件夹功能">
-<h3>前端结合阿里云实现上传文件夹功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/前端结合阿里云实现上传文件夹功能/" class="article-card" data-title="前端结合阿里云实现上传文件夹功能">
+<h4>前端结合阿里云实现上传文件夹功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/协办支持等待审批功能/" class="card" data-title="协办支持等待审批功能">
-<h3>协办支持等待审批功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/协办支持等待审批功能/" class="article-card" data-title="协办支持等待审批功能">
+<h4>协办支持等待审批功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/协办等操作按钮增加附件意见/" class="card" data-title="协办等操作按钮增加附件意见">
-<h3>协办等操作按钮增加附件意见</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/协办等操作按钮增加附件意见/" class="article-card" data-title="协办等操作按钮增加附件意见">
+<h4>协办等操作按钮增加附件意见</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/后台接口增强方法/" class="card" data-title="后台接口增强方法">
-<h3>后台接口增强方法</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/后台接口增强方法/" class="article-card" data-title="后台接口增强方法">
+<h4>后台接口增强方法</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/在线开发添加loading效果/" class="card" data-title="在线开发添加loading效果">
-<h3>在线开发添加loading效果</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/在线开发添加loading效果/" class="article-card" data-title="在线开发添加loading效果">
+<h4>在线开发添加loading效果</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/基于POI412实现word文档结构化提取/" class="card" data-title="基于POI4.1.2实现word文档结构化提取">
-<h3>基于POI4.1.2实现word文档结构化提取</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/基于POI412实现word文档结构化提取/" class="article-card" data-title="基于POI4.1.2实现word文档结构化提取">
+<h4>基于POI4.1.2实现word文档结构化提取</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/基于领域驱动设计的sql解析引擎/" class="card" data-title="基于领域驱动设计的sql解析引擎">
-<h3>基于领域驱动设计的sql解析引擎</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/基于领域驱动设计的sql解析引擎/" class="article-card" data-title="基于领域驱动设计的sql解析引擎">
+<h4>基于领域驱动设计的sql解析引擎</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/多线程事务问题/" class="card" data-title="多线程事务问题">
-<h3>多线程事务问题</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/多线程事务问题/" class="article-card" data-title="多线程事务问题">
+<h4>多线程事务问题</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/子表数据分页与导入功能技术文档/" class="card" data-title="子表数据分页与导入功能技术文档">
-<h3>子表数据分页与导入功能技术文档</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/子表数据分页与导入功能技术文档/" class="article-card" data-title="子表数据分页与导入功能技术文档">
+<h4>子表数据分页与导入功能技术文档</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/定时任务自定义功能后端/" class="card" data-title="定时任务自定义功能后端">
-<h3>定时任务自定义功能后端</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/定时任务自定义功能后端/" class="article-card" data-title="定时任务自定义功能后端">
+<h4>定时任务自定义功能后端</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/巧用接口实现报表数据统计/" class="card" data-title="巧用接口实现报表数据统计">
-<h3>巧用接口实现报表数据统计</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/巧用接口实现报表数据统计/" class="article-card" data-title="巧用接口实现报表数据统计">
+<h4>巧用接口实现报表数据统计</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/已发布模型数据类型的变更/" class="card" data-title="已发布模型数据类型的变更">
-<h3>已发布模型数据类型的变更</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/已发布模型数据类型的变更/" class="article-card" data-title="已发布模型数据类型的变更">
+<h4>已发布模型数据类型的变更</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/带鉴权的-Webservice-接口调用/" class="card" data-title="带鉴权的 Webservice 接口调用">
-<h3>带鉴权的 Webservice 接口调用</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/带鉴权的-Webservice-接口调用/" class="article-card" data-title="带鉴权的 Webservice 接口调用">
+<h4>带鉴权的 Webservice 接口调用</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/异步数据查询整合/" class="card" data-title="异步数据查询整合">
-<h3>异步数据查询整合</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/异步数据查询整合/" class="article-card" data-title="异步数据查询整合">
+<h4>异步数据查询整合</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/异步方法中使用EngineService/" class="card" data-title="异步方法中使用EngineService">
-<h3>异步方法中使用EngineService</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/异步方法中使用EngineService/" class="article-card" data-title="异步方法中使用EngineService">
+<h4>异步方法中使用EngineService</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/待办任务转办新增删除实现/" class="card" data-title="待办任务转办、新增、删除实现">
-<h3>待办任务转办、新增、删除实现</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/待办任务转办新增删除实现/" class="article-card" data-title="待办任务转办、新增、删除实现">
+<h4>待办任务转办、新增、删除实现</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/批量推送数据到ODS数据仓库方案说明/" class="card" data-title="批量推送数据到ODS数据仓库方案说明">
-<h3>批量推送数据到ODS数据仓库方案说明</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/批量推送数据到ODS数据仓库方案说明/" class="article-card" data-title="批量推送数据到ODS数据仓库方案说明">
+<h4>批量推送数据到ODS数据仓库方案说明</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/批量操作奖状打印与防伪信息查询/" class="card" data-title="批量操作奖状打印与防伪信息查询">
-<h3>批量操作奖状打印与防伪信息查询</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/批量操作奖状打印与防伪信息查询/" class="article-card" data-title="批量操作奖状打印与防伪信息查询">
+<h4>批量操作奖状打印与防伪信息查询</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/文件向量化存储服务物理部署/" class="card" data-title="文件向量化存储服务物理部署">
-<h3>文件向量化存储服务物理部署</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/文件向量化存储服务物理部署/" class="article-card" data-title="文件向量化存储服务物理部署">
+<h4>文件向量化存储服务物理部署</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/文件打印调用浏览器打印功能/" class="card" data-title="文件打印（调用浏览器打印功能）">
-<h3>文件打印（调用浏览器打印功能）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/文件打印调用浏览器打印功能/" class="article-card" data-title="文件打印（调用浏览器打印功能）">
+<h4>文件打印（调用浏览器打印功能）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/无流程表单数据唯一性同步/" class="card" data-title="无流程表单数据唯一性同步">
-<h3>无流程表单数据唯一性同步</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/无流程表单数据唯一性同步/" class="article-card" data-title="无流程表单数据唯一性同步">
+<h4>无流程表单数据唯一性同步</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/日志打印规范/" class="card" data-title="日志打印规范">
-<h3>日志打印规范</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/日志打印规范/" class="article-card" data-title="日志打印规范">
+<h4>日志打印规范</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/未发起流程发送邮件已发起的流程不重复发起/" class="card" data-title="未发起流程发送邮件，已发起的流程不重复发起">
-<h3>未发起流程发送邮件，已发起的流程不重复发起</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/未发起流程发送邮件已发起的流程不重复发起/" class="article-card" data-title="未发起流程发送邮件，已发起的流程不重复发起">
+<h4>未发起流程发送邮件，已发起的流程不重复发起</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/某邦第三方数据源组织数据同步/" class="card" data-title="某邦第三方数据源组织数据同步">
-<h3>某邦第三方数据源组织数据同步</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/某邦第三方数据源组织数据同步/" class="article-card" data-title="某邦第三方数据源组织数据同步">
+<h4>某邦第三方数据源组织数据同步</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/查询角色在流程中的使用/" class="card" data-title="查询角色在流程中的使用">
-<h3>查询角色在流程中的使用</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/查询角色在流程中的使用/" class="article-card" data-title="查询角色在流程中的使用">
+<h4>查询角色在流程中的使用</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/流程迁移数据处理/" class="card" data-title="流程迁移数据处理">
-<h3>流程迁移数据处理</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/流程迁移数据处理/" class="article-card" data-title="流程迁移数据处理">
+<h4>流程迁移数据处理</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/流程驳回到第三方获取驳回意见/" class="card" data-title="流程驳回到第三方获取驳回意见">
-<h3>流程驳回到第三方获取驳回意见</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/流程驳回到第三方获取驳回意见/" class="article-card" data-title="流程驳回到第三方获取驳回意见">
+<h4>流程驳回到第三方获取驳回意见</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/监听二开submit方法扩展功能/" class="card" data-title="监听二开submit方法，扩展功能">
-<h3>监听二开submit方法，扩展功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/监听二开submit方法扩展功能/" class="article-card" data-title="监听二开submit方法，扩展功能">
+<h4>监听二开submit方法，扩展功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/系统催办发送邮件功能/" class="card" data-title="系统催办发送邮件功能">
-<h3>系统催办发送邮件功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/系统催办发送邮件功能/" class="article-card" data-title="系统催办发送邮件功能">
+<h4>系统催办发送邮件功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/系统运维调整审批人串并行方式和节点设置的方式保持一致/" class="card" data-title="系统运维调整审批人串并行方式和节点设置的方式保持一致">
-<h3>系统运维调整审批人串并行方式和节点设置的方式保持一致</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/系统运维调整审批人串并行方式和节点设置的方式保持一致/" class="article-card" data-title="系统运维调整审批人串并行方式和节点设置的方式保持一致">
+<h4>系统运维调整审批人串并行方式和节点设置的方式保持一致</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/结合产品二开自定义甘特图/" class="card" data-title="结合产品二开自定义甘特图">
-<h3>结合产品二开自定义甘特图</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/结合产品二开自定义甘特图/" class="article-card" data-title="结合产品二开自定义甘特图">
+<h4>结合产品二开自定义甘特图</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/结合产品设置配置文件控制方法/" class="card" data-title="结合产品设置配置文件控制方法">
-<h3>结合产品设置配置文件控制方法</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/结合产品设置配置文件控制方法/" class="article-card" data-title="结合产品设置配置文件控制方法">
+<h4>结合产品设置配置文件控制方法</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/缓存使用分享/" class="card" data-title="缓存使用分享">
-<h3>缓存使用分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/缓存使用分享/" class="article-card" data-title="缓存使用分享">
+<h4>缓存使用分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/虚拟列表/" class="card" data-title="虚拟列表">
-<h3>虚拟列表</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/虚拟列表/" class="article-card" data-title="虚拟列表">
+<h4>虚拟列表</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/表单数据导出到Excel文件/" class="card" data-title="表单数据导出到Excel文件">
-<h3>表单数据导出到Excel文件</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/表单数据导出到Excel文件/" class="article-card" data-title="表单数据导出到Excel文件">
+<h4>表单数据导出到Excel文件</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/表单新增默认字段/" class="card" data-title="表单新增默认字段">
-<h3>表单新增默认字段</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/表单新增默认字段/" class="article-card" data-title="表单新增默认字段">
+<h4>表单新增默认字段</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/视图列表筛选与子表筛选回车搜索功能技术文档/" class="card" data-title="视图列表筛选与子表筛选回车搜索功能技术文档">
-<h3>视图列表筛选与子表筛选回车搜索功能技术文档</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/视图列表筛选与子表筛选回车搜索功能技术文档/" class="article-card" data-title="视图列表筛选与子表筛选回车搜索功能技术文档">
+<h4>视图列表筛选与子表筛选回车搜索功能技术文档</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/视图设计开发技巧/" class="card" data-title="视图设计开发技巧">
-<h3>视图设计开发技巧</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/视图设计开发技巧/" class="article-card" data-title="视图设计开发技巧">
+<h4>视图设计开发技巧</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/解决搜索框搜人范围扩大问题/" class="card" data-title="解决搜索框搜人范围扩大问题">
-<h3>解决搜索框搜人范围扩大问题</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/解决搜索框搜人范围扩大问题/" class="article-card" data-title="解决搜索框搜人范围扩大问题">
+<h4>解决搜索框搜人范围扩大问题</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/访问新增目录层级/" class="card" data-title="访问新增目录层级">
-<h3>访问新增目录层级</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/访问新增目录层级/" class="article-card" data-title="访问新增目录层级">
+<h4>访问新增目录层级</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/调整产品接收时间逻辑统计审核时长/" class="card" data-title="调整产品接收时间逻辑统计审核时长">
-<h3>调整产品接收时间逻辑统计审核时长</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/调整产品接收时间逻辑统计审核时长/" class="article-card" data-title="调整产品接收时间逻辑统计审核时长">
+<h4>调整产品接收时间逻辑统计审核时长</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/达梦数据库云枢安装部署初始化/" class="card" data-title="达梦数据库云枢安装部署初始化">
-<h3>达梦数据库云枢安装部署初始化</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/达梦数据库云枢安装部署初始化/" class="article-card" data-title="达梦数据库云枢安装部署初始化">
+<h4>达梦数据库云枢安装部署初始化</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/过程文件归集/" class="card" data-title="过程文件归集">
-<h3>过程文件归集</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/过程文件归集/" class="article-card" data-title="过程文件归集">
+<h4>过程文件归集</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/通用导入导出功能二开-Ldap同步/" class="card" data-title="通用导入导出功能二开 Ldap同步">
-<h3>通用导入导出功能二开 Ldap同步</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/通用导入导出功能二开-Ldap同步/" class="article-card" data-title="通用导入导出功能二开 Ldap同步">
+<h4>通用导入导出功能二开 Ldap同步</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/附件上传手动排序方案/" class="card" data-title="附件上传手动排序方案">
-<h3>附件上传手动排序方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/附件上传手动排序方案/" class="article-card" data-title="附件上传手动排序方案">
+<h4>附件上传手动排序方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/附件下载维护功能/" class="card" data-title="附件下载维护功能">
-<h3>附件下载维护功能</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/附件下载维护功能/" class="article-card" data-title="附件下载维护功能">
+<h4>附件下载维护功能</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/项目icon图标设置/" class="card" data-title="项目icon图标设置">
-<h3>项目icon图标设置</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/项目icon图标设置/" class="article-card" data-title="项目icon图标设置">
+<h4>项目icon图标设置</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/项目详细设计文档/" class="card" data-title="项目详细设计文档">
-<h3>项目详细设计文档</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/实现思路</span>
-</div>
+<a href="/2026/05/22/项目详细设计文档/" class="article-card" data-title="项目详细设计文档">
+<h4>项目详细设计文档</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/7中一次锁等待超时的问题解决及优化/" class="card" data-title="7中一次锁等待超时的问题、解决及优化">
-<h3>7中一次锁等待超时的问题、解决及优化</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/7中一次锁等待超时的问题解决及优化/" class="article-card" data-title="7中一次锁等待超时的问题、解决及优化">
+<h4>7中一次锁等待超时的问题、解决及优化</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/H3BPMnet产品问题排查/" class="card" data-title="H3BPM（.net）产品问题排查">
-<h3>H3BPM（.net）产品问题排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/H3BPMnet产品问题排查/" class="article-card" data-title="H3BPM（.net）产品问题排查">
+<h4>H3BPM（.net）产品问题排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/PDF打印模板在linux服务器部署后乱码问题分享/" class="card" data-title="PDF打印模板在linux服务器部署后乱码问题分享">
-<h3>PDF打印模板在linux服务器部署后乱码问题分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/PDF打印模板在linux服务器部署后乱码问题分享/" class="article-card" data-title="PDF打印模板在linux服务器部署后乱码问题分享">
+<h4>PDF打印模板在linux服务器部署后乱码问题分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/Windows服务器SFTP异常排查/" class="card" data-title="Windows服务器SFTP异常排查">
-<h3>Windows服务器SFTP异常排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/Windows服务器SFTP异常排查/" class="article-card" data-title="Windows服务器SFTP异常排查">
+<h4>Windows服务器SFTP异常排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/XX通信表单报错问题排查/" class="card" data-title="XX通信表单报错问题排查">
-<h3>XX通信表单报错问题排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/XX通信表单报错问题排查/" class="article-card" data-title="XX通信表单报错问题排查">
+<h4>XX通信表单报错问题排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/linux挖矿排查/" class="card" data-title="linux挖矿排查">
-<h3>linux挖矿排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/linux挖矿排查/" class="article-card" data-title="linux挖矿排查">
+<h4>linux挖矿排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/二开打印预览功能分享产品缺陷优化方案/" class="card" data-title="二开打印预览功能、分享产品缺陷优化方案">
-<h3>二开打印预览功能、分享产品缺陷优化方案</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/二开打印预览功能分享产品缺陷优化方案/" class="article-card" data-title="二开打印预览功能、分享产品缺陷优化方案">
+<h4>二开打印预览功能、分享产品缺陷优化方案</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云6问题排查/" class="card" data-title="云6问题排查">
-<h3>云6问题排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/云6问题排查/" class="article-card" data-title="云6问题排查">
+<h4>云6问题排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢61项目问题解决分享/" class="card" data-title="云枢6.1项目问题解决分享">
-<h3>云枢6.1项目问题解决分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/云枢61项目问题解决分享/" class="article-card" data-title="云枢6.1项目问题解决分享">
+<h4>云枢6.1项目问题解决分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢admin账户无后台权限问题排查/" class="card" data-title="云枢admin账户无后台权限问题排查">
-<h3>云枢admin账户无后台权限问题排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/云枢admin账户无后台权限问题排查/" class="article-card" data-title="云枢admin账户无后台权限问题排查">
+<h4>云枢admin账户无后台权限问题排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢列表导出数据失败问题处理/" class="card" data-title="云枢列表导出数据失败问题处理">
-<h3>云枢列表导出数据失败问题处理</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/云枢列表导出数据失败问题处理/" class="article-card" data-title="云枢列表导出数据失败问题处理">
+<h4>云枢列表导出数据失败问题处理</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/云枢配置https6x报表服务报错问题排查/" class="card" data-title="云枢配置https，6.x报表服务报错问题排查">
-<h3>云枢配置https，6.x报表服务报错问题排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/云枢配置https6x报表服务报错问题排查/" class="article-card" data-title="云枢配置https，6.x报表服务报错问题排查">
+<h4>云枢配置https，6.x报表服务报错问题排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/关于开发和运维中因环境无法直接访问数据库的技巧分享/" class="card" data-title="关于开发和运维中因环境无法直接访问数据库的技巧分享">
-<h3>关于开发和运维中因环境无法直接访问数据库的技巧分享</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/关于开发和运维中因环境无法直接访问数据库的技巧分享/" class="article-card" data-title="关于开发和运维中因环境无法直接访问数据库的技巧分享">
+<h4>关于开发和运维中因环境无法直接访问数据库的技巧分享</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/关于更新后清理缓存/" class="card" data-title="关于更新后清理缓存">
-<h3>关于更新后清理缓存</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/关于更新后清理缓存/" class="article-card" data-title="关于更新后清理缓存">
+<h4>关于更新后清理缓存</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/前后端问题定位/" class="card" data-title="前后端问题定位">
-<h3>前后端问题定位</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/前后端问题定位/" class="article-card" data-title="前后端问题定位">
+<h4>前后端问题定位</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/在线编码业务规则发布失败问题解决/" class="card" data-title="在线编码业务规则发布失败问题解决">
-<h3>在线编码业务规则发布失败问题解决</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/在线编码业务规则发布失败问题解决/" class="article-card" data-title="在线编码业务规则发布失败问题解决">
+<h4>在线编码业务规则发布失败问题解决</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/报表报错问题排查/" class="card" data-title="报表报错问题排查">
-<h3>报表报错问题排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/报表报错问题排查/" class="article-card" data-title="报表报错问题排查">
+<h4>报表报错问题排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/老租户接口联调审批节点缺失排查/" class="card" data-title="老租户接口联调审批节点缺失排查">
-<h3>老租户接口联调审批节点缺失排查</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/老租户接口联调审批节点缺失排查/" class="article-card" data-title="老租户接口联调审批节点缺失排查">
+<h4>老租户接口联调审批节点缺失排查</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/表单转办多人功能实现/" class="card" data-title="表单转办多人功能实现">
-<h3>表单转办多人功能实现</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/表单转办多人功能实现/" class="article-card" data-title="表单转办多人功能实现">
+<h4>表单转办多人功能实现</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/解决ant组件有时显示为英文问题/" class="card" data-title="解决ant组件有时显示为英文问题">
-<h3>解决ant组件有时显示为英文问题</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/解决ant组件有时显示为英文问题/" class="article-card" data-title="解决ant组件有时显示为英文问题">
+<h4>解决ant组件有时显示为英文问题</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/解决云枢集群部署nginx监听非默认80443端口无法登出问题/" class="card" data-title="解决云枢集群部署，nginx监听非默认（80，443）端口，无法登出问题">
-<h3>解决云枢集群部署，nginx监听非默认（80，443）端口，无法登出问题</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/问题分析</span>
-</div>
+<a href="/2026/05/22/解决云枢集群部署nginx监听非默认80443端口无法登出问题/" class="article-card" data-title="解决云枢集群部署，nginx监听非默认（80，443）端口，无法登出问题">
+<h4>解决云枢集群部署，nginx监听非默认（80，443）端口，无法登出问题</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
-<a href="/2026/05/22/需求分析备忘录云枢6/" class="card" data-title="需求分析备忘录（云枢6）">
-<h3>需求分析备忘录（云枢6）</h3>
-<div class="meta">
-<span>📅 2026-05-22</span>
-<span>经验技巧分享/需求分析</span>
-</div>
+<a href="/2026/05/22/需求分析备忘录云枢6/" class="article-card" data-title="需求分析备忘录（云枢6）">
+<h4>需求分析备忘录（云枢6）</h4>
+<div class="meta">📅 2026-05-22</div>
 </a>
 
 </div>
+</div>
+
 </div>
 
 </div>
 
 <footer>
-<p>📖 内容来源: <a href="https://authine.yuque.com/geyop4/vbtsir" target="_blank">云枢技术分享知识库</a></p>
-<p style="margin-top:10px">🛠️ Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank">Fluid</a></p>
+<p>© 2024 张三的个人博客 | Powered by <a href="https://hexo.io">Hexo</a></p>
+<p style="margin-top:10px; font-size:0.9em; opacity:0.7">内容仅供学习交流使用</p>
 </footer>
-</div>
 
 <script>
-function filterDocs() {
+function filterArticles() {
     const query = document.getElementById('search').value.toLowerCase();
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
+    document.querySelectorAll('.article-card').forEach(card => {
         const title = card.dataset.title.toLowerCase();
         card.style.display = title.includes(query) ? '' : 'none';
     });
 }
 
-function showAll() {
-    document.querySelectorAll('.card').forEach(card => card.style.display = '');
-    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-    document.querySelector('nav a').classList.add('active');
-}
-
-function scrollToCat(cat) {
-    document.getElementById(cat).scrollIntoView({behavior: 'smooth'});
+function scrollToCat(id) {
+    document.getElementById(id).scrollIntoView({behavior: 'smooth'});
 }
 </script>
+
 </body>
 </html>
