@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aspose.words 设置文字格式以及空白页操作 - 云枢技术文档</title>
+<meta property="og:title" content="aspose.words 设置文字格式以及空白页操作">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/asposewords-设置文字格式以及空白页操作/">
+<meta name="description" content="aspose.words 设置文字格式以及空白页操作 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>aspose.words 设置文字格式以及空白页操作</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>aspose.words 设置文字格式以及空白页操作</h1></p><p><h2>一、需求</h2>
+- 利用aspose.words生成PDF，内容要求：触摸板中的固定开头和结尾外，中间的部分需要在特定情况下显示指定的段落，且要将段落中的变量设置成粗体。
+- 不能有空白页产生。</p><p><h2>二、解决方案</h2>
+- 针对模板中固定的开头和结尾的部分，可直接在模板中设置占位符的格式对变量的格式进行设置；
+- 但中间部分，因为要求特定情况下显示指定段落，所以不能采用在模板中使用占位符的方法。需要对段落进行配置，判断满足条件再讲对应的段落写入；
+- 设置模板中的格式，避免产生空白页；
+- 判断页面内容是否为空，删除空白页；</p><p><h2>三、实现方案</h2>
+- 所需依赖</p><li>替换模板中的占位符变量</li><li>针对没有占位符的内容插入</li><li>空白页操作（待验证后补充）</li><p>引入pdfbox，对PDF文件进行操作</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/142849001</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端对接流式输出实现AI对话效果 - 云枢技术文档</title>
+<meta property="og:title" content="前端对接流式输出实现AI对话效果">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/前端对接流式输出实现AI对话效果/">
+<meta name="description" content="前端对接流式输出实现AI对话效果 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>前端对接流式输出实现AI对话效果</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>前端对接流式输出实现AI对话效果</h1></p><p><h1>背景</h1></p><p><h3>场景</h3>
+随着AI技术的普及，越来越多的客户希望在现有系统中集成AI能力（如智能问答、内容生成、数据分析等）。而<strong>流畅、实时</strong>的对话体验成为关键需求，直接影响用户对产品的满意度和使用粘性。如中冶项目创新融合了人员及项目信息智能查询等AI功能，极大提升了数据获取效率。</p><p><h3>核心痛点：</h3>
+- 响应延迟：传统API的“请求-等待-响应”模式会导致用户长时间等待，体验割裂。
+- 交互不自然：非流式输出时，用户需等待AI生成完整内容后才能看到结果，失去对话的实时感。
+- 性能与兼容性：不同技术方案（如SSE、WebSocket）的选型可能影响系统稳定性和开发成本。</p><p><h3>需求目标：</h3>
+- 实现流式输出：AI生成的内容以逐字或分块形式实时返回，模拟人类对话体验。
+- 降低感知延迟：用户即时看到部分结果，减少等待焦虑。</p><p>在实现 <strong>AI 流式输出</strong> 时，<strong>SSE（Server-Sent Events）</strong> 和 <strong>WebSocket</strong> 是两种主流方案，但适用场景不同。以下是详细对比及选型建议</p><p>| <strong>特性</strong> | <strong>SSE (Server-Sent Events)</strong> | <strong>WebSocket</strong> |  |
+| <strong>协议</strong> | 基于 HTTP（单向通信，服务端→客户端） | 独立协议（全双工，双向通信） |  |
+| <strong>数据格式</strong> | 纯文本（<code><strong>text/event-stream</strong></code></p><p>），需手动解析 | 支持二进制、文本，灵活性更高 |  |
+| <strong>连接管理</strong> | 自动重连（内置 <code><strong>retry</strong></code></p><p> 机制） | 需手动实现断线重连 |  |
+| <strong>浏览器兼容性</strong> | 除 IE 外主流浏览器均支持 | 全兼容（包括 IE 10+） |  |
+| <strong>适用场景</strong> | 服务端主动推送（如AI逐字输出、实时日志） | 双向实时交互（如聊天室、游戏） |  |
+| <strong>复杂度</strong> | 低（无需额外协议，直接使用 Fetch 或 EventSource） | 较高（需处理协议、心跳、状态维护） |  |</p><p>综上分析，使用SSE来实现流式输出，但是当需要考虑兼容性问题的时候，可以使用WebSocket。</p><p>这里也推荐一个三方库，避免重复造轮子</p><p><a href="https://www.npmjs.com/package/@microsoft/fetch-event-source">@microsoft/fetch-event-source</a></p><p><h1>实现过程</h1>
+xx项目流式输出核心代码：</p><p>实现简易的流式输出前端代码：</p><p>node+express实现流式输出接口：</p><p><h1>最终效果</h1></p><p><h1>参考文档</h1>
+<a href="https://juejin.cn/post/7481640606113234981">SSE协议的原理和使用方法</a></p><p><a href="https://www.npmjs.com/package/@microsoft/fetch-event-source">@microsoft/fetch-event-source</a></p><p><h1>踩过的坑</h1>
+如果碰到控制台接口请求中，返回的数据是流式的，但是返回时间节点相同，可能是以下原因：</p><li>nginx需要配置 proxy_buffering:off; 关闭缓存</li><li>如果前端是在本地启动的项目，由于产品使用的是webpack5的版本，默认会对响应内容进行压缩，需要在vue.config.js中配置compress: false。</li><p>使用@microsoft/fetch-event-source库时，一直出现接口取消，发起请求的情况时，需要配置：</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/233867332</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

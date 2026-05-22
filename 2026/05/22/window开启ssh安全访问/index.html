@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>window开启ssh安全访问 - 云枢技术文档</title>
+<meta property="og:title" content="window开启ssh安全访问">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/window开启ssh安全访问/">
+<meta name="description" content="window开启ssh安全访问 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>window开启ssh安全访问</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>window开启ssh安全访问</h1></p><p>在 Windows 上安装和配置 OpenSSH 服务器可以让你将 Windows 机器作为 SSH 远程访问的目标。以下是详细的安装和配置步骤：</p><p><h3>1. 检查 OpenSSH 是否已安装</h3>
+Windows 10（1809+）和 Windows 11 内置了 OpenSSH 客户端和服务器组件，但默认可能未安装。</p><p><strong>查看已安装的 OpenSSH 组件</strong>（以管理员身份运行 PowerShell）：</p><li>Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'</li><li>如果 <code>State</code> 为 <code>NotPresent</code>，表示未安装。</li><p><h3>2. 安装 OpenSSH 服务器</h3></p><p><h4>方法 1：通过 Windows 可选功能安装</h4>
+- 图形界面安装：</p><p>- 打开 设置 > 应用 > 可选功能。
+- 点击 查看功能，搜索 OpenSSH 服务器，勾选并安装。</p><li>PowerShell 安装（管理员权限）：</li><li>如果成功，<code>State</code> 会显示为 <code>Installed</code>。</li><p><h3>3. 启动并配置 OpenSSH 服务器</h3></p><p><h4>启动 SSH 服务</h4>
+在powershell窗口运行以下命令</p><p><h4>允许防火墙通过 SSH（默认端口 22）</h4>
+在powershell窗口运行以下命令</p><p><h3>4. 测试 SSH 连接(可选)</h3>
+在另一台机器（如 Linux 或另一台 Windows）上使用 SSH 客户端连接：</p><li>ssh username@你的WindowsIP</li><p>- <code>username</code> 是你的 Windows 用户名（需输入密码）。
+- 如果用户名包含空格，用引号包裹（如 <code>"John Doe"</code>）。</p><li>首次连接时会提示确认主机指纹，输入 <code>yes</code> 继续。</li><p><h3>5. 高级配置（可选）</h3></p><p><h4>修改 SSH 配置文件</h4>
+配置文件路径：<code>C:\ProgramData\ssh\sshd_config</code>（需管理员权限编辑）。</p><li>常用配置项：</li><p>修改后重启服务：</p><li>Restart-Service sshd</li><p><h4>密钥认证（免密码登录）</h4>
+<strong>生成密钥对</strong>（在客户端机器上）：</p><li>ssh-keygen -t rsa -b 4096</li><p>- 默认保存到 <code>~/.ssh/id_rsa</code>（私钥）和 <code>~/.ssh/id_rsa.pub</code>（公钥）。
+- </p><li>将公钥复制到 Windows 服务器：</li><p>- 将 <code>id_rsa.pub</code> 内容追加到服务器的 <code>C:\Users\你的用户名\.ssh\authorized_keys</code> 文件中。
+- 如果文件/目录不存在，手动创建并设置权限：</p><li>目标服务器执行公钥写入命令:</li><p><strong>测试密钥登录</strong>：</p><li>ssh -i /path/to/私钥 username@WindowsIP</li><p>或直接使用ssh直连,选择本地私有key进行验证登录。</p><p><h3>6. 常见问题解决</h3></p><p><h4>连接被拒绝</h4>
+检查服务是否运行：</p><li>Get-Service sshd</li><p>检查防火墙是否放行端口：</p><li>netsh advfirewall firewall show rule name="OpenSSH-Server"</li><p><h4>权限问题</h4>
+- 确保 <code>authorized_keys</code> 文件权限正确（仅允许所有者读写）。</p><p><h4>修改默认 Shell</h4>
+Windows 默认 SSH Shell 是 <code>cmd.exe</code>，可改为 PowerShell：</p><p><h3>总结</h3>
+- 安装 OpenSSH 服务器组件。
+- 启动服务并配置防火墙。
+- 通过密码或密钥连接。
+- 按需修改配置文件（如端口、认证方式）。</p><p>完成后，你的 Windows 机器即可通过 SSH 安全访问！</p><p>​</p><p><h2>其他问题处理</h2>
+当 OpenSSH.Server 在 Windows 系统上显示为 <strong>"InstallPending"</strong> 状态时，通常表示安装或卸载操作尚未完成，可能由于系统 pending 操作（如挂起的重启或依赖进程未完成）。以下是解决方法：</p><p><h3>1. 重启系统</h3>
+这是最常见且有效的解决方案，因为某些安装步骤需要重启才能完成：</p><li>保存工作，关闭所有程序。</li><p>以管理员身份运行命令提示符或 PowerShell，执行：</p><li>shutdown /r /t 0</li><p>重启后检查状态：</p><li>Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Server*'</li><p><h3>2. 手动完成安装</h3>
+如果重启无效，尝试手动完成安装：</p><p><h4>通过 PowerShell 完成安装：</h4></p><p><h4>通过 DISM 工具修复：</h4>
+DISM /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0</p><p><h3>3. 检查挂起的操作</h3>
+某些系统操作（如更新或软件安装）可能阻塞了 OpenSSH 的配置：</p><p>以管理员身份运行 PowerShell，检查挂起的重启：</p><li>Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending"</li><p>如果返回 <code>True</code>，则必须重启。</p><p>清理挂起的操作：</p><li>Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending" -Force -ErrorAction SilentlyContinue</li><p>（谨慎操作，建议优先重启）</p><p><h3>4. 检查依赖服务</h3>
+确保相关服务未被占用：</p><li>停止 OpenSSH 服务并重新配置：</li><p><h3>5. 检查系统日志</h3>
+查看详细错误信息：</p><li>打开 事件查看器 > Windows 日志 > 应用程序，筛选来源 <code>DISM</code> 或 <code>Windows-Servicing</code> 的错误。</li><p><h3>6. 重置 Windows Update 组件</h3>
+如果问题与更新相关：</p><p><h3>总结步骤</h3>
+- 重启电脑 → 检查状态。
+- 若未解决，手动重装 OpenSSH.Server。
+- 检查挂起的操作/日志，排除冲突。
+- 仍失败可尝试 DISM 或系统修复。</p><p>如果问题持续，可能需要更深入的系统检查（如 SFC 扫描或系统还原）。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/227592131</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

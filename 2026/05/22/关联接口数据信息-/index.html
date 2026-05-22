@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关联接口数据信息  - 云枢技术文档</title>
+<meta property="og:title" content="关联接口数据信息 ">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/关联接口数据信息-/">
+<meta name="description" content="关联接口数据信息  - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>关联接口数据信息 </h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>关联接口数据信息 </h1></p><p><strong>关联接口数据信息</strong></p><p><strong>一、需求</strong></p><p>实际业务中有非常多的与第三方系统数据间的交互，一般由第三方提供数据查询接口，云枢调用接口获取数据，进行表单上的数据关联绑定</p><p><strong>二、思路</strong></p><p>功能实现：产品表单业务规则中Created和Update中支持绑定业务规则接口数据。</p><p><strong>难点</strong>：</p><p>1、Load和GetList需要分别绑定不同的业务服务接口</p><p>2、业务服务的出参和入参数据类型需要和表单完全一致才可以，有不一样所有绑定过的全部要推倒重新来过</p><p>3、特殊控件类型无法支持绑定，例如 附件、选人控件、关联单选等</p><p>4、字段code存在不一致GetList中需要换成list.xxx的方式</p><p>5、绑定业务服务界面字段过多展示不全，很难操作选择</p><p><strong>分析</strong>：通过阅读产品接口源码中得知列表页面和表单详情页面的取值接口中，都会根据业务规则中的数据来源去选择不同方式取值，数据间的映射都会实时读取业务规则中配置的关联关系赋值映射。</p><p><strong>三、解决方案</strong></p><p><strong>方案</strong>：接口数据关系映射都在BizObjectConverterImpl类中，通过阅读源码可知，只需要接口字段code和表单字段code保持一致，GitList中绑定的接口可以直接以list数据类型返回；Load中接口映射少了一层封装绑定，忽略绑定映射逻辑，重写包装让接口数据完整的覆盖到表单字段中。解决了绑定问题，我们只需要告诉接口提供方每个字段的数据格式已经code即可</p><p><strong>四、实现步骤</strong></p><p><strong>重写BizObjectConverterImpl类中的fromSingleReturn接口数据映射的关系覆盖：</strong></p><p>1、重写的产品代码做一个数据约定，绑定映射的字段只有一个data的情况下走自更改的映射逻辑，不修改原有产品功能</p><p>2、接口数据code和表单字段code一致是前提条件</p><p>3、代码背景后端版本为6.12.22，其他版本自行查看源码是否一致</p><p><strong>五、效果展示</strong></p><p>1、GitList配置及显示：</p><p>2、Load配置及显示：</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/142834072</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

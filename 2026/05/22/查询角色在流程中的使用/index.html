@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>查询角色在流程中的使用 - 云枢技术文档</title>
+<meta property="og:title" content="查询角色在流程中的使用">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/查询角色在流程中的使用/">
+<meta name="description" content="查询角色在流程中的使用 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>查询角色在流程中的使用</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>查询角色在流程中的使用</h1></p><p><strong>查询角色在流程中的使用</strong></p><p><strong>一、需求</strong></p><p>目前各部门人员变动时，特别是合规或质控人员变动，需要查询用户参与了哪些流程包括审批节点和传阅节点，流程模板多节点也多，查起来需要耗费大量时间和精力，人工手动遍历也可能会有疏漏，故需参照之前H3定制的查询工作组和委托查询的功能，开发云枢的查询功能</p><p><strong>二、思路</strong></p><p>1.由于目前云枢的流程节点的在数据库中是以加密的方式存储，而H3的存储方式是明文存储，故云枢不能向H3那样通过数据库的方式直接进行查询。</p><p>2.查询某个模板的的审批节点的审批人的配置，需要查询出来模板的加密信息，然后在进行解密，最后才能查询审批人的配置。</p><p>3.查询角色在哪些流程中使用，由于需要查询的模板的数目很多，而且还要查询历史模板，所以先查询出来的模板，然后循环解密在解析审批人的方式，会导致查询效率很低，故采用将流程模板的审批人存储在redis缓存中，模板的审批人没有在缓存中的，再从数据库中获取。流程模板发布的时候将审批人缓存到redis中方。</p><p><strong>三、解决方案</strong></p><li>查询流程角色在流程中的使用。</li><p>/**
+ * 根据角色编码查询在哪些流程的哪些节点中使用过
+ <em> <strong></em>@param </strong>*roleCode
+ <em>* </em>@return
+ <em>*/</em>@GetMapping("/getActivityByRoleCode")public ResponseResult getActivityByRoleCode(String roleCode,boolean checkLatest){
+    List<Map<String,Object>> result=new ArrayList<>();
+    long s = System.<em>currentTimeMillis</em>();
+    try {
+        RoleModel roleModel = getOrganizationFacade().getRoleByCode(roleCode);
+        if(roleModel==null){
+            return getErrResponseResult(999999L,"角色不存在");
+        }
+        <em>log</em>.info("开始查询模板");
+        String sql_max="select b.workflowCode,max(b.workflowVersion) workflowVersion from h_workflow_template b left join h_workflow_header a on a.workflowcode=b.workflowcode where " +
+                "a.published=1 and b.templateType='PUBLISH' and " +
+                "a.schemaCode in( " +
+                "WITH cte(id,code,parentId,name, modeType,appCode) AS ( " +
+                "SELECT id,code,parentId,name,type modeType,appCode FROM h_app_function " +
+                "UNION ALL " +
+                "SELECT fn.id,fn.code,fn.parentId,fn.name,fn.type nodeType,fn.appCode  FROM h_app_function AS fn INNER JOIN cte AS t ON t.id=fn.parentId) " +
+                "select code from cte where modeType='BizModel') group by b.workflowCode";
+        List<Map<String, Object>> list_max = jdbcTemplate.queryForList(sql_max);
+        //content 不从数据库获取，每次发布新的版本时候将参与者写入缓存，这样查询速度更快
+        String sql = "select b.workflowCode,b.workflowVersion,b.id,a.workflowName from h_workflow_template b left join h_workflow_header a on a.workflowcode=b.workflowcode where " +
+                "a.published=1 and b.templateType='PUBLISH' and " +
+                "a.schemaCode in( " +
+                "WITH cte(id,code,parentId,name, modeType,appCode) AS ( " +
+                "SELECT id,code,parentId,name,type modeType,appCode FROM h_app_function  " +
+                "UNION ALL " +
+                "SELECT fn.id,fn.code,fn.parentId,fn.name,fn.type nodeType,fn.appCode  FROM h_app_function AS fn INNER JOIN cte AS t ON t.id=fn.parentId) "+
+                "select code from cte where modeType='BizModel') ";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        <em>log</em>.info("结束查询模板");
+        int num=0;
+        int index=0;
+        if(true) {
+            for (Map<String, Object> m : list) {
+                num++;
+                String workflowCode = m.get("workflowCode").toString();
+                int workflowVersion = Integer.<em>parseInt</em>(m.get("workflowVersion").toString());                String workflowName=m.get("workflowName").toString();
+                int max_workflowVersion=0;
+                boolean isLatest=false;
+                for(int i=0;i<list_max.size();i++){
+                    if(workflowCode.equals(list_max.get(i).get("workflowCode"))){
+                        max_workflowVersion=Integer.<em>parseInt</em>(list_max.get(i).get("workflowVersion").toString());
+                        if(max_workflowVersion==workflowVersion){
+                            isLatest=true;
+                        }
+                        break;
+                    }
+                }
+                if(checkLatest && !isLatest){
+                    continue;
+                }                long start = System.<em>currentTimeMillis</em>();
+                try {
+                    List<JSONObject> activityList= getWorkflowTemplateActivityParticipant(workflowCode,workflowVersion);
+                    if(CollectionUtils.<em>isNotEmpty</em>(activityList)){
+                        for(JSONObject json:activityList){
+                            String activityName= json.getString("activityName");
+                            String activityCode= json.getString("activityCode");
+                            String participant= json.getString("participant");
+                            index=handelActivityParticipant(roleModel,workflowCode, participant, activityCode, activityName, result,workflowName,workflowVersion,index,isLatest);
+                        }
+                    }
+                    else {
+                  com.authine.cloudpivot.engine.domain.workflow.WorkflowTemplate t = new WorkflowTemplate();
+                        WorkflowTemplateModel model= getWorkflowManagementFacade().getPublishedWorkflowTemplate(workflowCode, workflowVersion);
+                        List<Activity> acts=model.getActivities();
+                        List<Map<String, Object>> newMap = new ArrayList<>();
+                        for (Activity act : acts) {
+                            String participant = "";
+                            try {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("activityCode", act.getActivityCode());
+                                map.put("activityName", act.getActivityName());
+                                map.put("workflowCode", workflowCode);
+                                if (act.getActivityType() == ActivityType.<em>PARTICIPANT </em>|| act.getActivityType() == ActivityType.<em>CIRCULATE</em>) {
+                                    if (act.getActivityType() == ActivityType.<em>PARTICIPANT</em>) {
+                                        ParticipantActivity p = (ParticipantActivity) act;
+                                        participant = p.getParticipant();
+                                    } else {
+                                        CirculateActivity p = (CirculateActivity) act;
+                                        participant = p.getParticipant();
+                                    }
+                                    Map<String, Object> ma = new HashMap<>();
+                                    ma.put("activityCode", act.getActivityCode());
+                                    ma.put("activityName", act.getActivityName());
+                                    ma.put("participant", participant);
+                                    newMap.add(ma);
+                                    index=handelActivityParticipant(roleModel, workflowCode, participant, act.getActivityCode(), act.getActivityName(), result,workflowName,workflowVersion,index,isLatest);
+                                }
+                            } catch (Exception ex) {
+                                <em>log</em>.info("参与者:" + participant);
+                                <em>log</em>.info("异常:", ex);
+                            }
+                        }
+                        this.setWorkflowTemplateActivityPartticipant(workflowCode,workflowVersion,newMap);
+                    }
+                  } catch (Exception exception) {
+                    <em>log</em>.info("异常:", exception);
+                }
+            }
+        }
+    }
+    catch (Exception e){
+        <em>log</em>.info("异常:", e);
+    }
+    <em>log</em>.info("---------------------总消耗时间：{}ms", System.<em>currentTimeMillis</em>() - s);
+    return getOkResponseResult(result,"获取数据成功");</p><p>}</p><p>//流程模板审批人写入缓存</p><p>private void setWorkflowTemplateActivityPartticipant(String workflowCode,int workflowVersion,List<Map<String,Object>> participants){
+    this.redisTemplate.opsForValue().set("cloudpivot:workflowtemplate:"+workflowCode+":"+workflowVersion,JSON.<em>toJSONString</em>(participants));}</p><p>//从缓存中获取模板审批人private List<JSONObject> getWorkflowTemplateActivityParticipant(String workflowCode,int workflowVersion){
+    Object str=redisTemplate.opsForValue().get("cloudpivot:workflowtemplate:"+workflowCode+":"+workflowVersion);
+    if(str==null || StringUtil.<em>isEmpty</em>(str.toString())){
+        return null;
+    }
+    List<JSONObject> res= JSON.<em>parseArray</em>(str.toString(),JSONObject.class);
+    return res;}</p><p>//解析角色审批人中的角色private int handelActivityParticipant(RoleModel roleModel,String workflowCode,String participant,String activityCode,String activityName,List<Map<String,Object>> result,String workflowName,int workflowversion,int num,boolean isLatest){
+    Map<String, Object> map = new HashMap<>();
+    try {
+        map.put("activityCode", activityCode);
+        map.put("activityName", activityName);
+        map.put("workflowCode", workflowCode);
+        map.put("workflowName", workflowName);
+        map.put("workflowVersion",workflowversion);
+        map.put("isLatest",isLatest?"是":"否");
+        if (StringUtil.<em>isEmpty</em>(participant)) {
+            return num;
+        }
+        //匹配以"[{"开始，以"}]"结束的字符串（表达式试图配置的角色）
+        String match = "\\[\\{(.*?)\\}\\]";
+        Pattern pattern = Pattern.<em>compile</em>(match);
+        Matcher matcher = pattern.matcher(participant);
+        while (matcher.find()) {
+            String unitReg = matcher.group(1);
+            JSONObject json = JSONObject.<em>parseObject</em>("{" + unitReg + "}");
+            String id = json.getString("id");
+            String type = json.getString("type");
+            //2表示角色
+            if (type.equals("2")) {
+                if (id.equals(roleModel.getId())) {
+                    num++;
+                    map.put("num",num);
+                    result.add(map);
+                }
+            }
+        }</p><p>//公式视图配置的角色        String match2 = "FindUserByRole\\(.*\\)";
+        Pattern pattern2 = Pattern.<em>compile</em>(match2);
+        Matcher matcher2 = pattern2.matcher(participant);
+        while (matcher2.find()) {
+            String unitReg = matcher2.group(0);
+            String str = unitReg.replace("\"", "").replace(")", "");
+            String[] strs = str.split(",");
+            if (strs[1].equals(roleModel.getCode())) {
+                num++;
+                map.put("num",num);
+                result.add(map);
+            }
+        }
+    }
+    catch (Exception ex){
+        <em>log</em>.info("解析角色异常:"+participant+workflowCode+workflowversion);
+        <em>log</em>.info(ex.getMessage(),ex);
+    }
+    return num;}</p><li>实现效果</li><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/241293771</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

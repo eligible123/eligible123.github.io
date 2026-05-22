@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解决搜索框搜人范围扩大问题 - 云枢技术文档</title>
+<meta property="og:title" content="解决搜索框搜人范围扩大问题">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/解决搜索框搜人范围扩大问题/">
+<meta name="description" content="解决搜索框搜人范围扩大问题 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>解决搜索框搜人范围扩大问题</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>解决搜索框搜人范围扩大问题</h1></p><p><h1>解决搜索框搜人范围扩大问题</h1>
+一.需求</p><p>在产品选人控件中，有人员单选，人员多选以及混合选人 三种可选人的控件，限定了选人范围时，在选人搜索，会出现选择的人员超出可选范围限制问题。需要根据实际限定住该选人控件的选人范围。</p><p>二.思路</p><p>1.根据选人范围设定，将超出的部分过滤</p><p>2.针对混合选人控件中的人员，则将查询到的数据排除过滤</p><li>解决方案</li><p>1.在产品 api/organization/user/tree/serach 接口中增加idList 参数，</p><p>2.再对idList做逻辑处理，筛出满足条件的数据</p><p>四.实现步骤</p><li>重写 api/organization/user/tree/serach 接口，增加idList 参数</li><li>对idList做逻辑处理，筛出满足条件的数据</li><li>效果展示</li><p>1.查询范围外的人：</p><p>2.查询范围内的人：</p><p>3.混合选人：</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/164280268</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

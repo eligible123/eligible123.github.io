@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows服务器SFTP异常排查 - 云枢技术文档</title>
+<meta property="og:title" content="Windows服务器SFTP异常排查">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Windows服务器SFTP异常排查/">
+<meta name="description" content="Windows服务器SFTP异常排查 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>Windows服务器SFTP异常排查</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>Windows服务器SFTP异常排查</h1></p><p><h2>背景</h2>
+客户的服务器部署在windows上，客户重启服务器后发现SFTP在服务器使用不了，经排查发现客户的SFTP使用的是freeFTPd作为SFTP服务器端口为22，但是我打开该软件一直提示端口被占用。</p><p><h2>排查步骤</h2>
+- 使用netstat -ano | findstr ":22"查找出占用端口的进程号
+- 
+- 使用 tasklist  | findstr "<PID>"查看到对应的进程名称
+- 发现sshd的服务占用
+- 按下 <code>Win + R</code> 打开运行窗口，输入 <code>services.msc</code> 并回车，打开 “服务” 管理界面。</p><li>在服务列表中找到 SSH 服务器相关的服务：</li><p>- 若安装的是 OpenSSH 服务器，服务名称通常为 <code>OpenSSH SSH Server</code>。
+- 若使用的是 freeSSHd，服务名称可能是 <code>freeSSHd</code> 或 <code>sshd</code>。</p><p>- 右键该服务，选择 “停止” 即可临时关闭服务。
+- 若想彻底禁用（开机不自动启动），右键服务 → “属性”，将 “启动类型” 改为 “禁用”，点击 “确定”。</p><li>再开启freeFTPd成功</li><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/233873258</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

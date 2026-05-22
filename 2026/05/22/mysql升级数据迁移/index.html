@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mysql升级数据迁移 - 云枢技术文档</title>
+<meta property="og:title" content="mysql升级数据迁移">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/mysql升级数据迁移/">
+<meta name="description" content="mysql升级数据迁移 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>mysql升级数据迁移</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>mysql升级数据迁移</h1></p><p><strong>mysql升级数据迁移</strong></p><p><strong>一、需求</strong></p><p>客户升级采用并行方案，需要将老版本数据导入新版本中，此为数据迁移方案</p><p><strong>二、思路</strong></p><p>1、 组织数据可以采用先同步源库数据到目标库，然后再运行产品升级sql</p><p>2、业务数据，可以直接用sql带字段插入</p><p><strong>三、解决方案</strong></p><p><strong>方案</strong>：采用生成数据sql的模式。理清需要同步的表。 </p><p><strong>四、实现步骤</strong></p><p><strong>-- 设置参数</strong></p><p><strong>SET @oldDB = 'oldDB';</strong></p><p><strong>SET @newDB = 'newDB';</strong></p><p><strong>-- 生成业务数据迁移SQL，以应用前缀匹配</strong></p><p><strong>set @formName ="ixizx_"; </strong></p><p><strong>SELECT CONCAT(</strong></p><p><strong>    'INSERT INTO ', @newDB, '.', TABLE_NAME, ' (',</strong></p><p><strong>    GROUP_CONCAT(COLUMN_NAME ORDER BY ORDINAL_POSITION),</strong></p><p><strong>    ') ',</strong></p><p><strong>    '\nSELECT ',</strong></p><p><strong>    GROUP_CONCAT(COLUMN_NAME ORDER BY ORDINAL_POSITION),</strong></p><p><strong>    ' FROM ', @oldDB, '.', TABLE_NAME, ';'</strong></p><p><strong>) AS generated_sql</strong></p><p><strong>FROM information_schema.COLUMNS</strong></p><p><strong>WHERE TABLE_SCHEMA = @oldDB</strong></p><p><strong>  AND TABLE_NAME LIKE CONCAT(@formName, '%')</strong></p><p><strong>GROUP BY TABLE_NAME; </strong></p><p><strong>-- 系统表，精确到表名</strong></p><p><strong>SET @tableNames = 'h_org_user,h_org_dept_user,h_org_department,h_org_role,h_org_role_group,h_org_role_user,h_org_user_extend_attr,h_org_user_union_extend_attr,h_related_corp_setting';</strong></p><p><strong>-- 生成迁移SQL</strong></p><p><strong>SELECT </strong></p><p><strong>    CONCAT(</strong></p><p><strong>        'DROP TABLE IF EXISTS ', @newDB, '.', TABLE_NAME, '; ',</strong></p><p><strong>        'CREATE TABLE ', @newDB, '.', TABLE_NAME, </strong></p><p><strong>        ' LIKE ', @oldDB, '.', TABLE_NAME, '; ',</strong></p><p><strong>        'INSERT INTO ', @newDB, '.', TABLE_NAME, </strong></p><p><strong>        ' SELECT * FROM ', @oldDB, '.', TABLE_NAME, ';'</strong></p><p><strong>    ) AS migration_sql</strong></p><p><strong>FROM INFORMATION_SCHEMA.TABLES </strong></p><p><strong>WHERE TABLE_SCHEMA = @oldDB</strong></p><p><strong>AND FIND_IN_SET(TABLE_NAME, @tableNames) > 0;</strong></p><p><strong>五、效果展示</strong></p><p>生成的系统表迁移sql</p><p>DROP TABLE IF EXISTS newDB.base_security_client; CREATE TABLE newDB.base_security_client LIKE oldDB.base_security_client; INSERT INTO newDB.base_security_client SELECT * FROM oldDB.base_security_client;</p><p>生成的业务表迁移sql</p><p>INSERT INTO newDB.ixizx_deptsyncinfo (createdDeptId,createdTime,creater,id,modifiedTime,modifier,name,owner,ownerDeptId,ownerDeptQueryCode,sequenceNo,sequenceStatus,version,workflowInstanceId,orgInfoId,orgNameEn,orgNamePath,orgParentId,orgPrincipal,orgSourceFrom,orgStatus,orgTradeSysOrgId,orgTradeYsOrgId,orgType,orgName,supOrgCode,updateTime,orgCode,chgFlag,chgDesc,orgComId,orgExpiredTime,orgGradingLeader,orgId,orgIdPath,orgInvented,orgLevel,reason,isSuccess) </p><p>SELECT createdDeptId,createdTime,creater,id,modifiedTime,modifier,name,owner,ownerDeptId,ownerDeptQueryCode,sequenceNo,sequenceStatus,version,workflowInstanceId,orgInfoId,orgNameEn,orgNamePath,orgParentId,orgPrincipal,orgSourceFrom,orgStatus,orgTradeSysOrgId,orgTradeYsOrgId,orgType,orgName,supOrgCode,updateTime,orgCode,chgFlag,chgDesc,orgComId,orgExpiredTime,orgGradingLeader,orgId,orgIdPath,orgInvented,orgLevel,reason,isSuccess FROM oldDB.ixizx_deptsyncinfo;</p><p>INSERT INTO newDB.ixizx_deptsyncinfo_0421 (createdDeptId,createdTime,creater,id,modifiedTime,modifier,name,owner,ownerDeptId,ownerDeptQueryCode,sequenceNo,sequenceStatus,version,workflowInstanceId,orgInfoId,orgNameEn,orgNamePath,orgParentId,orgPrincipal,orgSourceFrom,orgStatus,orgTradeSysOrgId,orgTradeYsOrgId,orgType,orgName,supOrgCode,updateTime,orgCode,chgFlag,chgDesc,orgComId,orgExpiredTime,orgGradingLeader,orgId,orgIdPath,orgInvented,orgLevel,reason,isSuccess) </p><p>SELECT createdDeptId,createdTime,creater,id,modifiedTime,modifier,name,owner,ownerDeptId,ownerDeptQueryCode,sequenceNo,sequenceStatus,version,workflowInstanceId,orgInfoId,orgNameEn,orgNamePath,orgParentId,orgPrincipal,orgSourceFrom,orgStatus,orgTradeSysOrgId,orgTradeYsOrgId,orgType,orgName,supOrgCode,updateTime,orgCode,chgFlag,chgDesc,orgComId,orgExpiredTime,orgGradingLeader,orgId,orgIdPath,orgInvented,orgLevel,reason,isSuccess FROM oldDB.ixizx_deptsyncinfo_0421;</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/253779239</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mysql数据迁移分享 - 云枢技术文档</title>
+<meta property="og:title" content="Mysql数据迁移分享">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Mysql数据迁移分享/">
+<meta name="description" content="Mysql数据迁移分享 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>Mysql数据迁移分享</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>Mysql数据迁移分享</h1></p><p><strong>业务场景：</strong></p><p>某BPM项目从旧服务器迁移至新服务器，项目中所有的附件文件未使用文件服务器存储而是存放在数据库附件表中，且使用周期比较长，导致数据库数据量比较大，主要是附件表占用磁盘空间较多达到20G，前期迁移，因为在数据迁移时数据量过大，导致环境崩溃而迁移失败，因此首先需要完成数据库数据迁移工作才能保证项目的正常迁移。</p><p>备注：本次服务器迁移，不需要新旧服务器同时运行，即在低峰期允许旧服务器停掉，将数据同步至新服务器后即可切换至新服务器运行，但切换服务器时间要尽可能短。</p><p><strong>实现思路：</strong></p><p>利用逻辑备份工具mysqldump分批次导出数据，先根据数据创建时间分时间段导出附件表数据，然后再导出除附件表外的其他表数据，最后将从旧服务器导出的附件表数据、其他数据导入至新服务器数据库。</p><p><strong>具体实现：</strong></p><p>1、分时间段导出附件表ot_attachment数据，由于导出时间比较久，使用shell脚本循环处理执行；</p><p>2、导出除附件表外的其他表数据，总共有300多张表，使用shell脚本进行批量导出；</p><p>3、将导出的sql，使用source xx.sql 导入至新服务器数据库；</p><p>4、验证导入数据库表数量、数据与旧服务器是否一致。</p><p><strong>总结：</strong></p><p>1、导出数据操作较耗时，考虑使用shell脚本批量执行，提高效率；</p><p>2、在使用mysqldump导出附件表数据时，由于数据量较大，导出报错：</p><p>解决方法：使用--max_allowed_packet参数解决，该参数作用是：指定Mysql服务器发送和接受的最大包长度；</p><p>3、mysqldump有很多其他参数，可使用mysqldump --help 查看其他参数使用场景。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/106345939</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

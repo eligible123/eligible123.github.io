@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云六高版本甘特图配置、左树右表配置分享 - 云枢技术文档</title>
+<meta property="og:title" content="云六高版本甘特图配置、左树右表配置分享">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云六高版本甘特图配置左树右表配置分享/">
+<meta name="description" content="云六高版本甘特图配置、左树右表配置分享 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云六高版本甘特图配置、左树右表配置分享</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云六高版本甘特图配置、左树右表配置分享</h1></p><p>云六高版本甘特图配置、左树右表配置分享</p><p>一、项目背景：</p><p>- 某造项目大量表单出现左树右表的功能结构，其中10个表单为左树右表产品功能配置无法实现，自定义二开结合配置实现方法见《语雀产品列表左树右表开发、及左树层级权限配置拓展》详情内容见链接：https://authine.yuque.com/geyop4/vbtsir/egrkdr；
+- 某造项目部分功能可以依据产品配置实现，由于是高版本，分享一下配置过程，依据产品功能配置实现左树右表功能；
+- 本次某造项目，汇总执行计划情况，需要依据业务逻辑实现甘特配置，直观展示计划执行情况；此前其他项目均是二开，本次通过产品甘特图配置功能实现；</p><p>二、实现思路：</p><p>1、左树右表配置：</p><p>- 从创建模型开始，必须选择树形结构，常规结构无法实现配置；
+- 选则上级关联字段视图配置类型为树形结构；
+- 新增数据除顶层父级数据上级关联设置为空，后续层级数据依据上级关联字段设置为子集数据；</p><p>2、甘特图：</p><p>- 创建模型后，视图列表需重新建立甘特图视图；
+- 视图字段必须包含时间节点，标题、进度等字段
+- 依据或者创建唯一条件判断甘特图区分展示直观数据</p><p>三、具体实现：</p><p>1、左树右表：</p><p>创建树形模型：</p><p>自动生成表单界面，默认创建上级关联字段，本字段用来关联父级数据：</p><p>视图界面设置筛选条件为上级关联，可选类型选择为树形下拉即可；</p><p>新增数据时，创建父级数据的时候，无需关联，上级关联默认为空，不选择；父级数据同时会展示在左侧栏，为树形第一层级；创建子集数据是，在新增界面上级关联选择需要挂靠的父级数据即可，数据创建后，左侧树，层级下会自动创建子集数据；删除时，必须按照层级从底层到最外层一次删除即可；，删除项下不能存在子集数据，否则无法删除成功；</p><p>希望左树右表配置功能可以尽早实现，左侧树关联目标模型数据作为左树数据，可以灵活的配置左侧数据；</p><p>​</p><p>2、甘特图</p><p>创建模型后，拖拉表单控件后，发布成功后，在视图界面需要重新创建甘特图视图</p><p>将甘特图视图默认到当前视图，创建模型默认生成的视图可以放弃不处理；</p><p>创建模型后，必须创建时间节点、进度等字段，方便，配置甘特图时，可以有相对应的数据配置字段：</p><p>开始、结束时间作为列表数据展示范围，标题为甘特图左侧列表数据描述项，进度作为甘图展示数据的进度情况；柱状图颜色需要根据list字段或，综合条件作为判断依据；</p><p>根据多条件集成一个字段判断，作为甘特图展示的条件；</p><p>甘特图可以根据周期展示具体数据展示情况，可以按照日、周、月、季、年展示数据情况，默认展示当前日、周、月、季、年的数据；</p><p>注：柱状图判断字段数据必须由list接口返回才能正确判断展示情况，前端创建字段，前端赋值，甘特图无法识别，自动判断展示否的条件；</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/128245628</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

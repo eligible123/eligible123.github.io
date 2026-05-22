@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF打印模板在linux服务器部署后乱码问题分享 - 云枢技术文档</title>
+<meta property="og:title" content="PDF打印模板在linux服务器部署后乱码问题分享">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/PDF打印模板在linux服务器部署后乱码问题分享/">
+<meta name="description" content="PDF打印模板在linux服务器部署后乱码问题分享 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>PDF打印模板在linux服务器部署后乱码问题分享</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>PDF打印模板在linux服务器部署后乱码问题分享</h1></p><p><h2>一.问题场景</h2>
+       荆州烟草局项目中的安全作业票打印模板，业务需求是要根据不同的数据模型，生成指定格式的打印模板。首先在后端生成打印模板之后，以二进制文件流形式返回给浏览器。在本地测试中，打印模板生成无误，格式清晰<strong>（见图1）</strong>。后端代码在部署到Linux服务器之后，出现乱码问题<strong>（见图2）</strong>。</p><p><strong>图1</strong>：</p><p><strong>图2</strong>：</p><p>       如上图所示，在部署到服务器之后，生成的PDF文件中的字体全部变成了小方格，但是数字还是可以正常显示，这和文件乱码还是有区别的，下面再进行问题分析。</p><p><h2>二.问题分析</h2>
+       在日常开发中，遇到文件乱码问题，首先大多数都会想到编码问题，该问题解决思路大致分为如下几步：</p><p>1. 检查后端代码，当二进制文件以字符或字节流的形式返回给浏览器，HttpServletResponse响应体是否设置正确，以该PDF打印模板为例（<strong>见图3</strong>）。</p><p><strong>图3</strong>：</p><p>2. 检查前端js代码，当二进制文件响应给前端之后，需做如下设置（<strong>见图4</strong>）。</p><p><strong>图4</strong>：</p><p>3. 当上述设置都正确无误后，但乱码问题依然存在。通过postman对服务器的接口进行测试，跳过前端代码，乱码问题依然存在，说明不是前端代码造成的问题。进行本地测试，PDF打印模板文件也可以正常生成，字体无误，格式清晰，说明也不是后端代码造成的问题。最终问题定位在部署到Linux服务器之后，继续检查Linux服务器编码是否正确，输入locale命令，即可查看linux服务器编码<strong>（见图5）</strong>，同时可以对服务器进行编码设置，修改环境变量文件 /etc/profile，在profile文件末尾加入（export LC_ALL="zh_CN.UTF-8" ，export LANG="zh_CN.UTF-8"）<strong>（见图6）</strong><strong>。</strong></p><p><strong>图5</strong>：<strong> 图6</strong>：</p><p>4.linux服务器编码设置成功之后，但乱码问题依然存在，仔细观察生成的文件，发现生成文件其实并不是乱码，只是中文字体不显示，全是小方格<strong>（见图7）</strong>，推测并不是编码的问题，可能是中文字体的问题，同时提出两种解决方案。</p><p><strong>图7</strong>：</p><p><h2>三.解决方案</h2>
+       针对linux服务器缺少中文相关字体问题，⾸先在windows的   '控制⾯板'->'字体'   C:\Windows\Fonts中，将⾃⼰需要的字体复制出来。保存到一个文件夹中。把文件夹通过ftp传输到Linux中的/usr/share/fonts/下⾯。例如文件夹名为fonts。完成上述操作之后，现提出两种解决方案：</p><p><strong>1.第一种方案是通过代码层面解决，首先引入开包工具包依赖，加入以下这段代码，该段代码是指定linux服务器下中文字体的文件目录，进行导出。</strong></p><p><strong>2.第二种方案是在linux服务器上直接缓存windows的中文字体</strong></p><p>① 打开linux终端，进⼊root状态。在/usr/share/fonts/目录下输⼊ chmod 775 /usr/share/fonts/fonts 命令。</p><p>② 然后输入下面命令：
+    cd /usr/share/fonts/fonts
+    sudo mkfontscale
+    sudo mkfontdir
+    sudo fc-cache -fv</p><p>③ 安装字体索引指令：</p><p>使mkfontscale和mkfontdir命令正常运行，输入  yum install mkfontscale  命令。</p><p>使fc-cache命令正常运行，如果提示 fc-cache: command not found，输入  yum install fontconfig  命令。</p><p>④ 查看Linux服务器已安装中文字体，输入 fc-list :lang=zh  命令。</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/110228562</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

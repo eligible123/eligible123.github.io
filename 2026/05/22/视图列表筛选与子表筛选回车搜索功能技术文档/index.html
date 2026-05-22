@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视图列表筛选与子表筛选回车搜索功能技术文档 - 云枢技术文档</title>
+<meta property="og:title" content="视图列表筛选与子表筛选回车搜索功能技术文档">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/视图列表筛选与子表筛选回车搜索功能技术文档/">
+<meta name="description" content="视图列表筛选与子表筛选回车搜索功能技术文档 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>视图列表筛选与子表筛选回车搜索功能技术文档</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>视图列表筛选与子表筛选回车搜索功能技术文档</h1></p><p><strong>视图列表筛选与子表筛选回车搜索功能技术文档</strong></p><p><h2>一、功能概述</h2></p><p>本功能实现视图列表和子表数据的筛选输入框支持回车键触发搜索操作，提升用户体验，避免额外点击搜索按钮。</p><hr><p><h2>二、适用场景</h2></p><li>视图列表筛选输入框</li><li>子表筛选输入框</li><li>任何需要通过输入关键词并按回车触发筛选的场景</li><hr><p><h2>三、功能需求</h2></p><p>1. 用户在视图列表筛选输入框输入关键词，按回车触发筛选。</p><p>2. 用户在子表筛选输入框输入关键词，按回车触发子表筛选。</p><p>3. 支持空白输入忽略筛选操作。</p><p>4. 筛选结果实时刷新视图或子表数据。</p><hr><p><h2>四、实现方案</h2></p><p><h3>1. 视图列表筛选回车搜索</h3></p><p><h4>1.1 关键点</h4></p><li>监听视图列表筛选输入框的回车事件。</li><li>触发视图列表数据刷新接口，传递筛选关键词。</li><li>更新视图列表展示。</li><hr><p><h2>五、总结</h2></p><p>通过监听输入框回车事件，结合接口调用，实现视图列表和子表的回车筛选功能，提升用户操作效率和体验。</p><p>下面是代码文件路径及截图修改点</p><p>packages\cloudpivot-form\form\src\common\components\import-data\sheet-filter\query-item.vue</p><p>packages\cloudpivot-form\form\src\common\components\import-data\sheet-filter\sheet-filter.vue</p><p>packages\cloudpivot-form\form\src\components\ShortText\components\pc-input-text.vue</p><p>packages\cloudpivot-form\form\src\renderer\components\pc\base-control-adapter.vue</p><p>packages\cloudpivot-form\form\src\renderer\components\pc\input-number-range.vue</p><p>packages\cloudpivot-list\list\src\components\pc\components\queryForm\query-field-group2.vue</p><p>packages\cloudpivot-list\list\src\components\pc\components\queryForm\query-field-item2.vue</p><p>packages\cloudpivot-list\list\src\components\pc\components\queryForm\query-form-renderer2.vue</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/241293822</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

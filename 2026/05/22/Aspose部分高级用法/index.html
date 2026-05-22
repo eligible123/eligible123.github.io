@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aspose部分高级用法 - 云枢技术文档</title>
+<meta property="og:title" content="Aspose部分高级用法">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Aspose部分高级用法/">
+<meta name="description" content="Aspose部分高级用法 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>Aspose部分高级用法</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>Aspose部分高级用法</h1></p><p><strong>业务场景/背景：</strong></p><p>用法1：在每页添加印章；</p><p>用法2：获取不同类型的node并进行操作（如每行， 每个表格）</p><p><strong>实现思路</strong></p><p><strong>用法1：</strong></p><li>使用代码获取到印章文件流</li><li>获取总页数</li><li>根据业务需求对document进行印章插入操作</li><p>documentBuilder.insertImage(InputStream stream, int horzPos, double left, int vertPos, double top, double width, double height, int wrapType)方法解读：</p><p>(1) WrapType用来指定悬浮类型;</p><p>(2) left、vertPost、top、 width、width四者如字面意义为设置宽高及上下页边距</p><p>(3) horzPos参数为缩进类型， 如左缩进、右缩进，枚举如下</p><li>关闭印章文件流并下载为PDF格式文件</li><li>完整的插入印章代码如下</li><p><strong>用法2：</strong></p><li>NodeType枚举如下</li><p>可以使用<strong>NodeType</strong>属性获取每个节点的类型。此属性返回节点<strong>类型</strong>枚举值。例如，由<strong>Paragraph</strong>类表示的段落节点返回<strong>NodeType</strong>。<strong>段落</strong>，由<strong>Table</strong>类表示的表节点返回<strong>NodeType</strong>。<strong>表</strong>。</p><p>例1：删除注释</p><p>例2：获取每行文本(NodeType枚举类型不同可以获取到不同范围的文本)</p><li>利用node处理document实例</li><p>实例1：</p><p>实例2：</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/110572068</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

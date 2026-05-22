@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>老租户接口联调审批节点缺失排查 - 云枢技术文档</title>
+<meta property="og:title" content="老租户接口联调审批节点缺失排查">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/老租户接口联调审批节点缺失排查/">
+<meta name="description" content="老租户接口联调审批节点缺失排查 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>老租户接口联调审批节点缺失排查</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>老租户接口联调审批节点缺失排查</h1></p><p><h2>背景</h2>
+IAC租户Cost Center流程，操作记录中缺失审批节点</p><p><h2>思路</h2>
+1，任务代办是否生成</p><p>2，流程是否异常</p><p>3，是否流程回调影响</p><p><h2>解决过程</h2></p><p><h3>查看流程信息</h3></p><p><h4>1、通过fromId获取实例id</h4></p><p>##### </p><p>#### </p><p><h4>2、流程实例信息</h4></p><p>#### </p><p><h4>3、查看待办已办表</h4></p><p>#### </p><p><h4>4、查看流程图</h4></p><p>#### 
+缺失BBF-11 Accounting Confirm节点代办任务</p><p><h3>查看流程状态</h3></p><p>流程状态正常</p><p><h3>查看回调信息</h3></p><p><h4>1、查看回调日志</h4></p><p>#### </p><p><h4>2、查看接口信息</h4></p><p>#### </p><p><h4>3、查看回调接口</h4></p><p>#### 
+有节点推送processcenter且间隔时间过短，回调时存在异步等待代办生成推送，当流程操作时间过短时，待办还没推送，就马上处理了待办就会出现异常</p><p><h3>查看回调信息</h3></p><p><h4>1、解决思路</h4>
+待办还没推送时，不让处理，可以避免处理到还没推送状态的流程节点</p><p><h4>2、代码实现</h4>
+利用待办扩展功能更新待办不显示</p><p>#### 
+选择newbpm回调维护需要回调流程</p><p><h2>总结</h2>
+- 流程错误先看流程表，代办表，已办表信息
+- 结合流程回调查看，是否回调影响流程
+- 利用代办扩展功能，控制代办显示，完成问题处理</p><p>#### </p><p><h4>​</h4></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/123924010</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

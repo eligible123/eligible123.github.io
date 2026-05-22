@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于开发和运维中因环境无法直接访问数据库的技巧分享 - 云枢技术文档</title>
+<meta property="og:title" content="关于开发和运维中因环境无法直接访问数据库的技巧分享">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/关于开发和运维中因环境无法直接访问数据库的技巧分享/">
+<meta name="description" content="关于开发和运维中因环境无法直接访问数据库的技巧分享 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>关于开发和运维中因环境无法直接访问数据库的技巧分享</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>关于开发和运维中因环境无法直接访问数据库的技巧分享</h1></p><p><strong>场景：</strong></p><p>在很多开发和售后运维中数据库服务器因网络环境变化需要登陆vpn或者堡垒机跳转访问的时候，可以在开发或运维过程中写一个公共public数据库访问接口，达到快速便捷的去操作业务数据库。</p><p><strong>思路：</strong></p><p>通过前端简易绘制查询语句界面，后端代码写一个public接口，来实现数据库的查询展示表数据、数据导出和增删改操作。</p><p><strong>实现步骤：</strong></p><p>1、前端绘制页面，配置执行确认按钮、数据导出按钮和入参，其中key和sql语句采用加密方式传输。如下图：</p><p>2、后端根据入参key判断前端访问接口的正确性，否则跳转登录界面</p><p>3、根据sql语句执行数据库的增删改查操作以及查询出的表数据导出，代码如下：</p><p>4、业务层代码，如下：</p><p>5、mapper层拼接sql查询，代码如下：</p><p>  6、最终效果，如下图：</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/98782977</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

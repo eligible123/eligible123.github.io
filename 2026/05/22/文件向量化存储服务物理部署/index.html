@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件向量化存储服务物理部署 - 云枢技术文档</title>
+<meta property="og:title" content="文件向量化存储服务物理部署">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/文件向量化存储服务物理部署/">
+<meta name="description" content="文件向量化存储服务物理部署 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>文件向量化存储服务物理部署</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>文件向量化存储服务物理部署</h1></p><p><h2>文件向量化存储服务部署</h2>
+- 需求</p><p>8.5版本需要文件向量化存储数据对知识库进行数据存储，客户需要物理部署文件向量化存储服务。</p><li>部署文档</li><li>关闭防火墙与SELinux</li><p><em># 关闭防火墙</em></p><p><em>systemctl stop firewalld && systemctl disable firewalld</em></p><p><em># 关闭SELinux</em></p><p><em>setenforce 0 && sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config</em></p><li>时间同步</li><p><em># 时间同步</em></p><p><em>yum install -y chrony</em></p><p><em>systemctl start chronyd.service && systemctl enable chronyd.service</em></p><li>安装PostgreSQL16</li><p>在根目录下创建/data/postgresql目录</p><p><em># 创建安装目录</em></p><p><em>mkdir -p /data/postgresql</em></p><p><em>#给data目前添加权限</em></p><p><em>chmod -R 755 /data</em></p><p>将安装包中的postgresql-16.10.tar.gz上传至服务器的postgresql目录</p><li>解压源码</li><p><em># 解压源码包</em></p><p><em>tar -zxvf postgresql-16.10.tar.gz</em></p><li>安装编译运行需要的组件</li><p><em># 必要的组件安装</em></p><p><em>yum install gcc gcc-c++ -y</em></p><p><em>yum install readline-devel -y</em></p><li>进入解压目录，检测配置</li><p><em># 进入解压目录</em></p><p><em>cd postgresql-16.10/</em></p><p><em># 配置检查</em></p><p><em>./configure</em></p><li>编译安装</li><p><em># 编译安装</em></p><p><em>make -j4 & make install</em></p><li>配置环境变量</li><p><em># 编辑环境变量</em></p><p><em>vim /etc/profile</em></p><p>在文件最后增加</p><p><em># 环境变量新增内容</em></p><p><em>export PATH=$PATH:/usr/local/pgsql/bin</em></p><p><em>export PGDATA=/data/postgresql/postgresql-16.10/data</em></p><p><em>export LD_LIBRARY_PATH=/usr/local/pgsql/lib:$LD_LIBRARY_PATH</em></p><p><em># 环境变量新增内容结束</em></p><p>保存后执行下面命令使环境变量生效</p><p><em># 重新加载环境变量</em></p><p><em>source /etc/profile</em></p><li>创建数据目录，和用户并赋予权限</li><p><em># 创建目录</em></p><p><em>mkdir -p /data/postgresql/data</em></p><p><em>mkdir -p /data/postgresql/logs</em></p><p><em>mkdir -p /data/postgresql/archive </em></p><p><em>mkdir -p /data/backup</em></p><li>新增用户并设置密码</li><p><em># 新增Linux用户postgres</em></p><p><em>useradd postgres</em></p><p><em># 设置postgres用户密码</em></p><p><em>passwd postgres</em></p><p><strong>在弹窗内输入postgres的密码并保存</strong>。</p><li>修改目录权限</li><p><em># 修改目录权限</em></p><p><em>chown -R postgres:postgres /usr/local/pgsql/</em></p><p><em>chown -R postgres:postgres /data/postgresql/data</em></p><p><em>chown -R postgres:postgres /data/postgresql/logs</em></p><p><em>chown -R postgres:postgres /data/postgresql/archive</em></p><p><em>chown -R  postgres:postgres /data/backup/</em></p><li>修改用户环境变量</li><p><em># 切换Linux服务器postgres用户</em></p><p><em>su postgres</em></p><p><em># 编辑用户环境变量</em></p><p><em>vi ~/.bash_profile</em></p><p><em># 环境变量新增内容</em></p><p><em>export PATH=$PATH:/usr/local/pgsql/bin</em></p><p><em>export PGDATA=/data/postgresql/data</em></p><p><em># 环境变量新增内容结束</em></p><p><em># 重新加载用户环境变量</em></p><p><em>source ~/.bash_profile</em></p><li>初始化数据库</li><p><strong>请确认使用的是postgres用户，如果不是，请切换postgres用户</strong></p><p><em># 切换Linux服务器postgres用户</em></p><p><em>su postgres</em></p><p><em># 初始化数据库</em></p><p><em>/usr/local/pgsql/bin/initdb -D /data/postgresql/data/</em></p><li>修改配置</li><p><em># 编辑数据库配置文件pg_hba.conf</em></p><p><em>vim /data/postgresql/data/pg_hba.conf</em></p><p><em># 需要修改的</em></p><p><em>host    all             all             0.0.0.1/0            password</em></p><p><em># 需要新增的</em></p><p><em>host    replication     repluser        192.168.154.187/32   md5</em></p><p><em># 修改数据库配置文件postgresql.conf</em></p><p><em>vim /data/postgresql/data/postgresql.conf</em></p><p>需要修改的配置如下</p><li>新增系统服务</li><p><strong>注意：必须以root账号执行</strong></p><p><em># 新增系统命令</em></p><p><em>vim /etc/systemd/system/postgresql-16.service</em></p><p><strong>具体命令内容在【非容器部署\postgresql\postgresql配置文件\postgresql-16.service】中</strong></p><li>修改权限并重新加载系统服务</li><p><em># 修改执行权限</em></p><p><em>chmod 644 /etc/systemd/system/postgresql-16.service</em></p><p><em>#重新加载系统服务</em></p><p><em>sudo systemctl daemon-reload</em></p><li>启动服务</li><p><strong>注意：必须以root账号执行</strong></p><p><em># 启动postgreSQL服务</em></p><p><em>sudo systemctl start postgresql-16</em></p><p><em># 查看服务状态</em></p><p><em>sudo systemctl status postgresql-16</em></p><p>出现<strong>active (running)</strong>即表示启动成功</p><p><em># 设置开机启动</em></p><p><em>sudo systemctl enable postgresql-16</em></p><p><em># 查看设置状态</em></p><p><em>systemctl is-enabled postgresql-16</em></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/253745926</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

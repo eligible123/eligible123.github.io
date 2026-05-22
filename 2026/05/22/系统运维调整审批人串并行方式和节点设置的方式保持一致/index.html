@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统运维调整审批人串并行方式和节点设置的方式保持一致 - 云枢技术文档</title>
+<meta property="og:title" content="系统运维调整审批人串并行方式和节点设置的方式保持一致">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/系统运维调整审批人串并行方式和节点设置的方式保持一致/">
+<meta name="description" content="系统运维调整审批人串并行方式和节点设置的方式保持一致 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>系统运维调整审批人串并行方式和节点设置的方式保持一致</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>系统运维调整审批人串并行方式和节点设置的方式保持一致</h1></p><p><strong>系统运维调整审批人串并行方式和节点设置的方式保持一致实现</strong></p><p><strong>一、需求</strong></p><p>目前有的节点设置的审批人方式是串行方式，但是管理员调整审批人选择多人时候，审批人变成了并行的方式，和实际的需求不一致，需要保持管理员调整审批人的的串并行方式和和节点设置的方式保持一致。</p><p><strong>二、思路</strong></p><p>目前管理员调整审批人是给每个审批人都会生成一个待办，没有按照串行的顺序一个一个的先后顺序审批，也没有记录调整的审批人是谁，所以调整串行的审批节点的时候，需要记录下调整的审批人是哪些人，当一个审批人审批通过之后，然后读取记录表的数据生成下一个人的任务。</p><p>需要注意串并行的场景较多，需要考虑所有的业务场景。</p><p><strong>三、解决方案</strong></p><p><h3>1.设计调整节点审批人的记录表。</h3></p><p><h3>2.调整审批人的时候记录调整的审批人</h3>
+修改文件路径如下：</p><p>src/main/java/com/authine/cloudpivot/engine/service/impl/runtime/engine/ParticipantActivityRuntime.java</p><p>protected void adjust(List<String> participants) {
+    int size = participants.size();</p><p>//判断是串行节点且调整的审批人是多人
+    if (isSerialActivity() && participants.size() > 0) {
+    //只是创建第一个人员的任务</p><p>this.getWorkflowEngine().getWorkflowCoreApi().getBizPersistence().onWorkItemAdjust(this, Arrays.<em>asList</em>(participants.get(0)));
+        this.activityContext.workFlowToken.setItemCount(this.activityContext.workFlowToken.getApprovalCount() + size);
+        Map<String, Object> map = new HashMap<>();
+        map.put("instanceId", this.instanceContext.InstanceId);
+        map.put("tokenId", this.activityContext.workFlowToken.getTokenId());
+        List<SelectionValue> list = new ArrayList<>();
+        for (String id : participants) {
+            SelectionValue sel = new SelectionValue();
+            sel.setName(id);
+            sel.setId(id);
+            sel.setType(UnitType.<em>USER</em>);
+            list.add(sel);
+        }
+        map.put("participant", list);
+        String logId = this.getAdjustLogId(this.instanceContext.InstanceId, this.activityContext.workFlowToken.getTokenId().toString());
+        //存在调整记录的数据，则更新，否则新增数据
+        if (StringUtils.<em>isEmpty</em>(logId)) {
+            BizObjectModel biz = new BizObjectModel("serialActivityAdjustLog", map, false);
+            getWorkflowEngine().getWorkflowCoreApi().getBizObjectService().saveBizObject("", biz, false);
+        } else {
+            BizObject model = new BizObject("serialActivityAdjustLog", logId, map);
+            getWorkflowEngine().getWorkflowCoreApi().getBizObjectService().updateBizObject(model);
+        }
+    } else {
+        this.getWorkflowEngine().getWorkflowCoreApi().getBizPersistence().onWorkItemAdjust(this, participants);
+        this.activityContext.workFlowToken.setItemCount(this.activityContext.workFlowToken.getApprovalCount() + size);
+    }
+}</p><p><h3>1 创建下一个审批人的任务</h3>
+修改文件路径如下：</p><p>src/main/java/com/authine/cloudpivot/engine/service/impl/runtime/engine/ParticipantActivityRuntime.java</p><p>private void createNextWorkItem(String participant) {
+    //if (!this.checkFinished().isSucceed() && this.currentActivity.getParticipantType() == ParticipantType.MULTI_PARTICIPANT && this.currentActivity.getParticipationModel() == ParticipationModelType.SERIAL) {
+    if (!this.checkFinished().isSucceed() && this.currentActivity.getParticipantType() == ParticipantType.<em>MULTI_PARTICIPANT</em>) {</p><p>//判断是否是串行节点
+        if (isSerialActivity()) {
+            Set<String> userIds = Sets.<em>newHashSet</em>();</p><p>//判断管理员调整的记录表中是否有数据
+            List<String> ids = this.getParticipants(this.instanceContext.InstanceId, this.activityContext.workFlowToken.getTokenId().toString());
+            if (!CollectionUtils.<em>isEmpty</em>(ids)) {
+                userIds.addAll(ids);
+            } else {
+                userIds = this.getParticipants();
+            }
+            if (userIds != null) {
+                Set<String> participants = Sets.<em>newLinkedHashSet</em>();
+                participants.addAll(userIds);
+                Set<String> skipParticipants = this.getCurrentActivitySkipParticipants();
+                participants.removeAll(skipParticipants);
+                if (CollectionUtils.<em>isEmpty</em>(participants)) {
+                    return;
+                }
+                LinkedHashMap<String, String> trustors = new LinkedHashMap<>();</p><p>//处理委托的场景
+                if (!CollectionUtils.<em>isEmpty</em>(ids)) {
+                    trustors = this.getTrustParticipantByUserId(ids);
+                } else {
+                    trustors = this.trustParticipantMap;
+                }
+                this.newWorkflowRuntimePersistence.onWorkItemCreated(this, participants, "Default", false, trustors);
+            }
+        }
+    }
+}</p><p><h3>2 判断当前节点是否全部完成</h3>
+修改文件路径如下：</p><p>src/main/java/com/authine/cloudpivot/engine/service/impl/runtime/engine/ParticipantActivityRuntime.java</p><p>private boolean checkApproveExit() {
+    if (this.currentActivity.getParticipantType() == ParticipantType.<em>MULTI_PARTICIPANT </em>&& !StringUtils.<em>isEmpty</em>(this.currentActivity.getApproveExit())) {
+        AtomicReference<Boolean> bl = new AtomicReference<>((new ParticipantActivityExitHandler()).getExit(this.currentActivity.getApproveExit(), this.activityContext.workFlowToken.getItemCount(), this.activityContext.workFlowToken.getApprovalCount()));</p><p>//如果节点是串行节点，但是下一步动作选择的业务场景的驳回，即使其他人员的任务还没有完成该节点也是需要被认为是结束的
+        if (((ParticipantActivity) this.activityContext.activity).getParticipationModel().equals(ParticipationModelType.<em>SERIAL</em>) && isBusinessReject()) {
+            List<Map<String, Object>> list = authineDbFactory.<em>jdbcTemplate</em>.queryForList(
+                    "select a.participant from biz_workitem a" +
+                            " where a.instanceId=? and A.workflowTokenId=?  ",
+                    new Object[]{this.activityContext.instanceContext.getWorkFlowInstance().getId(), this.activityContext.workFlowToken.getId()});
+            //判断是否存在待办的任务
+            if (CollectionUtils.<em>isEmpty</em>(list)) {
+                bl.set(true);
+                return bl.get();
+            }
+        }
+        Set<String> userIds = Sets.<em>newHashSet</em>();</p><p>//获取管理员调整节点的审批人
+        List<String> ids = this.getParticipants(this.instanceContext.InstanceId, this.activityContext.workFlowToken.getTokenId().toString());
+        if (!CollectionUtils.<em>isEmpty</em>(ids)) {
+            userIds.addAll(ids);
+        } else {
+            userIds = this.getParticipants();
+        }
+        if (bl.get() && ((ParticipantActivity) this.activityContext.activity).getParticipationModel().equals(ParticipationModelType.<em>SERIAL</em>)) {
+            //串行时有个这样的场景
+            //本来节点审批人是选人控件(值A,B) 审批人 A 转办给 审批人C,此时C修改选人控件(值C,B),然后 审批人C 继续提交, C提交时系统会判断当前C是否在 选人控件(值C,B) 范围内,
+            // 是的话this.activityContext.workFlowToken.getApprovalCount()会加1,导致此时变成2了,和 this.activityContext.workFlowToken.getItemCount()的个数一样了
+            //所以下面的节点补充是否还有 节点的审批人没参与过此流程</p><p>            //当前节点已办的
+            List<Map<String, Object>> finishedItem = authineDbFactory.<em>jdbcTemplate</em>.queryForList(
+                    "select a.trustor,a.sourceid,a.participant from    biz_workitem_finished a" +
+                            " where  a.instanceId=? and A.workflowTokenId=? and a.state='FINISHED' ",
+                    new Object[]{this.activityContext.instanceContext.getWorkFlowInstance().getId(), this.activityContext.workFlowToken.getId()});</p><p>            List<String> allParticipant = finishedItem.stream().filter(p -> p.get("trustor") != null)
+                    .map(map -> map.get("trustor").toString())
+                    .collect(Collectors.<em>toList</em>());
+            allParticipant.addAll(finishedItem.stream().filter(p -> p.get("sourceid") != null)
+                    .map(map -> map.get("sourceid").toString())
+                    .collect(Collectors.<em>toList</em>()));
+            allParticipant.addAll(finishedItem.stream().filter(p -> p.get("participant") != null)
+                    .map(map -> map.get("participant").toString())
+                    .collect(Collectors.<em>toList</em>()));</p><p>            //判断节点审批人是否真的参与过(包括转办委托)
+            userIds.forEach(x -> {
+                if (!allParticipant.contains(x)) {
+                    bl.set(false);
+                }
+            });
+        }
+        return bl.get();
+    } else {
+        return this.currentActivity.getParticipantType() == ParticipantType.<em>SINGLE_PARTICIPANT </em>? this.activityContext.workFlowToken.getItemCount().equals(this.activityContext.workFlowToken.getApprovalCount()) : false;
+    }
+}</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/253746959</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

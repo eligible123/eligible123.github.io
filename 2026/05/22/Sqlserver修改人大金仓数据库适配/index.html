@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sqlserver修改人大金仓数据库适配 - 云枢技术文档</title>
+<meta property="og:title" content="Sqlserver修改人大金仓数据库适配">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Sqlserver修改人大金仓数据库适配/">
+<meta name="description" content="Sqlserver修改人大金仓数据库适配 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>Sqlserver修改人大金仓数据库适配</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>Sqlserver修改人大金仓数据库适配</h1></p><p><strong>背景：</strong></p><p><strong>随着国产化进程的推进，越来越多项目将进行国产化改造，国产化数据库一般会选择人大金仓或者达梦数据库，下面将SQLserver改造为人大金仓数据库，简单列举一些不适配，需要改造的地方，方便后面的同事参考改造。</strong></p><p>人大金仓不支持的常见语法：</p><p>正则搜索范围：<em>.cs;</em>.ascx;<em>.asmx;</em>.ashx;*.asax;</p><p>1、with(nolock) 不支持，</p><p>搜索：</p><p>删除</p><p>2、中括号不支持，</p><p>搜索：\[[^\"\'\(\)]*\]</p><p>删除</p><p>例如：select [State] from [dbo].[I_DocumentSend]</p><p>改为：select  State from  dbo.I_DocumentSend</p><p>3、语句中 +号不支持，</p><p>搜索：select [^\"]*\+</p><p>搜索：\+[^\"]*\'</p><p>搜索：\'[^\"]*\+</p><p>修改为 ||</p><p>比如： select  (Name+'_'+State) as Name  from  dbo.I_DocumentSend</p><p>改为： select  (Name  ||'_'||  State) as Name  from  dbo.I_DocumentSend</p><p>4、关联Update语法</p><p>搜索：update .*</p><p>增加表名</p><p>例如：update a set a.ParentID=b.ObjectID from OT_User a  inner join OT_OrganizationUnit b on a.ParentID=b.ObjectID</p><p>改为：update OT_User a set a.ParentID=b.ObjectID from OT_OrganizationUnit b where a.ParentID=b.ObjectID;</p><p>常用函数转换：</p><p>1、当前时间： getdate()</p><p>搜索：getdate\(\)</p><p>改为：NOW()</p><p>2、随机ID：newid()</p><p>搜索：newid\(\)</p><p>改为：SYS_GUID_NAME()</p><p>3、日期格式转换样例：CONVERT(varchar(100), getdate(), 23)</p><p>搜索：CONVERT\(.*\)</p><p>改为：to_char(NOW(),'yyyy-MM-dd')</p><p>-- 昨天</p><p>SELECT CURRENT_TIMESTAMP - 1</p><p>-- 明天</p><p>SELECT CURRENT_TIMESTAMP + 1</p><p>-- 30日后</p><p>SELECT CURRENT_TIMESTAMP + 30</p><p>4、判断字段长度条件 len(CarType)>0</p><p>搜索：len\(.*\)</p><p>改为：length(CarType)>0</p><p>5、转换保留2位小数：</p><p>搜索：CONVERT\(.*\)</p><p>例如：Convert(decimal(18,2),AggregateScoreCount/itemCount)</p><p>改为：round(AggregateScoreCount/itemCount,2)</p><p>6、格式转换</p><p>搜索：CONVERT\(.*\)</p><p>改为：to_number、to_char、to_date</p><p>7、like 模糊查询语句：like CONCAT('%', @InstanceName,'%')，</p><p>比如：</p><p>string sql = "SELECT * FROM Person WHERE I_DocumentSend LIKE CONCAT('%', @InstanceName,'%') ";</p><p>var Parameters=new SqlParameter[]{new SqlParameter("@InstanceName", "流程名称")};</p><p>8、时间比较：  DATEDIFF(Month,Inspectiontime,getdate()) >=0</p><p>搜索：DATEDIFF\(</p><p>改为： DATEDIFF('mm',Inspectiontime,NOW())>=0，则 年份 Year 修改为'yy',月份Month 修改为'mm', 其他如下</p><p>年yy,yyyy</p><p>季度qq,q</p><p>月mm,m</p><p>年中的日dy,y</p><p>日dd,d</p><p>周wk,ww</p><p>星期dw,w</p><p>小时hh</p><p>分钟mi,n</p><p>秒ss,s</p><p>毫秒ms</p><p>微妙mcs</p><p>纳秒ns</p><p>9、列转行</p><p>搜索：for xml path</p><p>例如：,(STUFF((select ';' + WorkPlan from  DB_SuperviseDepart  where   Pro_Id=A.Pro_Id for xml path('')),1,1,'')) as Name</p><p>改为：,(select string_agg(WorkPlan,';')  from  DB_SuperviseDepart  where   Pro_Id=A.Pro_Id ) as Name</p><p>9、EXISTS 语法参考为以下2个案例</p><p>搜索：exists</p><p>改为：</p><p>DECLARE</p><p>@ObjectID varchar2 (36 char);</p><p>@dept varchar2 (36 char);</p><p>BEGIN</p><p>if (not exists(select top 1 1 from MM_TAB_Favorites where  UserID=UserID_ and InstanceID=InstanceID_)) then</p><p>INSERT INTO I_ITITems (ObjectID,  dept) VALUES (@ObjectID,  @dept);</p><p>else</p><p>UPDATE I_ITITems SET  dept=@dept WHERE   ObjectID=@ObjectID;</p><p>end if;</p><p>end;</p><p>改为：</p><p>DECLARE</p><p>BEGIN</p><p>if(@StandardLevel='公司级') then</p><p>select ObjectID,Name as DeptName,'部门级' category from OT_OrganizationUnit where ParentID='18f923a7-5a5e-426d-94ae-a55ad1a4b240' and Name like CONCAT('%', @Names,'%')  order by SortKey ASC;</p><p>ELSE</p><p>if(@StandardLevel='部门级') then</p><p>select ObjectID,Name as DeptName,'个人' category from OT_User where Name like CONCAT('%', @Names,'%');</p><p>else</p><p>SELECT '' AS ObjectID,'' AS DeptName,'' category ;</p><p>end if;</p><p>end if;</p><p>end;</p><p>10、创建临时表及临时变量语法参考以下语法</p><p>搜索：table #</p><p>搜索：into #</p><p>搜索：declare</p><p>DECLARE</p><p>myQueryCode varchar2 (360 char);</p><p>BEGIN</p><p>create temp table tem (</p><p>ObjectID char(36) primary key</p><p>);</p><p>create temp table tem2 (</p><p>ObjectID char(36) primary key</p><p>);</p><p>insert into tem select @DeptID;</p><p>insert into tem2 select @DeptID;</p><p>WHILE (exists(select top 1 1 from tem2 a inner join OT_OrganizationUnit b on b.ParentID=a.ObjectID)) LOOP</p><p>insert into tem select b.ObjectID from tem2 a inner join OT_OrganizationUnit b on b.ParentID=a.ObjectID;</p><p>delete from tem2;</p><p>insert into tem2 select b.ObjectID from tem2 a inner join OT_OrganizationUnit b on b.ParentID=a.ObjectID;</p><p>END LOOP;</p><p>select myQueryCode=QueryCode from MM_Tab_Bylaw_Dictionary where ObjectID=@did;</p><p>select * from(</p><p>select</p><p>ROW_NUMBER() over(order by fi.PublishDate desc) as rowNUMBER</p><p>,fi.ID,fi.FileName ,fi.FinalFileCode,dept.Name as DeptName,fi.PublishDate</p><p>from MM_Tab_Bylaw_Files fi</p><p>inner join MM_Tab_Bylaw_Dictionary dic on dic.ObjectID=fi.DictionaryID</p><p>inner join OT_OrganizationUnit dept on dept.ObjectID=fi.DeptID</p><p>where exists(select top 1 1 from tem z where z.ObjectID=fi.DeptID)</p><p>and fi.FileState != 5 and dic.QueryCode like CONCAT(myQueryCode,'%')</p><p>and not exists(select top 1 1 from PlatFrom_InspectionAssessmentFinished x</p><p>inner join PlatFrom_ExamineStandardAndFileRelations y on y.ExamineStandardID=x.StandardID and y.FileID=fi.ID</p><p>where x.state=0 and x.IsConfirm=1 and x.StandardLevel='公司级' {0})</p><p>) t;</p><p>DROP TABLE tem;</p><p>DROP TABLE tem2;</p><p>end;</p><p>11、while循环从begin开始改为从LOOP开始</p><p>搜索：while</p><p>改为：</p><p>WHILE (exists(select top 1 1 from tem2 a inner join OT_OrganizationUnit b on b.ParentID=a.ObjectID)) LOOP</p><p>insert into tem select b.ObjectID from tem2 a inner join OT_OrganizationUnit b on b.ParentID=a.ObjectID;</p><p>delete from tem2;</p><p>insert into tem2 select b.ObjectID from tem2 a inner join OT_OrganizationUnit b on b.ParentID=a.ObjectID;</p><p>END LOOP;</p><p>12、参数化查询时，参数值不能直接使用枚举</p><p>搜索：.int</p><p>例如：parameters.Add(new Parameter("state", DbType.Int64, AssessmentStateEnum.Valid));</p><p>改为：parameters.Add(new Parameter("state", DbType.Int64, (int)AssessmentStateEnum.Valid));</p><p>13、Name会自动转小写，如需保留大写则加双引号</p><p>搜索：Name</p><p>例如：SELECT ObjectID,ParentID,Name,SortKey,IsFavorite FROM MM_Tab_Bylaw_Dictionary order by SortKey</p><p>改为：SELECT ObjectID,ParentID,"Name",SortKey,IsFavorite FROM MM_Tab_Bylaw_Dictionary order by SortKey</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/155773594</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

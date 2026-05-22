@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>linux挖矿排查 - 云枢技术文档</title>
+<meta property="og:title" content="linux挖矿排查">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/linux挖矿排查/">
+<meta name="description" content="linux挖矿排查 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>linux挖矿排查</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>linux挖矿排查</h1></p><p>排查过程</p><p>1、 首先使用top命令查看一下，top命令可以直接筛选出占用CPU过高的可疑进程。部分挖矿进程的名字由不规则数字和字母组成。</p><p>示例：</p><p>2、 如果看到了可疑进程，可以使用lsof -p pid 查看进程打开的文件，或查看 /proc/pid/exe 指向的文件（包含了正在进程中运行的程序链接）。</p><p>示例：</p><p>3、 查看可疑进程打开的文件，命令ls –al /xx/xx/xx/，来查看文件时间，但是这个时间一般不靠谱因为时间戳可以自行修改。</p><p>4、 若启用了服务，可以用命令：systemctl status pid，来查看服务时间</p><p>这里要在这个时间上下扩展几天，因为可能拿到服务器，进行挖矿了，还进行其他操作，也会留下痕迹。</p><p>去掉/sys/fs、/run/udev、/sys/kernel之类开头的数据，再根据黑客的习惯，比如把程序放在tmp目录，来锁定一些文件。</p><p>5、 查看服务器开了哪些服务。命令：netstat –atlp，若开启的有ssh、http、redis等服务需要重点关注是否是因为这些服务或者应用上存在漏洞导致服务器权限被控被植入木马。</p><p>6、 针对ssh爆破，使用lastb可以列出登入系统失败的用户。</p><p>7、 http服务的话，可看跑的是什么业务，用的是什么版本的框架以及是否使用第三方应用，是否存在有漏洞。</p><p>8、 清除定时任务</p><p>使用crontab -l 或  vim /var/spool/cron/root 查看是否有可疑定时任务，有的话直接删除，或停止crond进程。还有/etc/crontab、/var/spool/cron、/etc/cron.daily/、/etc/cron.hourly/、/etc/cron.monthly/、/etc/anacrontab 等文件夹或文件中的内容也要关注。</p><p>9、 清除启动项</p><p>还有的挖矿进程为了实现长期驻留，会向系统中添加启动项来确保系统重启后挖矿进程还能重新启动。所以在清除时还应该关注启动项中的内容，如果有可疑的启动项，也应该进行排查，确认是挖矿进程后，对其进行清除。</p><p>排查过程中重点应该关注： /etc/rc0.d/、/etc/rc1.d/、/etc/rc2.d/、/etc/rc3.d/、/etc/rc4.d/、/etc/rc5.d/、/etc/rc6.d/、/etc/rc.d/、/etc/rc.local /etc/inittab 、/etc/ld.so.preload </p><p>等目录或文件下的内容。</p><p>10、 清除公钥文件</p><p>在用户家目录的.ssh目录下放置authoruzed_keys文件，从而免密登陆该机器也是一种常见的保持服务器控制权的手段。在排查过程中应该查看该文件中是否有可疑公钥信息，有的话直接删除，避免攻击者再次免密登陆该主机。 [UserDIR]/.ssh/authorized_keys </p><p>11、 kill挖矿进程 </p><p>对于单进程挖矿程序，直接结束挖矿进程即可。但是对于大多数的挖矿进程，如果挖矿进程有守护进程，应先杀死守护进程再杀死挖矿进程，避免清除不彻底。 kill -9 pid 或  pkill ddg.3014 在实际的清除工作中，应找到本机上运行的挖矿脚本，根据脚本的执行流程确定木马的驻留方式，并按照顺序进行清除，避免清除不彻底。 </p><p>12、删除重启后，还是会被二次创建。
+这时可以使用类似下面的命令
+find ./ -mtime +20 -a -mtime -50 -type f
+表示寻找当前目录下(./)，20天以前(-mtime +20)并且(-a)50天以内(-mtime -50)修改过的文件(-type f)。查看某个时间段内有哪些文件被修改过。</p><p>13、通过crontab -l查看所有的定时任务。</p><p>通过crontab -r删除所有定时任务。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/89894354</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

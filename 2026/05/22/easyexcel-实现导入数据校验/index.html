@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>easyexcel 实现导入+数据校验 - 云枢技术文档</title>
+<meta property="og:title" content="easyexcel 实现导入+数据校验">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/easyexcel-实现导入数据校验/">
+<meta name="description" content="easyexcel 实现导入+数据校验 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>easyexcel 实现导入+数据校验</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>easyexcel 实现导入+数据校验</h1></p><p><h1>easyexcel 实现导入+数据校验</h1>
+一.背景</p><p>导入数据时，需要针对数据做一些定开的数据校验，并对后续云枢的升级更为友好型。</p><p>二.思路/方案</p><p>1.采用 easyexcel 作为基础框架，实现高性能 可扩展的 数据导入。</p><li>使用监听器 来实现多个数据模版的业务实现：</li><p>Controller → BasicExcelFactory → AbstractBasicExcelService → AbstractBasicImportListenerService → 具体业务实现</p><p>三.实现过程。</p><p>- 核心组件
+BasicExcelFactory：工厂类，根据类型获取具体服务</p><p>AbstractBasicExcelService：抽象服务，提供模板方法</p><p>AbstractBasicImportListenerService：基础监听器，处理通用逻辑</p><p>具体业务实现类：如KlCangkuBasicExcelService等</p><p>1.1 BasicExcelFactory 使用工厂模式根据类型动态获取对应的服务实现：</p><p>@Component</p><p>@Slf4j</p><p>public class BasicExcelFactory {</p><p>private AbstractBasicExcelService getExcelService(String type) {</p><p>AbstractBasicExcelService service = null;</p><p>switch (Objects.requireNonNull(BasicExcelEnum.getByType(type))) {</p><p>case KL_XCWZ:</p><p>service = SpringContextUtils.getBean("klxcwzBasicExcelService");</p><p>break;</p><p>case KL_CANGKU:</p><p>service = SpringContextUtils.getBean("klCangkuBasicExcelService");</p><p>break;</p><p>case KL_ZZP:</p><p>service = SpringContextUtils.getBean("klZzpBasicExcelService");</p><p>break;</p><p>default:</p><p>break;</p><p>}</p><p>return service;</p><p>}</p><p>public ImportResult doImport(UploadInitModel initModel, MultipartFile file) throws IOException {</p><p>AbstractBasicExcelService service = getExcelService(initModel.getType());</p><p>if (service == null) {</p><p>String errorMsg = "数据导入失败，类型匹配异常！";</p><p>log.error(errorMsg);</p><p>return new ImportResult(initModel.getTaskId(), errorMsg, ImportResult.allFailFlag);</p><p>}</p><p>return service.doImportTask(file, initModel);</p><p>}</p><p>public void doExportErrorData(String type, String taskId, HttpServletResponse response) {</p><p>AbstractBasicExcelService service = getExcelService(type);</p><p>if (service == null) {</p><p>String errorMsg = "基础档案导入，类型匹配异常！";</p><p>log.error(errorMsg);</p><p>return;</p><p>}</p><p>service.exportErrorData(type, taskId, response);</p><p>}</p><p>}</p><p>1.2 AbstractBasicImportListenerService 继承自EasyExcel的AnalysisEventListener，实现了核心导入逻辑：</p><p>public abstract class AbstractBasicImportListenerService<T> extends AnalysisEventListener<T> {</p><p>    protected RedissonClient redissonClient;
+    protected BasicExcelHelper helper;
+    protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    protected MaterialCostListService materialCostListService;
+//    protected UserService userService;</p><p>    public AbstractBasicImportListenerService(BasicInfoContext context) {
+        this.redissonClient = context.getRedissonClient();
+        this.helper = context.getHelper();
+        this.namedParameterJdbcTemplate=context.getNamedParameterJdbcTemplate();
+        this.materialCostListService = context.getMaterialCostListService();
+//        this.userService = context.getUserService();
+    }</p><p>    protected abstract String getType();</p><p>    protected abstract CommonImportValidateRes doValidateAndInit();</p><p>    protected abstract List<Map<String, Object>> buildDataMap(List<? extends ImportBean> successData);</p><p>    protected abstract String getErrorRedisKey();</p><p>    protected abstract String getTaskId();</p><p>    protected abstract AtomicInteger getSuccessNum();</p><p>    protected abstract AtomicInteger getErrorNum();</p><p>    //主逻辑
+    protected void handleExcel() {
+        //业务筛选校验 do business validate
+        CommonImportValidateRes commonImportValidateRes = doValidateAndInit();
+        getSuccessNum().addAndGet(commonImportValidateRes.getSuccessNums());
+        getErrorNum().addAndGet(commonImportValidateRes.getErrorNums());</p><p>        //清除业务对象
+        List<String> sequenceNos = commonImportValidateRes.getSuccessData().stream().map(ImportBean::getSequenceNo).distinct().collect(Collectors.toList());
+        helper.doClearBusinessData(sequenceNos, getType());
+        //保存成功数据
+        helper.saveBusinessData(buildDataMap(commonImportValidateRes.getSuccessData()), getType());
+        //缓存失败数据
+        helper.doSaveRedisInfo(getErrorRedisKey(), getTaskId(), commonImportValidateRes.getErrorData());
+    }</p><p>}</p><p>这里对用户自定义的数据查询，以及导入成功/失败 的数据处理 均做了“抽象”。</p><p>1.3 为避免内存溢出，系统采用了分批处理策略：</p><p>// 常量定义</p><p>public class ExcelConst {</p><p>public static final int MAX_IMPORT_DB_NUMS = 1000;</p><p>}</p><p>// 分批处理实现</p><p>if (cachedDataList.size() >= ExcelConst.MAX_IMPORT_DB_NUMS) {</p><p>handleExcel();</p><p>cachedDataList.clear();</p><p>}</p><p>1.4 这里做一个简单的示例：</p><p>@Service("klxcwzBasicImportService")</p><p>@Slf4j</p><p>public class KlxcwzBasicImportService extends AbstractBasicImportListenerService<KlxcwzModel>{</p><p>private AtomicInteger totalSuccessNums = new AtomicInteger(0);</p><p>private AtomicInteger totalErrorNums = new AtomicInteger(0);</p><p>private String taskId;</p><p>private UploadInitModel uploadInitModel;</p><p>private List<KlxcwzModel> cachedDataList = new ArrayList<>(ExcelConst.MAX_IMPORT_DB_NUMS);</p><p>public KlxcwzBasicImportService(BasicInfoContext context) {</p><p>super(context);</p><p>uploadInitModel = context.getInitModel();</p><p>taskId = context.getTaskId();</p><p>}</p><p>@Override</p><p>public void invoke(KlxcwzModel entity, AnalysisContext context) {</p><p>cachedDataList.add(entity);</p><p>// 触达阈值，业务逻辑操作</p><p>if (cachedDataList.size() >= ExcelConst.MAX_IMPORT_DB_NUMS) {</p><p>handleExcel();</p><p>// 存储完成清理 list</p><p>cachedDataList.clear();</p><p>}</p><p>}</p><p>@Override</p><p>protected AtomicInteger getSuccessNum() {</p><p>return totalSuccessNums;</p><p>}</p><p>@Override</p><p>protected AtomicInteger getErrorNum() {</p><p>return totalErrorNums;</p><p>}</p><p>@Override</p><p>protected String getType() {</p><p>return BasicExcelEnum.KL_XCWZ.getType();</p><p>}</p><p>@Override</p><p>protected String getErrorRedisKey() {</p><p>return BasicExcelEnum.KL_XCWZ.getErrorRedisKey();</p><p>}</p><p>@Override</p><p>protected String getTaskId() {</p><p>return taskId;</p><p>}</p><p>@Override</p><p>public void doAfterAllAnalysed(AnalysisContext analysisContext) {</p><p>//最后一次 不满MAX_IMPORT_DB_NUMS的处理</p><p>handleExcel();</p><p>helper.buildTaskResult(getType(), getTaskId(), getSuccessNum(), getErrorNum());</p><p>}</p><p>protected List<Map<String, Object>> buildDataMap(List<? extends ImportBean> successData) {</p><p>List<Map<String, Object>> mapInfos = new ArrayList<>();</p><p>if (CollectionUtils.isEmpty(successData)) {</p><p>return mapInfos;</p><p>}</p><p>List<Map<String, Object>> dataList = new ArrayList<>();</p><p>for (ImportBean bean : successData) {</p><p>Map<String, Object> entityMap = new HashMap<>();</p><p>KlxcwzModel klxcwzModel = (KlxcwzModel) bean;</p><p>helper.doCommonSqlFieldPadding(klxcwzModel, entityMap);</p><p>entityMap.put("id", UUID.randomUUID().toString().replace("-", ""));</p><p>entityMap.put("materialCode",klxcwzModel.getMaterialCode());</p><p>dataList.add(entityMap);</p><p>}</p><p>return dataList;</p><p>}</p><p>protected CommonImportValidateRes doValidateAndInit() {</p><p>List<KlxcwzModel> errorData = new ArrayList<>();</p><p>List<KlxcwzModel> successData = new ArrayList<>();</p><p>List<String> codes = cachedDataList.stream().map(KlxcwzModel::getMaterialCode).collect(Collectors.toList());</p><p>Map<String, MaterialCostModel> truthData = this.materialCostListService.checkDataFromMaterialCostList(codes);</p><p>for(KlxcwzModel model: cachedDataList){</p><p>StringBuilder sb = new StringBuilder();</p><p>sb.append(model.getMaterialCode());</p><p>String materialCode = model.getMaterialCode();</p><p>MaterialCostModel costModel = MapUtils.getObject(truthData, materialCode);</p><p>boolean errFlag = false;</p><p>if(costModel == null){</p><p>sb.append(" 料号对应的数据不存在;");</p><p>errFlag = true;</p><p>}else{</p><p>if(!model.getMateriaName().equals(costModel.getProductName())){</p><p>sb.append("品名未匹配(参考值:"+costModel.getProductName()+");");</p><p>errFlag = true;</p><p>}</p><p>}</p><p>if(errFlag){</p><p>model.setErrorMsg(sb.toString());</p><p>errorData.add(model);</p><p>continue;</p><p>}</p><p>successData.add(model);</p><p>}</p><p>return helper.buildRes(successData, errorData);</p><p>}</p><p>}</p><p>四.最终效果</p><p>五.思考</p><p>- 经过上述的方法可以满足用户 对低代码导入功能的 可扩展性的数据校验
+- 以上数据校验是需要即时返回错误数据给用户，较为友好的提示出 正确条数/错误条数。
+- 如果需要使用低代码产品的校验，这里也可以扩展满足
+- 之所以选择此方式，是对后续升级迭代比较友好，另一方面，也是在做扩展时，用户仅需要增加 制定部分即可满足新模型数据的校验。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/224699547</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

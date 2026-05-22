@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢admin账户无后台权限问题排查 - 云枢技术文档</title>
+<meta property="og:title" content="云枢admin账户无后台权限问题排查">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢admin账户无后台权限问题排查/">
+<meta name="description" content="云枢admin账户无后台权限问题排查 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢admin账户无后台权限问题排查</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢admin账户无后台权限问题排查</h1></p><p><h2>云枢版本</h2>
+6.11.5</p><p><h3>背景</h3>
+江汉油田项目售前在做组织树同步之后admin账户没有登陆后台权限</p><p><h3>思路</h3>
+- 后台是否启动
+- 查看日志
+- 组织同步的时候数据污染</p><p><h3>解决过程</h3></p><p><h4>检查后台状态</h4>
+直接前台控制台发现请求是200，证明后台是正常运行的</p><p><h4>查看登陆时的日志</h4>
+授权到2023-01-30到期，所以当天31号的时候过期了</p><p>授权之后发现还是无法登陆，发现用户数超出了授权用户数，授权时设置用户数即可</p><p>解决完授权问题之后，继续提示权限不足，继续查看日志，发现没有异常信息了，每次登陆日志只有一条信息，这时感觉就是数据污染的问题</p><p><h4>组织同步的时候数据污染</h4></p><p><h5>降低log.level,获得更多信息</h5>
+前端登陆接收到的正确的响应，此时无法定位到问题是什么，将日志的level降低到BEBUG，这样能看到更多的信息</p><p>再次登录，日志显示了用户的信息</p><p>根据id查询该用户的信息，发现并不是登陆所使用的admin账户，是同步组织树的第三方管理员，将这条记录删掉即可。</p><p>问题应该是因为在查询h_org_user表的时候，直接limit 1 取得admin账户，没有做筛选导致没有拿到正确的admin管理员</p><p><h3>总结</h3>
+- 排错首先看日志信息
+- 如果信息不全将输出等级降低
+- 同步组织树注意第三方admin账户过滤</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/113246130</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

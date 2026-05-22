@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>批量操作奖状打印与防伪信息查询 - 云枢技术文档</title>
+<meta property="og:title" content="批量操作奖状打印与防伪信息查询">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/批量操作奖状打印与防伪信息查询/">
+<meta name="description" content="批量操作奖状打印与防伪信息查询 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>批量操作奖状打印与防伪信息查询</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>批量操作奖状打印与防伪信息查询</h1></p><p><h3>场景：</h3>
+某教育局需求在不同的荣誉获奖时，进行批量使用模板、生成奖状、e签宝盖章、二维码防伪查询、上传pdf奖状附件、最终生成相应的荣誉信息并填充奖状附件信息。</p><p><h3>思路：</h3>
+使用奖状模板表单，存储不同的奖状模板；根据不同模板类型匹配到的奖状模板进行奖状明细数据填充，调用e签宝进行在线盖章，保存防伪信息数据，生成奖状；使用阿里云上传附件服务，将生成的奖状上传到奖状信息附件字段和新的荣誉信息表单数据进行保存。奖状pdf附件下载后，可扫描二维码查询奖状防伪信息。</p><p><h3>实现步骤：</h3></p><p><h4>一、获取奖状模板。</h4></p><p><h5>1、奖状模板信息</h5></p><p><h5>2、批量处理不同荣誉的奖状生成逻辑</h5></p><p><h5>3、获取奖状模板信息</h5></p><p><h4>二、填充奖状明细数据和调用e签宝签章在线盖章，并上传至阿里云。</h4></p><p><h5>1、调用e签宝接口，进行在线签章；调用阿里云进行附件上传</h5></p><p><h4>三、生成防伪信息。</h4></p><p><h5>1、生成并保存奖状防伪信息</h5></p><p><h4>四、上传奖状pdf附件至表单子表附件字段进行保存。</h4></p><p><h4>五、生成新的荣誉信息数据。</h4></p><p><h5>PS：奖状最终效果图</h5></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/149293571</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

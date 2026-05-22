@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>附件上传手动排序方案 - 云枢技术文档</title>
+<meta property="og:title" content="附件上传手动排序方案">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/附件上传手动排序方案/">
+<meta name="description" content="附件上传手动排序方案 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>附件上传手动排序方案</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>附件上传手动排序方案</h1></p><p><h4>业务场景：客户公司在指定表单里的附件上传控件，需支持上传附件可排序的功能。</h4></p><p><h3>实现思路：由于后端无法在后台新增排序字段，此功能需要前端手动增加排序拼接排序字段接口返回时将数据根据排序字段进行处理。</h3></p><p><h4>1.将modules\@cloudpivot\form\src\components\Attachment\components\file-list.vue 附件上传展示列表中新增排序图标以及将点击事件传给父组件，指定表单以及指定的控件code才展示排序图标。</h4></p><p><h4>2.在modules\@cloudpivot\form\src\components\Attachment\components\pc-upload.vue 文件中将控件属性以及子组件@emit事件接收处理数据排序等操作。</h4></p><p><h4>3.在modules\@cloudpivot\form\src\runtime\components\form-detail.ts提交保存的方法里面将排序后的数据进行排序拼接，由于上传之后id已存在，此时进行顺序调整后上传，但是接口返回时还是按照之前上传的id顺序返回，并不会按照排序后的顺序返回，所以需要进行排序字段拼接，然后接口返回时进行拼接字段将返回的数据进行排序处理。</h4></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/131800984</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

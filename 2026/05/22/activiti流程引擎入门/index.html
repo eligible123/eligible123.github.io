@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>activiti流程引擎入门 - 云枢技术文档</title>
+<meta property="og:title" content="activiti流程引擎入门">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/activiti流程引擎入门/">
+<meta name="description" content="activiti流程引擎入门 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>activiti流程引擎入门</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>activiti流程引擎入门</h1></p><p><h3>引擎介绍：</h3>
+activiti是一款开源的流程引擎，引擎底层提供了一套api来实现流程的部署、发起、流转等流程本身的必要功能，开发者只需要关注业务需求，而不用关注流程流转的运转走向。</p><p><h3>常用名词介绍：</h3>
+- 流程定义（Process Definition）：这是一个描述了业务流程的静态模型，通常是一个XML文件。一个模型发布之后就会生成一条流程定义数据，也就对应一个流程图的版本，发起的流程都是根据流程定义id去找到对应版本的流程图的。
+- 流程实例（Process Instance）：是流程定义的一个运行实例。
+- 执行流程（Execution）：代表了流程中的一个流程元素，可以是一个用户任务、服务任务等。
+- 任务（Task）：代表了需要被人或系统执行的一个工作。
+- 用户任务（User Task）：是一个需要人来完成的任务，可以通过任务列表API与用户进行交互。
+- 监听器（Listener）：可以对流程或任务的生命周期事件进行监听和响应。
+- 事件（Event）：在Activiti中，包括流程启动事件、任务创建事件等。</p><p>​</p><p><h3>核心api介绍：</h3>
+- RepositoryService：用于管理流程定义。可以用来部署流程定义、查询流程定义、删除流程定义。
+- RuntimeService：用于管理流程实例和执行实例。可以启动流程实例、查询执行实例、删除执行实例。
+- TaskService：用于管理人工任务。可以查询任务、完成任务、删除任务。
+- HistoryService：用于管理历史数据。可以查询历史流程实例、历史执行实例、历史任务等。
+- IdentityService：用于管理用户和组。可以用来添加用户、组、关联用户和组。
+- FormService：用于管理表单。可以查询表单、提交表单数据。
+- ManagementService：用于管理和控制Activiti流程引擎。可以获取引擎配置、数据库管理、作业executor</p><p>​</p><p><h3>常用元素介绍：</h3></p><p><h6>用户任务（user task）</h6>
+即用户审批节点，根据配置的代理人生成用户待办任务</p><p>对应符号：</p><p>​</p><p><h6>脚本任务</h6>
+执行指定脚本内容，常用的脚本语言JavaScript、Groovy等，可设置流程变量到流程中，也可调用java方法</p><p>对应符号：</p><p>示例：</p><p><h6>服务任务</h6>
+通常用于通过配置监听器实现一些特殊的业务，比如调用第三方接口等</p><p>对应符号：</p><p>示例：</p><p><h6>网关</h6>
+网关用于控制流程走向，分为排他网关、并行网关、兼容网关、事件网关。比较常用的是排他网关，根据网关内配置的条件表达式，确定流程分支。</p><p>示例：</p><p>排他网关对应符号：</p><p><h3>流程图示例：</h3>
+几个基本的流程图要包含：启动事件、任务、结束事件</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/164214952</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

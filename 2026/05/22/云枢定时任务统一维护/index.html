@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢定时任务统一维护 - 云枢技术文档</title>
+<meta property="og:title" content="云枢定时任务统一维护">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢定时任务统一维护/">
+<meta name="description" content="云枢定时任务统一维护 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢定时任务统一维护</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢定时任务统一维护</h1></p><p><h1>云枢定时任务统一维护</h1>
+<strong>一、背景需求</strong></p><p>在云枢实际应用中，经常会设置很多定时任务，产品自带的业务定时，以及一些和表单业务无关的综合定时任务，这些任务设置了不同的时间点执行，然而有时候我们开发会本地启动服务调试，可能就遇到定时任务本地执行，一般本地配置了测试环境对接地址，然而连接生产库，导致数据错乱，在此情况下，计划定时任务统一管理，只在liunx环境运行，这样就避免数据错乱，再考虑到业务修改定时任务时间，每次都需要重启服务器，非常麻烦</p><p><strong>二、思路</strong></p><p>1、用云枢表单创建一个配置表，用来配置每个定时任务的名称，以及定时corn，我们只需要修改corn就可以让下次定时生效，无需重启</p><p><strong>三、实现步骤</strong></p><p>1、创建一个表单，配置定时名称，corn，以及备注</p><p>2、后端代码，这里直接实现SchedulingConfigurer 类，重写configureTasks方法</p><p>3、代码展示逻辑</p><p>package com.authine.cloudpivot.ext.job;</p><p>import cn.hutool.system.SystemUtil;
+import com.authine.cloudpivot.engine.api.model.runtime.BizObjectModel;
+import com.authine.cloudpivot.engine.api.model.runtime.BizObjectQueryModel;
+import com.authine.cloudpivot.engine.component.query.api.FilterExpression;
+import com.authine.cloudpivot.engine.component.query.api.Page;
+import com.authine.cloudpivot.ext.controller.AttendanceController;
+import com.authine.cloudpivot.web.api.dubbo.DubboConfigService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;</p><p>@Component
+@Slf4j
+@EnableScheduling
+public class TradeCaravanTpTask implements SchedulingConfigurer {</p><p>    @Autowired
+    protected AttendanceController attendanceController;</p><p>    @Autowired
+    private DubboConfigService dubboConfigService;</p><p>    @Override
+    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+        String cornName = "商旅特批推送PM定时";
+        scheduledTaskRegistrar.addTriggerTask(() -> process(),
+                triggerContext -> {
+                    BizObjectQueryModel bizObjectQueryModel = new BizObjectQueryModel();
+                    String schemaCode = "scheduled_task";
+                    bizObjectQueryModel.setSchemaCode(schemaCode);
+                    bizObjectQueryModel.setQueryCode(schemaCode);
+                    FilterExpression filterExpression0=new FilterExpression.Item("task_name", FilterExpression.Op.Eq,cornName);
+                    bizObjectQueryModel.setFilterExpr(filterExpression0);
+                    Page<BizObjectModel> bizObjectModelPage = dubboConfigService.getBizObjectFacade().queryBizObjects(bizObjectQueryModel);
+                    //获取定时corn
+                    String cron = (String) bizObjectModelPage.getContent().get(0).getData().get("cron_expression");
+                    return new CronTrigger(cron).nextExecutionTime(triggerContext);
+                });
+    }</p><p>    private void process()  {
+        //控制只在liunx执行
+        if(SystemUtil.getOsInfo().isLinux()){
+            //定时业务逻辑接口
+            attendanceController.pushTp(null);
+        }
+    }
+}</p><p>4、配置相应的信息就能生效了</p><p><strong>四、总结</strong></p><p>此功能可以统一定时任务管理，修改定时时间无需重启服务器，也便于维护，降低维护成本，也能解决开发数据错乱问题</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/217020541</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

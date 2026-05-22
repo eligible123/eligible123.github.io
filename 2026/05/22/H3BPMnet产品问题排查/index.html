@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H3BPM（.net）产品问题排查 - 云枢技术文档</title>
+<meta property="og:title" content="H3BPM（.net）产品问题排查">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/H3BPMnet产品问题排查/">
+<meta name="description" content="H3BPM（.net）产品问题排查 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>H3BPM（.net）产品问题排查</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>H3BPM（.net）产品问题排查</h1></p><p><h2>1 文档说明</h2>
+本文档是针对H3 BPM的产品做系统性能问题和其他异常问题排查提供说明，包含前端、引擎和数据库的问题排查。</p><p><h2>2 H3BPM部署架构</h2>
+H3 BPM采用分部署部署架构，物理上分为3个层次：Portal/Engine/DB，每一层均可能发生性能问题，本文档将按照物理分层对每个层次进行问题排查说明。</p><p>系统部署物理架构图如下：</p><p>                                                   </p><p>性能优化原则：</p><p>减低各层之间通信，如Portal到Engine请求次数，Engine到DB请求次数，Portal访问DB请求次数。</p><p><h2>3 portal</h2></p><p><h3>3.1 概述</h3>
+Portal的运行宿主程序为IIS，所以只需要监控IIS的运行状态。</p><p><h3>3.2 页面错误排查</h3>
+H3 表单采用前后端分离方式，页面数据交互通过Ajax方式进行，后台传递JSON格式到前端，通过$.MvcSheet.Init 方法为入口，调用Sheet*.js控件进行逐一展示。当页面加载错误，或者等待框一直转圈不消失时，请通过Chrome浏览器查看Ajax服务是否正常访问。</p><p>查看方法，Chrome浏览器，F12打开控制台，转到【Console】选项卡，检查是否有脚本错误，如下图所示：</p><p>转到【NetWork】选项卡，检查【XHR】的服务访问是否正常，如下图所示：</p><p>单个控件排查，请在控件的Render 方法中加入断点，如下图所示：</p><p><h3>3.3页面性能排查</h3>
+请使用Chrome浏览器，F12打开控制台，转到【NetWork】选项卡，刷新页面，如下图所示：</p><p>注意工具栏底部的时间，正常表单打开在有缓存情况下，需要降低到1秒以内，此处尽量减少XHR类型的请求数量，越多则越影响性能。</p><p>请读懂以上截图每一列的含义，</p><p>Name：请求的资源名称</p><p>Status：请求的资源HTTP返回状态</p><p>Type：请求的资源类型</p><p>Initiator：请求的源文件，例如是在哪个资源发起的请求</p><p>Size：从服务器端请求返回的数据量大小</p><p>Time：请求耗时</p><p>扩展插件推荐：PageSpeed</p><p><h3>3.4 查看当前正在进行的请求</h3>
+打开IIS，点击选择IIS站点，点击【工作进程】</p><p>选择对应的应用程序池</p><p>双击后打开，可以查看当前正在运行的请求</p><p>注意【经过的时间】这一列，这列是请求时间，如果时间越长，表示这个表单打开越慢，我们需要把当前URL找出来，在浏览器访问检测性能。</p><p><h3>3.5 分析日志</h3>
+IIS每次请求都有日志记录，我们可以查看和分析请求日志，该日志记录了每次请求的URL和参数、客户端IP地址、客户端浏览器类型、耗费时间等。</p><p>点开，查看日志文件存储路径，并且找到日志文件目录：</p><p>使用【IIS日志分析程序】，将日志文件导入数据库进行分析，导入数据库后，每个字段说明如下（注：此信息都从IIS日志文件中提取）。</p><p>| 字段名称 | 说明 |  |
+| StartTime | 请求时间 |  |
+| ServerIP | 服务器IP |  |
+| Method | 请求方式 |  |
+| Resource | 请求的资源文件 |  |
+| Port | IIS站点端口号 |  |
+| ClientIP | 客户端IP地址 |  |
+| ClientPlatform | 客户端平台信息 |  |
+| Url | 请求的URL地址（该URL访问会请求资源文件） |  |
+| Params | 请求的URL参数 |  |
+| State | HTTP请求返回状态 |  |
+| UsedTime | 请求使用耗时 |  |</p><p>| 字段名称 | 说明 |  |
+| StartTime | 请求时间 |  |
+| ServerIP | 服务器IP |  |
+| Method | 请求方式 |  |
+| Resource | 请求的资源文件 |  |
+| Port | IIS站点端口号 |  |
+| ClientIP | 客户端IP地址 |  |
+| ClientPlatform | 客户端平台信息 |  |
+| Url | 请求的URL地址（该URL访问会请求资源文件） |  |
+| Params | 请求的URL参数 |  |
+| State | HTTP请求返回状态 |  |
+| UsedTime | 请求使用耗时 |  |</p><p>IIS日志分析参考：</p><p>1. 请从该表中查找UsedTime比较大的请求进行性能优化。</p><p>2. 按照时间进行分组，CreateTime默认是秒，查看访问最频繁的资源，分析是否可以降低此资源的请求数；真实案例：因为待办页面加了自动刷新机制，导致每秒最大请求数超过1000次访问获取待办数量接口，导致系统性能降低；</p><p>​</p><p><h2>4 engine</h2></p><p><h3>4.1 接口调用日期开启</h3>
+在集群数据库中，设置表OT_ClusterPolicy字段RecordInvokingLog 值为1，重启引擎服务。</p><p>系统会在H3 BPM安装目录/Server/Log 下记录引擎每次接口调用的日志，每个访问均有时间记录（注意：v9版本日志文件可能较大）。</p><p><h3>4.2 分析日志文件</h3></p><p><h4>4.2.1 提取时间较大的访问接口</h4></p><p>建议使用一个程序，提前日志中耗时比较大的接口调用，例如过滤大于2000毫秒的接口调用。</p><p>如果不是集中在某一个接口调用较慢，并且CPU使用率不高，那么有可能是内存回收机制出现问题，需要排查自定义开发程序是否手动调用GC.Collect。</p><p><h4>4.2.2 排查引擎死锁问题</h4></p><p><h4>4.2.2 排查引擎异常问题</h4>
+一般流程异常，都会有日志记录在Server/Log/DefaultEngine 中，请找到当天的引擎日志，查看错误信息排查问题。</p><p><h4>4.2.3 引擎监控工具</h4></p><p><h2>5 DB</h2></p><p><h3>5.1 SQL SERVER</h3></p><p><h4>5.1.1 慢SQL监控</h4>
+使用Sql Profiler，打开SQL SqlServer数据库，工具中找到 Sql Server Profiler</p><p>选择保存到数据库，弹出数据库设置界面，选择结果集保存的表</p><p>列筛选器选择时间大于500毫秒</p><p>完成后点击【运行】。</p><p><h4>5.1.2 查询当前执行进程</h4>
+查询当前SQL进程情况</p><p>Sp_who2</p><p>查询当前正在执行的SQL</p><p><h4>5.1.3 单条SQL性能分析</h4>
+先执行SQL，显示执行计划</p><p>SET STATISTICS IO ON</p><p>SET STATISTICS TIME ON</p><p>执行结果：</p><p>此结果中，物理读取是从磁盘读取数据，性能最差，逻辑读取是从内存读取数据，但是需要读取次数越少，性能越好。</p><p><h3>5.2 oracle</h3></p><p><h4>5.2.1 SQL语句</h4>
+分析Sql的Cost值，越小越好。</p><p><h4>5.2.2 使用参数化SQL</h4>
+SELECT * FROM OT_User where ObjectID=:ObjectID</p><p>测试结果：写入性能提高一倍，查询性能提高30%；</p><p><h4>5.3 分离日志数据库</h4>
+将日志数据库从正式数据库分开，例如H3Cloud存储放置在A服务器，H3Cloud_Log数据库存储B服务器，分散性能。对于使用较高的公司，日志写入每秒能达到100次以上，就非常有分离的必要。</p><p><h4>5.4 独写分离</h4>
+此方案需要数据库资源支持，例如SQL Server2012以上版本，Oracle RAC等。</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/90006134</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>调整产品接收时间逻辑统计审核时长 - 云枢技术文档</title>
+<meta property="og:title" content="调整产品接收时间逻辑统计审核时长">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/调整产品接收时间逻辑统计审核时长/">
+<meta name="description" content="调整产品接收时间逻辑统计审核时长 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>调整产品接收时间逻辑统计审核时长</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>调整产品接收时间逻辑统计审核时长</h1></p><p><h1>调整产品接收时间逻辑统计审核时长</h1>
+一.背景需求</p><p>客户在云枢平台希望能获取到各部门和各个团队的审核时间，产品在设计上，是根据用户打开表单时的时间更新任务开始时间，与客户实际场景不吻合，故此，客户提出对审核时长的需求。</p><p>二.思路/方案</p><p>- 在流程中，每当进行到下一节点，那在表单运维中-审批日志里的接收时间就为改节点的到达时间，在用户打开待办时，就会更新这里的接收时间。
+- 根据点1，那么我们在load 表单的时候，重写产品处理 接收时间的方法，并实现客户的统计需求。</p><p>三.实现过程</p><li>重写产品 WorkflowInstancefacedImpl 类中的 updateWorkItemStateAndSetToken() 方法中对于receiveTime 的，从而满足客户对于审核时间的指标。</li><p>  </p><p>- 从门户同步过来的时间数据里，根据客户定义的逻辑，拿到全量的数据，然后再根据他们对于部门的统计，以及对团队的统计数据，按照时间展示在页面。
+- 针对中间的数据，采用业务集成-业务规则，建立模型， 开始月为统计的开始月，结束月为统计的结束月，子表中为各个部门的统计数据。</p><p>- 业务规则的实现 a. 根据当前时间获取统计的周期区间值，因客户统计周期的特殊性，这里以单月为例；b. 配置从业务规则中按照时间区间取数据的逻辑，然后放在定时任务中，根据定时任务来每个周期执行一次。
+- 困难点是在产品的数据模型业务规则的灵活使用，通过更新子表的形式来满足对某一周期时间内的所有部门数据进行处理</p><p>四.最终效果</p><li>调整前的接收时间。</li><li>调整后</li><p>3.统计页面展示效果</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/170516202</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

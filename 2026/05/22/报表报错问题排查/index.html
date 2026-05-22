@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>无流程表单数据唯一性同步 - 云枢技术文档</title>
-<meta property="og:title" content="无流程表单数据唯一性同步">
+<title>报表报错问题排查 - 云枢技术文档</title>
+<meta property="og:title" content="报表报错问题排查">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://eligible123.github.io/2026/05/22/无流程表单数据唯一性同步/">
-<meta name="description" content="无流程表单数据唯一性同步 - 云枢低代码平台技术文档">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/报表报错问题排查/">
+<meta name="description" content="报表报错问题排查 - 云枢低代码平台技术文档">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
 <style>
 body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
@@ -25,15 +25,18 @@ hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
 </head>
 <body>
 <article class="markdown-body">
-<h1>无流程表单数据唯一性同步</h1>
+<h1>报表报错问题排查</h1>
 <div class="post-meta">
-<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
 <span>📅 2026-05-22</span>
 </div>
 <hr>
-<p><h1>无流程表单数据唯一性同步</h1></p><p><h1>业务层数据同步到数据层</h1>
-前言：在项目过程中存在业务数据频繁修改，最终确定的过程，这个过程中，客户想一直修改，而且无流程，纯表单修改，确定后不再修改，无编辑权限，或者编辑不显眼，最终某个时间点，批量生成数据，故此用表单数据直接变成流程完成数据，数据权限就无法轻易编辑了，只需要在视图页面调用二开代码</p><p>1、视图</p><li>后端代码</li><p>3、在业务方法中流程生效里面配置新增数据，就完成了相应需求</p><p>---
-<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/181571758</em>
+<p><h1>报表报错问题排查</h1></p><p><h2>背景：</h2>
+xx证券从6.10升级到6.12之后，所有的报表功能都无法使用</p><p>​</p><p><h2>排查思路：</h2>
+- 查看报错日志是在报表服务还是webapi服务，根据服务器错误日志追踪方法调用路径，确定错误方法，解读方法内容。
+- 经过定位发现报错位置是在webapi的com.authine.cloudpivot.web.api.controller.report.ReportController#executeBefore方法中，追踪其核心逻辑newExecutebeforeHelper方法，发现这个方法中有获取数据库信息</p><p>- 查找其获取的数据库信息正是webapi的数据库，检查配置文件中的连接串，发现在连接串用的是mariadb
+- 怀疑是6.10升级6.12的导致的兼容问题，咨询客户后发现其他环境都是用的mysql，最终修改为mysql之后解决问题</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/171264717</em>
 </p>
 <hr>
 <blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>

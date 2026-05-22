@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>缓存使用分享 - 云枢技术文档</title>
+<meta property="og:title" content="缓存使用分享">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/缓存使用分享/">
+<meta name="description" content="缓存使用分享 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>缓存使用分享</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>缓存使用分享</h1></p><p><h1>缓存使用分享</h1></p><p><h4>一.背景</h4>
+       我们先要明白：为什么要用缓存？ 如电商网站首页，每次打开都要从数据库中查询轮播图、热门商品、分类信息等数据。 如果每秒有1万个用户访问，数据库就要承受1万次查询压力。这就是典型的无缓存场景。数据库的磁盘IO速度远低于内存，当并发量上来后，系统响应变慢，数据库连接池被占满，最终导致服务不可用。</p><p><h4>二.思路/方案</h4>
+从用户请求到数据返回，数据可能经过的各级缓存路径如下图所示：</p><p><h6>本地缓存：</h6></p><p><h6>在应用进程内部维护的缓存存储，数据存储在JVM堆内存中。</h6>
+特点： 1）直接内存操作，无网络开销</p><p>    2）无需搭建额外服务</p><p>    3）每个应用实例独享自己的缓存</p><p>常用缓存： 1.Guava Cache    2.Caffeine</p><p>// Caffeine 示例（性能优于Guava Cache）</p><p>Cache<Long, Product> caffeineCache = Caffeine.newBuilder()</p><p>    .maximumSize(10_000)</p><p>    .expireAfterWrite(10, TimeUnit.MINUTES)</p><p>    .refreshAfterWrite(1, TimeUnit.MINUTES) // 支持刷新，Guava不支持</p><p>    .recordStats()</p><p>    .build(productId -> productDao.findById(productId));</p><p>// 异步获取</p><p>public CompletableFuture<Product> getProductAsync(Long id) {</p><p>    return caffeineCache.get(id, productId -> </p><p>        CompletableFuture.supplyAsync(() -> productDao.findById(productId)));</p><p>}</p><p><h5>redis 缓存</h5>
+- 支持多种数据类型，String / Hash /  List / Set /  Sorted Set 等
+- 集群模式, 常见使用场景： 会话存储（分布式Session）/  排行榜、计数器/ 分布式锁等</p><p><h6>Memcached：</h6>
+使用场景： 1. 纯缓存场景 2. 超大Value存储 3. 多线程高并发</p><p><h6>CDN缓存：</h6>
+CDN（Content Delivery Network）通过在各地部署边缘节点，将静态资源缓存到离用户最近的节点。</p><p>     适用场景： 静态资源：图片、CSS、JS文件， 视频流媒体 等</p><p>还有 ：浏览器缓存， 数据库缓存 这些缓存。</p><p><h4>三.实现过程。</h4></p><p>在实际使用的环境中，我们需要根据情况来适当的调整我们的缓存策略。</p><p><h4>四.总结</h4>
+- 问题点</p><p>- 缓存穿透: 大量请求查询不存在的数据，绕过缓存直接击穿数据库。
+- 缓存雪崩: 大量缓存同时过期，请求全部打到数据库。
+- 缓存击穿: 热点Key过期瞬间，大量并发请求同时查询数据库。
+- 出现以上问题的时候，我们需要调整代码的缓存刷新机制等即可尽量避免此类问题</p><li>总结：</li><p><strong>缓存使用的核心原则可以总结为以下几点</strong>：</p><p><strong>分级缓存</strong>：合理利用多级缓存架构</p><p><strong>合适粒度</strong>：根据业务特点选择缓存粒度</p><p><strong>及时更新</strong>：设计合理的缓存更新策略</p><p><strong>监控告警</strong>：建立完善的缓存监控体系</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/253764993</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

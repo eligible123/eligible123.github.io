@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>已发布模型数据类型的变更 - 云枢技术文档</title>
+<meta property="og:title" content="已发布模型数据类型的变更">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/已发布模型数据类型的变更/">
+<meta name="description" content="已发布模型数据类型的变更 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>已发布模型数据类型的变更</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>已发布模型数据类型的变更</h1></p><p><strong>已发布模型数据类型的变更</strong></p><p><strong>一、需求</strong></p><p>客户现场使用流程较多，有非常多的数据类型前后搭建需求上有不一致的变更，单选变多选，文本变选择框等等。云枢的模型发布之后控件类型就不可变更，且还需考虑已生成的业务数据和而且当前系统已经与第三方的对接联动非常深，单个字段的改动起来影响的面非常大。</p><p><strong>二、思路</strong></p><p><strong>难点</strong>：</p><p>1、新增一个字段，所有涉及有关的业务字段的映射都要改，流程各个地方都要重新配置。</p><p>2、无论怎么修改都不能影响已经产生的业务数据。</p><p><strong>分析</strong>：</p><p>	从控件本身的业务数据表来看，除去数值、日期格式之外，大部分的单选多选、哪怕是关联控件等等本质上都是varchar类型存不同的数据格式而已，而且大单选和多选的格式基本都是一样的，控制字段控件类型在h_biz_property中保存所有字段属性信息。</p><p><strong>三、解决方案</strong></p><p>1、同类型的控件变更起来最简单，字段的options都是一样的，例如部门单选改为部门多选，只需要更改下字段的类型propertyType,后台走一个update语句即可。</p><p>2、表单上需要将字段移除后，重新拉到表单上，重置表单模型的保存属性。</p><p>3、此方案最优先考虑的是不能影响已产生的历史数据，且有其他迁移或者新加字段能解决业务问题的话不建议使用。</p><p><strong>四、实现步骤</strong></p><p>1、非常关键的一步就是备份各类数据信息，h_biz_property需要备份一下，涉及修改的应用模型需要导出为xml到本地保存，有任何改动上的错误可以重新覆盖导致恢复成原来的。</p><p>2、观察需要改动字段的类型的propertyType和options的这两个属性的差别进行变更。示例为部门单选改成部门多选，只需要变更propertyType</p><p>3、清理运行环境的redis缓存</p><p>3、重新拖拽改动的表单字段</p><p><em>*</em>*</p><p><em>*</em>*</p><p><strong>五、效果展示</strong></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/224699032</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

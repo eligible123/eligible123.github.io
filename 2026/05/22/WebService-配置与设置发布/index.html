@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebService 配置与设置，发布 - 云枢技术文档</title>
+<meta property="og:title" content="WebService 配置与设置，发布">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/WebService-配置与设置发布/">
+<meta name="description" content="WebService 配置与设置，发布 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>WebService 配置与设置，发布</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>WebService 配置与设置，发布</h1></p><p><a href="https://www.cnblogs.com/workstation-liunianguowang/p/9092591.html"><strong>WebService 配置与设置，发布</strong></a></p><p><strong>背景：有时与第三方系统对接，涉及webService接口开发配置与发布，下面简单说明一下过程。</strong></p><p><strong>开发环境</strong></p><p>OS：win10 企业版</p><p>开发工具：VS2013</p><p>IIS版本：6.0</p><p>.NET版本：4.6.1</p><p><strong>Web Service</strong></p><p><strong>简介</strong></p><p>Web Service也叫XML Web Service WebService是一种可以接收从Internet或者Intranet上的其它系统中传递过来的请求，轻量级的独立的通讯技术。是:通过SOAP在Web上提供的软件服务，使用WSDL文件进行说明，并通过UDDI进行注册。</p><p>     XML：(Extensible Markup Language)扩展型可标记语言。面向短期的临时数据处理、面向万维网络，是Soap的基础。</p><p>     Soap：(Simple Object Access Protocol)简单对象存取协议。是XML Web Service 的通信协议。当用户通过UDDI找到你的WSDL描述文档后，他通过可以SOAP调用你建立的Web服务中的一个或多个操作。SOAP是XML文档形式的调用方法的规范，它可以支持不同的底层接口，像HTTP(S)或者SMTP。</p><p>   WSDL：(Web Services Description Language) WSDL 文件是一个 XML 文档，用于说明一组 SOAP 消息以及如何交换这些消息。大多数情况下由软件自动生成和使用。</p><p>   UDDI (Universal Description, Discovery, and Integration) 是一个主要针对Web服务供应商和使用者的新项目。在用户能够调用Web服务之前，必须确定这个服务内包含哪些商务方法，找到被调用的接口定义，还要在服务端来编制软件，UDDI是一种根据描述文档来引导系统查找相应服务的机制。UDDI利用SOAP消息机制（标准的XML/HTTP）来发布，编辑，浏览以及查找注册信息。它采用XML格式来封装各种不同类型的数据，并且发送到注册中心或者由注册中心来返回需要的数据。</p><p>1.特点：开放性，跨平台性，开放性是webservice的基础</p><p>2.XML通用标记语言，以及HTTP协议远程交互</p><p>3.三种调用方式：httppost，httpget，httpsoap</p><p><strong>简单例子</strong></p><p>首先，创建空web应用程序</p><p>选择空web应用程序</p><p>添加完成之后需要右键点击刚刚添加的空网站点击添加服务</p><p>添加服务后打开该服务增加WebMethod标记为公开方法</p><p>这里我还添加了一个ajax测试方法</p><p>就此编辑阶段完成，这里添加一下源码：</p><p>右键点击该页面 选择在浏览器中查看就可以看到该方法：</p><p>访问成功之后开始部署该服务到服务器，当前是部署到了我本机</p><p>注意，进入发布之后选择发布类型时候选择文件夹 或者 自定义模式</p><p>选择之后需要配置该服务位置以及方式如图：</p><p>配置成功之后选择发布，注意看一下生成结果：</p><p> </p><p>发布成功后就可以配置iis服务器啦，我本机为IIS6服务 成功安装iis信息服务器之后 按下win+r 键 召唤运行 输入inetmgr </p><p>iis信息服务器配置页面出现 如下图：</p><p>点击确定后该服务就发布出去啦访问该服务地址后会出现各种报错，下面是总结报错：</p><p>该问题是因为默认文档未设置，解决方式有两部，首先不仅要去配置默认文档，还要添加一下该文件扩展名信息：</p><p>默认文档设置：</p><p>请求筛选：</p><p>　　该文件扩展名为webservice文件扩展名。.asmx这里注意是有点的</p><p>　　有时候也会出现权限问题等等需要在网站设置一下：</p><p>　　</p><p>　　设置该权限之后问题解决，就可以成功访问该webservice啦</p><p>　　</p><p>　　当然还有很多其他错误这里就不一一介绍了</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/141902408</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>监听二开submit方法，扩展功能 - 云枢技术文档</title>
+<meta property="og:title" content="监听二开submit方法，扩展功能">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/监听二开submit方法扩展功能/">
+<meta name="description" content="监听二开submit方法，扩展功能 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>监听二开submit方法，扩展功能</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>监听二开submit方法，扩展功能</h1></p><p><strong>项目背景：</strong>某马中国，需要监听每一次的子表数据状态来修改主表流程节点是否回退。</p><p><strong>指引初衷：</strong>在不修改源码的基础上，更容易扩展功能，将功能代码从业务逻辑中分离出来，</p><p>扩展系统功能，来满足二开需求完成开发实现功能。</p><p><strong>业务场景</strong>：</p><p>主表流程包含子表流程，当子表里面的数据状态都是驳回时，回到主流程的submit节点</p><p><strong>实现思路、</strong><strong>实现方案</strong><strong>：</strong></p><p>通过切面监听代码中针对表单的二开类CustomizedFormRuntimeController的提交（submit）方法，获取参数workflowCode对于实际需要监听的表单code，当监听到属于需要扩展功能的模型，则可通过代码实现扩展，补充相关判断操作。</p><p><strong>实现过程：</strong></p><p>类上加@Aspect注解，方法上加@Before，来实现切面功能。</p><p><strong>效果演示：</strong></p><p><strong>实现需求使用到的相关产品方法：</strong></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/126766338</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需求分析备忘录（云枢6） - 云枢技术文档</title>
+<meta property="og:title" content="需求分析备忘录（云枢6）">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/需求分析备忘录云枢6/">
+<meta name="description" content="需求分析备忘录（云枢6） - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>需求分析备忘录（云枢6）</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 需求分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>需求分析备忘录（云枢6）</h1></p><p><strong>一、表单常规字段分析</strong></p><p><strong>通用</strong>：</p><p>新建模型确认是否树形结构；字段必填、是否编辑、是否映射（映射一般伴随只读），是否可见、校验规则。</p><p><strong>文本：</strong></p><p>长度、控重、格式校验。</p><p><strong>数值：</strong></p><p>精度、数值范围、计算。</p><p><strong>日期：</strong></p><p>格式、时间范围（比如在某个日期之前或之后）</p><p><strong>单选框、下拉单选：</strong></p><p>考虑自定义还是业务模型或者数据字典。</p><p><strong>复选框、下拉多选：</strong></p><p>考虑自定义还是业务模型或者数据字典；在考虑统计的情况下慎用，会增加复杂度。</p><p><strong>人员单选、部门单选：</strong></p><p>选取范围，是否自动带出。</p><p><strong>人员多选、部门多选：</strong></p><p>选取范围，是否自动带出。在考虑统计的情况下慎用，会增加复杂度。</p><p><strong>关联单选：</strong></p><p>弹出方式；显示字段；确认列表视图；筛选条件；映射字段；是否树形结构。</p><p><strong>关联多选：</strong></p><p>弹出方式；显示字段；确认列表视图；筛选条件；映射字段；是否树形结构。参与统计的情况慎用，增加复杂度。</p><p>​</p><p>二：一致性原则</p><p>这里一致性原则是主要指在云枢模型A中引用了其他模型B，引用模型B的字段映射到该模型A中（冗余字段），A模型映射的字段可编辑导致A模型冗余字段与B模型字段值不一致，后者B模型字段值更改A模型映射字段值没有变更。那么一旦有关联选择映射时，就一定要考虑数据一致性问题。如果可以通过数据联动方式尽量用联动方式，保持与数据源一致。</p><p>其他方式引用数据到表单上时也要考虑数据一致性。在确认要保持一致时一般通过回写方式实现。</p><p>​</p><p>​</p><p>​</p><p>​</p><p>未完待续............ </p><p>​</p><p>​</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/137219725</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

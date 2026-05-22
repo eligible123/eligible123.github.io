@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人大金仓项目本地环境部署 - 云枢技术文档</title>
+<meta property="og:title" content="人大金仓项目本地环境部署">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/人大金仓项目本地环境部署/">
+<meta name="description" content="人大金仓项目本地环境部署 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>人大金仓项目本地环境部署</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>人大金仓项目本地环境部署</h1></p><p><h1>一．业务场景</h1>
+1. 线上用的库是人大金仓的数据库与平时用的mysql有区别，由于本地项目不能连测试环境，所以需要本地部署一套人大金仓的环境调试</p><p>效果</p><p>​</p><p><h1>​</h1>
+​</p><p>​</p><p>​</p><p><h1>具体部署方案及注意点</h1>
+1. 安装版本要使用以下版本</p><p>​</p><p>​</p><p>​</p><p>​</p><p>2. 软件可在官网下载，安装过程中，此处要选否，否则sql查询会出现大小写问题</p><p>​</p><p>​</p><p>3.拿到恢复数据库的脚本，</p><p>选取数据库地址</p><p>创建恢复任务同步测试环境数据，同步完成后找到对应数据库，即可连接本地人大金仓的数据进行本地开发（这个地方如果恢复任务一直是0%不动，应该是版本有问题，更换成上图一样的版本即可）</p><p>多窗口开会出现报错问题，需要用到一个授权文件放入 ES\V8\KESRealPro\V008R006C007B0012  路径</p><p>​</p><p>​</p><p>​</p><p>​</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/162810770</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

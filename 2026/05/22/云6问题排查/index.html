@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云6问题排查 - 云枢技术文档</title>
+<meta property="og:title" content="云6问题排查">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云6问题排查/">
+<meta name="description" content="云6问题排查 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云6问题排查</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云6问题排查</h1></p><p>一、前端问题排查</p><p>1.表单赋值操作或者订阅失效</p><p>上述操作订阅字段值变化，打印到控制台。F12后，结果无论该字段如何改变，值变化始终不打印。结果如下图：</p><p>通过控制台可以看到错误原因，钩子函数抛出异常：callLifecycleHookTypeError: Cannot read properties of undefined (reading 'name')。此异常一般是表单写JS不规范导致，通过调试发现获取对象未定义，导致赋值操作失败，同时影响下面订阅失效。如图：</p><p>总结：前端页面异常排查步骤： F12 -->还原操作步骤-->查看控制台和网络-->查找异常信息;</p><p>找到异常信息后定位是后台管理中【表单设计】html中写的JS问题，还是前端源码问题。如果是前者，直接去【表单设计】中对应表单修改问题JS，如果是前端源码问题，初步判定问题点，加入debugger，在VSCODE中，结合页面调试，排查具体问题，然后修改。</p><p>二、通过产品日志问题排查</p><p>产品日志分为产品线上日志和服务器上产品日志。</p><p>1.线上日志在【后台管理】-【系统管理】-【日志消息】查看登陆日志、业务服务日志和异常日志。如图：</p><p>线上日志主要是业务服务日志和异常日志</p><p>业务服务日志及对应的业务集成中的业务服务方法调用日志，这里可以看到业务方法调用的记录，并且包含调用是否成功，对于调用失败的可以拿到对应参数在业务集成中运行测试，然后结合代码判断。</p><p>异常日志一般包含流程运行异常的相关信息，可以点击【打开】和【表单详情】来定位问题，由于表单数据问题引起的异常，修复表单数据后可点击【打开】，然后点击【修复】来修复流程。</p><p>2.服务器上线下日志一般在服务器/data/cloudpivot/program/backEnd/webapi/logs 目录下。</p><p>日志查看步骤：</p><p>a.远程客户端连接到云枢应用服务器</p><p>b.进入到日志目录，默认路径/data/cloudpivot/program/backEnd/webapi/logs</p><p>c.查看日志文件，tail -1000f log_total.log</p><p>d.如果知道报错的关键字，可以grep “关键字” log_total.log</p><p>然后结合日志内容判断问题位置，结合后端代码判断问题原因。这里包含异常抛出前的调用链，结合调用链找到具体代码位置和异常信息判断原因，修复问题。比较难判断的需要结合开发工具和业务场景还原来进行调试。</p><p>​</p><p>参考：【奥哲学堂】-【专业序列课】-【客服服务培训】</p><p>....后续完善中......</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/89874425</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

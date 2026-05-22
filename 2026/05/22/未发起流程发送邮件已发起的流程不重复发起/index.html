@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>未发起流程发送邮件，已发起的流程不重复发起 - 云枢技术文档</title>
+<meta property="og:title" content="未发起流程发送邮件，已发起的流程不重复发起">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/未发起流程发送邮件已发起的流程不重复发起/">
+<meta name="description" content="未发起流程发送邮件，已发起的流程不重复发起 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>未发起流程发送邮件，已发起的流程不重复发起</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>未发起流程发送邮件，已发起的流程不重复发起</h1></p><p><h2>背景</h2>
+某马项目，Probation模块主要是针对入职员工在入职后的几个时间节点按照配置的邮件模板，给LM、HRBP发送对应的邮件，存在未配置 LM、HRBP时，无法正常发起表单流程需要给HRIT发送邮件提醒给员工设置LM、HRBP，确保可以正常且不重复走入职程序；</p><p><h2>解决过程</h2>
+<strong>1）问题或业务拆解：</strong></p><p>Step1：确认入职流程有两种发起方式：1）是入职员工通过填写通过提交Probation System表单发起流程，2）通过手动运行probation配置的集成服务自动发起接口startTask对符合时间要求的员工信息重新发起一条Probation System表单流程</p><p>Step2：确认问题或业务需求：未发起流程的情况原因存在于发起人（即入职员工）不存在配置表单流程审批节点配置的LM角色，在提交表单后无法正常执行流程中配置的邮件发送，所需要实现的需求点为：在自动发起的接口中补充针对不存在LM的用户对HRIT角色用户发送邮件；已发起流程不重复发起，分析发起方式，可通过在表单中增加一个隐藏字段Qnumber，通过设置Qnumber设置用户id，每次发起前可通过判别该字段确认是否有发送过来限制重复发起；</p><p><strong>2）实现过程</strong></p><p>总体实现思路：存在LM、HRBP，查qunumber不存在表单记录时，走表单流程发起逻辑；不存在LM对找出的用户，绑定邮件模板给HRIT角色下绑定的用户发送邮件；</p><p>原有逻辑：1）捞人，捞出填充表单数据，查h_org_user捞出entryDate符合7天的员工数据，跟h_org_user_extend_attr查出的扩展字段的编码code及字段属性的id组装填充表单的数据；2）LM不为空时，并根据捞出填充的表单数据通过发起工作流实例触发流程发送邮件</p><p>实现整改：1）捞人，捞出填充表单数据，查h_org_user捞出entryDate符合7天到14天的员工数据，跟h_org_user_extend_attr查出的扩展字段的编码code及字段属性的id组装填充表单的数据，填充后的表单数据用当前userId填充qnumber字段值；2）分支逻辑1：确认当前用户是否存在LM、HRBP；分支逻辑2：用当前捞出来的用户的userId值用qnumber查probation表单确认表单中是否已存在当前用户已成功发起的流程表单记录；3）分支逻辑1不存在时，找模板，找HRIT，填充邮件模板数据发送邮件；分支逻辑2不存在时，走表单流程发起逻辑发送邮件；</p><p>代码实现参考指com.authine.cloudpivot.ext.services.ProbationService#startProbationTask</p><p>1）捞人逻辑修改</p><p>表单数据填充qnumber</p><p>2）确认是否存在lm，存量实现逻辑，此处仅提供参考，</p><p>确认是否重复发起，未重复发起时，走流程实例发起</p><p>3）不存在lm，step1 找邮件模板；step2替换模板配置的占位字段并重置收件人邮箱；step3发送邮件</p><p><h2>实现效果</h2>
+<a href="https://bpm-dev.azure.bmwchina.cloud/admin/#/integration">https://bpm-dev.azure.bmwchina.cloud/admin/#/integration</a></p><p>##</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/126168893</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

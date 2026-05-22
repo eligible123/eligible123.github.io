@@ -27,7 +27,7 @@ hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
 <article class="markdown-body">
 <h1>附件下载维护功能</h1>
 <div class="post-meta">
-<span>📂 <a href="/categories/通用方案/">通用方案</a></span>
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
 <span>📅 2026-05-22</span>
 </div>
 <hr>
@@ -222,7 +222,7 @@ hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
             " left join h_workflow_header b on a.workflowCode=b.workflowCode left join h_org_department c on a.dept=c.id where a.workflowCode=? and state=1 order by sortIndex";
     List<Map<String,Object>> queryList=jdbcTemplate.queryForList(sql,new Object[]{workflowCode});
     return getOkResponseResult(queryList,"获取数据成功");}</p><li>实现效果</li><li>附件模板的上传</li><p>首先点击上传本地文件，点击确认后可以会将文件存储到对应的表中，后续可以选择流程模板与之关联，在流程中就可以看到该附件，可以下载查看，上传附件的效果如下。</p><p> </p><li>查询附件模板</li><p>所有的启用状态的附件模板所有人员都可以看到，绑定了流程模板的附件不能删除，删除了的附件模板不再展示，实现效果如下。</p><li>编辑流程模板</li><p>所有人都可以查看所有部门的数据，普通用户默认勾选上自己部门（不可点击），普通用户只能编辑自己部门的数据，其他部门的数据不可编辑，超级管理员可以查询编辑和筛选所有部门的数据，点击确认后根据勾选的流程模板重新绑定附件，实现效果如下。</p><li>附件模板排序</li><p>点击对应的流程模板右侧的排序功能，可以对该模板关联的附件进行排序（附件包含绑定了了的数据以及当前勾选的流程模板的数据），排序页面可以上移和下移调整上下顺序，对应的流程表单上的顺序也会一起改变，实现效果如下。</p><li>流程表单的下载附件</li><p>根据配置的附件模板数据，流程表单可以对应的查看和下载相应的附件模板，实现效果如下。</p><p>---
-<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/xtdku7zgtppcsole</em>
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/217024079</em>
 </p>
 <hr>
 <blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>

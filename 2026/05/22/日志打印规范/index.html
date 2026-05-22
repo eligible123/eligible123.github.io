@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日志打印规范 - 云枢技术文档</title>
+<meta property="og:title" content="日志打印规范">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/日志打印规范/">
+<meta name="description" content="日志打印规范 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>日志打印规范</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>日志打印规范</h1></p><p><strong>场景: </strong></p><p>随着项目升级迭代，业务需求场景多样化，客户需要合理的日志输出是监控应用状态、调试代码和跟踪用户行为；</p><p>实现思路: 详见下列内容 </p><p>【1. 日志等级,  2. 日志内容,  3. 日志格式,  4. 日志输出】 </p><p>​</p><p>实现步骤: 详见下列内容 </p><p>【5. 日志封装,  6. 日志收集,  7. 日志等级控制,  8. 日志格式化】 </p><p><h1>1 日志等级</h1>
+- DEBUG: 详细的开发时信息，用于调试应用。
+- INFO: 重要事件的简要信息，如系统启动、配置等。
+- WARN: 系统能正常运行，但有潜在错误的情况。
+- ERROR: 由于严重的问题，某些功能无法正常运行。
+- FATAL: 非常严重的问题，可能导致系统崩溃。</p><p><h1>2 日志内容</h1>
+- 时间戳：精确到毫秒的事件发生时间。
+- 日志等级：当前日志消息的等级。
+- 消息内容：描述事件的详细信息。
+- 错误堆栈：如果是错误，提供错误堆栈信息。</p><p><h1>3 日志格式</h1>
+- [时间戳] [日志等级] [消息内容] [错误堆栈]</p><p>例如：</p><li>[2024-04-01T12:00:00.000Z] [ERROR] Failed to load user data. {stack}</li><p><h1>4 日志输出</h1>
+不同的日志等级可以使用不同的console方法：</p><p>- console.debug用于DEBUG级别。
+- console.info用于INFO级别。
+- console.warn用于WARN级别。
+- console.error用于ERROR和FATAL级别</p><p><h1>5 日志封装</h1></p><p><h1>6. 日志收集</h1></p><p><h1>6 日志等级控制</h1></p><p><h1>8. 日志格式化</h1></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/181576562</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

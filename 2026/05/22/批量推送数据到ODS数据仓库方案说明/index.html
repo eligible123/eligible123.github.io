@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>批量推送数据到ODS数据仓库方案说明 - 云枢技术文档</title>
+<meta property="og:title" content="批量推送数据到ODS数据仓库方案说明">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/批量推送数据到ODS数据仓库方案说明/">
+<meta name="description" content="批量推送数据到ODS数据仓库方案说明 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>批量推送数据到ODS数据仓库方案说明</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>批量推送数据到ODS数据仓库方案说明</h1></p><p><strong>场景：</strong></p><p>已经建设完工某业务系统需要将其所有的数据（包括基础数据、数据字典、业务数据、流程数据等约400张实体数据库表）全部推送到ODS数据仓库，再有ODS数据仓库提供视图，共享享给其他系统使用。源系统采用的数据库是SQLServer,目标ODS数据仓库采用的是Oracle，所有数据要求每天至少同步一次，部分数据实时性要求高的半个小时同步一次。</p><p><strong>思路：</strong></p><p>综合考虑了业务系统会优化修改，字段也会不断调整，同时考虑后期维护工作等因素，我们选用了以下方案：使用定时服务，定期去将业务系统数据推送到ODS数据仓库</p><p>- 定时服务中用到的一个基础配置表，作为两个不同源的数据交互的桥梁，基础配置表上记录了需要推送的SQLServer表名、对应的Oracle表名；
+- Oracle数据可以手工建表，也可以根据SQLSERVER字段自动建表
+- 同时我们针对不同的数据库表数据量级大小设置了全量同步、增量同步;
+- SQLServer表名与Oracle表名、字段名称完全一致，并且服务同步的时候以Oracle数据库表字段为准，如果 Oracle表名超过30个字符限制，新建表别名，同时在SQLServer新建对应的视图;
+- 设置定时任务，调用不用频率的基础配置来同步不同的数据。</p><p><strong>实现步骤：</strong></p><li>设计基础配置表。</li><p>--推送ODS 数据，基础表</p><li>定时服务核心代码说明</li><p>- 检查同步的数据，并进行跟踪运维
+- 检查同步日志，并且检查已经同步到Oralcel数据的准确性
+- 后期运维简单，后续有新增的表需要进行数据同步，只需要创建Oracle表，并且在基础配置表新增一行配置数据，即可进行数据同步，服务代码不需要调整。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/181572007</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>带鉴权的 Webservice 接口调用 - 云枢技术文档</title>
+<meta property="og:title" content="带鉴权的 Webservice 接口调用">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/带鉴权的-Webservice-接口调用/">
+<meta name="description" content="带鉴权的 Webservice 接口调用 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>带鉴权的 Webservice 接口调用</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>带鉴权的 Webservice 接口调用</h1></p><p><h1>带鉴权的 Webservice 接口调用</h1></p><p><h2>需求</h2>
+某项目中，需要对接第三方 WebService 接口，且接口带鉴权逻辑，第三方接口基于 <strong>SOAP</strong> 协议。</p><p><h2>实现思路</h2></p><p><h3>什么是 WebService 接口</h3>
+Web Service 接口是一种允许不同系统之间进行通信和数据交换的技术。它们提供了一种标准化的方式来使应用程序能够通过网络相互通信，而无需考虑它们所使用的编程语言或操作系统。</p><p><h3>什么是 SOAP 协议</h3>
+<strong>SOAP (Simple Object Access Protocol)</strong> 是一种基于 XML 的消息传递协议，它定义了消息的结构、编码规则以及调用和响应模式。SOAP 具有较为严格的规范和标准，因此在企业级应用中被广泛使用。</p><p><h3>调用 WebService 接口的要素</h3>
+基于 SOAP 协议的 WebService 接口可以通过 HTTP 进行请求，因为 SOAP WebService 使用 HTTP 或者 HTTPS 作为传输协议，我们可以将 SOAP 格式的 XML 放在 RequestBody 中，发送 POST 请求即可。</p><p>​</p><p>所以在调用接口之前，我们需要明确以下几点：</p><li>接口地址</li><li>请求体内容 （XML）</li><li>SOAPAction</li><li>接口鉴权方式</li><p>在此次项目中：</p><p>- 接口地址：
+http://eip.mmsh.sinopec.com/xxzx/_vti_bin/authentication.asmx  （认证）
+http://eip.mmsh.sinopec.com/xxzx/_vti_bin/Lists.asmx （执行业务）</p><p>​</p><li>请求体内容</li><li>SOAPAction</li><p> </p><p>- 接口鉴权方式
+基于 cookie ，当调用认证接口成功后，会在响应头中返回用于认证的 cookie 的值，再下次调用业务接口时，在请求头中携带即可。</p><p><h3>代码示例</h3>
+用于获取认证接口返回 Cookie 的方法</p><p>用于执行业务接口的方法</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/155788257</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

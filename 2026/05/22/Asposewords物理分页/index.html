@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>无流程表单数据唯一性同步 - 云枢技术文档</title>
-<meta property="og:title" content="无流程表单数据唯一性同步">
+<title>Aspose.words物理分页 - 云枢技术文档</title>
+<meta property="og:title" content="Aspose.words物理分页">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://eligible123.github.io/2026/05/22/无流程表单数据唯一性同步/">
-<meta name="description" content="无流程表单数据唯一性同步 - 云枢低代码平台技术文档">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/Asposewords物理分页/">
+<meta name="description" content="Aspose.words物理分页 - 云枢低代码平台技术文档">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
 <style>
 body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
@@ -25,15 +25,17 @@ hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
 </head>
 <body>
 <article class="markdown-body">
-<h1>无流程表单数据唯一性同步</h1>
+<h1>Aspose.words物理分页</h1>
 <div class="post-meta">
 <span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
 <span>📅 2026-05-22</span>
 </div>
 <hr>
-<p><h1>无流程表单数据唯一性同步</h1></p><p><h1>业务层数据同步到数据层</h1>
-前言：在项目过程中存在业务数据频繁修改，最终确定的过程，这个过程中，客户想一直修改，而且无流程，纯表单修改，确定后不再修改，无编辑权限，或者编辑不显眼，最终某个时间点，批量生成数据，故此用表单数据直接变成流程完成数据，数据权限就无法轻易编辑了，只需要在视图页面调用二开代码</p><p>1、视图</p><li>后端代码</li><p>3、在业务方法中流程生效里面配置新增数据，就完成了相应需求</p><p>---
-<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/181571758</em>
+<p><h1>Aspose.words物理分页</h1></p><p><h1>业务场景：</h1>
+xx certificate的需求要针对不同页做盖章、页脚页眉处理，并且不能使用模板进行操作。</p><p><h1>实现思路：</h1>
+由于aspose words的分页是逻辑分页，针对页的操作会作用于所有的逻辑页，所以需要判断分页节点插入分页符以实现物理分页。本次的实现思路是遍历文档中的所有活动节点，获取当前活动节点的逻辑页码与上一个活动节点的逻辑页码做比较，如果发生改变，则插入分页符以实现物理分页。</p><p><h1>实现代码：</h1>
+业务实现</p><p> </p><p> </p><p>业务数据构建文档正文（含html标签处理）：</p><p>​</p><p>分页-盖章-页脚设置</p><p>​</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/124945021</em>
 </p>
 <hr>
 <blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>

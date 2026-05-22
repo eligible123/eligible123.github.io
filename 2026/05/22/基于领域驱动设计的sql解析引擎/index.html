@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基于领域驱动设计的sql解析引擎 - 云枢技术文档</title>
+<meta property="og:title" content="基于领域驱动设计的sql解析引擎">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/基于领域驱动设计的sql解析引擎/">
+<meta name="description" content="基于领域驱动设计的sql解析引擎 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>基于领域驱动设计的sql解析引擎</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>基于领域驱动设计的sql解析引擎</h1></p><p><h1>一、场景</h1>
+用来解决后端代码中sql需要频繁变化的问题，同时对一些场景后端不需要再编写sql。</p><p>代码和思路可复用，一次编写，整个项目成员都可以使用，能非常有效地降低开发成本。</p><p><h1>二、实现效果</h1></p><p><h1>三、实现过程</h1></p><p><h2>3.1 领域建模</h2>
+        </p><p>         </p><p>           名称                       ---         该数据的中文名称                （必填）</p><p>           查询条件               ---         该sql查询一些查询条件      （非必填）</p><p>           名称编码               ---         该数据的英文编码                （必填）</p><p>           解析引擎               ---         可以选择对应的解析引擎   （非必填）    </p><p>           报表定义               ---          执行的sql                             （必填） </p><p>           事实上我们需要字段就有两个，一个存储sql的长文本字段，另一个是可以去查询该sql的字段。其余字段可以按实际的需要自行添加。</p><p><h2>3.2 代码编写</h2>
+        代码为某一个具体的sql引擎编写</p><p>        整体思路为：处理查询条件-》处理排序字段-》汇总重新拼接sql -》查询出数据-》返回数据</p><p>       其中ReportSetting为该模型的vo对象，其余字段按实际需要来。</p><p><h2>3.3配置</h2></p><p><h2>3.4效果图</h2>
+前端直接调用相关接口，传入查询参数</p><p>查询出来的数据</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/93139421</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

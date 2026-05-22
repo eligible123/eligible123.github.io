@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢子表按钮以及字段不同状态的处理 - 云枢技术文档</title>
+<meta property="og:title" content="云枢子表按钮以及字段不同状态的处理">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/云枢子表按钮以及字段不同状态的处理/">
+<meta name="description" content="云枢子表按钮以及字段不同状态的处理 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>云枢子表按钮以及字段不同状态的处理</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>云枢子表按钮以及字段不同状态的处理</h1></p><p><h4>业务场景：客户公司希望子表的功能按钮根据表单的状态去展示不用的状态以及子表某个字段是固定展示出来，然后根据流程状态是否完成去显示值。</h4></p><p><h3>实现思路：</h3></p><p><h4>在后台表单设计HTML中找到对应的子表在a-action-group加上想要的功能按钮，然后根据表单是否为新增，去控制按钮的是否禁用。</h4></p><p><h4>子表有需要固定展示字段但是需要根据流程状态去控制字段的值是否展示，与配置显示条件不同之处在于字段为固定展示，只是值的显示与隐藏</h4>
+通过 h3form.formObj.bizObject.sequenceStatus 的状态去判断当前表单的流程状态是否已完成，通过循环对子表的字段进行display处理与配置显示条件的效果是一样的，数据完全隐藏后标题也会看不见，则需要通过获取dom节点去进行隐藏数据，<strong>h3form.formObj.bizObject.sequenceStatus !== 'COMPLETED' 主要是判断在打开表单详情时进行数据隐藏</strong>，<strong>this.standardAwardSignSpecDetail.getColumnValueChange('specNumber') 监听子表字段的change事件则是在新增表单时生成数据时也需要隐藏，同时需要判断dom节点数据是否已生成数据，当有数据之后在进行隐藏数据</strong>，由于子表字段没有特殊标识，需要获取到子表之后，往下去找对应字段的dom节点处理。</p><p><strong>在表单设计HTML中可多次通过 h3form 去拿想要的数据，比如 当前表单是否新增状态，当前表单是否编辑状态，表单id等都可获取到。</strong></p><p><h4>实现效果：</h4></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/142940685</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

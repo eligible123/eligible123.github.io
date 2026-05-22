@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目icon图标设置 - 云枢技术文档</title>
+<meta property="og:title" content="项目icon图标设置">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/项目icon图标设置/">
+<meta name="description" content="项目icon图标设置 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>项目icon图标设置</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>项目icon图标设置</h1></p><p>项目中配置icon图标</p><p>关于icon图标的大量引入或者更换。首先可以到阿里适量图标库中，创建自己的项目然后将自己需要的icon图标放到项目之中，之后下载至本地。</p><p>解压缩之后就可以将里面的内容复制到项目放静态文件的地方。</p><p>demo_index.html可以查看引入的所有图标</p><p>之后icon图标的一个使用方式就是这样的，其中hticonfont是必须要有的。</p><p>其中hticonfont可以在iconfont.css文件里面找到，这个是在图标库里面的一个项目信息，这个css文件也包含了所有图标的类名</p><p>上述的使用方式是比较常用的font-class引用方式，目前在阿里推荐的使用方式是symbol引用。</p><p>symbol的使用方式</p><p>加入通用的css</p><p><style type="text/css"> .icon { width: 1em; height: 1em; vertical-align: -0.15em; fill: currentColor; overflow: hidden; } </style></p><p>挑选相应图标并获取类名，应用于页面</p><p><svg class="icon" aria-hidden="true"> <use xlink:href="#icon-xxx"></use> </svg></p><p>这种引入方式也可以直接封装为组件便于之后的多方引用。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/106033512</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

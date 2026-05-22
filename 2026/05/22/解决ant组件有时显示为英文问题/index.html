@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解决ant组件有时显示为英文问题 - 云枢技术文档</title>
+<meta property="og:title" content="解决ant组件有时显示为英文问题">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/解决ant组件有时显示为英文问题/">
+<meta name="description" content="解决ant组件有时显示为英文问题 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>解决ant组件有时显示为英文问题</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 问题分析</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>解决ant组件有时显示为英文问题</h1></p><p><h1>背景</h1>
+目前在俩个项目上遇到过ant组件显示成了英文模式，一直找不到原因，云枢中英文模式也为中文</p><p><h1>解决思路</h1>
+通过查阅资料，发现ant组件最顶层嵌套了a-config-provider，但进入云枢后默认给a-config-provider的值没赋上或赋的为英文模式，导致ant组件显示为英文</p><p><h1>解决方法</h1>
+在每个端app.vue文件中手动配置上a-config-provider并赋值，考虑到云枢本身兼容了中英文切换，这里不能直接写死</p><p><h2>先引入ant的俩个语言包</h2></p><p><h2>定义locale变量</h2></p><p><h1>总结</h1>
+通过在app.vue顶层配置a-config-provider的语言模式解决了ant有时显示英文的bug</p><p><h2>完整代码</h2></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/162877644</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>异步数据查询整合 - 云枢技术文档</title>
+<meta property="og:title" content="异步数据查询整合">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/异步数据查询整合/">
+<meta name="description" content="异步数据查询整合 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>异步数据查询整合</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>异步数据查询整合</h1></p><p><strong>删除流程同步外部系统</strong></p><p><strong>一、需求</strong></p><p>有一个获取数据接口，获取多个service的数据查询最终进行整合汇总。目前这个接口返回很慢，需要进行优化</p><p><strong>二、思路</strong></p><p>1、 查看代码逻辑，发现多个serivce数据查询出来之后需要相互关联处理，但查询时互不影响。</p><p>2、采用异步查询，最终汇总的做法。</p><p><strong>三、解决方案</strong></p><p><strong>方案</strong>：采用异步查询，最终汇总的做法。</p><p><strong>四、实现步骤</strong></p><p><strong>	</strong>// 创建线程池（根据实际需求调整核心线程数）ExecutorService executor = Executors.<em>newFixedThreadPool</em>(6);
+// 定义所有并行任务Future<Map<String, Object>> futureDataMap = executor.submit(() ->
+        enterpriseBudgetQuarterNewService.getData(getNewMap(map)));
+Future<List<Map<String, Object>>> futureCprList = executor.submit(() ->
+        constructionProjectRevenService.getData(getNewMap(map)));
+Future<List<Map<String, Object>>> futurePccList = executor.submit(() ->
+        projectCostComparisonService.getData(getNewMap(map)));
+Future<List<Map<String, Object>>> futureProfit = executor.submit(() ->
+        incomeStatementRpNewService.getData(getNewMap(map)));
+Future<Object> futureExpAnalyse = executor.submit(() -> {
+    try {
+        return expAnalyseQuarterService.queryData(getNewMap(map));
+    } catch (ParseException e) {
+        return null;  // 保持与原逻辑一致的异常处理
+    }
+});
+Future<ResponseResult<?>> futureAnalysis = executor.submit(() ->
+        propertyImpairmentAnalysController.analysis(getNewMap(map)));
+// 立即关闭线程池（不再接受新任务）executor.shutdown();</p><p>try {
+    // 获取有依赖关系的三个任务结果（并行等待）
+    // 综合指标表
+    Map<String, Object> dataMap = futureDataMap.get();
+    // 建造项目营收确权对比表
+    List<Map<String, Object>> cprList = futureCprList.get();
+    //  建造项目收入成本对比表
+    List<Map<String, Object>> pccList = futurePccList.get();
+    // 利润表
+    List<Map<String, Object>> proList = futureProfit.get();
+    Object expResult = futureExpAnalyse.get();
+    if (expResult != null) {
+        result.put(<em>CODE_INSTITUTIONINCOMEANALYSE</em>, expResult);
+    }
+    // 资产减值分析表
+    ResponseResult<?> analysisResult = futureAnalysis.get();
+    if (analysisResult.getData() != null) {
+        result.put(<em>CODE_PROPERTYIMPAIRMENTANA</em>, analysisResult.getData());
+    }
+    // 补全利润表
+    completeIncomeStatementRp(proList,dataMap,pccList);
+    // 执行数据计算
+    calculate(dataMap, cprList, pccList, proList);</p><p>    // 组装核心数据
+    result.put(<em>CODE_COMPREHENSIVEINDEXTABL</em>, dataMap);
+    result.put(<em>CODE_CONSTRUCTIONPROJECTREVEN</em>, cprList);
+    result.put(<em>CODE_PROJECTCOSTCOMPARISON</em>, pccList);</p><p>    // 获取并组装并行任务结果（这些get()会立即返回已完成的结果）
+    result.put(<em>CODE_INCOMESTATEMENT</em>, proList);</p><p>} catch (InterruptedException e) {
+    Thread.<em>currentThread</em>().interrupt();
+    throw new RuntimeException("任务执行被中断", e);} catch (ExecutionException e) {
+    throw new RuntimeException("任务执行异常", e.getCause());} finally {
+    // 强制终止剩余任务（如果有）
+    if (!executor.isTerminated()) {
+        executor.shutdownNow();
+    }
+}
+long duration = System.<em>currentTimeMillis</em>() - start;<em>log</em>.info("并行查询总耗时：{}ms", duration);
+return result;</p><p><strong>五、效果展示</strong></p><p>最终缩短60%时间。</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/241293729</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

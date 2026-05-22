@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>协办等操作按钮增加附件意见 - 云枢技术文档</title>
+<meta property="og:title" content="协办等操作按钮增加附件意见">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/协办等操作按钮增加附件意见/">
+<meta name="description" content="协办等操作按钮增加附件意见 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>协办等操作按钮增加附件意见</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>协办等操作按钮增加附件意见</h1></p><p><strong>协办等操作按钮增加附件意见</strong></p><p><strong>一、业务需求</strong></p><p>云枢表单默认按钮除了提交驳回等按钮有上传附件的地方，其他业务按钮都是弹窗，只有文本意见。客户希望能统一用户习惯，协办转办等操作在做按钮操作的时候也需要上传附件信息，来展示给被协办的业务方。</p><p><strong>二、实现思路</strong></p><p>1、前端需要在审批操作弹窗的页面上在协办说明位置上加上附件控件</p><p>2、后端代码中需要对协办等审批意见的操作进行记录，附件信息绑定对应的操作意见逻辑。</p><p><strong>三、实现分析：</strong></p><p>1、参数添加：</p><p><strong>代码改造：</strong></p><p>1、附件信息存储到当前线程中</p><p>2、核心代码改造</p><p>3、分析总结：</p><p>从产品源码中分析BizCommentModel中本身就包含resources附件对象字段，底层的保存意见逻辑中就是会对此字段进行判断并关联进附件表。所以改造逻辑本质就是将前端给过来的意见附件对象赋值到BizCommentModel后续会自动存储并关联；另外由于此项目产研已经有过其他二开记录所以在代码上直接修改，其他项目可以拓展产品方法到自己逻辑中，其他逻辑保留，只改造将附件对象到BizCommentModel。</p><p><strong>四、效果展示</strong></p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/253759609</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>

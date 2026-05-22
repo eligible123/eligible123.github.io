@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>达梦数据库云枢安装部署初始化 - 云枢技术文档</title>
+<meta property="og:title" content="达梦数据库云枢安装部署初始化">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://eligible123.github.io/2026/05/22/达梦数据库云枢安装部署初始化/">
+<meta name="description" content="达梦数据库云枢安装部署初始化 - 云枢低代码平台技术文档">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+body { max-width: 900px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+.post-meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+.post-meta span { margin-right: 15px; }
+blockquote { border-left: 4px solid #dfe2e5; padding: 0 1em; color: #6a737d; margin-top: 30px; }
+pre { background: #f6f8fa; padding: 16px; overflow: auto; border-radius: 6px; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 85%; }
+pre code { background: none; padding: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 24px 0; }
+</style>
+</head>
+<body>
+<article class="markdown-body">
+<h1>达梦数据库云枢安装部署初始化</h1>
+<div class="post-meta">
+<span>📂 <a href="/categories/经验技巧分享/">经验技巧分享</a> / 实现思路</span>
+<span>📅 2026-05-22</span>
+</div>
+<hr>
+<p><h1>达梦数据库云枢安装部署初始化</h1></p><p><strong>安装</strong></p><p>本次安装服务器是【麒麟】，虚拟机为Linux</p><p>达梦数据库是收费的，别自己安装了。找厂商</p><p>达梦安装会有很多设置都会帮你调整好。（列如：大小写忽略，防火墙，备份策略...）</p><p>建完库之后。会建立对应的用户与对应表空间，以及给定权限</p><p>> #建表空间 </p><p>create tablespace cloudpivot datafile 'cloudpivot.dbf' size 4096 AUTOEXTEND on; </p><p>create TABLESPACE H3YUN_REPORT DATAFILE 'H3YUN_REPORT.DBF' SIZE 4096 AUTOEXTEND on; </p><p>#建用户并控制对应的表空间</p><p> CREATE USER cloudpivot IDENTIFIED BY "test123456!@#$%" DEFAULT TABLESPACE cloudpivot DEFAULT INDEX TABLESPACE cloudpivot; </p><p>CREATE USER h3yun_report IDENTIFIED BY "test123456!@#$%" DEFAULT TABLESPACE H3YUN_REPORT DEFAULT INDEX TABLESPACE H3YUN_REPORT; </p><p>#赋予对应的权限</p><p> grant resource,vti,soi to cloudpivot;</p><p> grant resource,vti,soi to h3yun_report;
+​</p><p><strong>启动与停止</strong></p><p>> #进入达梦安装的bin目录下</p><p> cd /dmdbms/bin</p><p> #启动</p><p> ./DmServiceDMSERVER start </p><p>#停止</p><p> ./DmServiceDMSERVER stop
+如果有的地方不能通过这种方式启动服务</p><p>可以在找到安装路径执行，通过前台启动的，退出之后就关闭了</p><p>> #通过前台启动的方式，路径明确后执行</p><p> /dm8/bin/dmserver /dm/data/DMDB/dm.ini
+<strong>备份与还原</strong></p><p>备份可以通过可视化工具【DM管理工具】在线备份。安装好达梦数据库之后，在安装目录的doc下会有很多操作手册。写的很繁琐，但是比在网上找对应的操作友好一点，信创环境，网上找到的资源还是少</p><p>右键新增备份即可。</p><p>还原装在虚拟机Linux上的只能通过命令执行。达梦数据库提供的【DM控制台工具】不能连接远程服务器</p><p>而且还原必须要在脱机的情况下进行。本次记录的是表空间还原。</p><p>> #切换用户到dmdba</p><p> su - dmdba</p><p> #进入达梦安装的bin目录下</p><p> cd /dmdbms/bin</p><p> #停止服务 </p><p>./DmServiceDMSERVER stop </p><p>#进入达梦数据库命令执行控制台 进入RMAN</p><p> ./dmrman </p><p>#还原备份之前，先备份一次，这是在备份库 </p><p>backup database '/dmdbms/data/DAMENG/dm.ini' backupset 'full_bak' </p><p>#退出RMAN</p><p> exit </p><p>#进入备份仓库 查看备份文件</p><p> cd /data/DAMENG/bak </p><p>#进入对应的备份 </p><p>cd TS_cloudpiovt_FULL_2024_03_31-16_57_56/</p><p> #获取当前路径</p><p> pwd </p><p><h1>/dmdbms/data/DAMENG/bak/TS_cloudpivot_FULL_2024_03_31_16_57_56</h1></p><p> #还原表空间。启动 DMRMAN，输入以下命令</p><p> restore database '/dmdbms/data/DAMENG/dm.ini' tablespace cloudpivot from backupset '/dmdbms/data/DAMENG/bak/TS_cloudpivot_FULL_2024_03_31_16_57_56'</p><p> #恢复表空间。启动 DMRMAN，输入以下命令</p><p> recover database '/dmdbms/data/DAMENG/dm.ini' tablespace cloudpivot with archivedir '/dmdbms/data/DAMENG/arch' until time '2024-03-31 16:57:56' </p><p>#达梦官方提供的语句是 </p><p><h1>recover database '/dmdbms/data/DAMENG/dm.ini' tablespace cloudpivot </h1></p><p><h1>达梦DBA人员执行的是未注释的语句，最后没有什么效果。</h1></p><p> # 说明1：DBA：备份后执行的DDL语句太多 </p><p><h1>说明2：time 对应的时间节点还能向前推 </h1></p><p><h1>猜测：达梦数据库备份还原确实有问题 </h1></p><p>#退出DMRMAN</p><p> exit </p><p>#启动服务 </p><p>./DmServiceDMSERVER start 
+进入数据库查看是否还原</p><p><strong>迁移数据</strong></p><p>迁移数据使用达梦提供的【DM数据迁移工具】</p><p>可视化操作。注意选着的配置，可提供的参考文档</p><p>就是这个地方要注意不要选着【创建模式】...达梦DBA人员没有说明为什么不选这个</p><p>另外注意的是，如果目标表空间已存在，工具并不能进行覆盖迁移，迁移之后反而会破坏表空间结构，导致想删除都删除不了</p><p><strong>数据库关键字忽略</strong></p><p>DM数据库在查询的时候，会出现关键字问题。</p><p>例如查询人员表时admin是关键字段，这句查询会报错。是因为【admin】在达梦数据库中是关键字。需要修改配置进行忽略</p><p>> select admin from h_org_user limit 100
+<strong>修改方式1：</strong></p><p>找到安装目录下的dm.ini文件</p><p>打开文件，找到EXCLUDE_RESERVED_WORDS，添加要忽略的关键字 XML,EXCHANGE,DOMAIN,link</p><p><strong>修改方式2：</strong></p><p>> SP_SET_PARA_STRING_VALUE(2, 'EXCLUDE_RESERVED_WORDS','XML,EXCHANGE,DOMAIN,link'); 
+这两种修改方式选一直即可。修改完成之后要重启数据库</p><p><strong>数据库连接器</strong></p><p>目前有使用到两个：DM管理工具（官方）、DBeaver</p><p>在这两个连接工具中都遇到了问题，有的SQL无法执行。举例：DDL语句中给字段类型int（INT），构建函数参数类型int（INT）</p><p>有的在一个上执行不了，在另外一个上能执行</p><p>有的都执行不了，就要手动去编辑修改...</p><p>---
+<em>原文链接: https://authine.yuque.com/geyop4/vbtsir/206729849</em>
+</p>
+<hr>
+<blockquote>📖 原文来源: <a href="https://authine.yuque.com/geyop4/vbtsir">云枢技术分享知识库</a></blockquote>
+</article>
+</body>
+</html>
