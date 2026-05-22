@@ -1,1097 +1,1322 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
-
-
-
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
-  
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="李阳">
-  <meta name="keywords" content="云枢,CloudPivot,低代码,后端开发,Authine,奥哲">
-  
-    <meta name="description" content="分享云枢(CloudPivot)低代码平台开发经验、后端技术笔记和实战心得">
-<meta property="og:type" content="website">
-<meta property="og:title" content="李阳的技术博客">
-<meta property="og:url" content="https://eligible123.github.io/index.html">
-<meta property="og:site_name" content="李阳的技术博客">
-<meta property="og:description" content="分享云枢(CloudPivot)低代码平台开发经验、后端技术笔记和实战心得">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="李阳">
-<meta property="article:tag" content="Authine">
-<meta property="article:tag" content="CloudPivot">
-<meta property="article:tag" content="云枢">
-<meta property="article:tag" content="低代码">
-<meta property="article:tag" content="后端开发">
-<meta property="article:tag" content="奥哲">
-<meta name="twitter:card" content="summary_large_image">
-  
-  
-  
-  <title>李阳的技术博客</title>
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
-
-
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"eligible123.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":true,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
-    }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
-<meta name="generator" content="Hexo 8.1.2"></head>
-
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢技术文档 - 李阳的技术博客</title>
+<meta name="description" content="云枢(Authine)低代码平台技术文档，包含通用方案、特殊场景方案、第三方集成等内容">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #f5f5f5; color: #333; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+header { background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%); color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 0 0 20px 20px; }
+header h1 { text-align: center; font-size: 2.5em; margin-bottom: 10px; }
+header p { text-align: center; font-size: 1.2em; opacity: 0.9; }
+.stats { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+.stat { text-align: center; }
+.stat-num { font-size: 2em; font-weight: bold; }
+.stat-label { font-size: 0.9em; opacity: 0.8; }
+nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+nav a { padding: 10px 20px; background: white; border-radius: 25px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s; }
+nav a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+nav a.active { background: #1890ff; color: white; }
+.category { margin-bottom: 40px; }
+.category-title { font-size: 1.5em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid; display: flex; align-items: center; gap: 10px; }
+.category-title .icon { font-size: 1.2em; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+.card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer; text-decoration: none; color: #333; display: block; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.card h3 { font-size: 1.1em; margin-bottom: 10px; line-height: 1.4; }
+.card .meta { font-size: 0.85em; color: #666; display: flex; justify-content: space-between; }
+footer { text-align: center; padding: 30px; color: #666; font-size: 0.9em; }
+footer a { color: #1890ff; text-decoration: none; }
+.search-box { text-align: center; margin-bottom: 30px; }
+.search-box input { padding: 12px 24px; width: 100%; max-width: 500px; border: 2px solid #e8e8e8; border-radius: 25px; font-size: 16px; outline: none; transition: border-color 0.3s; }
+.search-box input:focus { border-color: #1890ff; }
+</style>
+</head>
 <body>
-  
+<header>
+<div class="container">
+<h1>📚 云枢技术文档</h1>
+<p>云枢(Authine)低代码平台技术方案与集成指南</p>
+<div class="stats">
+<div class="stat">
+<div class="stat-num">149</div>
+<div class="stat-label">篇文档</div>
+</div>
+<div class="stat">
+<div class="stat-num">3</div>
+<div class="stat-label">个分类</div>
+</div>
+</div>
+</div>
+</header>
 
-  <header>
-    
+<div class="container">
+<div class="search-box">
+<input type="text" id="search" placeholder="🔍 搜索文档标题..." oninput="filterDocs()">
+</div>
 
-<div class="header-inner" style="height: 100vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>李阳的技术博客</strong>
-    </a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content (desktop) -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/" target="_self">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/" target="_self">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/" target="_self">
-                <i class="iconfont icon-category-fill"></i>
-                <span>分类</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/" target="_self">
-                <i class="iconfont icon-tags-fill"></i>
-                <span>标签</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/" target="_self">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+<nav>
+<a href="#" class="active" onclick="showAll()">全部</a>
+<a href="#通用方案" onclick="scrollToCat('通用方案')">🔧 通用方案 (58)</a>
+<a href="#特殊场景方案" onclick="scrollToCat('特殊场景方案')">⚡ 特殊场景方案 (59)</a>
+<a href="#第三方集成" onclick="scrollToCat('第三方集成')">🔗 第三方集成 (32)</a>
 </nav>
 
-<!-- Mobile grid menu overlay -->
-<div id="mobile-grid-menu" class="d-lg-none">
-  <div class="mobile-grid-menu-inner">
-    <div class="container">
-      <div class="row">
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-home-fill"></i>
-                  <span>首页</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/archives/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-archive-fill"></i>
-                  <span>归档</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/categories/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-category-fill"></i>
-                  <span>分类</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/tags/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-tags-fill"></i>
-                  <span>标签</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/about/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-user-fill"></i>
-                  <span>关于</span>
-                </div>
-              </a>
-            </div>
-          
-        
-        
-          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
-            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <div class="mobile-grid-item">
-                <i class="iconfont icon-search"></i>
-                <span>搜索</span>
-              </div>
-            </a>
-          </div>
-        
-        
-          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
-               data-label-light="开灯"
-               data-label-dark="关灯">
-            <a href="javascript:;" aria-label="Color Toggle">
-              <div class="mobile-grid-item">
-                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
-                <span id="mobile-color-toggle-label">关灯</span>
-              </div>
-            </a>
-          </div>
-        
-      </div>
-    </div>
-  </div>
+<div id="docs">
+
+<div class="category" id="通用方案">
+<h2 class="category-title" style="border-color: #1890ff">
+<span class="icon">🔧</span> 通用方案
+<span style="font-size:0.6em; color:#666; font-weight:normal">(58篇)</span>
+</h2>
+<div class="grid">
+
+<a href="/2026/05/22/BPM发起流程/" class="card" data-title="BPM发起流程">
+<h3>BPM发起流程</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/DOP统一权限控制/" class="card" data-title="DOP统一权限控制">
+<h3>DOP统一权限控制</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/DOP统一登陆方案/" class="card" data-title="DOP统一登陆方案">
+<h3>DOP统一登陆方案</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/EasyExcel合并单元格数据读取/" class="card" data-title="EasyExcel合并单元格数据读取">
+<h3>EasyExcel合并单元格数据读取</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/H3BPMnet表单上添加通用自定义按钮/" class="card" data-title="H3BPM(.net)表单上添加通用自定义按钮">
+<h3>H3BPM(.net)表单上添加通用自定义按钮</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/H3BPM审批时上传附件PC端_移动端/" class="card" data-title="H3BPM审批时上传附件【PC端_移动端】">
+<h3>H3BPM审批时上传附件【PC端_移动端】</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/SM4国密加解密-祝欢/" class="card" data-title="SM4国密加解密-祝欢">
+<h3>SM4国密加解密-祝欢</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/bpm流程迁移云枢配置/" class="card" data-title="bpm流程迁移云枢配置">
+<h3>bpm流程迁移云枢配置</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/bpm表单流程迁移云枢/" class="card" data-title="bpm表单流程迁移云枢">
+<h3>bpm表单流程迁移云枢</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/业务全周期二开流程图vue-super-flow/" class="card" data-title="业务全周期二开流程图（vue-super-flow）">
+<h3>业务全周期二开流程图（vue-super-flow）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/两个系统公用一个数据源/" class="card" data-title="两个系统公用一个数据源">
+<h3>两个系统公用一个数据源</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/二开-BPMjava版组织机构新增岗位配置/" class="card" data-title="二开-BPM(java)版组织机构新增岗位配置">
+<h3>二开-BPM(java)版组织机构新增岗位配置</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云6数据库持久化操作-NativeSql/" class="card" data-title="云6数据库持久化操作-NativeSql">
+<h3>云6数据库持久化操作-NativeSql</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云7-执行sql-二开方案/" class="card" data-title="云7 执行sql 二开方案">
+<h3>云7 执行sql 二开方案</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢-app-生成/" class="card" data-title="云枢 app 生成">
+<h3>云枢 app 生成</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢-webservice-api接口/" class="card" data-title="云枢 webservice api接口">
+<h3>云枢 webservice api接口</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢6配置参数说明/" class="card" data-title="云枢6配置参数说明">
+<h3>云枢6配置参数说明</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢登录在三方系统认证账号密码/" class="card" data-title="云枢登录在三方系统认证账号密码">
+<h3>云枢登录在三方系统认证账号密码</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢表单流程数据迁移/" class="card" data-title="云枢表单、流程数据迁移">
+<h3>云枢表单、流程数据迁移</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢角色导入导出/" class="card" data-title="云枢角色导入导出">
+<h3>云枢角色导入导出</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢调用sap接口/" class="card" data-title="云枢调用sap接口">
+<h3>云枢调用sap接口</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢默认登录拓展邮箱登录案例/" class="card" data-title="云枢默认登录拓展邮箱登录案例">
+<h3>云枢默认登录拓展邮箱登录案例</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/人员单选映射逻辑与拓展映射思路分享/" class="card" data-title="人员单选映射逻辑与拓展映射思路分享">
+<h3>人员单选映射逻辑与拓展映射思路分享</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/人员同步个人信息扩展/" class="card" data-title="人员同步个人信息扩展">
+<h3>人员同步个人信息扩展</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/制造企业物料辅料成本科目维度高性能归集/" class="card" data-title="制造企业物料辅料成本（科目维度）高性能归集">
+<h3>制造企业物料辅料成本（科目维度）高性能归集</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/制造企业车间料工费成本明细高性能计算/" class="card" data-title="制造企业车间料工费成本明细高性能计算">
+<h3>制造企业车间料工费成本明细高性能计算</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/包含子流程的流程撤回_驳回实现方案/" class="card" data-title="包含子流程的流程撤回_驳回实现方案">
+<h3>包含子流程的流程撤回_驳回实现方案</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/在线编码动态嵌入手写签名到word文档/" class="card" data-title="在线编码动态嵌入手写签名到word文档">
+<h3>在线编码动态嵌入手写签名到word文档</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/基于产品模型校验拓展自定义数据项案例分享/" class="card" data-title="基于产品模型校验拓展自定义数据项案例分享">
+<h3>基于产品模型校验拓展自定义数据项案例分享</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/塔比星第三方开放平台接入工具类/" class="card" data-title="塔比星第三方开放平台接入工具类">
+<h3>塔比星第三方开放平台接入工具类</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/子表数据通过接口返回数据填充/" class="card" data-title="子表数据通过接口返回数据填充">
+<h3>子表数据通过接口返回数据填充</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/字段映射表数据同步技术方案/" class="card" data-title="字段映射表数据同步技术方案">
+<h3>字段映射表数据同步技术方案</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/应用维度管控微信和邮箱消息/" class="card" data-title="应用维度管控微信和邮箱消息">
+<h3>应用维度管控微信和邮箱消息</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/手机短信登录和微信扫码登录案例/" class="card" data-title="手机短信登录和微信扫码登录案例">
+<h3>手机短信登录和微信扫码登录案例</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/接口入参出参加密并验签/" class="card" data-title="接口入参出参加密并验签">
+<h3>接口入参出参加密并验签</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/更新导入支持只导入表单部分字段/" class="card" data-title="更新导入支持只导入表单部分字段">
+<h3>更新导入支持只导入表单部分字段</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/流程中发送外链给第三方填写数据并回填/" class="card" data-title="流程中发送外链给第三方填写数据并回填">
+<h3>流程中发送外链给第三方填写数据并回填</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/流程开始节点多个发起人实现/" class="card" data-title="流程开始节点多个发起人实现">
+<h3>流程开始节点多个发起人实现</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/流程迁移运维小工具/" class="card" data-title="流程迁移运维小工具">
+<h3>流程迁移运维小工具</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/测试第三方平台SSL认证接口请求解禁/" class="card" data-title="测试第三方平台SSL认证接口请求解禁">
+<h3>测试第三方平台SSL认证接口请求解禁</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/牧原-钉钉职位-自定义-同步-云枢角色/" class="card" data-title="牧原 钉钉职位 自定义 同步 云枢角色">
+<h3>牧原 钉钉职位 自定义 同步 云枢角色</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/生成历史表单数据/" class="card" data-title="生成历史表单数据">
+<h3>生成历史表单数据</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/电子签章契约锁对接/" class="card" data-title="电子签章（契约锁）对接">
+<h3>电子签章（契约锁）对接</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/第三方接口新增表单数据加默认值/" class="card" data-title="第三方接口新增表单数据加默认值">
+<h3>第三方接口新增表单数据加默认值</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/第三方数据-转化-云枢业务数据/" class="card" data-title="第三方数据 转化 云枢业务数据">
+<h3>第三方数据 转化 云枢业务数据</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/第三方流程委托同步至云枢/" class="card" data-title="第三方流程委托同步至云枢">
+<h3>第三方流程委托同步至云枢</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义实现权限系统/" class="card" data-title="自定义实现权限系统">
+<h3>自定义实现权限系统</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/表单批量打包附件/" class="card" data-title="表单批量打包附件">
+<h3>表单批量打包附件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/表单详情添加全局方法实现字段自动赋值/" class="card" data-title="表单详情添加全局方法，实现字段自动赋值">
+<h3>表单详情添加全局方法，实现字段自动赋值</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/递归新增树形数据结构以及入参格式转换思路/" class="card" data-title="递归新增树形数据结构以及入参格式转换思路">
+<h3>递归新增树形数据结构以及入参格式转换思路</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/通用数据迁移案例/" class="card" data-title="通用数据迁移案例">
+<h3>通用数据迁移案例</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/通用的前端调用产品业务规则实现/" class="card" data-title="通用的前端调用产品业务规则实现">
+<h3>通用的前端调用产品业务规则实现</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/通过Word模板动态生成Word文档/" class="card" data-title="通过Word模板动态生成Word文档">
+<h3>通过Word模板动态生成Word文档</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/防抖函数接口响应速度差异过大展示数据处理/" class="card" data-title="防抖函数接口响应速度差异过大展示数据处理">
+<h3>防抖函数接口响应速度差异过大展示数据处理</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/阿里云短信平台接入案例/" class="card" data-title="阿里云短信平台接入案例">
+<h3>阿里云短信平台接入案例</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/附件下载维护功能/" class="card" data-title="附件下载维护功能">
+<h3>附件下载维护功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/页面埋点收集信息/" class="card" data-title="页面埋点，收集信息">
+<h3>页面埋点，收集信息</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/高版本产品代码引入所需依赖/" class="card" data-title="高版本产品代码引入所需依赖">
+<h3>高版本产品代码引入所需依赖</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>通用方案</span>
+</div>
+</a>
+
+</div>
 </div>
 
-  
+<div class="category" id="特殊场景方案">
+<h2 class="category-title" style="border-color: #722ed1">
+<span class="icon">⚡</span> 特殊场景方案
+<span style="font-size:0.6em; color:#666; font-weight:normal">(59篇)</span>
+</h2>
+<div class="grid">
 
-<div id="banner" class="banner" parallax=true
-     style="background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle" data-typed-text="云枢低代码平台开发实践,后端技术笔记与心得分享,用代码构建数字世界,探索企业级AI平台的无限可能"></span>
-          
-        </div>
+<a href="/2026/05/22/85定制二开发送邮件功能/" class="card" data-title="8.5定制二开发送邮件功能">
+<h3>8.5定制二开发送邮件功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
 
-        
-      </div>
+<a href="/2026/05/22/AD域账号密码登录改造/" class="card" data-title="AD域账号密码登录改造">
+<h3>AD域账号密码登录改造</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
 
-      
-        <div class="scroll-down-bar">
-          <i class="iconfont icon-arrowdown"></i>
-        </div>
-      
-    </div>
-  </div>
+<a href="/2026/05/22/H3BPM达梦数据库适配改造/" class="card" data-title="H3BPM达梦数据库适配改造">
+<h3>H3BPM达梦数据库适配改造</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/PC端右下角浮标快捷工具/" class="card" data-title="PC端右下角浮标快捷工具">
+<h3>PC端右下角浮标快捷工具</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/SAP接口数组入参调用/" class="card" data-title="SAP接口数组入参调用">
+<h3>SAP接口数组入参调用</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/Vue-多页签导航组件开发/" class="card" data-title="Vue 多页签导航组件开发">
+<h3>Vue 多页签导航组件开发</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/Vue-自定义拖拽指令/" class="card" data-title="Vue 自定义拖拽指令">
+<h3>Vue 自定义拖拽指令</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/antd级联控件与原生下拉加载数据方法/" class="card" data-title="antd级联控件与原生下拉加载数据方法">
+<h3>antd级联控件与原生下拉加载数据方法</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/docker-部署云枢需要连接互联网/" class="card" data-title="docker 部署云枢（需要连接互联网）">
+<h3>docker 部署云枢（需要连接互联网）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/excel代替子表/" class="card" data-title="excel代替子表">
+<h3>excel代替子表</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/tcs部署/" class="card" data-title="tcs部署">
+<h3>tcs部署</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/三方主数据同步/" class="card" data-title="三方主数据同步">
+<h3>三方主数据同步</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/不二开页面巧妙在表单详情页面内嵌页面/" class="card" data-title="不二开页面，巧妙在表单详情页面内嵌页面">
+<h3>不二开页面，巧妙在表单详情页面内嵌页面</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/二开云枢数据字典存值模式/" class="card" data-title="二开云枢数据字典存值模式">
+<h3>二开云枢数据字典存值模式</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/二开产品报表导出图片/" class="card" data-title="二开产品报表导出图片">
+<h3>二开产品报表导出图片</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云6融合网页数据爬取/" class="card" data-title="云6融合网页数据爬取">
+<h3>云6融合网页数据爬取</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢PC端集成pageoffice实现在线办公全流程签批套红盖章/" class="card" data-title="云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）">
+<h3>云枢PC端集成pageoffice实现在线办公全流程（签批，套红，盖章）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢mobile端集成ntko实现办公全流程/" class="card" data-title="云枢mobile端集成ntko实现办公全流程">
+<h3>云枢mobile端集成ntko实现办公全流程</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢打印添加水印/" class="card" data-title="云枢打印添加水印">
+<h3>云枢打印添加水印</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢表单引用外部文件/" class="card" data-title="云枢表单引用外部文件">
+<h3>云枢表单引用外部文件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/产品二开实现二进制流转换为二维码图片excel下载功能/" class="card" data-title="产品二开实现二进制流转换为二维码、图片、excel下载功能">
+<h3>产品二开实现二进制流转换为二维码、图片、excel下载功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/产品结合甘特图开发/" class="card" data-title="产品结合甘特图开发">
+<h3>产品结合甘特图开发</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/产品表单页面实现点击文字展示二维码功能/" class="card" data-title="产品表单页面实现点击文字展示二维码功能">
+<h3>产品表单页面实现点击文字展示二维码功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/代办任务去除周末和节假日审批耗时功能简述/" class="card" data-title="代办任务去除周末和节假日审批耗时功能简述">
+<h3>代办任务去除周末和节假日审批耗时功能简述</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/企微消息卡片集成多环境待办审批后跳回列表页/" class="card" data-title="企微消息卡片集成多环境待办审批后跳回列表页">
+<h3>企微消息卡片集成多环境待办审批后跳回列表页</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/关联单选映射数据后被调整打开表单label标红悬浮展示关联数据/" class="card" data-title="关联单选映射数据后被调整打开表单label标红悬浮展示关联数据">
+<h3>关联单选映射数据后被调整打开表单label标红悬浮展示关联数据</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/关联表单树形结构使用与统计优化/" class="card" data-title="关联表单树形结构使用与统计优化">
+<h3>关联表单树形结构使用与统计优化</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/前端读取配置表生成图片自适应以及下载功能/" class="card" data-title="前端读取配置表生成图片自适应以及下载功能">
+<h3>前端读取配置表生成图片自适应以及下载功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/前端项目私仓地址更换说明/" class="card" data-title="前端项目私仓地址更换说明">
+<h3>前端项目私仓地址更换说明</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/单点登录二次登录问题/" class="card" data-title="单点登录二次登录问题">
+<h3>单点登录二次登录问题</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/后台操作拦截/" class="card" data-title="后台操作拦截">
+<h3>后台操作拦截</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/基于Oauth2的云枢流程触发业务服务接口配置/" class="card" data-title="基于Oauth2的云枢流程触发业务服务接口配置">
+<h3>基于Oauth2的云枢流程触发业务服务接口配置</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/定时任务自定义功能后端/" class="card" data-title="定时任务自定义功能后端">
+<h3>定时任务自定义功能后端</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/应用角色组实现/" class="card" data-title="应用角色组实现">
+<h3>应用角色组实现</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/开放草稿数据查询/" class="card" data-title="开放草稿数据查询">
+<h3>开放草稿数据查询</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/无流程表单数据唯一性同步/" class="card" data-title="无流程表单数据唯一性同步">
+<h3>无流程表单数据唯一性同步</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/某马---角标分享/" class="card" data-title="某马 - 角标分享">
+<h3>某马 - 角标分享</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/某马逻辑删除/" class="card" data-title="某马逻辑删除">
+<h3>某马逻辑删除</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/树形报表数据统计/" class="card" data-title="树形报表数据统计">
+<h3>树形报表数据统计</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/树形视图-左树右表数据一一对应/" class="card" data-title="树形视图-左树右表数据一一对应">
+<h3>树形视图-左树右表数据一一对应</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/树形视图支持方案/" class="card" data-title="树形视图支持方案">
+<h3>树形视图支持方案</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/登录接入极验功能/" class="card" data-title="登录接入极验功能">
+<h3>登录接入极验功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/移动端前端打包批量下载/" class="card" data-title="移动端前端打包批量下载">
+<h3>移动端前端打包批量下载</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/移动端考勤打卡/" class="card" data-title="移动端考勤打卡">
+<h3>移动端考勤打卡</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/移动端调起导航软件/" class="card" data-title="移动端调起导航软件">
+<h3>移动端调起导航软件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/箭头样式步骤条/" class="card" data-title="箭头样式步骤条">
+<h3>箭头样式步骤条</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/给子表中的控件添加离焦事件/" class="card" data-title="给子表中的控件添加离焦事件">
+<h3>给子表中的控件添加离焦事件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/考勤功能/" class="card" data-title="考勤功能">
+<h3>考勤功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义Modal弹窗Mobile/" class="card" data-title="自定义Modal弹窗(Mobile)">
+<h3>自定义Modal弹窗(Mobile)</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义Modal弹窗PC/" class="card" data-title="自定义Modal弹窗(PC)">
+<h3>自定义Modal弹窗(PC)</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义模型表名/" class="card" data-title="自定义模型表名">
+<h3>自定义模型表名</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义步骤条组件/" class="card" data-title="自定义步骤条组件">
+<h3>自定义步骤条组件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义竖向时间轴组件/" class="card" data-title="自定义竖向时间轴组件">
+<h3>自定义竖向时间轴组件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义视图样式二级视图展示/" class="card" data-title="自定义视图样式，二级视图展示">
+<h3>自定义视图样式，二级视图展示</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义页面使用产品idocview预览功能/" class="card" data-title="自定义页面使用产品idocview预览功能">
+<h3>自定义页面使用产品idocview预览功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/表单当前审批人/" class="card" data-title="表单当前审批人">
+<h3>表单当前审批人</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/访问连接添加二级目录/" class="card" data-title="访问连接添加二级目录">
+<h3>访问连接添加二级目录</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/递归实现树形导图/" class="card" data-title="递归实现树形导图">
+<h3>递归实现树形导图</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+<a href="/2026/05/22/针对单个表单的单个控件二开/" class="card" data-title="针对单个表单的单个控件二开">
+<h3>针对单个表单的单个控件二开</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>特殊场景方案</span>
+</div>
+</a>
+
+</div>
 </div>
 
+<div class="category" id="第三方集成">
+<h2 class="category-title" style="border-color: #52c41a">
+<span class="icon">🔗</span> 第三方集成
+<span style="font-size:0.6em; color:#666; font-weight:normal">(32篇)</span>
+</h2>
+<div class="grid">
 
+<a href="/2026/05/22/BPMjava集成企业微信使用扫一扫功能/" class="card" data-title="BPM(java)集成企业微信使用扫一扫功能">
+<h3>BPM(java)集成企业微信使用扫一扫功能</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云6集成WPS附件在线编辑/" class="card" data-title="云6集成WPS附件在线编辑">
+<h3>云6集成WPS附件在线编辑</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云7-身份认证/" class="card" data-title="云7-身份认证">
+<h3>云7-身份认证</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢610文件存储-分应用存储不同文件服务器/" class="card" data-title="云枢6.10文件存储-分应用存储不同文件服务器">
+<h3>云枢6.10文件存储-分应用存储不同文件服务器</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢6125-SSO单点登录PC端/" class="card" data-title="云枢6.12.5 SSO单点登录（PC端）">
+<h3>云枢6.12.5 SSO单点登录（PC端）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢与OA系统的集成/" class="card" data-title="云枢与OA系统的集成">
+<h3>云枢与OA系统的集成</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢第三方数据源为第三方数据库集成/" class="card" data-title="云枢第三方数据源为第三方数据库集成">
+<h3>云枢第三方数据源为第三方数据库集成</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢自维护组织实现企业微信单点登录/" class="card" data-title="云枢自维护组织实现企业微信单点登录">
+<h3>云枢自维护组织实现企业微信单点登录</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/云枢集成第三方扫码登录/" class="card" data-title="云枢集成第三方扫码登录">
+<h3>云枢集成第三方扫码登录</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/企微单点登录云枢/" class="card" data-title="企微单点登录云枢">
+<h3>企微单点登录云枢</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/企查查第三方接入应用/" class="card" data-title="企查查第三方接入应用">
+<h3>企查查第三方接入应用</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/低代码rpa融合/" class="card" data-title="低代码rpa融合">
+<h3>低代码rpa融合</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/删除流程同步外部系统/" class="card" data-title="删除流程同步外部系统">
+<h3>删除流程同步外部系统</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/前端实现-PC端集成ntko实现在线办公全流程签批套红盖章/" class="card" data-title="前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）">
+<h3>前端实现 PC端集成ntko实现在线办公全流程（签批，套红，盖章）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/单点登录云6到钉钉/" class="card" data-title="单点登录云6到钉钉">
+<h3>单点登录云6到钉钉</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/单点登录到云枢/" class="card" data-title="单点登录到云枢">
+<h3>单点登录到云枢</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/即时通单点登录到云枢/" class="card" data-title="即时通单点登录到云枢">
+<h3>即时通单点登录到云枢</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/尘锋SCRM开放平台对接案例/" class="card" data-title="尘锋SCRM开放平台对接案例">
+<h3>尘锋SCRM开放平台对接案例</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/帆软报表控件js赋值/" class="card" data-title="帆软报表控件js赋值">
+<h3>帆软报表控件js赋值</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/待办待阅扩展第三方集成/" class="card" data-title="待办、待阅扩展（第三方集成）">
+<h3>待办、待阅扩展（第三方集成）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/监听产品附件控件实现阿里云OCR身份证识别及数据映射/" class="card" data-title="监听产品附件控件实现阿里云OCR身份证识别及数据映射">
+<h3>监听产品附件控件实现阿里云OCR身份证识别及数据映射</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/移动端list列表页调起导航软件/" class="card" data-title="移动端list列表页调起导航软件">
+<h3>移动端list列表页调起导航软件</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/移动端高德地图的使用/" class="card" data-title="移动端高德地图的使用">
+<h3>移动端高德地图的使用</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/第三方服务调用云枢-openApi授权/" class="card" data-title="第三方服务调用云枢 openApi(授权)">
+<h3>第三方服务调用云枢 openApi(授权)</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/第三方系统消息推送/" class="card" data-title="第三方系统消息推送">
+<h3>第三方系统消息推送</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/第三方组织用户同步/" class="card" data-title="第三方组织用户同步">
+<h3>第三方组织用户同步</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/自定义应用企业微信待办消息推送/" class="card" data-title="自定义应用企业微信待办消息推送">
+<h3>自定义应用企业微信待办消息推送</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/金工消息中心对接文档/" class="card" data-title="金工消息中心对接文档">
+<h3>金工消息中心对接文档</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/钉钉待办推送调整至旧版待办任务/" class="card" data-title="钉钉待办推送调整至旧版待办任务">
+<h3>钉钉待办推送调整至旧版待办任务</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/钉钉日程接入/" class="card" data-title="钉钉日程接入">
+<h3>钉钉日程接入</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/集成邮件带附件发送/" class="card" data-title="集成邮件带附件发送">
+<h3>集成邮件带附件发送</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+<a href="/2026/05/22/飞书集成单点消息创建群组/" class="card" data-title="飞书集成（单点、消息、创建群组）">
+<h3>飞书集成（单点、消息、创建群组）</h3>
+<div class="meta">
+<span>📅 2026-05-22</span>
+<span>第三方集成</span>
+</div>
+</a>
+
+</div>
+</div>
 
 </div>
 
-  </header>
-
-  <main>
-    
-      <div class="container nopadding-x-md">
-        <div id="board"
-          style="margin-top: 0">
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<h1 style="display: none">李阳的技术博客</h1>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/001%20%E6%B5%81%E7%A8%8B%E4%BA%8B%E4%BB%B6%E4%BE%9D%E8%B5%96%E7%9A%84%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%99%E5%8D%87%E7%BA%A7/" target="_self">
-          001 流程事件依赖的业务规则升级
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/001%20%E6%B5%81%E7%A8%8B%E4%BA%8B%E4%BB%B6%E4%BE%9D%E8%B5%96%E7%9A%84%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%99%E5%8D%87%E7%BA%A7/" target="_self">
-        <div>
-          001 流程事件依赖的业务规则升级历史默认逻辑，流程事件以及系统节点配置的业务规则，在流程中执行后会默认更新业务模型数据到数据库，实际只有业务规则有数据赋值节点、业务方法节点才需要更新到数据库。 此升级程序针对的是在流程事件、系统节点配置的业务规则且此业务规则包含数据赋值节点、业务方法节点，那么升级程序在对应节点开启落库开关。 开关  来源: https://www.yuque.com/skwme
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/PostgreSql%E7%AD%89%E5%B0%8F%E4%BC%97%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E9%BB%98%E8%AE%A4%E6%89%A7%E8%A1%8CDDL%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/" target="_self">
-          PostgreSql等小众数据库，启动服务默认执行DDL死锁问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/PostgreSql%E7%AD%89%E5%B0%8F%E4%BC%97%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E9%BB%98%E8%AE%A4%E6%89%A7%E8%A1%8CDDL%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          PostgreSql等小众数据库，启动服务默认执行DDL死锁问题云枢8.3之后更换了ORM，默认启动服务时，ORM会主动检查表结构并默认执行DDL强校准。在Mysql等数据库下，多节点启动并不会存在问题。 当前在postgresql等小众数据库下存在锁表的风险，对应工单： #197010 【西钻升级】多节点下启动程序会报锁表启动不起来 参考链接: https://rdmp.authine.cn/p
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/oceanbase-v3%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E6%A0%B7%E4%BE%8B/" target="_self">
-          oceanbase-v3数据库配置样例
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/oceanbase-v3%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E6%A0%B7%E4%BE%8B/" target="_self">
-        <div>
-          oceanbase-v3数据库配置样例1.cloudpivot_user application-prod.yml 12# 代码块内容需要在浏览器中查看完整内容# 请访问: https://www.yuque.com/skwme4/qlby6y/gggbsxlznryvmizi  2.tenant-manage application.properties 1# 代码块内容需要在浏览器中查看完整内
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%B8%9A%E5%8A%A1%E9%9B%86%E6%88%90%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B/" target="_self">
-          业务集成场景示例
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%B8%9A%E5%8A%A1%E9%9B%86%E6%88%90%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B/" target="_self">
-        <div>
-          业务集成场景示例使用场景   场景描述 功能点 示例    进销存中，采购商品生成生成订单，集成到财务系统并从财务系统获取付款情况，若付款成功则采购流程完成 标准Rest适配器 示例一   进销存系统商品采购后，调用销售系统的服务进行数据对接 Soap 适配器 示例二   金融企业中数据的完整性要求较高，对核心业务的数据需实时做备份；业务处理时直接对备份数据库的表做增删改查 Data Table适
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E4%BD%BF%E7%94%A8/" class="category-chain-item">云枢使用</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%BA%918.5%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/" target="_self">
-          云8.5产品部署准备工作
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%BA%918.5%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/" target="_self">
-        <div>
-          云8.5产品部署准备工作一.环境要求   类型 支持范围 备注    网络 内部数据库&#x2F;中间件&#x2F;节点互通    缓存服务 redis5.0+&#x2F;宝兰德bcs&#x2F;东方通cache    数据库 DM8&#x2F;MySQL5.7&#x2F;MySQL8&#x2F;TaurusDB&#x2F;postgres16&#x2F;oracle19c+&#x2F;KingB
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%BA%918.6%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/" target="_self">
-          云8.6产品部署准备工作
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%BA%918.6%E4%BA%A7%E5%93%81%E9%83%A8%E7%BD%B2%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/" target="_self">
-        <div>
-          云8.6产品部署准备工作一.环境要求   类型 支持范围 备注    网络 内部数据库&#x2F;中间件&#x2F;节点互通    缓存服务 redis5.0+&#x2F;宝兰德bcs&#x2F;东方通cache    数据库 DM8&#x2F;MySQL5.7&#x2F;MySQL8&#x2F;TaurusDB&#x2F;postgres16&#x2F;oracle19c+&#x2F;KingB
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%BA%91%E6%9E%A26.0%E6%8A%A5%E8%A1%A8%E8%9E%8D%E5%90%88%E9%83%A8%E7%BD%B2%E6%B1%87%E6%80%BB/" target="_self">
-          云枢6.0报表融合部署汇总
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%BA%91%E6%9E%A26.0%E6%8A%A5%E8%A1%A8%E8%9E%8D%E5%90%88%E9%83%A8%E7%BD%B2%E6%B1%87%E6%80%BB/" target="_self">
-        <div>
-          云枢6.0报表融合部署汇总该部分后续会合并至部署文档中，以一个中间件&#x2F;服务的方式被云枢调用，其版本与云枢6.0版本的对应关系如下：    云枢 报表(X为修订版本号，X越大越接近报表的最新版本)    6.0-6.2 3.0-3.2   6.3-6.6 3.4.1.X   6.7 3.5.0.X   6.9~6.11 4.3.4.X   6.12 5.1.1.X   6.13 后端：5.
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9A%20AI%20%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" target="_self">
-          云枢企业 AI 平台项目介绍
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9A%20AI%20%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" target="_self">
-        <div>
-          云枢企业 AI 平台项目介绍云枢企业 AI 平台前端 — 目录结构与依赖说明 版本标识：AI-Platform-v1.1.0（根 package.json）文档用途：说明仓库目录职责、工作区内包与 npm 依赖的分类，并附带可渲染为思维导图的结构（Mermaid）。 1. 仓库与技术栈概览   维度 说明    形态 Yarn Workspaces + Lerna 的 Monorepo（根 wor
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9AAI%E5%B9%B3%E5%8F%B0V1.1%E7%89%88%E6%9C%AC/" target="_self">
-          云枢企业AI平台V1.1版本
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%BA%91%E6%9E%A2%E4%BC%81%E4%B8%9AAI%E5%B9%B3%E5%8F%B0V1.1%E7%89%88%E6%9C%AC/" target="_self">
-        <div>
-          云枢企业AI平台V1.1版本版本价值 AI：助理支持语音播报、联网搜索；AI平台支持用户反馈机制；助理支持展示历史对话；知识库新增【知识召回测试工具】；支持提示词模板；单任务技能支持”AI统计分析”动作 集团型组织支持：组织机构维护支持”经营单元、机构、员工标签”；部门、岗位支持拓展字段；组织机构数据展示优化 视图配置态全面优化：新增”视图复制”、”数据限定范围”功能；配置页面样式体验优化；前台可
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E4%BD%BF%E7%94%A8/" class="category-chain-item">云枢使用</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/05/21/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91%E8%80%85%E6%89%8B%E5%86%8C%EF%BC%888.5%E7%89%88%E6%9C%AC%EF%BC%89/" target="_self">
-          云枢开发者手册（8.5版本）
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/05/21/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91%E8%80%85%E6%89%8B%E5%86%8C%EF%BC%888.5%E7%89%88%E6%9C%AC%EF%BC%89/" target="_self">
-        <div>
-          云枢开发者手册（8.5版本）目录 低代码开发 后端 前端 版本升级指引 后端升级 前端升级 DevOps 云枢部署 集成服务 向量数据库部署 部署WIKI 信创适配构建 AI配置
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-05-21 14:49" pubdate>
-              2026-05-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%BA%91%E6%9E%A2%E5%BC%80%E5%8F%91/" class="category-chain-item">云枢开发</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E6%9E%A2/">#云枢</a>
-            
-              <a href="/tags/CloudPivot/">#CloudPivot</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-
-
-  <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
-    </span>
-  </nav>
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-    
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
+<footer>
+<p>📖 内容来源: <a href="https://authine.yuque.com/geyop4/vbtsir" target="_blank">云枢技术分享知识库</a></p>
+<p style="margin-top:10px">🛠️ Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank">Fluid</a></p>
+</footer>
 </div>
 
-    
+<script>
+function filterDocs() {
+    const query = document.getElementById('search').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        card.style.display = title.includes(query) ? '' : 'none';
+    });
+}
 
-    
-  </main>
+function showAll() {
+    document.querySelectorAll('.card').forEach(card => card.style.display = '');
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.querySelector('nav a').classList.add('active');
+}
 
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <span> | </span> <span>© 2025 李阳</span> 
-    </div>
-  
-  
-  
-</div>
-
-  </footer>
-
-  <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        var texts = ["云枢低代码平台开发实践","后端技术笔记与心得分享","用代码构建数字世界","探索企业级AI平台的无限可能"];
-        var idx = Math.floor(Math.random() * texts.length);
-        typing(texts[idx]);
-      
-    })(window, document);
-  </script>
-
-
-
-
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
-
-
-
-
-  <script  src="/js/local-search.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
+function scrollToCat(cat) {
+    document.getElementById(cat).scrollIntoView({behavior: 'smooth'});
+}
+</script>
 </body>
 </html>
