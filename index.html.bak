@@ -356,7 +356,6 @@ footer a {
 <li><a href="#about">关于我</a></li>
 <li><a href="#internship">实习经历</a></li>
 <li><a href="#articles">技术文章</a></li>
-<li><a href="/interview-questions/">面试题库</a></li>
 </ul>
 </div>
 </nav>
@@ -369,10 +368,6 @@ footer a {
 <div class="stat-item">
 <div class="stat-num">254</div>
 <div class="stat-label">篇文章</div>
-</div>
-<div class="stat-item">
-<div class="stat-num">2,516</div>
-<div class="stat-label">道面试题</div>
 </div>
 <div class="stat-item">
 <div class="stat-num">4</div>
@@ -418,13 +413,6 @@ footer a {
 </div>
 
 <div class="categories-grid">
-
-<a href="/interview-questions/" class="category-card">
-<div class="category-icon">🎯</div>
-<h3>面试题库</h3>
-<div class="count">2,516 道面试题</div>
-<div class="desc">Java、中间件、场景题全覆盖，含AI生成答案</div>
-</a>
 
 <a href="#cat-通用方案" class="category-card" onclick="scrollToCat('cat-通用方案')">
 <div class="category-icon">📋</div>
