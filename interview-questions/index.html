@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java面试题库 | 李阳的技术博客</title>
+<meta name="description" content="2516道Java面试题，涵盖AI大模型、后端、中间件等46个分类，含详细答案">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(15, 15, 25, 0.8);
+  --neon-cyan: #00f0ff;
+  --neon-purple: #b000ff;
+  --neon-green: #00ff88;
+  --neon-pink: #ff0080;
+  --neon-yellow: #f0ff00;
+  --text-primary: #e0e0ff;
+  --text-secondary: #8888aa;
+  --border-glow: rgba(0, 240, 255, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated grid background */
+.bg-grid {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: perspective(500px) rotateX(0deg); }
+  100% { transform: perspective(500px) rotateX(5deg); }
+}
+
+/* Floating particles */
+.particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  animation: float linear infinite;
+  box-shadow: 0 0 6px var(--neon-cyan);
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* Scan line effect */
+.scanline {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 240, 255, 0.01) 2px,
+    rgba(0, 240, 255, 0.01) 4px
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Navigation */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 15, 0.95);
+  border-bottom: 1px solid var(--border-glow);
+  backdrop-filter: blur(20px);
+}
+
+.navbar .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5em;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-decoration: none;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+.logo span { color: var(--text-secondary); font-weight: 400; }
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover::after { width: 100%; }
+
+/* Hero section */
+.hero {
+  position: relative;
+  z-index: 2;
+  padding: 80px 30px 60px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+}
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3em;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5), 0 0 80px rgba(0, 240, 255, 0.2);
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+}
+
+.hero .subtitle {
+  font-size: 1.1em;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+.hero .stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  text-align: center;
+  padding: 20px 30px;
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  background: rgba(0, 240, 255, 0.03);
+  min-width: 150px;
+}
+
+.stat-box .num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5em;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+.stat-box .label {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+/* Search box */
+.search-container {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  margin: 0 auto 50px;
+  padding: 0 30px;
+}
+
+.search-box {
+  width: 100%;
+  padding: 15px 25px 15px 50px;
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95em;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.search-box:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05);
+}
+
+.search-box::placeholder { color: var(--text-secondary); }
+
+.search-icon {
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neon-cyan);
+  font-size: 1.1em;
+}
+
+/* Category filters */
+.filter-bar {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto 30px;
+  padding: 0 30px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid var(--border-glow);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+/* Categories grid */
+.categories-section {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 30px 60px;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5em;
+  color: var(--neon-purple);
+  text-shadow: 0 0 20px rgba(176, 0, 255, 0.5);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.section-title::before {
+  content: '//';
+  color: var(--text-secondary);
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-glow), transparent);
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.category-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 25px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15), 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.category-card:hover::before { opacity: 1; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  font-size: 2em;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 240, 255, 0.1);
+  border-radius: 10px;
+  border: 1px solid var(--border-glow);
+}
+
+.card-count {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+.card-title {
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.card-desc {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.card-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 3px 10px;
+  background: rgba(176, 0, 255, 0.1);
+  border: 1px solid rgba(176, 0, 255, 0.3);
+  border-radius: 4px;
+  font-size: 0.75em;
+  color: var(--neon-purple);
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 30px;
+  border-top: 1px solid var(--border-glow);
+  color: var(--text-secondary);
+  font-size: 0.85em;
+}
+
+.footer a {
+  color: var(--neon-cyan);
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2em; }
+  .hero .stats-row { gap: 20px; }
+  .stat-box { min-width: 100px; padding: 15px; }
+  .stat-box .num { font-size: 1.8em; }
+  .categories-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+
+/* Glitch effect for title */
+@keyframes glitch {
+  0%, 100% { text-shadow: 0 0 40px rgba(0, 240, 255, 0.5); }
+  20% { text-shadow: -2px 0 var(--neon-pink), 2px 0 var(--neon-green); }
+  40% { text-shadow: 2px 0 var(--neon-pink), -2px 0 var(--neon-green); }
+  60% { text-shadow: -1px 0 var(--neon-pink), 1px 0 var(--neon-green); }
+  80% { text-shadow: 1px 0 var(--neon-pink), -1px 0 var(--neon-green); }
+}
+
+.hero h1:hover {
+  animation: glitch 0.3s ease infinite;
+}
+
+/* Terminal cursor blink */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--neon-cyan);
+  margin-left: 5px;
+  animation: blink 1s infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+<div class="scanline"></div>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="logo">LY<span>.DEV</span></a>
+    <ul class="nav-links">
+      <li><a href="/">首页</a></li>
+      <li><a href="/#articles">技术文章</a></li>
+      <li><a href="/interview-questions/">面试题库</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>INTERVIEW QUESTIONS<span class="cursor"></span></h1>
+  <p class="subtitle">// 46 个分类 · 2516 道面试题 · 含详细答案</p>
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="num">2516</div>
+      <div class="label">TOTAL</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">46</div>
+      <div class="label">CATEGORIES</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">99.8%</div>
+      <div class="label">COVERAGE</div>
+    </div>
+  </div>
+</section>
+
+<div class="search-container">
+  <i class="fas fa-terminal search-icon"></i>
+  <input type="text" class="search-box" id="search" placeholder="> 搜索面试题分类..." oninput="filterCategories()">
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterByTag('all')">全部</button>
+  <button class="filter-btn" onclick="filterByTag('java')">Java</button>
+  <button class="filter-btn" onclick="filterByTag('middleware')">中间件</button>
+  <button class="filter-btn" onclick="filterByTag('database')">数据库</button>
+  <button class="filter-btn" onclick="filterByTag('devops')">运维部署</button>
+  <button class="filter-btn" onclick="filterByTag('interview')">大厂面经</button>
+  <button class="filter-btn" onclick="filterByTag('algo')">算法</button>
+  <button class="filter-btn" onclick="filterByTag('ai')">AI/大模型</button>
+</div>
+
+<section class="categories-section">
+  <h2 class="section-title">CATEGORIES</h2>
+  <div class="categories-grid" id="categories-grid">
+
+    <a href="./AI大模型/AI大模型.md" class="category-card" data-title="AI大模型面试题" data-tags="ai">
+      <div class="card-header">
+        <div class="card-icon">🤖</div>
+        <div class="card-count">343</div>
+      </div>
+      <div class="card-title">AI大模型面试题</div>
+      <div class="card-desc">LLM、Transformer、RAG、Agent等前沿AI技术面试题</div>
+      <div class="card-tags"><span class="tag">AI</span><span class="tag">LLM</span></div>
+    </a>
+
+    <a href="./华为OD/华为OD.md" class="category-card" data-title="华为OD面试题" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">📱</div>
+        <div class="card-count">209</div>
+      </div>
+      <div class="card-title">华为OD面试题</div>
+      <div class="card-desc">华为OD机试、算法题、面试真题汇总</div>
+      <div class="card-tags"><span class="tag">华为</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./Java/Java.md" class="category-card" data-title="Java面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">☕</div>
+        <div class="card-count">200</div>
+      </div>
+      <div class="card-title">Java面试题</div>
+      <div class="card-desc">Java核心、集合、多线程、JVM等高频面试题</div>
+      <div class="card-tags"><span class="tag">Java</span><span class="tag">JVM</span></div>
+    </a>
+
+    <a href="./ElasticSearch/ElasticSearch.md" class="category-card" data-title="ElasticSearch面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">🔍</div>
+        <div class="card-count">177</div>
+      </div>
+      <div class="card-title">ElasticSearch面试题</div>
+      <div class="card-desc">ES原理、索引、分片、查询优化等面试题</div>
+      <div class="card-tags"><span class="tag">ES</span><span class="tag">搜索引擎</span></div>
+    </a>
+
+    <a href="./Java热门200道/Java热门200道.md" class="category-card" data-title="Java热门面试题200道" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🔥</div>
+        <div class="card-count">162</div>
+      </div>
+      <div class="card-title">Java热门面试题200道</div>
+      <div class="card-desc">精选Java高频面试题，覆盖核心知识点</div>
+      <div class="card-tags"><span class="tag">Java</span><span class="tag">高频</span></div>
+    </a>
+
+    <a href="./Git进阶/Git进阶.md" class="category-card" data-title="Git进阶面试题" data-tags="devops">
+      <div class="card-header">
+        <div class="card-icon">📦</div>
+        <div class="card-count">123</div>
+      </div>
+      <div class="card-title">Git进阶面试题</div>
+      <div class="card-desc">Git高级操作、分支策略、冲突解决等</div>
+      <div class="card-tags"><span class="tag">Git</span><span class="tag">版本控制</span></div>
+    </a>
+
+    <a href="./Nginx/Nginx.md" class="category-card" data-title="Nginx面试题" data-tags="devops">
+      <div class="card-header">
+        <div class="card-icon">🌐</div>
+        <div class="card-count">115</div>
+      </div>
+      <div class="card-title">Nginx面试题</div>
+      <div class="card-desc">Nginx配置、负载均衡、反向代理等面试题</div>
+      <div class="card-tags"><span class="tag">Nginx</span><span class="tag">运维</span></div>
+    </a>
+
+    <a href="./Zookeeper/Zookeeper.md" class="category-card" data-title="Zookeeper面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">🦁</div>
+        <div class="card-count">92</div>
+      </div>
+      <div class="card-title">Zookeeper面试题</div>
+      <div class="card-desc">ZAB协议、分布式锁、选举机制等面试题</div>
+      <div class="card-tags"><span class="tag">ZK</span><span class="tag">分布式</span></div>
+    </a>
+
+    <a href="./后端场景/后端场景.md" class="category-card" data-title="后端场景面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🏗️</div>
+        <div class="card-count">80</div>
+      </div>
+      <div class="card-title">后端场景面试题</div>
+      <div class="card-desc">高并发、秒杀、分布式事务等场景设计题</div>
+      <div class="card-tags"><span class="tag">场景</span><span class="tag">设计</span></div>
+    </a>
+
+    <a href="./Dubbo/Dubbo.md" class="category-card" data-title="Dubbo面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div class="card-count">64</div>
+      </div>
+      <div class="card-title">Dubbo面试题</div>
+      <div class="card-desc">RPC原理、服务治理、负载均衡等面试题</div>
+      <div class="card-tags"><span class="tag">Dubbo</span><span class="tag">RPC</span></div>
+    </a>
+
+    <a href="./大厂算法真题/大厂算法真题.md" class="category-card" data-title="大厂算法真题" data-tags="algo">
+      <div class="card-header">
+        <div class="card-icon">🧮</div>
+        <div class="card-count">63</div>
+      </div>
+      <div class="card-title">大厂算法真题</div>
+      <div class="card-desc">字节、腾讯、阿里等大厂算法面试真题</div>
+      <div class="card-tags"><span class="tag">算法</span><span class="tag">LeetCode</span></div>
+    </a>
+
+    <a href="./Kafka/Kafka.md" class="category-card" data-title="Kafka面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">📨</div>
+        <div class="card-count">59</div>
+      </div>
+      <div class="card-title">Kafka面试题</div>
+      <div class="card-desc">分区、副本、消费者组、Exactly-Once等面试题</div>
+      <div class="card-tags"><span class="tag">Kafka</span><span class="tag">MQ</span></div>
+    </a>
+
+    <a href="./Git基础/Git基础.md" class="category-card" data-title="Git基础面试题" data-tags="devops">
+      <div class="card-header">
+        <div class="card-icon">📂</div>
+        <div class="card-count">59</div>
+      </div>
+      <div class="card-title">Git基础面试题</div>
+      <div class="card-desc">Git基本操作、工作区、暂存区等基础面试题</div>
+      <div class="card-tags"><span class="tag">Git</span><span class="tag">基础</span></div>
+    </a>
+
+    <a href="./Spring/Spring.md" class="category-card" data-title="Spring面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🌱</div>
+        <div class="card-count">58</div>
+      </div>
+      <div class="card-title">Spring面试题</div>
+      <div class="card-desc">IoC、AOP、Bean生命周期、事务管理等面试题</div>
+      <div class="card-tags"><span class="tag">Spring</span><span class="tag">框架</span></div>
+    </a>
+
+    <a href="./字节跳动面经/字节跳动面经.md" class="category-card" data-title="字节跳动Java面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🎵</div>
+        <div class="card-count">58</div>
+      </div>
+      <div class="card-title">字节跳动Java面经</div>
+      <div class="card-desc">字节跳动后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">字节</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./MySQL/MySQL.md" class="category-card" data-title="MySQL面试题" data-tags="database">
+      <div class="card-header">
+        <div class="card-icon">🐬</div>
+        <div class="card-count">49</div>
+      </div>
+      <div class="card-title">MySQL面试题</div>
+      <div class="card-desc">索引优化、事务隔离、锁机制、MVCC等面试题</div>
+      <div class="card-tags"><span class="tag">MySQL</span><span class="tag">数据库</span></div>
+    </a>
+
+    <a href="./SQL网站场景/SQL网站场景.md" class="category-card" data-title="SQL网站场景面试题" data-tags="database">
+      <div class="card-header">
+        <div class="card-icon">💾</div>
+        <div class="card-count">45</div>
+      </div>
+      <div class="card-title">SQL网站场景面试题</div>
+      <div class="card-desc">网站业务场景下的SQL查询与优化</div>
+      <div class="card-tags"><span class="tag">SQL</span><span class="tag">场景</span></div>
+    </a>
+
+    <a href="./SpringCloud/SpringCloud.md" class="category-card" data-title="SpringCloud面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">☁️</div>
+        <div class="card-count">44</div>
+      </div>
+      <div class="card-title">SpringCloud面试题</div>
+      <div class="card-desc">微服务架构、服务注册、配置中心等面试题</div>
+      <div class="card-tags"><span class="tag">SpringCloud</span><span class="tag">微服务</span></div>
+    </a>
+
+    <a href="./Linux系统/Linux系统.md" class="category-card" data-title="Linux系统面试题" data-tags="devops">
+      <div class="card-header">
+        <div class="card-icon">🐧</div>
+        <div class="card-count">43</div>
+      </div>
+      <div class="card-title">Linux系统面试题</div>
+      <div class="card-desc">进程管理、内存管理、Shell脚本等面试题</div>
+      <div class="card-tags"><span class="tag">Linux</span><span class="tag">系统</span></div>
+    </a>
+
+    <a href="./阿里巴巴面经/阿里巴巴面经.md" class="category-card" data-title="阿里巴巴Java面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🛒</div>
+        <div class="card-count">35</div>
+      </div>
+      <div class="card-title">阿里巴巴Java面经</div>
+      <div class="card-desc">阿里巴巴后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">阿里</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./后端系统设计/后端系统设计.md" class="category-card" data-title="后端系统设计面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🏛️</div>
+        <div class="card-count">34</div>
+      </div>
+      <div class="card-title">后端系统设计面试题</div>
+      <div class="card-desc">系统设计、架构设计、高可用等面试题</div>
+      <div class="card-tags"><span class="tag">系统设计</span><span class="tag">架构</span></div>
+    </a>
+
+    <a href="./SQL电商场景/SQL电商场景.md" class="category-card" data-title="SQL电商场景面试题" data-tags="database">
+      <div class="card-header">
+        <div class="card-icon">🛍️</div>
+        <div class="card-count">34</div>
+      </div>
+      <div class="card-title">SQL电商场景面试题</div>
+      <div class="card-desc">电商业务场景下的SQL查询与优化</div>
+      <div class="card-tags"><span class="tag">SQL</span><span class="tag">电商</span></div>
+    </a>
+
+    <a href="./京东面经/京东面经.md" class="category-card" data-title="京东Java面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🐕</div>
+        <div class="card-count">33</div>
+      </div>
+      <div class="card-title">京东Java面经</div>
+      <div class="card-desc">京东后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">京东</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./RabbitMQ/RabbitMQ.md" class="category-card" data-title="RabbitMQ面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">🐰</div>
+        <div class="card-count">31</div>
+      </div>
+      <div class="card-title">RabbitMQ面试题</div>
+      <div class="card-desc">消息确认、死信队列、延迟队列等面试题</div>
+      <div class="card-tags"><span class="tag">RabbitMQ</span><span class="tag">MQ</span></div>
+    </a>
+
+    <a href="./RocketMQ/RocketMQ.md" class="category-card" data-title="RocketMQ面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">🚀</div>
+        <div class="card-count">30</div>
+      </div>
+      <div class="card-title">RocketMQ面试题</div>
+      <div class="card-desc">顺序消息、事务消息、消息轨迹等面试题</div>
+      <div class="card-tags"><span class="tag">RocketMQ</span><span class="tag">MQ</span></div>
+    </a>
+
+    <a href="./Docker/Docker.md" class="category-card" data-title="Docker面试题" data-tags="devops">
+      <div class="card-header">
+        <div class="card-icon">🐳</div>
+        <div class="card-count">28</div>
+      </div>
+      <div class="card-title">Docker面试题</div>
+      <div class="card-desc">容器化、镜像、网络、编排等面试题</div>
+      <div class="card-tags"><span class="tag">Docker</span><span class="tag">容器</span></div>
+    </a>
+
+    <a href="./设计模式/设计模式.md" class="category-card" data-title="设计模式面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🎨</div>
+        <div class="card-count">26</div>
+      </div>
+      <div class="card-title">设计模式面试题</div>
+      <div class="card-desc">单例、工厂、策略、观察者等23种设计模式</div>
+      <div class="card-tags"><span class="tag">设计模式</span><span class="tag">OOP</span></div>
+    </a>
+
+    <a href="./Kubernetes/Kubernetes.md" class="category-card" data-title="Kubernetes面试题" data-tags="devops">
+      <div class="card-header">
+        <div class="card-icon">☸️</div>
+        <div class="card-count">25</div>
+      </div>
+      <div class="card-title">Kubernetes面试题</div>
+      <div class="card-desc">Pod、Service、Deployment、调度等面试题</div>
+      <div class="card-tags"><span class="tag">K8s</span><span class="tag">编排</span></div>
+    </a>
+
+    <a href="./Redis/Redis.md" class="category-card" data-title="Redis面试题" data-tags="database">
+      <div class="card-header">
+        <div class="card-icon">🔴</div>
+        <div class="card-count">24</div>
+      </div>
+      <div class="card-title">Redis面试题</div>
+      <div class="card-desc">数据结构、持久化、集群、缓存穿透等面试题</div>
+      <div class="card-tags"><span class="tag">Redis</span><span class="tag">缓存</span></div>
+    </a>
+
+    <a href="./操作系统/操作系统.md" class="category-card" data-title="操作系统面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">💻</div>
+        <div class="card-count">21</div>
+      </div>
+      <div class="card-title">操作系统面试题</div>
+      <div class="card-desc">进程调度、内存管理、死锁、IO模型等面试题</div>
+      <div class="card-tags"><span class="tag">OS</span><span class="tag">基础</span></div>
+    </a>
+
+    <a href="./计算机网络/计算机网络.md" class="category-card" data-title="计算机网络面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🌍</div>
+        <div class="card-count">21</div>
+      </div>
+      <div class="card-title">计算机网络面试题</div>
+      <div class="card-desc">TCP/IP、HTTP/HTTPS、DNS、网络安全等面试题</div>
+      <div class="card-tags"><span class="tag">网络</span><span class="tag">TCP</span></div>
+    </a>
+
+    <a href="./美团面经/美团面经.md" class="category-card" data-title="美团Java面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🛵</div>
+        <div class="card-count">20</div>
+      </div>
+      <div class="card-title">美团Java面经</div>
+      <div class="card-desc">美团后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">美团</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./SpringBoot/SpringBoot.md" class="category-card" data-title="SpringBoot面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🍃</div>
+        <div class="card-count">19</div>
+      </div>
+      <div class="card-title">SpringBoot面试题</div>
+      <div class="card-desc">自动配置、Starter、Actuator等面试题</div>
+      <div class="card-tags"><span class="tag">SpringBoot</span><span class="tag">框架</span></div>
+    </a>
+
+    <a href="./拼多多面经/拼多多面经.md" class="category-card" data-title="拼多多Java面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🍊</div>
+        <div class="card-count">19</div>
+      </div>
+      <div class="card-title">拼多多Java面经</div>
+      <div class="card-desc">拼多多后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">拼多多</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./消息队列/消息队列.md" class="category-card" data-title="消息队列面试题" data-tags="middleware">
+      <div class="card-header">
+        <div class="card-icon">📬</div>
+        <div class="card-count">15</div>
+      </div>
+      <div class="card-title">消息队列面试题</div>
+      <div class="card-desc">MQ通用概念、选型对比、消息可靠性等面试题</div>
+      <div class="card-tags"><span class="tag">MQ</span><span class="tag">中间件</span></div>
+    </a>
+
+    <a href="./腾讯面经/腾讯面经.md" class="category-card" data-title="腾讯Java面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🐧</div>
+        <div class="card-count">14</div>
+      </div>
+      <div class="card-title">腾讯Java面经</div>
+      <div class="card-desc">腾讯后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">腾讯</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./MyBatis/MyBatis.md" class="category-card" data-title="MyBatis面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🗃️</div>
+        <div class="card-count">12</div>
+      </div>
+      <div class="card-title">MyBatis面试题</div>
+      <div class="card-desc">ORM映射、缓存机制、插件开发等面试题</div>
+      <div class="card-tags"><span class="tag">MyBatis</span><span class="tag">ORM</span></div>
+    </a>
+
+    <a href="./小红书面经/小红书面经.md" class="category-card" data-title="小红书面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">📕</div>
+        <div class="card-count">11</div>
+      </div>
+      <div class="card-title">小红书面经</div>
+      <div class="card-desc">小红书后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">小红书</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./小米面经/小米面经.md" class="category-card" data-title="小米面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">📱</div>
+        <div class="card-count">10</div>
+      </div>
+      <div class="card-title">小米面经</div>
+      <div class="card-desc">小米后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">小米</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./快手面经/快手面经.md" class="category-card" data-title="快手面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🎬</div>
+        <div class="card-count">10</div>
+      </div>
+      <div class="card-title">快手面经</div>
+      <div class="card-desc">快手后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">快手</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./网易面经/网易面经.md" class="category-card" data-title="网易面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🎮</div>
+        <div class="card-count">9</div>
+      </div>
+      <div class="card-title">网易面经</div>
+      <div class="card-desc">网易后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">网易</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./设计题/设计题.md" class="category-card" data-title="设计题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">✏️</div>
+        <div class="card-count">8</div>
+      </div>
+      <div class="card-title">设计题</div>
+      <div class="card-desc">系统设计、架构设计实战面试题</div>
+      <div class="card-tags"><span class="tag">设计</span><span class="tag">架构</span></div>
+    </a>
+
+    <a href="./滴滴面经/滴滴面经.md" class="category-card" data-title="滴滴面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🚕</div>
+        <div class="card-count">7</div>
+      </div>
+      <div class="card-title">滴滴面经</div>
+      <div class="card-desc">滴滴后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">滴滴</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./蚂蚁金服面经/蚂蚁金服面经.md" class="category-card" data-title="蚂蚁金服面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🐜</div>
+        <div class="card-count">7</div>
+      </div>
+      <div class="card-title">蚂蚁金服面经</div>
+      <div class="card-desc">蚂蚁金服后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">蚂蚁</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./百度面经/百度面经.md" class="category-card" data-title="百度面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🐻</div>
+        <div class="card-count">6</div>
+      </div>
+      <div class="card-title">百度面经</div>
+      <div class="card-desc">百度后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">百度</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./前端面试题/前端面试题.md" class="category-card" data-title="前端面试题" data-tags="java">
+      <div class="card-header">
+        <div class="card-icon">🖼️</div>
+        <div class="card-count">4</div>
+      </div>
+      <div class="card-title">前端面试题</div>
+      <div class="card-desc">JavaScript、Vue、React等前端面试题</div>
+      <div class="card-tags"><span class="tag">前端</span><span class="tag">JS</span></div>
+    </a>
+
+    <a href="./淘天面经/淘天面经.md" class="category-card" data-title="淘天面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🏪</div>
+        <div class="card-count">3</div>
+      </div>
+      <div class="card-title">淘天面经</div>
+      <div class="card-desc">淘天集团后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">淘天</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./微软面经/微软面经.md" class="category-card" data-title="微软面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🪟</div>
+        <div class="card-count">3</div>
+      </div>
+      <div class="card-title">微软面经</div>
+      <div class="card-desc">微软后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">微软</span><span class="tag">面经</span></div>
+    </a>
+
+    <a href="./Shopee面经/Shopee面经.md" class="category-card" data-title="Shopee面经" data-tags="interview">
+      <div class="card-header">
+        <div class="card-icon">🛒</div>
+        <div class="card-count">2</div>
+      </div>
+      <div class="card-title">Shopee面经</div>
+      <div class="card-desc">Shopee后端面试真题与经验分享</div>
+      <div class="card-tags"><span class="tag">Shopee</span><span class="tag">面经</span></div>
+    </a>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 李阳的技术博客 | <a href="/">eligible123.github.io</a></p>
+  <p style="margin-top:8px; opacity:0.6">// 数据来源: mianshiya.com · 答案由 MiMo AI 生成</p>
+</footer>
+
+<script>
+// Create floating particles
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    particle.style.animationDelay = Math.random() * 10 + 's';
+    particle.style.opacity = Math.random() * 0.5 + 0.2;
+    container.appendChild(particle);
+  }
+}
+createParticles();
+
+// Search filter
+function filterCategories() {
+  const query = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.category-card').forEach(card => {
+    const title = card.dataset.title.toLowerCase();
+    card.style.display = title.includes(query) ? '' : 'none';
+  });
+}
+
+// Tag filter
+function filterByTag(tag) {
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('.category-card').forEach(card => {
+    if (tag === 'all') {
+      card.style.display = '';
+    } else {
+      const tags = card.dataset.tags || '';
+      card.style.display = tags.includes(tag) ? '' : 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
