@@ -27,92 +27,35 @@
     justify-content: center;
     padding: 20px;
   }
-  .container {
-    max-width: 500px;
-    text-align: center;
-  }
-  .avatar {
-    font-size: 64px;
-    margin-bottom: 20px;
-  }
+  .container { max-width: 500px; text-align: center; }
+  .avatar { font-size: 64px; margin-bottom: 20px; }
   h1 {
-    font-size: 28px;
-    margin-bottom: 8px;
+    font-size: 28px; margin-bottom: 8px;
     background: linear-gradient(135deg, var(--accent), var(--primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .subtitle {
-    color: var(--text-muted);
-    margin-bottom: 32px;
-    font-size: 14px;
-  }
-  .stats {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    margin-bottom: 32px;
-  }
-  .stat {
-    text-align: center;
-  }
-  .stat .num {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-  .stat .label {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
+  .subtitle { color: var(--text-muted); margin-bottom: 32px; font-size: 14px; }
+  .stats { display: flex; gap: 24px; justify-content: center; margin-bottom: 32px; }
+  .stat .num { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .stat .label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
   .btn {
-    display: inline-block;
-    padding: 16px 40px;
+    display: inline-block; padding: 16px 40px;
     background: linear-gradient(135deg, var(--primary), #7C3AED);
-    color: #fff;
-    text-decoration: none;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    transition: all .3s;
+    color: #fff; text-decoration: none; border-radius: 12px;
+    font-size: 18px; font-weight: 600; transition: all .3s;
     box-shadow: 0 4px 20px rgba(79,70,229,.3);
   }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(79,70,229,.4);
-  }
-  .note {
-    margin-top: 20px;
-    padding: 16px;
-    background: rgba(255,193,7,.1);
-    border: 1px solid rgba(255,193,7,.3);
-    border-radius: 8px;
-    color: #FCD34D;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-  .note strong { color: #FBBF24; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(79,70,229,.4); }
   .categories {
-    margin-top: 32px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
+    margin-top: 32px; display: flex; flex-wrap: wrap;
+    gap: 8px; justify-content: center;
   }
   .categories span {
-    background: rgba(79,70,229,.15);
-    color: var(--primary);
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 12px;
+    background: rgba(79,70,229,.15); color: var(--primary);
+    padding: 4px 12px; border-radius: 16px; font-size: 12px;
     border: 1px solid rgba(79,70,229,.3);
   }
-  .footer {
-    margin-top: 40px;
-    color: var(--text-muted);
-    font-size: 12px;
-  }
+  .footer { margin-top: 40px; color: var(--text-muted); font-size: 12px; }
   .footer a { color: var(--accent); text-decoration: none; }
 </style>
 </head>
@@ -120,43 +63,19 @@
   <div class="container">
     <div class="avatar">🤖</div>
     <h1>Java面试AI助手</h1>
-    <p class="subtitle">基于 2516 道面试题库 · BM25语义检索 · LongCat大模型</p>
-
+    <p class="subtitle">基于 2516 道面试题库 · 智能检索 · AI增强回答</p>
     <div class="stats">
-      <div class="stat">
-        <div class="num">2516</div>
-        <div class="label">面试题</div>
-      </div>
-      <div class="stat">
-        <div class="num">46</div>
-        <div class="label">分类</div>
-      </div>
-      <div class="stat">
-        <div class="num">AI</div>
-        <div class="label">智能回答</div>
-      </div>
+      <div class="stat"><div class="num">2516</div><div class="label">面试题</div></div>
+      <div class="stat"><div class="num">46</div><div class="label">分类</div></div>
+      <div class="stat"><div class="num">AI</div><div class="label">智能回答</div></div>
     </div>
-
-    <a class="btn" href="https://39.106.212.219/ai-chat/" target="_blank">
-      🚀 启动AI面试助手
-    </a>
-
-    <div class="note">
-      <strong>⚠️ 首次访问提示：</strong><br>
-      点击上方按钮后，浏览器可能会提示"连接不安全"或"证书警告"，这是正常的（服务器使用自签名证书）。<br><br>
-      👉 <strong>Chrome/Edge：</strong>点击"高级" → "继续前往 39.106.212.219（不安全）"<br>
-      👉 <strong>Firefox：</strong>点击"接受风险并继续"<br>
-      👉 <strong>Safari：</strong>点击"显示详细信息" → "访问此网站"<br><br>
-      之后就可以正常使用了！
-    </div>
-
+    <a class="btn" href="https://interview.cc.cd/">🚀 开始使用</a>
     <div class="categories">
       <span>Java</span><span>Spring</span><span>MySQL</span><span>Redis</span>
       <span>Kafka</span><span>Docker</span><span>K8s</span><span>Netty</span>
       <span>MyBatis</span><span>Dubbo</span><span>ES</span><span>Nginx</span>
       <span>设计模式</span><span>算法</span><span>系统设计</span>
     </div>
-
     <p class="footer">
       <a href="/interview-questions/">浏览全部题库</a> · 
       <a href="/">返回首页</a>
