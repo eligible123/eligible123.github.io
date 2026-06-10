@@ -1,0 +1,1 @@
+const QUESTIONS = [{"num": 1, "title": "Git 是使用什么语言编写的？", "difficulty": "简单", "difficulty_emoji": "🟢", "tags": "Git, Git概念", "answer": "Git是用C语言编写的。由Linus Torvalds于2005年开发，最初用于管理Linux内核源代码。选择C语言主要基于其高性能、跨平台兼容性和底层控制能力，这使得Git能够高效处理大型代码库和复杂操作。C语言允许直接内存管理和优化，确保了Git在速度与稳定性方面的优势，支持其分布式架构的核心设计理念。这种语言选择使Git成为快速、可靠的版本控制系统，广泛应用于软件开发领域。"}];
