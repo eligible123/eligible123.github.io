@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI模拟面试 | 李阳的技术博客</title>
-<meta name="description" content="AI智能模拟面试，支持上传简历和JD，AI分析专属面试题">
+<meta name="description" content="AI智能模拟面试，上传简历+JD生成15道专属面试题">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
@@ -42,12 +42,6 @@ body {
     linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
   z-index: 0;
-  animation: gridMove 20s linear infinite;
-}
-
-@keyframes gridMove {
-  0% { transform: perspective(500px) rotateX(0deg); }
-  100% { transform: perspective(500px) rotateX(5deg); }
 }
 
 .particles {
@@ -72,21 +66,6 @@ body {
   10% { opacity: 1; }
   90% { opacity: 1; }
   100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-}
-
-.scanline {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 240, 255, 0.01) 2px,
-    rgba(0, 240, 255, 0.01) 4px
-  );
-  z-index: 1;
-  pointer-events: none;
 }
 
 .navbar {
@@ -132,27 +111,12 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: all 0.3s;
-  position: relative;
 }
 
 .nav-links a:hover {
   color: var(--neon-cyan);
   text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
 }
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--neon-cyan);
-  box-shadow: 0 0 10px var(--neon-cyan);
-  transition: width 0.3s;
-}
-
-.nav-links a:hover::after { width: 100%; }
 
 .hero {
   position: relative;
@@ -167,9 +131,8 @@ body {
   font-size: 2.5em;
   font-weight: 900;
   color: var(--neon-cyan);
-  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5), 0 0 80px rgba(0, 240, 255, 0.2);
+  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
   margin-bottom: 15px;
-  letter-spacing: 3px;
 }
 
 .hero .subtitle {
@@ -178,13 +141,12 @@ body {
   margin-bottom: 30px;
 }
 
-/* Upload section */
-.upload-section {
+.main-container {
   position: relative;
   z-index: 2;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 30px 40px;
+  padding: 0 30px 60px;
 }
 
 .section-title {
@@ -208,6 +170,11 @@ body {
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, var(--border-glow), transparent);
+}
+
+/* Upload Section */
+.upload-section {
+  margin-bottom: 40px;
 }
 
 .upload-grid {
@@ -249,7 +216,7 @@ body {
   gap: 10px;
 }
 
-.upload-card .card-header .badge {
+.badge {
   padding: 3px 10px;
   border-radius: 4px;
   font-size: 0.75em;
@@ -283,11 +250,6 @@ body {
   background: rgba(0, 240, 255, 0.03);
 }
 
-.upload-area.dragover {
-  border-color: var(--neon-green);
-  background: rgba(0, 255, 136, 0.05);
-}
-
 .upload-area .icon {
   font-size: 2.5em;
   margin-bottom: 10px;
@@ -296,14 +258,6 @@ body {
 .upload-area p {
   color: var(--text-secondary);
   font-size: 0.85em;
-  line-height: 1.6;
-}
-
-.upload-area .file-types {
-  margin-top: 10px;
-  font-size: 0.75em;
-  color: var(--text-secondary);
-  opacity: 0.7;
 }
 
 .upload-area input[type="file"] {
@@ -334,14 +288,6 @@ body {
 .file-info .file-name {
   font-size: 0.85em;
   color: var(--neon-green);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.file-info .file-size {
-  font-size: 0.75em;
-  color: var(--text-secondary);
 }
 
 .file-info .remove-btn {
@@ -350,188 +296,308 @@ body {
   color: var(--neon-pink);
   cursor: pointer;
   font-size: 1.1em;
-  padding: 5px;
-  transition: all 0.3s;
 }
 
-.file-info .remove-btn:hover {
-  text-shadow: 0 0 10px rgba(255, 0, 128, 0.5);
+/* Analysis Result */
+.analysis-section {
+  margin-bottom: 40px;
 }
 
-/* Analysis preview */
-.analysis-preview {
+.analysis-card {
   background: var(--bg-card);
   border: 1px solid var(--border-glow);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
+  border-radius: 16px;
+  padding: 30px;
   display: none;
 }
 
-.analysis-preview.show {
+.analysis-card.show {
   display: block;
+  animation: fadeIn 0.3s ease;
 }
 
-.analysis-preview h4 {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.match-score {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.score-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Orbitron', sans-serif;
-  color: var(--neon-cyan);
-  margin-bottom: 15px;
-  font-size: 0.95em;
+  font-size: 1.5em;
+  font-weight: 900;
 }
 
-.analysis-preview .skills-tags {
+.score-circle.high {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 240, 255, 0.2));
+  border: 3px solid var(--neon-green);
+  color: var(--neon-green);
+}
+
+.score-circle.medium {
+  background: linear-gradient(135deg, rgba(255, 136, 0, 0.2), rgba(255, 255, 0, 0.2));
+  border: 3px solid var(--neon-orange);
+  color: var(--neon-orange);
+}
+
+.score-circle.low {
+  background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(255, 0, 0, 0.2));
+  border: 3px solid var(--neon-pink);
+  color: var(--neon-pink);
+}
+
+.score-info h3 {
+  font-size: 1.1em;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.score-info p {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
+.keywords-section {
+  margin-bottom: 20px;
+}
+
+.keywords-section h4 {
+  font-size: 0.9em;
+  color: var(--neon-cyan);
+  margin-bottom: 10px;
+}
+
+.keywords-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.keyword-tag {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8em;
+}
+
+.keyword-tag.hit {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--neon-green);
+}
+
+.keyword-tag.miss {
+  background: rgba(255, 0, 128, 0.1);
+  border: 1px solid rgba(255, 0, 128, 0.3);
+  color: var(--neon-pink);
+}
+
+.skills-analysis {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.skills-analysis h4 {
+  font-size: 0.9em;
+  color: var(--neon-purple);
   margin-bottom: 15px;
 }
 
-.analysis-preview .skill-tag {
-  padding: 5px 12px;
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  border-radius: 6px;
-  font-size: 0.8em;
-  color: var(--neon-cyan);
+.skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
 }
 
-.analysis-preview .skill-tag.jd {
-  background: rgba(176, 0, 255, 0.1);
-  border-color: rgba(176, 0, 255, 0.3);
-  color: var(--neon-purple);
+.skill-item:last-child {
+  border-bottom: none;
 }
 
-.analysis-preview .start-btn {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
-  border: none;
+.skill-name {
+  color: var(--text-primary);
+  font-size: 0.9em;
+}
+
+.skill-match {
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.75em;
+}
+
+.skill-match.high {
+  background: rgba(0, 255, 136, 0.1);
+  color: var(--neon-green);
+}
+
+.skill-match.medium {
+  background: rgba(255, 136, 0, 0.1);
+  color: var(--neon-orange);
+}
+
+.skill-match.low {
+  background: rgba(255, 0, 128, 0.1);
+  color: var(--neon-pink);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
   border-radius: 8px;
-  color: white;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 1em;
+  font-size: 0.9em;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.analysis-preview .start-btn:hover {
+.btn.primary {
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  border: none;
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.btn.primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 30px rgba(0, 255, 136, 0.4);
 }
 
-.analysis-preview .start-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border-glow);
+  color: var(--text-secondary);
 }
 
-/* Mode selection */
-.mode-section {
-  position: relative;
-  z-index: 2;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 30px 40px;
+.btn.secondary:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
 }
 
-.mode-grid {
+/* Questions Section */
+.questions-section {
+  margin-bottom: 40px;
+}
+
+.questions-categories {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
-.mode-card {
+.category-card {
   background: var(--bg-card);
   border: 1px solid var(--border-glow);
   border-radius: 12px;
-  padding: 30px;
-  cursor: pointer;
-  transition: all 0.4s;
-  position: relative;
   overflow: hidden;
 }
 
-.mode-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 3px;
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-  opacity: 0;
-  transition: opacity 0.3s;
+.category-header {
+  padding: 15px 20px;
+  background: rgba(0, 240, 255, 0.05);
+  border-bottom: 1px solid var(--border-glow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.mode-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--neon-cyan);
-  box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15), 0 0 20px rgba(0, 240, 255, 0.1);
+.category-header .icon {
+  font-size: 1.5em;
 }
 
-.mode-card:hover::before { opacity: 1; }
-
-.mode-card.selected {
-  border-color: var(--neon-green);
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
-}
-
-.mode-card.selected::before {
-  background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
-  opacity: 1;
-}
-
-.mode-icon {
-  font-size: 2.5em;
-  margin-bottom: 15px;
-}
-
-.mode-card h3 {
-  font-size: 1.1em;
-  margin-bottom: 10px;
+.category-header h3 {
+  font-size: 1em;
   color: var(--text-primary);
 }
 
-.mode-card .desc {
-  font-size: 0.85em;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.mode-card .tags {
-  display: flex;
-  gap: 8px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-}
-
-.tag {
+.category-header .count {
+  margin-left: auto;
   padding: 3px 10px;
-  background: rgba(176, 0, 255, 0.1);
-  border: 1px solid rgba(176, 0, 255, 0.3);
+  background: rgba(0, 240, 255, 0.1);
+  border-radius: 10px;
+  font-size: 0.75em;
+  color: var(--neon-cyan);
+}
+
+.question-list {
+  padding: 15px;
+}
+
+.question-item {
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+}
+
+.question-item:hover {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.question-item:last-child {
+  margin-bottom: 0;
+}
+
+.question-item .q-num {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(0, 240, 255, 0.1);
   border-radius: 4px;
   font-size: 0.75em;
-  color: var(--neon-purple);
+  color: var(--neon-cyan);
+  margin-right: 8px;
 }
 
-/* Chat area */
-.chat-section {
-  position: relative;
-  z-index: 2;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 30px 60px;
+.question-item .q-text {
+  font-size: 0.85em;
+  color: var(--text-primary);
 }
 
-.chat-container {
+/* Interview Section */
+.interview-section {
+  margin-bottom: 40px;
+}
+
+.interview-container {
   background: var(--bg-card);
   border: 1px solid var(--border-glow);
   border-radius: 16px;
   overflow: hidden;
 }
 
-.chat-header {
+.interview-header {
   padding: 20px 25px;
   background: rgba(0, 240, 255, 0.05);
   border-bottom: 1px solid var(--border-glow);
@@ -540,7 +606,7 @@ body {
   gap: 15px;
 }
 
-.chat-header .status {
+.interview-header .status {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -554,12 +620,12 @@ body {
   50% { opacity: 0.5; }
 }
 
-.chat-header .info h3 {
+.interview-header .info h3 {
   font-size: 1em;
   color: var(--text-primary);
 }
 
-.chat-header .info p {
+.interview-header .info p {
   font-size: 0.8em;
   color: var(--text-secondary);
 }
@@ -568,15 +634,10 @@ body {
   height: 500px;
   overflow-y: auto;
   padding: 25px;
-  scroll-behavior: smooth;
 }
 
 .chat-messages::-webkit-scrollbar {
   width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
@@ -607,12 +668,10 @@ body {
 
 .message.ai .message-avatar {
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
 }
 
 .message.user .message-avatar {
   background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
-  box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
 }
 
 .message-content {
@@ -626,13 +685,11 @@ body {
 .message.ai .message-content {
   background: rgba(0, 240, 255, 0.05);
   border: 1px solid rgba(0, 240, 255, 0.2);
-  color: var(--text-primary);
 }
 
 .message.user .message-content {
   background: rgba(176, 0, 255, 0.1);
   border: 1px solid rgba(176, 0, 255, 0.3);
-  color: var(--text-primary);
 }
 
 .message-content .meta {
@@ -641,31 +698,6 @@ body {
   margin-top: 8px;
 }
 
-.message-content code {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9em;
-  color: var(--neon-green);
-}
-
-.message-content pre {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 15px;
-  border-radius: 8px;
-  margin: 10px 0;
-  overflow-x: auto;
-  border: 1px solid var(--border-glow);
-}
-
-.message-content pre code {
-  background: none;
-  padding: 0;
-  color: var(--text-primary);
-}
-
-/* Typing indicator */
 .typing-indicator {
   display: none;
   padding: 15px 20px;
@@ -694,60 +726,6 @@ body {
   50% { transform: translateY(-5px); }
 }
 
-/* Input area */
-.chat-input {
-  padding: 20px 25px;
-  border-top: 1px solid var(--border-glow);
-  display: flex;
-  gap: 15px;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 12px 20px;
-  background: rgba(15, 15, 25, 0.9);
-  border: 1px solid var(--border-glow);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9em;
-  outline: none;
-  transition: all 0.3s;
-}
-
-.chat-input input:focus {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-}
-
-.chat-input input::placeholder { color: var(--text-secondary); }
-
-.chat-input button {
-  padding: 12px 25px;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  font-size: 0.9em;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
-}
-
-.chat-input button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 30px rgba(0, 240, 255, 0.4);
-}
-
-.chat-input button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Action buttons */
 .action-bar {
   padding: 15px 25px;
   display: flex;
@@ -771,10 +749,48 @@ body {
 .action-btn:hover {
   border-color: var(--neon-cyan);
   color: var(--neon-cyan);
-  background: rgba(0, 240, 255, 0.05);
 }
 
-/* Score display */
+.chat-input {
+  padding: 20px 25px;
+  border-top: 1px solid var(--border-glow);
+  display: flex;
+  gap: 15px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px 20px;
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+  outline: none;
+}
+
+.chat-input input:focus {
+  border-color: var(--neon-cyan);
+}
+
+.chat-input button {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Score Card */
 .score-card {
   background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 240, 255, 0.1) 100%);
   border: 1px solid rgba(0, 255, 136, 0.3);
@@ -794,13 +810,6 @@ body {
   font-size: 3em;
   font-weight: 900;
   color: var(--neon-green);
-  text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-}
-
-.score-card .feedback {
-  margin-top: 15px;
-  color: var(--text-secondary);
-  line-height: 1.8;
 }
 
 /* Footer */
@@ -819,33 +828,7 @@ body {
   text-decoration: none;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .hero h1 { font-size: 1.8em; }
-  .upload-grid { grid-template-columns: 1fr; }
-  .mode-grid { grid-template-columns: 1fr; }
-  .chat-messages { height: 400px; }
-  .nav-links { display: none; }
-  .message-content { max-width: 85%; }
-}
-
-/* Cursor blink */
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background: var(--neon-cyan);
-  margin-left: 5px;
-  animation: blink 1s infinite;
-  vertical-align: text-bottom;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Loading overlay */
+/* Loading */
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -878,10 +861,26 @@ body {
   to { transform: rotate(360deg); }
 }
 
-.loading-text {
-  color: var(--neon-cyan);
-  font-size: 1.1em;
-  animation: pulse 2s infinite;
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.8em; }
+  .upload-grid { grid-template-columns: 1fr; }
+  .questions-categories { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--neon-cyan);
+  margin-left: 5px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 </style>
 </head>
@@ -889,11 +888,10 @@ body {
 
 <div class="bg-grid"></div>
 <div class="particles" id="particles"></div>
-<div class="scanline"></div>
 
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">AI正在分析简历和岗位...</div>
+  <div class="loading-text" style="color:var(--neon-cyan)">AI正在分析简历和岗位...</div>
 </div>
 
 <nav class="navbar">
@@ -902,7 +900,6 @@ body {
     <ul class="nav-links">
       <li><a href="/">首页</a></li>
       <li><a href="/interview-questions/">面试题库</a></li>
-      <li><a href="/ai-chat/">AI面试助手</a></li>
       <li><a href="/ai-mock-interview/" style="color:var(--neon-green)">🎯 AI模拟面试</a></li>
     </ul>
   </div>
@@ -910,164 +907,122 @@ body {
 
 <section class="hero">
   <h1>AI MOCK INTERVIEW<span class="cursor"></span></h1>
-  <p class="subtitle">// 📄 上传简历+JD → 🤖 AI智能分析 → 🎯 专属面试题</p>
+  <p class="subtitle">// 📄 上传简历+JD → 🤖 AI分析 → 🎯 15道专属面试题</p>
 </section>
 
-<!-- Upload Section -->
-<section class="upload-section">
-  <h2 class="section-title">UPLOAD FILES</h2>
-  <div class="upload-grid">
-    <!-- Resume Upload -->
-    <div class="upload-card" id="resume-card">
-      <div class="card-header">
-        <h3>📄 个人简历</h3>
-        <span class="badge required">必填</span>
-      </div>
-      <div class="upload-area" id="resume-upload">
-        <div class="icon">📁</div>
-        <p>点击或拖拽上传简历</p>
-        <div class="file-types">支持 PDF、Word、TXT 格式</div>
-        <input type="file" id="resume-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'resume')">
-      </div>
-      <div class="file-info" id="resume-info">
-        <div class="file-name">
-          <span>✅</span>
-          <span id="resume-name">-</span>
+<div class="main-container">
+  <!-- Upload Section -->
+  <section class="upload-section">
+    <h2 class="section-title">UPLOAD FILES</h2>
+    <div class="upload-grid">
+      <div class="upload-card" id="resume-card">
+        <div class="card-header">
+          <h3>📄 个人简历</h3>
+          <span class="badge required">必填</span>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="file-size" id="resume-size">-</span>
+        <div class="upload-area" id="resume-upload">
+          <div class="icon">📁</div>
+          <p>点击或拖拽上传简历</p>
+          <div style="font-size:0.75em;color:var(--text-secondary);margin-top:8px">支持 PDF、Word、TXT</div>
+          <input type="file" id="resume-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'resume')">
+        </div>
+        <div class="file-info" id="resume-info">
+          <span class="file-name" id="resume-name">-</span>
           <button class="remove-btn" onclick="removeFile('resume')">✕</button>
         </div>
       </div>
-    </div>
 
-    <!-- JD Upload -->
-    <div class="upload-card" id="jd-card">
-      <div class="card-header">
-        <h3>💼 岗位JD</h3>
-        <span class="badge optional">选填</span>
-      </div>
-      <div class="upload-area" id="jd-upload">
-        <div class="icon">📋</div>
-        <p>点击或拖拽上传岗位描述</p>
-        <div class="file-types">支持 PDF、Word、TXT 格式，或直接粘贴文本</div>
-        <input type="file" id="jd-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'jd')">
-      </div>
-      <div class="file-info" id="jd-info">
-        <div class="file-name">
-          <span>✅</span>
-          <span id="jd-name">-</span>
+      <div class="upload-card" id="jd-card">
+        <div class="card-header">
+          <h3>💼 岗位JD</h3>
+          <span class="badge required">必填</span>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="file-size" id="jd-size">-</span>
+        <div class="upload-area" id="jd-upload">
+          <div class="icon">📋</div>
+          <p>点击或拖拽上传岗位描述</p>
+          <div style="font-size:0.75em;color:var(--text-secondary);margin-top:8px">支持 PDF、Word、TXT</div>
+          <input type="file" id="jd-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'jd')">
+        </div>
+        <div class="file-info" id="jd-info">
+          <span class="file-name" id="jd-name">-</span>
           <button class="remove-btn" onclick="removeFile('jd')">✕</button>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Analysis Preview -->
-  <div class="analysis-preview" id="analysis-preview">
-    <h4>🔍 AI分析结果预览</h4>
-    <div class="skills-tags" id="skills-tags"></div>
-    <p style="color:var(--text-secondary);font-size:0.85em;margin-bottom:15px" id="analysis-desc"></p>
-    <button class="start-btn" onclick="startInterview()" id="start-interview-btn">
-      🚀 开始专属面试
-    </button>
-  </div>
-</section>
-
-<!-- Mode Section -->
-<section class="mode-section">
-  <h2 class="section-title">SELECT MODE</h2>
-  <div class="mode-grid">
-    <div class="mode-card selected" onclick="selectMode('java')" data-mode="java">
-      <div class="mode-icon">☕</div>
-      <h3>Java后端面试</h3>
-      <div class="desc">Java核心、多线程、JVM、Spring全家桶、分布式等高频面试题</div>
-      <div class="tags">
-        <span class="tag">Java</span>
-        <span class="tag">Spring</span>
-        <span class="tag">多线程</span>
-      </div>
-    </div>
-    <div class="mode-card" onclick="selectMode('database')" data-mode="database">
-      <div class="mode-icon">🐬</div>
-      <h3>数据库面试</h3>
-      <div class="desc">MySQL索引优化、事务隔离、锁机制、Redis缓存策略等</div>
-      <div class="tags">
-        <span class="tag">MySQL</span>
-        <span class="tag">Redis</span>
-        <span class="tag">索引</span>
-      </div>
-    </div>
-    <div class="mode-card" onclick="selectMode('system')" data-mode="system">
-      <div class="mode-icon">🏛️</div>
-      <h3>系统设计面试</h3>
-      <div class="desc">高并发、分布式系统、微服务架构、秒杀系统等场景设计题</div>
-      <div class="tags">
-        <span class="tag">架构</span>
-        <span class="tag">分布式</span>
-        <span class="tag">高可用</span>
-      </div>
-    </div>
-    <div class="mode-card" onclick="selectMode('ai')" data-mode="ai">
-      <div class="mode-icon">🤖</div>
-      <h3>AI大模型面试</h3>
-      <div class="desc">Transformer、RAG、Agent、LangChain、向量数据库等前沿技术</div>
-      <div class="tags">
-        <span class="tag">LLM</span>
-        <span class="tag">RAG</span>
-        <span class="tag">Agent</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Chat Section -->
-<section class="chat-section">
-  <h2 class="section-title">INTERVIEW ROOM</h2>
-  <div class="chat-container">
-    <div class="chat-header">
-      <div class="status"></div>
-      <div class="info">
-        <h3 id="mode-title">Java后端面试官</h3>
-        <p id="mode-desc">上传简历后开始专属面试</p>
-      </div>
-    </div>
-    <div class="chat-messages" id="chat-messages">
-      <div class="message ai">
-        <div class="message-avatar">🤖</div>
-        <div class="message-content">
-          <p>👋 你好！我是你的AI面试官。</p>
-          <p>请先上传你的<strong>简历</strong>（必填），如果有目标岗位的<strong>JD</strong>（选填）也可以一起上传。</p>
-          <p>我会根据你的简历和岗位要求，为你生成<strong>专属面试题</strong>！</p>
-          <div class="meta">AI面试官 · 刚刚</div>
+  <!-- Analysis Section -->
+  <section class="analysis-section">
+    <h2 class="section-title">ANALYSIS RESULT</h2>
+    <div class="analysis-card" id="analysis-card">
+      <div class="analysis-header">
+        <div class="match-score">
+          <div class="score-circle" id="match-score-circle">-</div>
+          <div class="score-info">
+            <h3>岗位匹配度</h3>
+            <p id="match-reason">-</p>
+          </div>
         </div>
       </div>
+
+      <div class="keywords-section">
+        <h4>🔑 JD核心关键词</h4>
+        <div class="keywords-tags" id="keywords-tags"></div>
+      </div>
+
+      <div class="skills-analysis">
+        <h4>📊 技能匹配分析</h4>
+        <div id="skills-list"></div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn primary" onclick="startInterview()">🚀 开始15道专属面试</button>
+        <button class="btn secondary" onclick="downloadInterviewDoc()">📥 下载面试准备文档</button>
+      </div>
     </div>
-    <div class="typing-indicator" id="typing-indicator">
-      <span></span><span></span><span></span>
+  </section>
+
+  <!-- Questions Preview -->
+  <section class="questions-section" id="questions-section" style="display:none">
+    <h2 class="section-title">INTERVIEW QUESTIONS (15)</h2>
+    <div class="questions-categories" id="questions-categories"></div>
+  </section>
+
+  <!-- Interview Section -->
+  <section class="interview-section" id="interview-section" style="display:none">
+    <h2 class="section-title">INTERVIEW ROOM</h2>
+    <div class="interview-container">
+      <div class="interview-header">
+        <div class="status"></div>
+        <div class="info">
+          <h3 id="current-category">-</h3>
+          <p id="question-progress">问题 1 / 15</p>
+        </div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="typing-indicator" id="typing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="action-bar">
+        <button class="action-btn" onclick="showHint()">💡 提示</button>
+        <button class="action-btn" onclick="skipQuestion()">⏭️ 跳过</button>
+        <button class="action-btn" onclick="endInterview()">📊 结束面试</button>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="user-input" placeholder="输入你的回答..." onkeypress="handleKeyPress(event)" disabled>
+        <button onclick="submitAnswer()" id="submit-btn" disabled>发送</button>
+      </div>
     </div>
-    <div class="action-bar">
-      <button class="action-btn" onclick="sendQuickAction('换一道题')">🔄 换一道题</button>
-      <button class="action-btn" onclick="sendQuickAction('提示一下')">💡 提示一下</button>
-      <button class="action-btn" onclick="sendQuickAction('结束面试')">📊 结束面试</button>
-    </div>
-    <div class="chat-input">
-      <input type="text" id="user-input" placeholder="> 输入你的回答..." onkeypress="handleKeyPress(event)" disabled>
-      <button onclick="sendMessage()" id="send-btn" disabled>发送</button>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
 
 <footer class="footer">
   <p>© 2026 李阳的技术博客 | <a href="/">eligible123.github.io</a></p>
-  <p style="margin-top:8px; opacity:0.6">// AI模拟面试 · Powered by LongCat LLM</p>
+  <p style="margin-top:8px; opacity:0.6">// AI模拟面试 · Powered by resume-job-matcher v1.1.0</p>
 </footer>
 
 <script>
-// Create floating particles
+// Particles
 function createParticles() {
   const container = document.getElementById('particles');
   for (let i = 0; i < 30; i++) {
@@ -1075,57 +1030,37 @@ function createParticles() {
     particle.className = 'particle';
     particle.style.left = Math.random() * 100 + '%';
     particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    particle.style.animationDelay = Math.random() * 10 + 's';
-    particle.style.opacity = Math.random() * 0.5 + 0.2;
     container.appendChild(particle);
   }
 }
 createParticles();
 
-// File upload handling
-let resumeFile = null;
-let jdFile = null;
+// State
 let resumeText = '';
 let jdText = '';
-let analyzedSkills = [];
+let analysisResult = null;
+let interviewQuestions = [];
+let currentQuestionIndex = 0;
+let scoreHistory = [];
 
+// File handling
 function handleFileUpload(event, type) {
   const file = event.target.files[0];
   if (!file) return;
-  
-  const maxSize = 10 * 1024 * 1024; // 10MB
-  if (file.size > maxSize) {
-    alert('文件大小不能超过10MB');
-    return;
-  }
-  
-  if (type === 'resume') {
-    resumeFile = file;
-    document.getElementById('resume-name').textContent = file.name;
-    document.getElementById('resume-size').textContent = formatFileSize(file.size);
-    document.getElementById('resume-info').classList.add('show');
-    document.getElementById('resume-card').classList.add('has-file');
-    readFileContent(file, 'resume');
-  } else {
-    jdFile = file;
-    document.getElementById('jd-name').textContent = file.name;
-    document.getElementById('jd-size').textContent = formatFileSize(file.size);
-    document.getElementById('jd-info').classList.add('show');
-    document.getElementById('jd-card').classList.add('has-file');
-    readFileContent(file, 'jd');
-  }
-  
-  checkFilesReady();
-}
 
-function readFileContent(file, type) {
   const reader = new FileReader();
   reader.onload = function(e) {
     const content = e.target.result;
     if (type === 'resume') {
       resumeText = content;
+      document.getElementById('resume-name').textContent = '✅ ' + file.name;
+      document.getElementById('resume-info').classList.add('show');
+      document.getElementById('resume-card').classList.add('has-file');
     } else {
       jdText = content;
+      document.getElementById('jd-name').textContent = '✅ ' + file.name;
+      document.getElementById('jd-info').classList.add('show');
+      document.getElementById('jd-card').classList.add('has-file');
     }
     checkFilesReady();
   };
@@ -1134,430 +1069,558 @@ function readFileContent(file, type) {
 
 function removeFile(type) {
   if (type === 'resume') {
-    resumeFile = null;
     resumeText = '';
     document.getElementById('resume-input').value = '';
     document.getElementById('resume-info').classList.remove('show');
     document.getElementById('resume-card').classList.remove('has-file');
   } else {
-    jdFile = null;
     jdText = '';
     document.getElementById('jd-input').value = '';
     document.getElementById('jd-info').classList.remove('show');
     document.getElementById('jd-card').classList.remove('has-file');
   }
-  
-  document.getElementById('analysis-preview').classList.remove('show');
-  checkFilesReady();
-}
-
-function formatFileSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
 function checkFilesReady() {
-  if (resumeText) {
+  if (resumeText && jdText) {
     analyzeFiles();
   }
 }
 
+// Analysis
 function analyzeFiles() {
-  // Simulate AI analysis
   const loading = document.getElementById('loading-overlay');
   loading.classList.add('show');
-  
+
   setTimeout(() => {
     loading.classList.remove('show');
-    
-    // Extract skills from resume and JD
-    analyzedSkills = extractSkills(resumeText, jdText);
-    
-    // Show analysis preview
-    const preview = document.getElementById('analysis-preview');
-    preview.classList.add('show');
-    
-    const tagsContainer = document.getElementById('skills-tags');
-    tagsContainer.innerHTML = '';
-    
-    analyzedSkills.forEach(skill => {
-      const tag = document.createElement('span');
-      tag.className = `skill-tag ${skill.from === 'jd' ? 'jd' : ''}`;
-      tag.textContent = skill.name;
-      tagsContainer.appendChild(tag);
-    });
-    
-    const desc = document.getElementById('analysis-desc');
-    desc.textContent = `已识别 ${analyzedSkills.length} 个技能点，将基于这些内容生成专属面试题。`;
-    
-    // Auto select mode based on skills
-    autoSelectMode();
+    analysisResult = performAnalysis(resumeText, jdText);
+    showAnalysisResult(analysisResult);
+    generateInterviewQuestions(analysisResult);
   }, 2000);
 }
 
-function extractSkills(resume, jd) {
-  const skills = [];
-  const skillKeywords = {
-    java: ['Java', 'Spring', 'SpringBoot', 'SpringCloud', 'MyBatis', 'Hibernate', 'JVM', 'JDK', 'Maven', 'Gradle'],
-    database: ['MySQL', 'Redis', 'MongoDB', 'PostgreSQL', 'Oracle', 'SQL', '数据库', '索引', '事务'],
-    middleware: ['Kafka', 'RabbitMQ', 'RocketMQ', 'Elasticsearch', 'ES', 'Nginx', 'Docker', 'Kubernetes', 'K8s'],
-    frontend: ['Vue', 'React', 'Angular', 'JavaScript', 'TypeScript', 'HTML', 'CSS', '前端'],
-    ai: ['AI', '机器学习', '深度学习', 'LLM', '大模型', 'NLP', 'RAG', 'Agent', 'Transformer', 'Python'],
-    devops: ['Linux', 'Git', 'CI/CD', 'Jenkins', 'DevOps', '运维', '部署'],
-    design: ['设计模式', '架构', '微服务', '分布式', '高并发', '高可用', '系统设计']
+function performAnalysis(resume, jd) {
+  // Extract keywords from JD
+  const jdKeywords = extractKeywords(jd);
+  const resumeKeywords = extractKeywords(resume);
+
+  // Match keywords
+  const hitKeywords = jdKeywords.filter(k => resumeKeywords.some(r => r.includes(k) || k.includes(r)));
+  const missKeywords = jdKeywords.filter(k => !hitKeywords.includes(k));
+
+  // Calculate match score
+  const matchRate = hitKeywords.length / Math.max(jdKeywords.length, 1);
+  let matchScore, matchReason;
+  if (matchRate >= 0.7) {
+    matchScore = '高';
+    matchReason = '简历与岗位高度匹配，技能和经验覆盖大部分要求';
+  } else if (matchRate >= 0.4) {
+    matchScore = '中';
+    matchReason = '简历与岗位部分匹配，建议补充相关技能和经验描述';
+  } else {
+    matchScore = '低';
+    matchReason = '简历与岗位匹配度较低，建议针对性优化简历内容';
+  }
+
+  // Extract skills
+  const skills = extractSkills(resume, jd);
+
+  return {
+    matchScore,
+    matchReason,
+    jdKeywords,
+    hitKeywords,
+    missKeywords,
+    skills,
+    matchRate: Math.round(matchRate * 100)
   };
-  
+}
+
+function extractKeywords(text) {
+  const keywords = [];
+  const patterns = [
+    /Java|Spring|SpringBoot|MyBatis|MySQL|Redis|Docker|Kubernetes|K8s/gi,
+    /微服务|分布式|高并发|高可用|架构设计/gi,
+    /Python|Go|C\+\+|JavaScript|TypeScript/gi,
+    /Kafka|RabbitMQ|RocketMQ|Elasticsearch|ES/gi,
+    /Linux|Git|CI\/CD|Jenkins|DevOps/gi,
+    /AI|机器学习|深度学习|LLM|NLP|RAG/gi,
+    /Vue|React|Angular|前端|HTML|CSS/gi,
+    /数据库|索引|事务|锁|缓存/gi,
+    /3年|5年|经验|本科|硕士/gi
+  ];
+
+  patterns.forEach(pattern => {
+    const matches = text.match(pattern);
+    if (matches) {
+      keywords.push(...matches.map(m => m.trim()));
+    }
+  });
+
+  return [...new Set(keywords)].slice(0, 15);
+}
+
+function extractSkills(resume, jd) {
+  const skillKeywords = {
+    'Java': ['Java', 'JDK', 'JVM'],
+    'Spring': ['Spring', 'SpringBoot', 'SpringCloud'],
+    '数据库': ['MySQL', 'Redis', 'MongoDB', 'PostgreSQL'],
+    '中间件': ['Kafka', 'RabbitMQ', 'RocketMQ', 'Elasticsearch'],
+    '容器化': ['Docker', 'Kubernetes', 'K8s', '容器'],
+    '分布式': ['分布式', '微服务', '高并发', '高可用'],
+    '前端': ['Vue', 'React', 'JavaScript', 'TypeScript'],
+    'AI': ['AI', '机器学习', '深度学习', 'LLM', 'NLP'],
+    'DevOps': ['Linux', 'Git', 'CI/CD', 'Jenkins'],
+    '设计模式': ['设计模式', '单例', '工厂', '观察者']
+  };
+
+  const skills = [];
   const text = resume + ' ' + jd;
-  
-  for (const [category, keywords] of Object.entries(skillKeywords)) {
-    keywords.forEach(keyword => {
-      if (text.includes(keyword)) {
-        const from = jd.includes(keyword) ? 'jd' : 'resume';
-        if (!skills.find(s => s.name === keyword)) {
-          skills.push({ name: keyword, category, from });
-        }
-      }
+
+  for (const [skill, keywords] of Object.entries(skillKeywords)) {
+    const found = keywords.some(k => text.includes(k));
+    if (found) {
+      const inResume = keywords.some(k => resume.includes(k));
+      const inJd = keywords.some(k => jd.includes(k));
+      skills.push({
+        name: skill,
+        inResume,
+        inJd,
+        match: inResume && inJd ? 'high' : (inResume || inJd ? 'medium' : 'low')
+      });
+    }
+  }
+
+  return skills;
+}
+
+function showAnalysisResult(result) {
+  const card = document.getElementById('analysis-card');
+  card.classList.add('show');
+
+  // Match score
+  const circle = document.getElementById('match-score-circle');
+  circle.textContent = result.matchRate + '%';
+  circle.className = 'score-circle';
+  if (result.matchRate >= 70) circle.classList.add('high');
+  else if (result.matchRate >= 40) circle.classList.add('medium');
+  else circle.classList.add('low');
+
+  document.getElementById('match-reason').textContent = result.matchReason;
+
+  // Keywords
+  const tagsContainer = document.getElementById('keywords-tags');
+  tagsContainer.innerHTML = '';
+  result.hitKeywords.forEach(k => {
+    tagsContainer.innerHTML += `<span class="keyword-tag hit">✅ ${k}</span>`;
+  });
+  result.missKeywords.forEach(k => {
+    tagsContainer.innerHTML += `<span class="keyword-tag miss">❌ ${k}</span>`;
+  });
+
+  // Skills
+  const skillsList = document.getElementById('skills-list');
+  skillsList.innerHTML = '';
+  result.skills.forEach(skill => {
+    skillsList.innerHTML += `
+      <div class="skill-item">
+        <span class="skill-name">${skill.name}</span>
+        <span class="skill-match ${skill.match}">${skill.match === 'high' ? '完全匹配' : skill.match === 'medium' ? '部分匹配' : '需补充'}</span>
+      </div>
+    `;
+  });
+}
+
+// Generate 15 interview questions (7 categories, 2-3 each)
+function generateInterviewQuestions(analysis) {
+  const categories = [
+    {
+      name: '自我介绍',
+      icon: '👤',
+      questions: [
+        { q: '请用1-2分钟做一个自我介绍', a: '我是[姓名]，[学历]毕业，拥有[X]年[领域]开发经验。在[公司]期间，负责[核心工作]，取得了[量化成果]。', tips: '突出与岗位相关的经验和技能' },
+        { q: '你为什么对这个岗位感兴趣？', a: '这个岗位与我的技术栈高度匹配，而且贵公司在[领域]的发展方向与我的职业规划一致。', tips: '结合JD和公司背景回答' }
+      ]
+    },
+    {
+      name: '简历经历深挖',
+      icon: '📝',
+      questions: generateResumeQuestions(analysis)
+    },
+    {
+      name: '岗位专业问题',
+      icon: '💻',
+      questions: generateTechnicalQuestions(analysis)
+    },
+    {
+      name: '行为面试题',
+      icon: '🤝',
+      questions: [
+        { q: '请描述一次你解决技术难题的经历', a: '使用STAR法则：情境-遇到什么问题，任务-需要解决什么，行动-采取了什么措施，结果-取得了什么效果。', tips: '用STAR法则结构化回答' },
+        { q: '你如何处理与同事的技术分歧？', a: '首先倾听对方观点，然后用数据和事实说明自己的方案，必要时进行技术验证，最终以最优方案为准。', tips: '展现沟通能力和团队协作' }
+      ]
+    },
+    {
+      name: '情景面试题',
+      icon: '🎯',
+      questions: [
+        { q: '如果线上出现紧急bug，你会如何处理？', a: '首先快速定位问题，评估影响范围，然后制定修复方案，同时通知相关方，最后复盘总结。', tips: '展现问题处理能力和责任心' },
+        { q: '如何保证项目按时交付？', a: '合理拆解任务，预留buffer时间，及时同步进度，识别风险并提前处理。', tips: '展现项目管理能力' }
+      ]
+    },
+    {
+      name: '压力面试题',
+      icon: '💪',
+      questions: [
+        { q: '你觉得自己的最大缺点是什么？', a: '选择一个真实但不致命的缺点，说明自己正在如何改进。', tips: '诚实但要展现自我改进意识' },
+        { q: '如果入职后发现工作与预期不符，你会怎么办？', a: '先深入了解岗位职责，与领导沟通期望，调整自己的状态，积极适应新环境。', tips: '展现适应能力和积极态度' }
+      ]
+    },
+    {
+      name: '反问面试官',
+      icon: '❓',
+      questions: [
+        { q: '你对这个岗位的新人有什么期望？', a: '这是向面试官了解岗位期望的好机会，可以问：团队目前的技术栈、项目阶段、新人培养计划等。', tips: '展现对岗位的兴趣和思考' },
+        { q: '团队的技术氛围和学习机会如何？', a: '了解团队是否鼓励技术创新、是否有技术分享、是否有培训资源等。', tips: '关注长期发展' }
+      ]
+    }
+  ];
+
+  interviewQuestions = categories;
+  showQuestionsPreview(categories);
+}
+
+function generateResumeQuestions(analysis) {
+  const questions = [];
+  if (analysis.skills.length > 0) {
+    const skill = analysis.skills[0];
+    questions.push({
+      q: `请详细介绍一下你在${skill.name}方面的经验`,
+      a: `结合简历中的项目经历，详细说明在${skill.name}方面的技术深度和实际应用。`,
+      tips: '用具体项目和数据说明'
     });
   }
-  
-  return skills.slice(0, 15); // Limit to 15 skills
+  questions.push({
+    q: '你参与过最有挑战性的项目是什么？',
+    a: '选择一个与岗位相关的项目，用STAR法则描述：背景、挑战、解决方案、成果。',
+    tips: '突出技术难点和个人贡献'
+  });
+  return questions;
 }
 
-function autoSelectMode() {
-  const categories = analyzedSkills.map(s => s.category);
-  
-  if (categories.includes('ai')) {
-    selectMode('ai');
-  } else if (categories.includes('database')) {
-    selectMode('database');
-  } else if (categories.includes('design')) {
-    selectMode('system');
-  } else {
-    selectMode('java');
-  }
-}
+function generateTechnicalQuestions(analysis) {
+  const questions = [];
+  const techMap = {
+    'Java': [
+      { q: '请说说HashMap的底层实现原理？', a: '数组+链表+红黑树，JDK8后链表长度超过8转红黑树，负载因子0.75，扩容2倍。', tips: '讲清楚数据结构和扩容机制' },
+      { q: 'volatile关键字的作用是什么？', a: '保证可见性和禁止指令重排序，但不能保证原子性。', tips: '结合内存模型说明' }
+    ],
+    'Spring': [
+      { q: 'Spring Boot的自动配置原理是什么？', a: '@EnableAutoConfiguration加载spring.factories，通过条件注解过滤配置类。', tips: '讲清楚@EnableAutoConfiguration的作用' }
+    ],
+    '数据库': [
+      { q: 'MySQL索引的B+树原理是什么？', a: '多路平衡搜索树，非叶子节点只存索引，叶子节点存数据用链表连接，树高3-4层减少IO。', tips: '对比B树说明优势' },
+      { q: 'Redis的持久化机制有哪些？', a: 'RDB定时快照、AOF记录命令、混合持久化结合两者优点。', tips: '对比优缺点' }
+    ],
+    '分布式': [
+      { q: '分布式事务有哪些解决方案？', a: '2PC、3PC、TCC、本地消息表、MQ事务消息、Seata等。', tips: '对比各方案优缺点' }
+    ]
+  };
 
-// Mode selection
-let currentMode = 'java';
-const modeNames = {
-  java: 'Java后端面试官',
-  database: '数据库面试官',
-  system: '系统设计面试官',
-  ai: 'AI大模型面试官'
-};
-const modeDescs = {
-  java: 'Java核心、多线程、JVM、Spring全家桶、分布式等',
-  database: 'MySQL索引、事务、锁机制、Redis缓存策略等',
-  system: '高并发、分布式系统、微服务架构、秒杀系统等',
-  ai: 'Transformer、RAG、Agent、LangChain、向量数据库等'
-};
-
-function selectMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.mode-card').forEach(card => card.classList.remove('selected'));
-  document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
-  document.getElementById('mode-title').textContent = modeNames[mode];
-  document.getElementById('mode-desc').textContent = modeDescs[mode];
-}
-
-// Chat functionality
-const chatMessages = document.getElementById('chat-messages');
-const userInput = document.getElementById('user-input');
-const typingIndicator = document.getElementById('typing-indicator');
-const sendBtn = document.getElementById('send-btn');
-
-// Interview questions based on mode and skills
-const baseQuestions = {
-  java: [
-    "请说说Java中HashMap的底层实现原理？",
-    "volatile关键字的作用是什么？它能保证原子性吗？",
-    "请解释一下JVM的垃圾回收机制，常用的垃圾回收器有哪些？",
-    "Spring Boot的自动配置原理是什么？",
-    "说说你对synchronized和ReentrantLock的理解？"
-  ],
-  database: [
-    "请解释MySQL的索引类型和B+树索引的原理？",
-    "MySQL的事务隔离级别有哪些？各自会出现什么问题？",
-    "说说MySQL的锁机制，行锁、表锁、间隙锁的区别？",
-    "Redis的持久化机制有哪些？各自的优缺点？",
-    "如何优化一个慢SQL？说说你的排查思路？"
-  ],
-  system: [
-    "请设计一个秒杀系统，需要考虑哪些问题？",
-    "如何设计一个分布式ID生成器？有哪些方案？",
-    "说说分布式事务的解决方案有哪些？",
-    "如何设计一个高可用的微服务架构？",
-    "消息队列如何保证消息不丢失？"
-  ],
-  ai: [
-    "请解释一下Transformer的Self-Attention机制？",
-    "RAG（检索增强生成）的原理是什么？有哪些优化方向？",
-    "说说你对AI Agent的理解，它有哪些核心组件？",
-    "向量数据库的原理是什么？常用的有哪些？",
-    "如何评估一个大语言模型的效果？有哪些评估指标？"
-  ]
-};
-
-// Skill-specific questions
-const skillQuestions = {
-  'Spring': ['Spring IOC的原理是什么？', 'Spring AOP的实现方式有哪些？', 'Spring Bean的生命周期是怎样的？'],
-  'MySQL': ['MySQL的B+树索引和Hash索引有什么区别？', '如何分析MySQL的执行计划？', 'MySQL主从复制的原理是什么？'],
-  'Redis': ['Redis的数据结构有哪些？各自的使用场景？', 'Redis集群的方案有哪些？', '如何解决Redis缓存穿透问题？'],
-  'Docker': ['Docker和虚拟机的区别是什么？', 'Dockerfile的常用指令有哪些？', 'Docker网络模式有哪些？'],
-  '微服务': ['微服务架构的优缺点是什么？', '服务注册与发现的原理是什么？', '如何实现微服务的链路追踪？'],
-  '分布式': ['CAP理论是什么？', 'BASE理论是什么？', '分布式锁的实现方案有哪些？'],
-  'Java': ['Java中==和equals的区别是什么？', 'Java的泛型是如何实现的？', 'Java的反射机制是什么？'],
-  'SpringBoot': ['SpringBoot的Starter原理是什么？', 'SpringBoot配置文件的加载顺序？', 'SpringBoot Actuator的作用是什么？']
-};
-
-let questionIndex = 0;
-let interviewStarted = false;
-let scoreHistory = [];
-let usedQuestions = new Set();
-
-function startInterview() {
-  if (!resumeText) {
-    alert('请先上传简历！');
-    return;
-  }
-  
-  interviewStarted = true;
-  userInput.disabled = false;
-  sendBtn.disabled = false;
-  
-  addMessage(`
-    <p>✅ 已收到你的简历${jdFile ? '和岗位JD' : ''}！</p>
-    <p>基于你的技能背景，我将为你进行<strong>专属面试</strong>。</p>
-    <p>让我们开始吧！</p>
-  `);
-  
-  setTimeout(() => {
-    askNextQuestion();
-  }, 1000);
-}
-
-function getPersonalizedQuestion() {
-  // Try skill-specific questions first
-  for (const skill of analyzedSkills) {
-    if (skillQuestions[skill.name]) {
-      const questions = skillQuestions[skill.name];
-      const unused = questions.filter(q => !usedQuestions.has(q));
-      if (unused.length > 0) {
-        const question = unused[Math.floor(Math.random() * unused.length)];
-        usedQuestions.add(question);
-        return question;
-      }
+  analysis.skills.forEach(skill => {
+    if (techMap[skill.name]) {
+      questions.push(...techMap[skill.name]);
     }
+  });
+
+  if (questions.length === 0) {
+    questions.push({
+      q: '请介绍一下你最熟悉的技术栈',
+      a: '选择一个最熟悉的技术，从原理、使用场景、优化经验等方面展开。',
+      tips: '展现技术深度'
+    });
   }
-  
-  // Fall back to base questions
-  const modeQuestions = baseQuestions[currentMode];
-  const unused = modeQuestions.filter(q => !usedQuestions.has(q));
-  if (unused.length > 0) {
-    const question = unused[Math.floor(Math.random() * unused.length)];
-    usedQuestions.add(question);
-    return question;
-  }
-  
-  // Reset if all questions used
-  usedQuestions.clear();
-  return modeQuestions[Math.floor(Math.random() * modeQuestions.length)];
+
+  return questions.slice(0, 3);
 }
 
-function askNextQuestion() {
-  const question = getPersonalizedQuestion();
-  questionIndex++;
-  
-  const skillTag = analyzedSkills.length > 0 
-    ? `<span style="color:var(--neon-purple);font-size:0.85em">[${analyzedSkills[Math.floor(Math.random() * analyzedSkills.length)].name}]</span> `
-    : '';
-  
-  addMessage(`
-    <p><strong>第 ${questionIndex} 题 ${skillTag}</strong></p>
-    <p><strong>❓ ${question}</strong></p>
-    <p style="margin-top:10px;color:var(--text-secondary);font-size:0.85em">请在下方输入框中回答，完成后点击发送。</p>
-  `);
+function showQuestionsPreview(categories) {
+  const section = document.getElementById('questions-section');
+  section.style.display = 'block';
+
+  const container = document.getElementById('questions-categories');
+  container.innerHTML = '';
+
+  categories.forEach((cat, catIndex) => {
+    let questionsHtml = '';
+    cat.questions.forEach((q, qIndex) => {
+      questionsHtml += `
+        <div class="question-item" onclick="startSpecificQuestion(${catIndex}, ${qIndex})">
+          <span class="q-num">Q${qIndex + 1}</span>
+          <span class="q-text">${q.q}</span>
+        </div>
+      `;
+    });
+
+    container.innerHTML += `
+      <div class="category-card">
+        <div class="category-header">
+          <span class="icon">${cat.icon}</span>
+          <h3>${cat.name}</h3>
+          <span class="count">${cat.questions.length}题</span>
+        </div>
+        <div class="question-list">${questionsHtml}</div>
+      </div>
+    `;
+  });
+
+  section.scrollIntoView({ behavior: 'smooth' });
 }
 
-function addMessage(content, isUser = false) {
-  const messageDiv = document.createElement('div');
-  messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-  
-  const avatar = isUser ? '👤' : '🤖';
-  const time = new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
-  
-  messageDiv.innerHTML = `
+// Interview
+function startInterview() {
+  document.getElementById('interview-section').style.display = 'block';
+  document.getElementById('user-input').disabled = false;
+  document.getElementById('submit-btn').disabled = false;
+
+  // Flatten questions
+  const allQuestions = [];
+  interviewQuestions.forEach(cat => {
+    cat.questions.forEach(q => {
+      allQuestions.push({ ...q, category: cat.name });
+    });
+  });
+
+  currentQuestionIndex = 0;
+  scoreHistory = [];
+
+  addMessage('ai', `👋 你好！基于你的简历和岗位JD，我为你准备了15道专属面试题。
+
+📋 **题目分类**：
+${interviewQuestions.map(cat => `${cat.icon} ${cat.name}（${cat.questions.length}题）`).join('\n')}
+
+让我们开始吧！输入任意内容开始第一题。`);
+
+  document.getElementById('interview-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function startSpecificQuestion(catIndex, qIndex) {
+  document.getElementById('interview-section').style.display = 'block';
+  document.getElementById('user-input').disabled = false;
+  document.getElementById('submit-btn').disabled = false;
+
+  // Calculate global index
+  let globalIndex = 0;
+  for (let i = 0; i < catIndex; i++) {
+    globalIndex += interviewQuestions[i].questions.length;
+  }
+  globalIndex += qIndex;
+
+  currentQuestionIndex = globalIndex;
+  scoreHistory = [];
+
+  const cat = interviewQuestions[catIndex];
+  const q = cat.questions[qIndex];
+
+  addMessage('ai', `🎯 **${cat.name}** - 问题 ${globalIndex + 1}/15
+
+${q.q}`);
+
+  document.getElementById('current-category').textContent = cat.name;
+  document.getElementById('question-progress').textContent = `问题 ${globalIndex + 1} / 15`;
+
+  document.getElementById('interview-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function addMessage(role, content) {
+  const messages = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+
+  const avatar = role === 'ai' ? '🤖' : '👤';
+  const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+  div.innerHTML = `
     <div class="message-avatar">${avatar}</div>
     <div class="message-content">
-      ${content}
-      <div class="meta">${isUser ? '你' : 'AI面试官'} · ${time}</div>
+      ${content.replace(/\n/g, '<br>')}
+      <div class="meta">${role === 'ai' ? 'AI面试官' : '你'} · ${time}</div>
     </div>
   `;
-  
-  chatMessages.appendChild(messageDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 }
 
-function showTyping() {
-  typingIndicator.style.display = 'block';
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+function submitAnswer() {
+  const input = document.getElementById('user-input');
+  const answer = input.value.trim();
+  if (!answer) return;
 
-function hideTyping() {
-  typingIndicator.style.display = 'none';
-}
+  addMessage('user', answer);
+  input.value = '';
 
-function evaluateAnswer(answer) {
-  const length = answer.length;
-  let score = 60;
-  let feedback = '';
-  
-  if (length > 200) {
-    score += 15;
-    feedback += '回答详细，内容充实。';
-  } else if (length > 100) {
-    score += 10;
-    feedback += '回答较为完整。';
-  } else if (length > 50) {
-    score += 5;
-    feedback += '回答基本正确，但可以更详细。';
-  } else {
-    feedback += '回答过于简短，建议展开说明。';
+  // Get current question
+  const allQuestions = [];
+  interviewQuestions.forEach(cat => {
+    cat.questions.forEach(q => {
+      allQuestions.push({ ...q, category: cat.name });
+    });
+  });
+
+  if (currentQuestionIndex >= allQuestions.length) {
+    endInterview();
+    return;
   }
-  
-  const keywords = ['原理', '实现', '优化', '区别', '优缺点', '场景', '源码', '底层', '机制'];
-  const foundKeywords = keywords.filter(k => answer.includes(k));
-  if (foundKeywords.length > 0) {
-    score += foundKeywords.length * 3;
-    feedback += `使用了专业术语（${foundKeywords.join('、')}），加分！`;
-  }
-  
-  score = Math.min(score, 100);
+
+  const currentQ = allQuestions[currentQuestionIndex];
+
+  // Evaluate answer
+  const score = evaluateAnswer(answer, currentQ);
   scoreHistory.push(score);
-  
-  return { score, feedback };
+
+  // Show feedback
+  const feedback = score >= 80 ? '🎉 优秀！' : score >= 60 ? '👍 不错！' : '⚠️ 需要加强';
+  addMessage('ai', `${feedback} **评分：${score}分**
+
+💡 **参考答案**：
+${currentQ.a}
+
+${currentQ.tips ? `📌 **技巧**：${currentQ.tips}` : ''}`);
+
+  // Next question
+  currentQuestionIndex++;
+  if (currentQuestionIndex < allQuestions.length) {
+    const nextQ = allQuestions[currentQuestionIndex];
+    setTimeout(() => {
+      addMessage('ai', `---
+
+**问题 ${currentQuestionIndex + 1}/15** [${nextQ.category}]
+
+${nextQ.q}`);
+      document.getElementById('current-category').textContent = nextQ.category;
+      document.getElementById('question-progress').textContent = `问题 ${currentQuestionIndex + 1} / 15`;
+    }, 1500);
+  } else {
+    setTimeout(() => {
+      endInterview();
+    }, 1500);
+  }
 }
 
-function sendMessage() {
-  const text = userInput.value.trim();
-  if (!text) return;
-  
-  addMessage(`<p>${text}</p>`, true);
-  userInput.value = '';
-  
-  sendBtn.disabled = true;
-  showTyping();
-  
-  setTimeout(() => {
-    hideTyping();
-    sendBtn.disabled = false;
-    
-    if (text === '换一道题') {
-      askNextQuestion();
-    } else if (text === '提示一下') {
-      addMessage(`
-        <p>💡 提示：</p>
-        <p>你可以从以下几个角度回答：</p>
-        <p>1. 基本概念/定义</p>
-        <p>2. 底层原理/实现机制</p>
-        <p>3. 实际应用场景</p>
-        <p>4. 优缺点对比</p>
-        <p>5. 结合你的项目经验</p>
-      `);
-    } else if (text === '结束面试') {
-      showInterviewReport();
-    } else {
-      const { score, feedback } = evaluateAnswer(text);
-      
-      addMessage(`
-        <p><strong>📝 评分：${score}分</strong></p>
-        <p>${feedback}</p>
-      `);
-      
-      setTimeout(() => {
-        askNextQuestion();
-      }, 1000);
-    }
-  }, 1500);
+function evaluateAnswer(answer, question) {
+  let score = 60;
+  const length = answer.length;
+
+  if (length > 200) score += 15;
+  else if (length > 100) score += 10;
+  else if (length > 50) score += 5;
+
+  const keywords = ['原理', '实现', '优化', '区别', '场景', '源码', '底层', '机制', '方案'];
+  const found = keywords.filter(k => answer.includes(k));
+  score += found.length * 3;
+
+  return Math.min(100, Math.max(0, score));
 }
 
-function showInterviewReport() {
-  const avgScore = scoreHistory.length > 0 
-    ? Math.round(scoreHistory.reduce((a, b) => a + b) / scoreHistory.length)
+function showHint() {
+  const allQuestions = [];
+  interviewQuestions.forEach(cat => {
+    cat.questions.forEach(q => allQuestions.push(q));
+  });
+
+  if (currentQuestionIndex < allQuestions.length) {
+    const q = allQuestions[currentQuestionIndex];
+    addMessage('ai', `💡 **提示**：${q.tips || '从基本概念、原理、应用场景、优缺点等角度回答'}`);
+  }
+}
+
+function skipQuestion() {
+  const allQuestions = [];
+  interviewQuestions.forEach(cat => {
+    cat.questions.forEach(q => allQuestions.push(q));
+  });
+
+  currentQuestionIndex++;
+  if (currentQuestionIndex < allQuestions.length) {
+    const nextQ = allQuestions[currentQuestionIndex];
+    addMessage('ai', `⏭️ 已跳过
+
+**问题 ${currentQuestionIndex + 1}/15**
+
+${nextQ.q}`);
+  } else {
+    endInterview();
+  }
+}
+
+function endInterview() {
+  const avgScore = scoreHistory.length > 0
+    ? Math.round(scoreHistory.reduce((a, b) => a + b, 0) / scoreHistory.length)
     : 0;
-  
-  const skillsText = analyzedSkills.length > 0 
-    ? `<p>📋 已覆盖技能点：${analyzedSkills.map(s => s.name).join('、')}</p>`
-    : '';
-  
-  addMessage(`
-    <div class="score-card">
-      <h3>📊 面试报告</h3>
-      <div class="score">${avgScore}分</div>
-      <div class="feedback">
-        <p>✅ 本次面试共回答 ${scoreHistory.length} 道题</p>
-        <p>📈 平均得分：${avgScore}分</p>
-        <p>🏆 最高得分：${Math.max(...scoreHistory)}分</p>
-        ${skillsText}
-        <p style="margin-top:15px">💪 继续加油！多练习才能在真实面试中表现出色！</p>
-      </div>
-    </div>
-  `);
-  
-  interviewStarted = false;
-  questionIndex = 0;
-  scoreHistory = [];
-  usedQuestions.clear();
-  
-  userInput.disabled = true;
-  sendBtn.disabled = true;
-}
 
-function sendQuickAction(action) {
-  userInput.value = action;
-  sendMessage();
+  addMessage('ai', `📊 **面试报告**
+
+✅ 已完成：${scoreHistory.length} 道题
+📈 平均分：${avgScore} 分
+🏆 最高分：${Math.max(...scoreHistory, 0)} 分
+
+${avgScore >= 80 ? '🎉 表现优秀！继续保持！' : avgScore >= 60 ? '👍 表现不错，还有提升空间！' : '💪 继续加油，多练习！'}`);
+
+  document.getElementById('user-input').disabled = true;
+  document.getElementById('submit-btn').disabled = true;
 }
 
 function handleKeyPress(event) {
-  if (event.key === 'Enter') {
-    sendMessage();
-  }
+  if (event.key === 'Enter') submitAnswer();
 }
 
-// Drag and drop support
-const uploadAreas = document.querySelectorAll('.upload-area');
-uploadAreas.forEach(area => {
-  area.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    area.classList.add('dragover');
-  });
-  
-  area.addEventListener('dragleave', () => {
-    area.classList.remove('dragover');
-  });
-  
-  area.addEventListener('drop', (e) => {
-    e.preventDefault();
-    area.classList.remove('dragover');
-    
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      const input = area.querySelector('input[type="file"]');
-      const type = input.id === 'resume-input' ? 'resume' : 'jd';
-      
-      // Create a DataTransfer object to set the file
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      input.files = dataTransfer.files;
-      
-      handleFileUpload({ target: input }, type);
-    }
-  });
-});
+// Download interview doc
+function downloadInterviewDoc() {
+  if (!analysisResult || interviewQuestions.length === 0) {
+    alert('请先上传简历和JD');
+    return;
+  }
 
-// Auto focus input
-userInput.focus();
+  let html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>面试准备文档</title>
+<style>
+body{font-family:-apple-system,sans-serif;line-height:1.8;color:#1f2937;max-width:900px;margin:0 auto;padding:40px 20px;background:#f8fafc}
+h1{font-size:24px;color:#1e40af;border-bottom:3px solid #3b82f6;padding-bottom:12px}
+h2{font-size:18px;color:#1e40af;margin:28px 0 16px;padding-left:12px;border-left:4px solid #3b82f6}
+.card{background:#fff;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.q{font-weight:600;margin-bottom:8px}.a{color:#475569;font-size:14px;margin-bottom:8px}.tip{background:#fef3c7;padding:8px 12px;border-radius:6px;font-size:12px;color:#92400e}
+</style>
+</head>
+<body>
+<h1>🎯 面试准备文档</h1>
+<p>基于简历+岗位JD定制 · 共15道面试题</p>`;
+
+  interviewQuestions.forEach(cat => {
+    html += `<h2>${cat.icon} ${cat.name}</h2>`;
+    cat.questions.forEach((q, i) => {
+      html += `<div class="card">
+<div class="q">Q${i + 1}: ${q.q}</div>
+<div class="a"><strong>参考答案：</strong>${q.a}</div>
+${q.tip ? `<div class="tip">💡 ${q.tip}</div>` : ''}
+</div>`;
+    });
+  });
+
+  html += '</body></html>';
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'interview_prep.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 
 </body>
