@@ -788,7 +788,6 @@ body {
 let resumeText = '', jdText = '';
 let interviewQuestions = [];
 let currentQuestionIndex = 0;
-let scoreHistory = [];
 
 function handleFile(e, type) {
   const file = e.target.files[0];
@@ -971,10 +970,8 @@ function submitAnswer() {
   if (currentQuestionIndex >= allQ.length) { endInterview(); return; }
 
   const q = allQ[currentQuestionIndex];
-  const score = Math.min(100, 60 + Math.min(40, answer.length / 5));
-  scoreHistory.push(score);
 
-  addMessage('ai', `${score >= 80 ? '🎉 优秀！' : score >= 60 ? '👍 不错！' : '⚠️ 需要加强'} **评分：${Math.round(score)}分**\n\n💡 **参考答案**：${q.a}\n\n📌 **技巧**：${q.tips}`);
+  addMessage('ai', `💡 **参考答案**：${q.a}\n\n📌 **技巧**：${q.tips}`);
 
   currentQuestionIndex++;
   if (currentQuestionIndex < allQ.length) {
@@ -1009,8 +1006,7 @@ function skipQuestion() {
 }
 
 function endInterview() {
-  const avg = scoreHistory.length > 0 ? Math.round(scoreHistory.reduce((a,b) => a+b) / scoreHistory.length) : 0;
-  addMessage('ai', `📊 **面试报告**\n\n✅ 已完成：${scoreHistory.length} 道题\n📈 平均分：${avg} 分\n🏆 最高分：${Math.round(Math.max(...scoreHistory, 0))} 分\n\n${avg >= 80 ? '🎉 表现优秀！' : avg >= 60 ? '👍 表现不错！' : '💪 继续加油！'}`);
+  addMessage('ai', `📊 **面试结束**\n\n✅ 已完成所有面试题\n\n💡 请查看参考答案，总结自己的回答，不断提升！`);
   document.getElementById('user-input').disabled = true;
   document.getElementById('submit-btn').disabled = true;
 }
