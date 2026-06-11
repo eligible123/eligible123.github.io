@@ -3,1066 +3,602 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Java面试题库 | 李阳的技术博客</title>
-<meta name="description" content="2516道Java面试题，涵盖AI大模型、后端、中间件等46个分类，含详细答案">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>面试题库 | 李阳的技术博客</title>
+<meta name="description" content="2516道Java面试题，涵盖AI大模型、后端、中间件等46个分类">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
-
-:root {
-  --bg-dark: #0a0a0f;
-  --bg-card: rgba(15, 15, 25, 0.8);
-  --neon-cyan: #00f0ff;
-  --neon-purple: #b000ff;
-  --neon-green: #00ff88;
-  --neon-pink: #ff0080;
-  --neon-yellow: #f0ff00;
-  --text-primary: #e0e0ff;
-  --text-secondary: #8888aa;
-  --border-glow: rgba(0, 240, 255, 0.3);
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --primary: #111827;
+  --secondary: #374151;
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+  --text: #111827;
+  --subtext: #6B7280;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
 body {
-  font-family: 'JetBrains Mono', monospace;
-  background: var(--bg-dark);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Animated grid background */
-.bg-grid {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-image:
-    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  z-index: 0;
-  animation: gridMove 20s linear infinite;
-}
-
-@keyframes gridMove {
-  0% { transform: perspective(500px) rotateX(0deg); }
-  100% { transform: perspective(500px) rotateX(5deg); }
-}
-
-/* Floating particles */
-.particles {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 2px; height: 2px;
-  background: var(--neon-cyan);
-  border-radius: 50%;
-  animation: float linear infinite;
-  box-shadow: 0 0 6px var(--neon-cyan);
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh) scale(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-}
-
-/* Scan line effect */
-.scanline {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 240, 255, 0.01) 2px,
-    rgba(0, 240, 255, 0.01) 4px
-  );
-  z-index: 1;
-  pointer-events: none;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Navigation */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
-  background: rgba(10, 10, 15, 0.95);
-  border-bottom: 1px solid var(--border-glow);
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
 .navbar .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 15px 30px;
+  padding: 0 24px;
+  height: 64px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.5em;
-  font-weight: 900;
-  color: var(--neon-cyan);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
   text-decoration: none;
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-  letter-spacing: 2px;
 }
-
-.logo span { color: var(--text-secondary); font-weight: 400; }
 
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 32px;
   list-style: none;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.85em;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: all 0.3s;
-  position: relative;
+  color: var(--subtext);
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.nav-links a:hover {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-}
+.nav-links a:hover { color: var(--primary); }
 
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--neon-cyan);
-  box-shadow: 0 0 10px var(--neon-cyan);
-  transition: width 0.3s;
-}
-
-.nav-links a:hover::after { width: 100%; }
-
-/* Hero section */
+/* Hero */
 .hero {
-  position: relative;
-  z-index: 2;
-  padding: 80px 30px 60px;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+  padding: 100px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .hero h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 3em;
-  font-weight: 900;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5), 0 0 80px rgba(0, 240, 255, 0.2);
-  margin-bottom: 20px;
-  letter-spacing: 3px;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
 }
 
 .hero .subtitle {
-  font-size: 1.1em;
-  color: var(--text-secondary);
-  margin-bottom: 40px;
+  font-size: 16px;
+  color: var(--subtext);
 }
 
-.hero .stats-row {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  flex-wrap: wrap;
-}
-
-.stat-box {
-  text-align: center;
-  padding: 20px 30px;
-  border: 1px solid var(--border-glow);
-  border-radius: 8px;
-  background: rgba(0, 240, 255, 0.03);
-  min-width: 150px;
-}
-
-.stat-box .num {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2.5em;
-  font-weight: 900;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-}
-
-.stat-box .label {
-  font-size: 0.8em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-top: 5px;
-}
-
-/* Search box */
-.search-container {
-  position: relative;
-  z-index: 2;
-  max-width: 600px;
-  margin: 0 auto 50px;
-  padding: 0 30px;
-}
-
-.search-box {
-  width: 100%;
-  padding: 15px 25px 15px 50px;
-  background: rgba(15, 15, 25, 0.9);
-  border: 1px solid var(--border-glow);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95em;
-  outline: none;
-  transition: all 0.3s;
-}
-
-.search-box:focus {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05);
-}
-
-.search-box::placeholder { color: var(--text-secondary); }
-
-.search-icon {
-  position: absolute;
-  left: 50px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--neon-cyan);
-  font-size: 1.1em;
-}
-
-/* Category filters */
-.filter-bar {
-  position: relative;
-  z-index: 2;
-  max-width: 1400px;
-  margin: 0 auto 30px;
-  padding: 0 30px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.filter-btn {
-  padding: 8px 18px;
-  background: transparent;
-  border: 1px solid var(--border-glow);
-  border-radius: 20px;
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8em;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.filter-btn:hover, .filter-btn.active {
-  background: rgba(0, 240, 255, 0.1);
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-}
-
-/* Categories grid */
-.categories-section {
-  position: relative;
-  z-index: 2;
-  max-width: 1400px;
+/* Main Layout */
+.main {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 30px 60px;
+  padding: 0 24px 80px;
+  display: flex;
+  gap: 32px;
 }
 
-.section-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.5em;
-  color: var(--neon-purple);
-  text-shadow: 0 0 20px rgba(176, 0, 255, 0.5);
-  margin-bottom: 30px;
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 88px;
+  height: fit-content;
+}
+
+.sidebar-nav {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+}
+
+.sidebar-item {
   display: flex;
   align-items: center;
-  gap: 15px;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--secondary);
+  transition: all 0.15s;
 }
 
-.section-title::before {
-  content: '//';
-  color: var(--text-secondary);
+.sidebar-item:hover {
+  background: var(--bg);
+  color: var(--primary);
 }
 
-.section-title::after {
-  content: '';
+.sidebar-item.active {
+  background: var(--primary);
+  color: white;
+}
+
+.sidebar-item .count {
+  font-size: 12px;
+  color: var(--subtext);
+}
+
+.sidebar-item.active .count {
+  color: rgba(255,255,255,0.7);
+}
+
+/* Content */
+.content {
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--border-glow), transparent);
+  min-width: 0;
 }
 
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+/* Search */
+.search-bar {
+  margin-bottom: 20px;
 }
 
-.category-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 12px;
-  padding: 25px;
-  text-decoration: none;
-  color: var(--text-primary);
-  transition: all 0.4s;
-  position: relative;
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+}
+
+/* Questions List */
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.question-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.question-item:hover {
+  border-color: #D1D5DB;
+  box-shadow: var(--shadow);
+}
+
+.question-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--subtext);
+  flex-shrink: 0;
+}
+
+.question-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.question-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.question-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.difficulty {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.difficulty.easy {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.difficulty.medium {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.difficulty.hard {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.question-tags {
+  display: flex;
+  gap: 4px;
+}
+
+.question-tag {
+  padding: 2px 8px;
+  background: var(--bg);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--subtext);
+}
+
+/* Detail View */
+.detail-view {
+  display: none;
+}
+
+.detail-view.active {
+  display: block;
+}
+
+.detail-header {
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--subtext);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+
+.back-btn:hover {
+  color: var(--primary);
+}
+
+.detail-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
-.category-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 3px;
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-  opacity: 0;
-  transition: opacity 0.3s;
+.detail-question {
+  padding: 32px;
+  border-bottom: 1px solid var(--border);
 }
 
-.category-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--neon-cyan);
-  box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15), 0 0 20px rgba(0, 240, 255, 0.1);
-}
-
-.category-card:hover::before { opacity: 1; }
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.detail-question .q-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
   margin-bottom: 12px;
 }
 
-.card-icon {
-  font-size: 2em;
-  width: 50px;
-  height: 50px;
+.detail-question .q-meta {
   display: flex;
+  gap: 12px;
   align-items: center;
-  justify-content: center;
-  background: rgba(0, 240, 255, 0.1);
-  border-radius: 10px;
-  border: 1px solid var(--border-glow);
 }
 
-.card-count {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.8em;
-  font-weight: 700;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+.answer-section {
+  padding: 32px;
 }
 
-.card-title {
-  font-size: 1.1em;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-}
-
-.card-desc {
-  font-size: 0.85em;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.card-tags {
-  display: flex;
+.show-answer-btn {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+  padding: 10px 24px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.tag {
-  padding: 3px 10px;
-  background: rgba(176, 0, 255, 0.1);
-  border: 1px solid rgba(176, 0, 255, 0.3);
-  border-radius: 4px;
-  font-size: 0.75em;
-  color: var(--neon-purple);
+.show-answer-btn:hover {
+  background: #1F2937;
+}
+
+.answer-content {
+  display: none;
+  margin-top: 24px;
+  padding: 24px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--secondary);
+}
+
+.answer-content.show {
+  display: block;
+}
+
+.answer-content p {
+  margin-bottom: 12px;
+}
+
+.answer-content strong {
+  color: var(--primary);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 24px;
+}
+
+.page-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--secondary);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.page-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.page-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
 
 /* Footer */
 .footer {
-  position: relative;
-  z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
   text-align: center;
-  padding: 40px 30px;
-  border-top: 1px solid var(--border-glow);
-  color: var(--text-secondary);
-  font-size: 0.85em;
-}
-
-.footer a {
-  color: var(--neon-cyan);
-  text-decoration: none;
+  color: var(--subtext);
+  font-size: 13px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .hero h1 { font-size: 2em; }
-  .hero .stats-row { gap: 20px; }
-  .stat-box { min-width: 100px; padding: 15px; }
-  .stat-box .num { font-size: 1.8em; }
-  .categories-grid { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .hero h1 { font-size: 28px; }
+  .question-item { flex-direction: column; align-items: flex-start; }
   .nav-links { display: none; }
-}
-
-/* Glitch effect for title */
-@keyframes glitch {
-  0%, 100% { text-shadow: 0 0 40px rgba(0, 240, 255, 0.5); }
-  20% { text-shadow: -2px 0 var(--neon-pink), 2px 0 var(--neon-green); }
-  40% { text-shadow: 2px 0 var(--neon-pink), -2px 0 var(--neon-green); }
-  60% { text-shadow: -1px 0 var(--neon-pink), 1px 0 var(--neon-green); }
-  80% { text-shadow: 1px 0 var(--neon-pink), -1px 0 var(--neon-green); }
-}
-
-.hero h1:hover {
-  animation: glitch 0.3s ease infinite;
-}
-
-/* Terminal cursor blink */
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background: var(--neon-cyan);
-  margin-left: 5px;
-  animation: blink 1s infinite;
-  vertical-align: text-bottom;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 </style>
 </head>
 <body>
 
-<div class="bg-grid"></div>
-<div class="particles" id="particles"></div>
-<div class="scanline"></div>
-
 <nav class="navbar">
   <div class="container">
-    <a href="/" class="logo">LY<span>.DEV</span></a>
+    <a href="/" class="logo">LY.DEV</a>
     <ul class="nav-links">
       <li><a href="/">首页</a></li>
-      <li><a href="/#articles">技术文章</a></li>
-      <li><a href="/interview-questions/">面试题库</a></li>
-      <li><a href="/random-question/" style="color:var(--neon-orange)">🎯 随机一题</a></li>
-      <li><a href="/ai-chat/" style="color:var(--neon-cyan)">🤖 AI面试助手</a></li>
-      <li><a href="/ai-mock-interview/" style="color:var(--neon-green)">🎯 AI模拟面试</a></li>
+      <li><a href="/interview-questions/">题库</a></li>
+      <li><a href="/ai-mock-interview/">AI面试</a></li>
+      <li><a href="/random-question/">随机一题</a></li>
     </ul>
   </div>
 </nav>
 
 <section class="hero">
-  <h1>INTERVIEW QUESTIONS<span class="cursor"></span></h1>
-  <p class="subtitle">// 46 个分类 · 2516 道面试题 · 含详细答案</p>
-  <div class="stats-row">
-    <div class="stat-box">
-      <div class="num">2516</div>
-      <div class="label">TOTAL</div>
-    </div>
-    <div class="stat-box">
-      <div class="num">46</div>
-      <div class="label">CATEGORIES</div>
-    </div>
-    <div class="stat-box">
-      <div class="num">99.8%</div>
-      <div class="label">COVERAGE</div>
-    </div>
-  </div>
-  <div style="margin-top:20px">
-    <a href="/ai-chat/" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));color:#fff;text-decoration:none;border-radius:8px;font-weight:700;font-size:15px;box-shadow:0 0 20px rgba(0,240,255,.3)">🤖 AI面试助手 · 智能问答</a>
-  </div>
+  <h1>面试题库</h1>
+  <p class="subtitle">2516道面试题 · 46个分类 · 含详细答案</p>
 </section>
 
-<div class="search-container">
-  <i class="fas fa-terminal search-icon"></i>
-  <input type="text" class="search-box" id="search" placeholder="> 搜索面试题分类..." oninput="filterCategories()">
-</div>
+<div class="main">
+  <aside class="sidebar">
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+  </aside>
 
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterByTag('all')">全部</button>
-  <button class="filter-btn" onclick="filterByTag('java')">Java</button>
-  <button class="filter-btn" onclick="filterByTag('middleware')">中间件</button>
-  <button class="filter-btn" onclick="filterByTag('database')">数据库</button>
-  <button class="filter-btn" onclick="filterByTag('devops')">运维部署</button>
-  <button class="filter-btn" onclick="filterByTag('interview')">大厂面经</button>
-  <button class="filter-btn" onclick="filterByTag('algo')">算法</button>
-  <button class="filter-btn" onclick="filterByTag('ai')">AI/大模型</button>
-</div>
+  <div class="content">
+    <div class="search-bar">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索面试题...">
+    </div>
 
-<section class="categories-section">
-  <h2 class="section-title">CATEGORIES</h2>
-  <div class="categories-grid" id="categories-grid">
+    <div class="questions-list" id="questionsList"></div>
+    <div class="pagination" id="pagination"></div>
 
-    <a href="./AI大模型/" class="category-card" data-title="AI大模型面试题" data-tags="ai">
-      <div class="card-header">
-        <div class="card-icon">🤖</div>
-        <div class="card-count">343</div>
+    <div class="detail-view" id="detailView">
+      <div class="detail-header">
+        <button class="back-btn" onclick="showList()">← 返回列表</button>
       </div>
-      <div class="card-title">AI大模型面试题</div>
-      <div class="card-desc">LLM、Transformer、RAG、Agent等前沿AI技术面试题</div>
-      <div class="card-tags"><span class="tag">AI</span><span class="tag">LLM</span></div>
-    </a>
-
-    <a href="./华为OD/" class="category-card" data-title="华为OD面试题" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">📱</div>
-        <div class="card-count">209</div>
+      <div class="detail-card">
+        <div class="detail-question">
+          <div class="q-meta">
+            <span class="difficulty" id="detailDiff"></span>
+            <div class="question-tags" id="detailTags"></div>
+          </div>
+          <h2 class="q-title" id="detailTitle"></h2>
+        </div>
+        <div class="answer-section">
+          <button class="show-answer-btn" onclick="toggleAnswer()">查看答案</button>
+          <div class="answer-content" id="answerContent"></div>
+        </div>
       </div>
-      <div class="card-title">华为OD面试题</div>
-      <div class="card-desc">华为OD机试、算法题、面试真题汇总</div>
-      <div class="card-tags"><span class="tag">华为</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./Java/" class="category-card" data-title="Java面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">☕</div>
-        <div class="card-count">200</div>
-      </div>
-      <div class="card-title">Java面试题</div>
-      <div class="card-desc">Java核心、集合、多线程、JVM等高频面试题</div>
-      <div class="card-tags"><span class="tag">Java</span><span class="tag">JVM</span></div>
-    </a>
-
-    <a href="./ElasticSearch/" class="category-card" data-title="ElasticSearch面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">🔍</div>
-        <div class="card-count">177</div>
-      </div>
-      <div class="card-title">ElasticSearch面试题</div>
-      <div class="card-desc">ES原理、索引、分片、查询优化等面试题</div>
-      <div class="card-tags"><span class="tag">ES</span><span class="tag">搜索引擎</span></div>
-    </a>
-
-    <a href="./Java热门200道/" class="category-card" data-title="Java热门面试题200道" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🔥</div>
-        <div class="card-count">162</div>
-      </div>
-      <div class="card-title">Java热门面试题200道</div>
-      <div class="card-desc">精选Java高频面试题，覆盖核心知识点</div>
-      <div class="card-tags"><span class="tag">Java</span><span class="tag">高频</span></div>
-    </a>
-
-    <a href="./Git进阶/" class="category-card" data-title="Git进阶面试题" data-tags="devops">
-      <div class="card-header">
-        <div class="card-icon">📦</div>
-        <div class="card-count">123</div>
-      </div>
-      <div class="card-title">Git进阶面试题</div>
-      <div class="card-desc">Git高级操作、分支策略、冲突解决等</div>
-      <div class="card-tags"><span class="tag">Git</span><span class="tag">版本控制</span></div>
-    </a>
-
-    <a href="./Nginx/" class="category-card" data-title="Nginx面试题" data-tags="devops">
-      <div class="card-header">
-        <div class="card-icon">🌐</div>
-        <div class="card-count">115</div>
-      </div>
-      <div class="card-title">Nginx面试题</div>
-      <div class="card-desc">Nginx配置、负载均衡、反向代理等面试题</div>
-      <div class="card-tags"><span class="tag">Nginx</span><span class="tag">运维</span></div>
-    </a>
-
-    <a href="./Zookeeper/" class="category-card" data-title="Zookeeper面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">🦁</div>
-        <div class="card-count">92</div>
-      </div>
-      <div class="card-title">Zookeeper面试题</div>
-      <div class="card-desc">ZAB协议、分布式锁、选举机制等面试题</div>
-      <div class="card-tags"><span class="tag">ZK</span><span class="tag">分布式</span></div>
-    </a>
-
-    <a href="./后端场景/" class="category-card" data-title="后端场景面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🏗️</div>
-        <div class="card-count">80</div>
-      </div>
-      <div class="card-title">后端场景面试题</div>
-      <div class="card-desc">高并发、秒杀、分布式事务等场景设计题</div>
-      <div class="card-tags"><span class="tag">场景</span><span class="tag">设计</span></div>
-    </a>
-
-    <a href="./Dubbo/" class="category-card" data-title="Dubbo面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">⚡</div>
-        <div class="card-count">64</div>
-      </div>
-      <div class="card-title">Dubbo面试题</div>
-      <div class="card-desc">RPC原理、服务治理、负载均衡等面试题</div>
-      <div class="card-tags"><span class="tag">Dubbo</span><span class="tag">RPC</span></div>
-    </a>
-
-    <a href="./大厂算法真题/" class="category-card" data-title="大厂算法真题" data-tags="algo">
-      <div class="card-header">
-        <div class="card-icon">🧮</div>
-        <div class="card-count">63</div>
-      </div>
-      <div class="card-title">大厂算法真题</div>
-      <div class="card-desc">字节、腾讯、阿里等大厂算法面试真题</div>
-      <div class="card-tags"><span class="tag">算法</span><span class="tag">LeetCode</span></div>
-    </a>
-
-    <a href="./Kafka/" class="category-card" data-title="Kafka面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">📨</div>
-        <div class="card-count">59</div>
-      </div>
-      <div class="card-title">Kafka面试题</div>
-      <div class="card-desc">分区、副本、消费者组、Exactly-Once等面试题</div>
-      <div class="card-tags"><span class="tag">Kafka</span><span class="tag">MQ</span></div>
-    </a>
-
-    <a href="./Git基础/" class="category-card" data-title="Git基础面试题" data-tags="devops">
-      <div class="card-header">
-        <div class="card-icon">📂</div>
-        <div class="card-count">59</div>
-      </div>
-      <div class="card-title">Git基础面试题</div>
-      <div class="card-desc">Git基本操作、工作区、暂存区等基础面试题</div>
-      <div class="card-tags"><span class="tag">Git</span><span class="tag">基础</span></div>
-    </a>
-
-    <a href="./Spring/" class="category-card" data-title="Spring面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🌱</div>
-        <div class="card-count">58</div>
-      </div>
-      <div class="card-title">Spring面试题</div>
-      <div class="card-desc">IoC、AOP、Bean生命周期、事务管理等面试题</div>
-      <div class="card-tags"><span class="tag">Spring</span><span class="tag">框架</span></div>
-    </a>
-
-    <a href="./字节跳动面经/" class="category-card" data-title="字节跳动Java面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🎵</div>
-        <div class="card-count">58</div>
-      </div>
-      <div class="card-title">字节跳动Java面经</div>
-      <div class="card-desc">字节跳动后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">字节</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./MySQL/" class="category-card" data-title="MySQL面试题" data-tags="database">
-      <div class="card-header">
-        <div class="card-icon">🐬</div>
-        <div class="card-count">49</div>
-      </div>
-      <div class="card-title">MySQL面试题</div>
-      <div class="card-desc">索引优化、事务隔离、锁机制、MVCC等面试题</div>
-      <div class="card-tags"><span class="tag">MySQL</span><span class="tag">数据库</span></div>
-    </a>
-
-    <a href="./SQL网站场景/" class="category-card" data-title="SQL网站场景面试题" data-tags="database">
-      <div class="card-header">
-        <div class="card-icon">💾</div>
-        <div class="card-count">45</div>
-      </div>
-      <div class="card-title">SQL网站场景面试题</div>
-      <div class="card-desc">网站业务场景下的SQL查询与优化</div>
-      <div class="card-tags"><span class="tag">SQL</span><span class="tag">场景</span></div>
-    </a>
-
-    <a href="./SpringCloud/" class="category-card" data-title="SpringCloud面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">☁️</div>
-        <div class="card-count">44</div>
-      </div>
-      <div class="card-title">SpringCloud面试题</div>
-      <div class="card-desc">微服务架构、服务注册、配置中心等面试题</div>
-      <div class="card-tags"><span class="tag">SpringCloud</span><span class="tag">微服务</span></div>
-    </a>
-
-    <a href="./Linux系统/" class="category-card" data-title="Linux系统面试题" data-tags="devops">
-      <div class="card-header">
-        <div class="card-icon">🐧</div>
-        <div class="card-count">43</div>
-      </div>
-      <div class="card-title">Linux系统面试题</div>
-      <div class="card-desc">进程管理、内存管理、Shell脚本等面试题</div>
-      <div class="card-tags"><span class="tag">Linux</span><span class="tag">系统</span></div>
-    </a>
-
-    <a href="./阿里巴巴面经/" class="category-card" data-title="阿里巴巴Java面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🛒</div>
-        <div class="card-count">35</div>
-      </div>
-      <div class="card-title">阿里巴巴Java面经</div>
-      <div class="card-desc">阿里巴巴后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">阿里</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./后端系统设计/" class="category-card" data-title="后端系统设计面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🏛️</div>
-        <div class="card-count">34</div>
-      </div>
-      <div class="card-title">后端系统设计面试题</div>
-      <div class="card-desc">系统设计、架构设计、高可用等面试题</div>
-      <div class="card-tags"><span class="tag">系统设计</span><span class="tag">架构</span></div>
-    </a>
-
-    <a href="./SQL电商场景/" class="category-card" data-title="SQL电商场景面试题" data-tags="database">
-      <div class="card-header">
-        <div class="card-icon">🛍️</div>
-        <div class="card-count">34</div>
-      </div>
-      <div class="card-title">SQL电商场景面试题</div>
-      <div class="card-desc">电商业务场景下的SQL查询与优化</div>
-      <div class="card-tags"><span class="tag">SQL</span><span class="tag">电商</span></div>
-    </a>
-
-    <a href="./京东面经/" class="category-card" data-title="京东Java面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🐕</div>
-        <div class="card-count">33</div>
-      </div>
-      <div class="card-title">京东Java面经</div>
-      <div class="card-desc">京东后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">京东</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./RabbitMQ/" class="category-card" data-title="RabbitMQ面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">🐰</div>
-        <div class="card-count">31</div>
-      </div>
-      <div class="card-title">RabbitMQ面试题</div>
-      <div class="card-desc">消息确认、死信队列、延迟队列等面试题</div>
-      <div class="card-tags"><span class="tag">RabbitMQ</span><span class="tag">MQ</span></div>
-    </a>
-
-    <a href="./RocketMQ/" class="category-card" data-title="RocketMQ面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">🚀</div>
-        <div class="card-count">30</div>
-      </div>
-      <div class="card-title">RocketMQ面试题</div>
-      <div class="card-desc">顺序消息、事务消息、消息轨迹等面试题</div>
-      <div class="card-tags"><span class="tag">RocketMQ</span><span class="tag">MQ</span></div>
-    </a>
-
-    <a href="./Docker/" class="category-card" data-title="Docker面试题" data-tags="devops">
-      <div class="card-header">
-        <div class="card-icon">🐳</div>
-        <div class="card-count">28</div>
-      </div>
-      <div class="card-title">Docker面试题</div>
-      <div class="card-desc">容器化、镜像、网络、编排等面试题</div>
-      <div class="card-tags"><span class="tag">Docker</span><span class="tag">容器</span></div>
-    </a>
-
-    <a href="./设计模式/" class="category-card" data-title="设计模式面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🎨</div>
-        <div class="card-count">26</div>
-      </div>
-      <div class="card-title">设计模式面试题</div>
-      <div class="card-desc">单例、工厂、策略、观察者等23种设计模式</div>
-      <div class="card-tags"><span class="tag">设计模式</span><span class="tag">OOP</span></div>
-    </a>
-
-    <a href="./Kubernetes/" class="category-card" data-title="Kubernetes面试题" data-tags="devops">
-      <div class="card-header">
-        <div class="card-icon">☸️</div>
-        <div class="card-count">25</div>
-      </div>
-      <div class="card-title">Kubernetes面试题</div>
-      <div class="card-desc">Pod、Service、Deployment、调度等面试题</div>
-      <div class="card-tags"><span class="tag">K8s</span><span class="tag">编排</span></div>
-    </a>
-
-    <a href="./Redis/" class="category-card" data-title="Redis面试题" data-tags="database">
-      <div class="card-header">
-        <div class="card-icon">🔴</div>
-        <div class="card-count">24</div>
-      </div>
-      <div class="card-title">Redis面试题</div>
-      <div class="card-desc">数据结构、持久化、集群、缓存穿透等面试题</div>
-      <div class="card-tags"><span class="tag">Redis</span><span class="tag">缓存</span></div>
-    </a>
-
-    <a href="./操作系统/" class="category-card" data-title="操作系统面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">💻</div>
-        <div class="card-count">21</div>
-      </div>
-      <div class="card-title">操作系统面试题</div>
-      <div class="card-desc">进程调度、内存管理、死锁、IO模型等面试题</div>
-      <div class="card-tags"><span class="tag">OS</span><span class="tag">基础</span></div>
-    </a>
-
-    <a href="./计算机网络/" class="category-card" data-title="计算机网络面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🌍</div>
-        <div class="card-count">21</div>
-      </div>
-      <div class="card-title">计算机网络面试题</div>
-      <div class="card-desc">TCP/IP、HTTP/HTTPS、DNS、网络安全等面试题</div>
-      <div class="card-tags"><span class="tag">网络</span><span class="tag">TCP</span></div>
-    </a>
-
-    <a href="./美团面经/" class="category-card" data-title="美团Java面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🛵</div>
-        <div class="card-count">20</div>
-      </div>
-      <div class="card-title">美团Java面经</div>
-      <div class="card-desc">美团后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">美团</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./SpringBoot/" class="category-card" data-title="SpringBoot面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🍃</div>
-        <div class="card-count">19</div>
-      </div>
-      <div class="card-title">SpringBoot面试题</div>
-      <div class="card-desc">自动配置、Starter、Actuator等面试题</div>
-      <div class="card-tags"><span class="tag">SpringBoot</span><span class="tag">框架</span></div>
-    </a>
-
-    <a href="./拼多多面经/" class="category-card" data-title="拼多多Java面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🍊</div>
-        <div class="card-count">19</div>
-      </div>
-      <div class="card-title">拼多多Java面经</div>
-      <div class="card-desc">拼多多后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">拼多多</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./消息队列/" class="category-card" data-title="消息队列面试题" data-tags="middleware">
-      <div class="card-header">
-        <div class="card-icon">📬</div>
-        <div class="card-count">15</div>
-      </div>
-      <div class="card-title">消息队列面试题</div>
-      <div class="card-desc">MQ通用概念、选型对比、消息可靠性等面试题</div>
-      <div class="card-tags"><span class="tag">MQ</span><span class="tag">中间件</span></div>
-    </a>
-
-    <a href="./腾讯面经/" class="category-card" data-title="腾讯Java面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🐧</div>
-        <div class="card-count">14</div>
-      </div>
-      <div class="card-title">腾讯Java面经</div>
-      <div class="card-desc">腾讯后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">腾讯</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./MyBatis/" class="category-card" data-title="MyBatis面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🗃️</div>
-        <div class="card-count">12</div>
-      </div>
-      <div class="card-title">MyBatis面试题</div>
-      <div class="card-desc">ORM映射、缓存机制、插件开发等面试题</div>
-      <div class="card-tags"><span class="tag">MyBatis</span><span class="tag">ORM</span></div>
-    </a>
-
-    <a href="./小红书面经/" class="category-card" data-title="小红书面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">📕</div>
-        <div class="card-count">11</div>
-      </div>
-      <div class="card-title">小红书面经</div>
-      <div class="card-desc">小红书后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">小红书</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./小米面经/" class="category-card" data-title="小米面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">📱</div>
-        <div class="card-count">10</div>
-      </div>
-      <div class="card-title">小米面经</div>
-      <div class="card-desc">小米后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">小米</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./快手面经/" class="category-card" data-title="快手面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🎬</div>
-        <div class="card-count">10</div>
-      </div>
-      <div class="card-title">快手面经</div>
-      <div class="card-desc">快手后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">快手</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./网易面经/" class="category-card" data-title="网易面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🎮</div>
-        <div class="card-count">9</div>
-      </div>
-      <div class="card-title">网易面经</div>
-      <div class="card-desc">网易后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">网易</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./设计题/" class="category-card" data-title="设计题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">✏️</div>
-        <div class="card-count">8</div>
-      </div>
-      <div class="card-title">设计题</div>
-      <div class="card-desc">系统设计、架构设计实战面试题</div>
-      <div class="card-tags"><span class="tag">设计</span><span class="tag">架构</span></div>
-    </a>
-
-    <a href="./滴滴面经/" class="category-card" data-title="滴滴面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🚕</div>
-        <div class="card-count">7</div>
-      </div>
-      <div class="card-title">滴滴面经</div>
-      <div class="card-desc">滴滴后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">滴滴</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./蚂蚁金服面经/" class="category-card" data-title="蚂蚁金服面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🐜</div>
-        <div class="card-count">7</div>
-      </div>
-      <div class="card-title">蚂蚁金服面经</div>
-      <div class="card-desc">蚂蚁金服后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">蚂蚁</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./百度面经/" class="category-card" data-title="百度面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🐻</div>
-        <div class="card-count">6</div>
-      </div>
-      <div class="card-title">百度面经</div>
-      <div class="card-desc">百度后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">百度</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./前端面试题/" class="category-card" data-title="前端面试题" data-tags="java">
-      <div class="card-header">
-        <div class="card-icon">🖼️</div>
-        <div class="card-count">4</div>
-      </div>
-      <div class="card-title">前端面试题</div>
-      <div class="card-desc">JavaScript、Vue、React等前端面试题</div>
-      <div class="card-tags"><span class="tag">前端</span><span class="tag">JS</span></div>
-    </a>
-
-    <a href="./淘天面经/" class="category-card" data-title="淘天面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🏪</div>
-        <div class="card-count">3</div>
-      </div>
-      <div class="card-title">淘天面经</div>
-      <div class="card-desc">淘天集团后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">淘天</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./微软面经/" class="category-card" data-title="微软面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🪟</div>
-        <div class="card-count">3</div>
-      </div>
-      <div class="card-title">微软面经</div>
-      <div class="card-desc">微软后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">微软</span><span class="tag">面经</span></div>
-    </a>
-
-    <a href="./Shopee面经/" class="category-card" data-title="Shopee面经" data-tags="interview">
-      <div class="card-header">
-        <div class="card-icon">🛒</div>
-        <div class="card-count">2</div>
-      </div>
-      <div class="card-title">Shopee面经</div>
-      <div class="card-desc">Shopee后端面试真题与经验分享</div>
-      <div class="card-tags"><span class="tag">Shopee</span><span class="tag">面经</span></div>
-    </a>
-
+    </div>
   </div>
-</section>
+</div>
 
 <footer class="footer">
-  <p>© 2026 李阳的技术博客 | <a href="/">eligible123.github.io</a></p>
-  <p style="margin-top:8px; opacity:0.6">// 数据来源: mianshiya.com · 答案由 MiMo AI 生成</p>
+  <p>© 2026 李阳的技术博客</p>
 </footer>
 
 <script>
-// Create floating particles
-function createParticles() {
-  const container = document.getElementById('particles');
-  for (let i = 0; i < 30; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    particle.style.animationDelay = Math.random() * 10 + 's';
-    particle.style.opacity = Math.random() * 0.5 + 0.2;
-    container.appendChild(particle);
-  }
-}
-createParticles();
+// Question categories with counts
+const categories = [
+  { name: '全部题目', count: 2516, filter: 'all' },
+  { name: 'Java', count: 200, filter: 'java' },
+  { name: 'Spring', count: 58, filter: 'spring' },
+  { name: 'MySQL', count: 49, filter: 'mysql' },
+  { name: 'Redis', count: 24, filter: 'redis' },
+  { name: 'Kafka', count: 59, filter: 'kafka' },
+  { name: 'JVM', count: 50, filter: 'jvm' },
+  { name: 'AI大模型', count: 343, filter: 'ai' },
+  { name: '系统设计', count: 34, filter: 'system' },
+  { name: '算法', count: 63, filter: 'algo' },
+  { name: 'Docker', count: 28, filter: 'docker' },
+  { name: 'Kubernetes', count: 25, filter: 'k8s' },
+];
 
-// Search filter
-function filterCategories() {
-  const query = document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('.category-card').forEach(card => {
-    const title = card.dataset.title.toLowerCase();
-    card.style.display = title.includes(query) ? '' : 'none';
+// Sample questions
+const questions = [
+  { id: 1, title: '请说说Java中HashMap的底层实现原理？', difficulty: '中等', tags: ['HashMap', '集合', 'JDK'], category: 'java', answer: 'HashMap基于数组+链表+红黑树实现。JDK8后，当链表长度超过8且数组长度>=64时，链表转为红黑树。默认初始容量16，负载因子0.75，扩容为原来的2倍。' },
+  { id: 2, title: 'volatile关键字的作用是什么？', difficulty: '中等', tags: ['volatile', '多线程', '并发'], category: 'java', answer: 'volatile保证可见性和禁止指令重排序，但不能保证原子性。适用于状态标记、DCL单例等场景。' },
+  { id: 3, title: 'MySQL的事务隔离级别有哪些？', difficulty: '中等', tags: ['MySQL', '事务', '隔离级别'], category: 'mysql', answer: '读未提交、读已提交、可重复读（MySQL默认）、串行化。分别解决脏读、不可重复读、幻读问题。' },
+  { id: 4, title: 'Redis的持久化机制有哪些？', difficulty: '中等', tags: ['Redis', '持久化', 'RDB'], category: 'redis', answer: 'RDB定时快照、AOF记录命令、混合持久化。RDB文件小恢复快，AOF数据安全，混合结合两者优点。' },
+  { id: 5, title: 'JVM的垃圾回收机制是什么？', difficulty: '困难', tags: ['JVM', 'GC', '垃圾回收'], category: 'jvm', answer: '通过可达性分析判断对象存活，使用标记-清除、标记-整理、复制算法。新生代用复制，老年代用标记-整理。' },
+  { id: 6, title: 'Spring Boot自动配置原理？', difficulty: '中等', tags: ['Spring', '自动配置', 'Starter'], category: 'spring', answer: '@EnableAutoConfiguration加载spring.factories，通过条件注解过滤配置类。' },
+  { id: 7, title: '如何设计一个秒杀系统？', difficulty: '困难', tags: ['秒杀', '高并发', '系统设计'], category: 'system', answer: '前端限流、Redis预扣库存、异步下单、乐观锁防超卖。' },
+  { id: 8, title: 'Transformer的Self-Attention机制？', difficulty: '困难', tags: ['Transformer', 'Attention', 'AI'], category: 'ai', answer: 'Q、K、V线性变换，计算注意力分数softmax(QK^T/√d)V，多头注意力并行计算。' },
+  { id: 9, title: 'MySQL索引的B+树原理？', difficulty: '中等', tags: ['索引', 'B+树', 'MySQL'], category: 'mysql', answer: '多路平衡搜索树，非叶子节点只存索引，叶子节点存数据用链表连接，树高3-4层减少IO。' },
+  { id: 10, title: '分布式事务解决方案？', difficulty: '困难', tags: ['分布式', '事务', 'TCC'], category: 'system', answer: '2PC、3PC、TCC、本地消息表、MQ事务消息、Seata等方案。' },
+];
+
+let currentCategory = 'all';
+let currentPage = 1;
+const pageSize = 20;
+
+// Initialize
+function init() {
+  renderSidebar();
+  renderQuestions();
+}
+
+// Render sidebar
+function renderSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = categories.map(cat => `
+    <div class="sidebar-item ${currentCategory === cat.filter ? 'active' : ''}" onclick="selectCategory('${cat.filter}')">
+      <span>${cat.name}</span>
+      <span class="count">${cat.count}</span>
+    </div>
+  `).join('');
+}
+
+// Select category
+function selectCategory(filter) {
+  currentCategory = filter;
+  currentPage = 1;
+  renderSidebar();
+  renderQuestions();
+  showList();
+}
+
+// Render questions
+function renderQuestions() {
+  const list = document.getElementById('questionsList');
+  const filtered = currentCategory === 'all' ? questions : questions.filter(q => q.category === currentCategory);
+
+  list.innerHTML = filtered.map((q, i) => `
+    <div class="question-item" onclick="showDetail(${q.id})">
+      <div class="question-num">${i + 1}</div>
+      <div class="question-content">
+        <div class="question-title">${q.title}</div>
+        <div class="question-meta">
+          <span class="difficulty ${q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard'}">${q.difficulty}</span>
+          <div class="question-tags">
+            ${q.tags.map(t => `<span class="question-tag">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Show detail
+function showDetail(id) {
+  const q = questions.find(q => q.id === id);
+  if (!q) return;
+
+  document.getElementById('questionsList').style.display = 'none';
+  document.querySelector('.pagination').style.display = 'none';
+  document.getElementById('detailView').classList.add('active');
+
+  document.getElementById('detailTitle').textContent = q.title;
+  document.getElementById('detailDiff').textContent = q.difficulty;
+  document.getElementById('detailDiff').className = `difficulty ${q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard'}`;
+  document.getElementById('detailTags').innerHTML = q.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
+  document.getElementById('answerContent').innerHTML = `<p>${q.answer}</p>`;
+  document.getElementById('answerContent').classList.remove('show');
+}
+
+// Show list
+function showList() {
+  document.getElementById('questionsList').style.display = 'flex';
+  document.querySelector('.pagination').style.display = 'flex';
+  document.getElementById('detailView').classList.remove('active');
+}
+
+// Toggle answer
+function toggleAnswer() {
+  document.getElementById('answerContent').classList.toggle('show');
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase();
+  const items = document.querySelectorAll('.question-item');
+  items.forEach(item => {
+    const title = item.querySelector('.question-title').textContent.toLowerCase();
+    item.style.display = title.includes(query) ? '' : 'none';
   });
-}
+});
 
-// Tag filter
-function filterByTag(tag) {
-  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-
-  document.querySelectorAll('.category-card').forEach(card => {
-    if (tag === 'all') {
-      card.style.display = '';
-    } else {
-      const tags = card.dataset.tags || '';
-      card.style.display = tags.includes(tag) ? '' : 'none';
-    }
-  });
-}
+init();
 </script>
 
 </body>

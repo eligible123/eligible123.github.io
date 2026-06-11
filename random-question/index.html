@@ -5,158 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>随机一题 | 面试题库</title>
 <meta name="description" content="随机抽取面试题，AI分析答案匹配度，错题本功能">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
-
-:root {
-  --bg-dark: #0a0a0f;
-  --bg-card: rgba(15, 15, 25, 0.8);
-  --neon-cyan: #00f0ff;
-  --neon-purple: #b000ff;
-  --neon-green: #00ff88;
-  --neon-pink: #ff0080;
-  --neon-yellow: #f0ff00;
-  --neon-orange: #ff8800;
-  --text-primary: #e0e0ff;
-  --text-secondary: #8888aa;
-  --border-glow: rgba(0, 240, 255, 0.3);
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --primary: #111827;
+  --secondary: #374151;
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+  --text: #111827;
+  --subtext: #6B7280;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
 body {
-  font-family: 'JetBrains Mono', monospace;
-  background: var(--bg-dark);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.bg-grid {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-image:
-    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  z-index: 0;
-}
-
-.particles {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 2px; height: 2px;
-  background: var(--neon-cyan);
-  border-radius: 50%;
-  animation: float linear infinite;
-  box-shadow: 0 0 6px var(--neon-cyan);
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh) scale(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
-  background: rgba(10, 10, 15, 0.95);
-  border-bottom: 1px solid var(--border-glow);
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
 .navbar .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 15px 30px;
+  padding: 0 24px;
+  height: 64px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.5em;
-  font-weight: 900;
-  color: var(--neon-cyan);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
   text-decoration: none;
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-  letter-spacing: 2px;
 }
-
-.logo span { color: var(--text-secondary); font-weight: 400; }
 
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 32px;
   list-style: none;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.85em;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: all 0.3s;
+  color: var(--subtext);
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.nav-links a:hover {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-}
+.nav-links a:hover { color: var(--primary); }
 
 .hero {
-  position: relative;
-  z-index: 2;
-  padding: 60px 30px 40px;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+  padding: 100px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .hero h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2.5em;
-  font-weight: 900;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
-  margin-bottom: 15px;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
 }
 
 .hero .subtitle {
-  font-size: 1em;
-  color: var(--text-secondary);
-  margin-bottom: 30px;
+  font-size: 16px;
+  color: var(--subtext);
 }
 
-/* Main container */
-.main-container {
-  position: relative;
-  z-index: 2;
-  max-width: 1000px;
+.main {
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 30px 60px;
+  padding: 0 24px 80px;
 }
 
-/* Question card */
+/* Stats */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--subtext);
+  margin-top: 4px;
+}
+
+/* Question Card */
 .question-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 24px;
 }
 
 .question-header {
@@ -168,64 +145,57 @@ body {
 
 .question-meta {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
 }
 
 .question-num {
-  padding: 5px 15px;
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 4px 12px;
+  background: var(--bg);
   border-radius: 6px;
-  font-size: 0.85em;
-  color: var(--neon-cyan);
+  font-size: 13px;
+  color: var(--subtext);
 }
 
-.difficulty-tag {
-  padding: 5px 12px;
+.difficulty {
+  padding: 4px 10px;
   border-radius: 6px;
-  font-size: 0.8em;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.difficulty-tag.easy {
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  color: var(--neon-green);
+.difficulty.easy {
+  background: #ECFDF5;
+  color: #059669;
 }
 
-.difficulty-tag.medium {
-  background: rgba(255, 136, 0, 0.1);
-  border: 1px solid rgba(255, 136, 0, 0.3);
-  color: var(--neon-orange);
+.difficulty.medium {
+  background: #FEF3C7;
+  color: #D97706;
 }
 
-.difficulty-tag.hard {
-  background: rgba(255, 0, 128, 0.1);
-  border: 1px solid rgba(255, 0, 128, 0.3);
-  color: var(--neon-pink);
+.difficulty.hard {
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
 .question-tags {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .question-tag {
   padding: 3px 10px;
-  background: rgba(176, 0, 255, 0.1);
-  border: 1px solid rgba(176, 0, 255, 0.3);
-  border-radius: 4px;
-  font-size: 0.75em;
-  color: var(--neon-purple);
+  background: var(--bg);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--subtext);
 }
 
 .question-title {
-  font-size: 1.3em;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.6;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
   margin-bottom: 20px;
 }
 
@@ -234,205 +204,162 @@ body {
   gap: 10px;
 }
 
-.action-btn {
+.btn {
   padding: 10px 20px;
-  background: transparent;
-  border: 1px solid var(--border-glow);
   border-radius: 8px;
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85em;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
+  font-family: inherit;
+  transition: all 0.15s;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.action-btn:hover {
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-  background: rgba(0, 240, 255, 0.05);
-}
-
-.action-btn.primary {
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-  border: none;
+.btn.primary {
+  background: var(--primary);
   color: white;
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+  border: none;
 }
 
-.action-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 30px rgba(0, 240, 255, 0.4);
+.btn.primary:hover {
+  background: #1F2937;
 }
 
-/* Answer section */
+.btn.secondary {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--secondary);
+}
+
+.btn.secondary:hover {
+  border-color: var(--primary);
+}
+
+/* Answer Section */
 .answer-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  display: none;
+}
+
+.answer-section.show {
+  display: block;
 }
 
 .answer-section h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-purple);
-  margin-bottom: 20px;
-  font-size: 1.1em;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
 .answer-input {
   width: 100%;
-  min-height: 200px;
-  padding: 20px;
-  background: rgba(15, 15, 25, 0.9);
-  border: 1px solid var(--border-glow);
-  border-radius: 12px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95em;
-  line-height: 1.8;
+  min-height: 150px;
+  padding: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
   resize: vertical;
   outline: none;
-  transition: all 0.3s;
+  font-family: inherit;
 }
 
 .answer-input:focus {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-}
-
-.answer-input::placeholder {
-  color: var(--text-secondary);
+  border-color: var(--primary);
 }
 
 .submit-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 30px;
-  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  font-size: 1em;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-  margin-top: 15px;
+  margin-top: 12px;
 }
 
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 30px rgba(0, 255, 136, 0.4);
-}
-
-.submit-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Score result */
+/* Score Result */
 .score-result {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
   display: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
 }
 
 .score-result.show {
   display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .score-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .score-header h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-cyan);
-  font-size: 1.1em;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .score-circle {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2em;
-  font-weight: 900;
-  margin: 0 auto 20px;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 auto 16px;
 }
 
 .score-circle.high {
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 240, 255, 0.2));
-  border: 3px solid var(--neon-green);
-  color: var(--neon-green);
-  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+  background: #ECFDF5;
+  color: #059669;
+  border: 3px solid #10B981;
 }
 
 .score-circle.medium {
-  background: linear-gradient(135deg, rgba(255, 136, 0, 0.2), rgba(255, 255, 0, 0.2));
-  border: 3px solid var(--neon-orange);
-  color: var(--neon-orange);
-  text-shadow: 0 0 20px rgba(255, 136, 0, 0.5);
+  background: #FEF3C7;
+  color: #D97706;
+  border: 3px solid #F59E0B;
 }
 
 .score-circle.low {
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(255, 0, 0, 0.2));
-  border: 3px solid var(--neon-pink);
-  color: var(--neon-pink);
-  text-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 3px solid #EF4444;
 }
 
 .score-feedback {
-  color: var(--text-secondary);
-  line-height: 1.8;
-  margin-bottom: 20px;
-}
-
-.score-feedback p {
-  margin-bottom: 8px;
+  color: var(--subtext);
+  font-size: 14px;
+  margin-bottom: 16px;
 }
 
 .match-details {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--bg);
   border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
 }
 
 .match-details h4 {
-  color: var(--neon-cyan);
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 10px;
-  font-size: 0.9em;
 }
 
 .match-item {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-  font-size: 0.85em;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
 }
 
 .match-item:last-child {
@@ -440,298 +367,170 @@ body {
 }
 
 .match-label {
-  color: var(--text-secondary);
+  color: var(--subtext);
 }
 
 .match-value {
-  color: var(--neon-green);
+  color: var(--success);
 }
 
 .match-value.low {
-  color: var(--neon-pink);
+  color: var(--danger);
 }
 
-/* Standard answer */
+/* Standard Answer */
 .standard-answer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
   display: none;
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 0, 128, 0.3);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
 }
 
 .standard-answer.show {
   display: block;
-  animation: fadeIn 0.3s ease;
 }
 
 .standard-answer h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-pink);
-  margin-bottom: 20px;
-  font-size: 1.1em;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--danger);
 }
 
 .standard-answer .answer-content {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  padding: 25px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 14px;
   line-height: 1.8;
-  color: var(--text-primary);
+  color: var(--secondary);
 }
 
-.standard-answer .answer-content p {
-  margin-bottom: 12px;
+/* Wrong Book */
+.wrong-book {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  display: none;
 }
 
-.standard-answer .answer-content strong {
-  color: var(--neon-cyan);
+.wrong-book.show {
+  display: block;
 }
 
-/* Wrong question book */
-.wrong-book-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
-}
-
-.wrong-book-section h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-orange);
-  margin-bottom: 20px;
-  font-size: 1.1em;
+.wrong-book h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
 
-.wrong-book-section .count-badge {
-  padding: 5px 15px;
-  background: rgba(255, 136, 0, 0.1);
-  border: 1px solid rgba(255, 136, 0, 0.3);
+.wrong-book .count-badge {
+  padding: 4px 12px;
+  background: #FEF2F2;
   border-radius: 20px;
-  font-size: 0.8em;
-  color: var(--neon-orange);
+  font-size: 13px;
+  color: #DC2626;
 }
 
 .wrong-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .wrong-item {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s;
-  border: 1px solid transparent;
+  transition: background 0.15s;
 }
 
 .wrong-item:hover {
-  border-color: var(--neon-orange);
-  background: rgba(255, 136, 0, 0.05);
+  background: #F3F4F6;
 }
 
 .wrong-item .question-text {
   flex: 1;
-  font-size: 0.9em;
-  color: var(--text-primary);
-  margin-right: 15px;
+  font-size: 14px;
+  margin-right: 12px;
 }
 
 .wrong-item .fail-count {
-  padding: 5px 12px;
-  background: rgba(255, 0, 128, 0.1);
-  border: 1px solid rgba(255, 0, 128, 0.3);
+  padding: 4px 10px;
+  background: #FEF2F2;
   border-radius: 6px;
-  font-size: 0.8em;
-  color: var(--neon-pink);
+  font-size: 12px;
+  color: #DC2626;
   white-space: nowrap;
 }
 
 .wrong-item .remove-btn {
-  margin-left: 10px;
+  margin-left: 8px;
   background: none;
   border: none;
-  color: var(--text-secondary);
+  color: var(--subtext);
   cursor: pointer;
-  font-size: 1.1em;
-  padding: 5px;
-  transition: color 0.3s;
+  font-size: 14px;
 }
 
 .wrong-item .remove-btn:hover {
-  color: var(--neon-pink);
+  color: var(--danger);
 }
 
 .empty-state {
   text-align: center;
-  padding: 40px;
-  color: var(--text-secondary);
+  padding: 32px;
+  color: var(--subtext);
+  font-size: 14px;
 }
 
-.empty-state .icon {
-  font-size: 3em;
-  margin-bottom: 15px;
-}
-
-/* Stats bar */
-.stats-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-}
-
-.stat-card .stat-value {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.8em;
-  font-weight: 900;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-}
-
-.stat-card .stat-label {
-  font-size: 0.8em;
-  color: var(--text-secondary);
-  margin-top: 5px;
-}
-
-/* Footer */
 .footer {
-  position: relative;
-  z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
   text-align: center;
-  padding: 40px 30px;
-  border-top: 1px solid var(--border-glow);
-  color: var(--text-secondary);
-  font-size: 0.85em;
+  color: var(--subtext);
+  font-size: 13px;
 }
 
-.footer a {
-  color: var(--neon-cyan);
-  text-decoration: none;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .hero h1 { font-size: 1.8em; }
+  .hero h1 { font-size: 28px; }
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .question-header { flex-direction: column; gap: 10px; }
   .nav-links { display: none; }
-}
-
-/* Cursor blink */
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background: var(--neon-cyan);
-  margin-left: 5px;
-  animation: blink 1s infinite;
-  vertical-align: text-bottom;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 10, 15, 0.9);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-overlay.show {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  padding: 30px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.modal-header h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-orange);
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 1.5em;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.modal-close:hover {
-  color: var(--neon-pink);
 }
 </style>
 </head>
 <body>
 
-<div class="bg-grid"></div>
-<div class="particles" id="particles"></div>
-
 <nav class="navbar">
   <div class="container">
-    <a href="/" class="logo">LY<span>.DEV</span></a>
+    <a href="/" class="logo">LY.DEV</a>
     <ul class="nav-links">
       <li><a href="/">首页</a></li>
-      <li><a href="/interview-questions/">面试题库</a></li>
-      <li><a href="/random-question/" style="color:var(--neon-orange)">🎯 随机一题</a></li>
-      <li><a href="/ai-mock-interview/">AI模拟面试</a></li>
+      <li><a href="/interview-questions/">题库</a></li>
+      <li><a href="/ai-mock-interview/">AI面试</a></li>
+      <li><a href="/random-question/">随机一题</a></li>
     </ul>
   </div>
 </nav>
 
 <section class="hero">
-  <h1>RANDOM QUESTION<span class="cursor"></span></h1>
-  <p class="subtitle">// 🎯 随机出题 · AI评分 · 错题本 · 查漏补缺</p>
+  <h1>随机一题</h1>
+  <p class="subtitle">随机出题 · AI评分 · 错题本 · 查漏补缺</p>
 </section>
 
-<div class="main-container">
-  <!-- Stats Bar -->
+<div class="main">
+  <!-- Stats -->
   <div class="stats-bar">
     <div class="stat-card">
       <div class="stat-value" id="totalAttempted">0</div>
@@ -751,39 +550,30 @@ body {
     </div>
   </div>
 
-  <!-- Question Card -->
+  <!-- Question -->
   <div class="question-card" id="questionCard">
     <div class="question-header">
       <div class="question-meta">
         <span class="question-num" id="questionNum"># 题目 1</span>
-        <span class="difficulty-tag" id="questionDiff">中等</span>
+        <span class="difficulty" id="questionDiff">中等</span>
       </div>
       <div class="question-tags" id="questionTags"></div>
     </div>
-    <div class="question-title" id="questionTitle">
-      点击下方按钮开始随机出题...
-    </div>
+    <div class="question-title" id="questionTitle">点击下方按钮开始随机出题...</div>
     <div class="question-actions">
-      <button class="action-btn primary" onclick="getRandomQuestion()">
-        🎲 随机一题
-      </button>
-      <button class="action-btn" onclick="showWrongBook()">
-        📕 错题本
-        <span id="wrongBadge" style="display:none;background:var(--neon-pink);color:white;padding:2px 8px;border-radius:10px;font-size:0.8em">0</span>
-      </button>
+      <button class="btn primary" onclick="getRandomQuestion()">🎲 随机一题</button>
+      <button class="btn secondary" onclick="showWrongBook()">📕 错题本 <span id="wrongBadge" style="display:none;background:#FEE2E2;color:#DC2626;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:4px">0</span></button>
     </div>
   </div>
 
-  <!-- Answer Section -->
-  <div class="answer-section" id="answerSection" style="display:none">
+  <!-- Answer -->
+  <div class="answer-section" id="answerSection">
     <h3>✏️ 输入你的答案</h3>
-    <textarea class="answer-input" id="answerInput" placeholder="请在此输入你的答案...&#10;&#10;提示：尽量详细地回答，包含关键概念、原理和实际应用场景。"></textarea>
-    <button class="submit-btn" onclick="submitAnswer()" id="submitBtn">
-      📝 提交答案
-    </button>
+    <textarea class="answer-input" id="answerInput" placeholder="请在此输入你的答案..."></textarea>
+    <button class="btn primary submit-btn" onclick="submitAnswer()" id="submitBtn">📝 提交答案</button>
   </div>
 
-  <!-- Score Result -->
+  <!-- Score -->
   <div class="score-result" id="scoreResult">
     <div class="score-header">
       <h3>📊 评分结果</h3>
@@ -794,9 +584,9 @@ body {
       <h4>匹配度分析</h4>
       <div id="matchItems"></div>
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="action-btn primary" onclick="getRandomQuestion()">🎲 下一题</button>
-      <button class="action-btn" onclick="showCurrentAnswer()">📖 查看标准答案</button>
+    <div style="display:flex;gap:10px">
+      <button class="btn primary" onclick="getRandomQuestion()">🎲 下一题</button>
+      <button class="btn secondary" onclick="showCurrentAnswer()">📖 查看标准答案</button>
     </div>
   </div>
 
@@ -804,13 +594,11 @@ body {
   <div class="standard-answer" id="standardAnswer">
     <h3>📖 标准答案</h3>
     <div class="answer-content" id="standardContent"></div>
-    <button class="action-btn primary" onclick="getRandomQuestion()" style="margin-top:15px">
-      🎲 下一题
-    </button>
+    <button class="btn primary" onclick="getRandomQuestion()" style="margin-top:16px">🎲 下一题</button>
   </div>
 
-  <!-- Wrong Book Section -->
-  <div class="wrong-book-section" id="wrongBookSection" style="display:none">
+  <!-- Wrong Book -->
+  <div class="wrong-book" id="wrongBook">
     <h3>
       📕 错题本
       <span class="count-badge" id="wrongBookCount">0 道</span>
@@ -819,461 +607,192 @@ body {
   </div>
 </div>
 
-<!-- Wrong Book Modal -->
-<div class="modal-overlay" id="wrongBookModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>📕 错题本详情</h3>
-      <button class="modal-close" onclick="closeModal()">&times;</button>
-    </div>
-    <div id="modalContent"></div>
-  </div>
-</div>
-
 <footer class="footer">
-  <p>© 2026 李阳的技术博客 | <a href="/">eligible123.github.io</a></p>
-  <p style="margin-top:8px; opacity:0.6">// 随机一题 · Powered by MiMo AI</p>
+  <p>© 2026 李阳的技术博客</p>
 </footer>
 
 <script>
-// Create particles
-function createParticles() {
-  const container = document.getElementById('particles');
-  for (let i = 0; i < 30; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    particle.style.animationDelay = Math.random() * 10 + 's';
-    container.appendChild(particle);
-  }
-}
-createParticles();
-
-// Question database (simulated - in real app, fetch from API)
 const questionDatabase = [
-  {
-    id: 1,
-    title: "请说说Java中HashMap的底层实现原理？",
-    difficulty: "中等",
-    tags: ["Java", "集合", "数据结构"],
-    category: "java",
-    answer: "HashMap基于**数组+链表+红黑树**实现：\n\n1. **数组结构**：底层是一个Node数组，默认初始容量16，负载因子0.75\n\n2. **哈希计算**：通过key的hashCode()经过扰动函数处理后得到hash值，再通过`(n-1) & hash`计算数组下标\n\n3. **链表结构**：当发生哈希冲突时，使用链表存储，JDK8后采用尾插法\n\n4. **红黑树优化**：当链表长度超过8且数组长度>=64时，链表转为红黑树，时间复杂度从O(n)降为O(logn)\n\n5. **扩容机制**：当元素数量超过容量*负载因子时，数组扩容为原来的2倍\n\n6. **线程不安全**：多线程环境下可能出现数据覆盖，需要使用ConcurrentHashMap"
-  },
-  {
-    id: 2,
-    title: "volatile关键字的作用是什么？它能保证原子性吗？",
-    difficulty: "中等",
-    tags: ["Java", "多线程", "并发"],
-    category: "java",
-    answer: "volatile的**两大作用**：\n\n1. **保证可见性**：当一个线程修改volatile变量时，其他线程能立即看到最新值，因为会强制刷新到主内存\n\n2. **禁止指令重排序**：通过内存屏障禁止编译器和处理器对指令进行重排序优化\n\n**不能保证原子性**：\n- volatile只能保证单次读/写的原子性\n- 对于i++这种复合操作（读-改-写），volatile无法保证原子性\n- 需要使用synchronized或AtomicInteger来保证原子性\n\n**使用场景**：\n- 状态标记量（如boolean flag）\n- 双重检查锁定（DCL）中的单例模式\n- 读多写少的场景"
-  },
-  {
-    id: 3,
-    title: "MySQL的事务隔离级别有哪些？各自会出现什么问题？",
-    difficulty: "中等",
-    tags: ["MySQL", "数据库", "事务"],
-    category: "database",
-    answer: "MySQL有**四种事务隔离级别**：\n\n1. **读未提交（Read Uncommitted）**\n   - 问题：脏读、不可重复读、幻读\n   - 最低级别，几乎不用\n\n2. **读已提交（Read Committed）**\n   - 问题：不可重复读、幻读\n   - 解决脏读问题\n   - Oracle默认级别\n\n3. **可重复读（Repeatable Read）**\n   - 问题：幻读\n   - MySQL默认级别\n   - 通过MVCC和间隙锁部分解决幻读\n\n4. **串行化（Serializable）**\n   - 问题：无\n   - 最高级别，完全串行执行\n   - 性能最差\n\n**相关概念**：\n- 脏读：读到未提交的数据\n- 不可重复读：两次读取结果不同\n- 幻读：两次查询结果集不同"
-  },
-  {
-    id: 4,
-    title: "Redis的持久化机制有哪些？各自的优缺点？",
-    difficulty: "中等",
-    tags: ["Redis", "数据库", "缓存"],
-    category: "database",
-    answer: "Redis有两种**持久化机制**：\n\n**1. RDB（Redis Database）**\n- 原理：定时将内存数据快照写入磁盘\n- 优点：文件小、恢复快、对性能影响小\n- 缺点：可能丢失最后一次快照后的数据\n- 配置：save 900 1（900秒内1次修改）\n\n**2. AOF（Append Only File）**\n- 原理：记录每条写命令\n- 优点：数据安全性高、可读性好\n- 缺点：文件大、恢复慢\n- 同步策略：always/everysec/no\n\n**混合持久化（Redis 4.0+）**\n- 结合RDB和AOF优点\n- AOF文件前半段是RDB格式，后半段是AOF命令\n- 推荐使用"
-  },
-  {
-    id: 5,
-    title: "请解释一下JVM的垃圾回收机制，常用的垃圾回收器有哪些？",
-    difficulty: "困难",
-    tags: ["Java", "JVM", "性能优化"],
-    category: "java",
-    answer: "JVM**垃圾回收机制**：\n\n**1. 对象存活判断**\n- 引用计数法：有引用+1，失效-1，缺点是循环引用\n- 可达性分析：从GC Roots出发，不可达的对象可回收\n\n**2. 垃圾回收算法**\n- 标记-清除：产生内存碎片\n- 标记-整理：无碎片但效率低\n- 复制算法：适合新生代，空间利用率50%\n- 分代收集：新生代用复制，老年代用标记-整理\n\n**3. 常用垃圾回收器**\n- Serial：单线程，适合小堆\n- ParNew：多线程版Serial\n- Parallel Scavenge：关注吞吐量\n- CMS：低停顿，但有碎片\n- G1：分Region，可预测停顿\n- ZGC：超低停顿（<10ms）"
-  },
-  {
-    id: 6,
-    title: "Spring Boot的自动配置原理是什么？",
-    difficulty: "中等",
-    tags: ["Spring", "框架", "Java"],
-    category: "java",
-    answer: "Spring Boot**自动配置原理**：\n\n**1. @SpringBootApplication**\n- 组合注解：@SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan\n- 核心是@EnableAutoConfiguration\n\n**2. 自动配置流程**\n- @EnableAutoConfiguration通过@Import加载AutoConfigurationImportSelector\n- AutoConfigurationImportSelector读取META-INF/spring.factories文件\n- 根据条件注解（@ConditionalOnClass等）过滤配置类\n\n**3. 条件注解**\n- @ConditionalOnClass：类路径存在时生效\n- @ConditionalOnMissingBean：容器中无该Bean时生效\n- @ConditionalOnProperty：配置属性满足时生效\n\n**4. 配置绑定**\n- 通过@ConfigurationProperties绑定配置文件属性\n- 支持松散绑定、JSR303校验"
-  },
-  {
-    id: 7,
-    title: "如何设计一个秒杀系统，需要考虑哪些问题？",
-    difficulty: "困难",
-    tags: ["系统设计", "高并发", "架构"],
-    category: "system",
-    answer: "**秒杀系统设计要点**：\n\n**1. 前端优化**\n- 页面静态化、CDN加速\n- 按钮防重、倒计时同步\n- 前端限流（随机丢弃请求）\n\n**2. 接入层**\n- Nginx限流、负载均衡\n- 请求排队、验证码\n\n**3. 服务层**\n- 库存预热到Redis\n- 原子操作扣减库存\n- 异步下单（消息队列）\n\n**4. 数据层**\n- 分库分表\n- 库存扣减使用乐观锁\n- 订单超时未支付回滚库存\n\n**5. 核心问题**\n- 超卖问题：Redis原子操作+数据库乐观锁\n- 高并发：限流+异步+缓存\n- 数据一致性：最终一致性"
-  },
-  {
-    id: 8,
-    title: "请解释一下Transformer的Self-Attention机制？",
-    difficulty: "困难",
-    tags: ["AI", "深度学习", "NLP"],
-    category: "ai",
-    answer: "**Self-Attention机制**：\n\n**1. 核心思想**\n- 让模型关注输入序列中所有位置\n- 计算每个位置与其他位置的相关性\n\n**2. 计算过程**\n- 输入X经过线性变换得到Q、K、V\n- 计算注意力分数：score = Q × K^T / √d_k\n- softmax归一化得到注意力权重\n- 加权求和：output = softmax(score) × V\n\n**3. Multi-Head Attention**\n- 多头注意力并行计算\n- 捕获不同子空间的信息\n- 最后拼接并线性变换\n\n**4. 优势**\n- 并行计算效率高\n- 捕捉长距离依赖\n- 可解释性强\n\n**5. 应用**\n- BERT、GPT等预训练模型\n- 机器翻译、文本生成"
-  },
-  {
-    id: 9,
-    title: "MySQL的索引类型和B+树索引的原理？",
-    difficulty: "中等",
-    tags: ["MySQL", "数据库", "索引"],
-    category: "database",
-    answer: "**MySQL索引类型**：\n\n**1. 按数据结构分**\n- B+树索引：最常用，适合范围查询\n- Hash索引：等值查询快，不支持范围\n- Full-text索引：全文搜索\n\n**2. 按逻辑分**\n- 主键索引：唯一且非空\n- 唯一索引：值唯一\n- 普通索引：无限制\n- 联合索引：多列组合\n\n**3. B+树原理**\n- 多路平衡搜索树\n- 非叶子节点只存索引\n- 叶子节点存数据，用链表连接\n- 树高一般3-4层\n\n**4. 优势**\n- 磁盘IO次数少（树矮）\n- 范围查询快（叶子链表）\n- 排序效率高\n\n**5. 索引失效**\n- 函数操作、类型转换\n- OR条件、!=、LIKE '%xx'"
-  },
-  {
-    id: 10,
-    title: "说说分布式事务的解决方案有哪些？",
-    difficulty: "困难",
-    tags: ["分布式", "架构", "事务"],
-    category: "system",
-    answer: "**分布式事务解决方案**：\n\n**1. 2PC（两阶段提交）**\n- 准备阶段：协调者询问参与者\n- 提交阶段：所有参与者同意则提交\n- 缺点：同步阻塞、单点故障\n\n**2. 3PC（三阶段提交）**\n- 增加CanCommit阶段\n- 减少阻塞时间\n\n**3. TCC（Try-Confirm-Cancel）**\n- Try：预留资源\n- Confirm：确认提交\n- Cancel：取消释放\n- 适合业务层实现\n\n**4. 本地消息表**\n- 本地事务+消息表\n- 定时任务补偿\n\n**5. MQ事务消息**\n- RocketMQ支持\n- 半消息+回查机制\n\n**6. Seata**\n- AT模式：自动补偿\n- TCC模式：手动实现\n- Saga模式：长事务"
-  }
+  { id: 1, title: '请说说Java中HashMap的底层实现原理？', difficulty: '中等', tags: ['Java', '集合'], answer: 'HashMap基于数组+链表+红黑树实现。JDK8后链表长度超过8转红黑树，默认容量16，负载因子0.75。' },
+  { id: 2, title: 'volatile关键字的作用是什么？', difficulty: '中等', tags: ['Java', '多线程'], answer: 'volatile保证可见性和禁止指令重排序，但不能保证原子性。' },
+  { id: 3, title: 'MySQL的事务隔离级别有哪些？', difficulty: '中等', tags: ['MySQL', '事务'], answer: '读未提交、读已提交、可重复读（默认）、串行化。' },
+  { id: 4, title: 'Redis的持久化机制有哪些？', difficulty: '中等', tags: ['Redis', '持久化'], answer: 'RDB定时快照、AOF记录命令、混合持久化。' },
+  { id: 5, title: 'JVM的垃圾回收机制是什么？', difficulty: '困难', tags: ['JVM', 'GC'], answer: '可达性分析判断存活，标记-清除/整理/复制算法，分代收集。' },
+  { id: 6, title: 'Spring Boot自动配置原理？', difficulty: '中等', tags: ['Spring', '自动配置'], answer: '@EnableAutoConfiguration加载spring.factories，条件注解过滤。' },
+  { id: 7, title: '如何设计一个秒杀系统？', difficulty: '困难', tags: ['系统设计', '高并发'], answer: '前端限流、Redis预扣库存、异步下单、乐观锁防超卖。' },
+  { id: 8, title: 'Transformer的Self-Attention机制？', difficulty: '困难', tags: ['AI', 'Transformer'], answer: 'Q、K、V线性变换，softmax(QK^T/√d)V，多头注意力。' },
+  { id: 9, title: 'MySQL索引的B+树原理？', difficulty: '中等', tags: ['MySQL', '索引'], answer: '多路平衡搜索树，非叶子节点存索引，叶子节点存数据用链表连接。' },
+  { id: 10, title: '分布式事务解决方案？', difficulty: '困难', tags: ['分布式', '事务'], answer: '2PC、3PC、TCC、本地消息表、MQ事务消息、Seata。' },
 ];
 
-// State
 let currentQuestion = null;
 let wrongBook = JSON.parse(localStorage.getItem('wrongBook') || '{}');
 let stats = JSON.parse(localStorage.getItem('questionStats') || '{"attempted":0,"passed":0}');
 
-// Update stats display
 function updateStats() {
   const wrongCount = Object.keys(wrongBook).length;
   const passRate = stats.attempted > 0 ? Math.round((stats.passed / stats.attempted) * 100) : 0;
-  
   document.getElementById('totalAttempted').textContent = stats.attempted;
   document.getElementById('passCount').textContent = stats.passed;
   document.getElementById('wrongCount').textContent = wrongCount;
   document.getElementById('passRate').textContent = passRate + '%';
-  
-  // Update badge
   const badge = document.getElementById('wrongBadge');
-  if (wrongCount > 0) {
-    badge.style.display = 'inline';
-    badge.textContent = wrongCount;
-  } else {
-    badge.style.display = 'none';
-  }
-  
+  badge.style.display = wrongCount > 0 ? 'inline' : 'none';
+  badge.textContent = wrongCount;
   document.getElementById('wrongBookCount').textContent = wrongCount + ' 道';
-  
-  // Save to localStorage
   localStorage.setItem('wrongBook', JSON.stringify(wrongBook));
   localStorage.setItem('questionStats', JSON.stringify(stats));
 }
 
-// Get random question
 function getRandomQuestion() {
-  // Hide previous results
   document.getElementById('scoreResult').classList.remove('show');
   document.getElementById('standardAnswer').classList.remove('show');
-  document.getElementById('answerSection').style.display = 'none';
-  document.getElementById('wrongBookSection').style.display = 'none';
-  
-  // Pick random question (prefer wrong ones 30% of the time)
+  document.getElementById('wrongBook').classList.remove('show');
+  document.getElementById('answerSection').classList.add('show');
+
   const wrongIds = Object.keys(wrongBook);
   let question;
-  
   if (wrongIds.length > 0 && Math.random() < 0.3) {
-    // Pick from wrong book
-    const randomWrongId = wrongIds[Math.floor(Math.random() * wrongIds.length)];
-    question = questionDatabase.find(q => q.id == randomWrongId);
+    question = questionDatabase.find(q => q.id == wrongIds[Math.floor(Math.random() * wrongIds.length)]);
   }
-  
-  if (!question) {
-    question = questionDatabase[Math.floor(Math.random() * questionDatabase.length)];
-  }
-  
+  if (!question) question = questionDatabase[Math.floor(Math.random() * questionDatabase.length)];
+
   currentQuestion = question;
-  
-  // Update UI
   document.getElementById('questionNum').textContent = `# 题目 ${question.id}`;
   document.getElementById('questionTitle').textContent = question.title;
-  
-  // Difficulty
+
   const diffEl = document.getElementById('questionDiff');
   diffEl.textContent = question.difficulty;
-  diffEl.className = 'difficulty-tag';
-  if (question.difficulty === '简单') diffEl.classList.add('easy');
-  else if (question.difficulty === '中等') diffEl.classList.add('medium');
-  else diffEl.classList.add('hard');
-  
-  // Tags
-  const tagsEl = document.getElementById('questionTags');
-  tagsEl.innerHTML = question.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
-  
-  // Show answer section
-  document.getElementById('answerSection').style.display = 'block';
+  diffEl.className = 'difficulty ' + (question.difficulty === '简单' ? 'easy' : question.difficulty === '中等' ? 'medium' : 'hard');
+
+  document.getElementById('questionTags').innerHTML = question.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
   document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
-  
-  // Scroll to question
   document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Submit answer
 function submitAnswer() {
-  const userAnswer = document.getElementById('answerInput').value.trim();
-  
-  if (!userAnswer) {
-    alert('请输入你的答案！');
-    return;
-  }
-  
-  if (!currentQuestion) {
-    alert('请先获取一道题目！');
-    return;
-  }
-  
-  // Disable button
+  const answer = document.getElementById('answerInput').value.trim();
+  if (!answer || !currentQuestion) return;
+
   document.getElementById('submitBtn').disabled = true;
-  
-  // Simulate AI analysis
+
   setTimeout(() => {
-    const result = analyzeAnswer(userAnswer, currentQuestion.answer);
-    
-    // Update stats
+    const result = analyzeAnswer(answer, currentQuestion.answer);
     stats.attempted++;
+
     if (result.score >= 60) {
       stats.passed++;
-      // Remove from wrong book if passed
-      if (wrongBook[currentQuestion.id]) {
-        delete wrongBook[currentQuestion.id];
-      }
+      if (wrongBook[currentQuestion.id]) delete wrongBook[currentQuestion.id];
     } else {
-      // Add to wrong book
       if (!wrongBook[currentQuestion.id]) {
-        wrongBook[currentQuestion.id] = {
-          question: currentQuestion.title,
-          failCount: 0,
-          lastAttempt: new Date().toISOString()
-        };
+        wrongBook[currentQuestion.id] = { question: currentQuestion.title, failCount: 0, lastAttempt: new Date().toISOString() };
       }
       wrongBook[currentQuestion.id].failCount++;
-      wrongBook[currentQuestion.id].lastAttempt = new Date().toISOString();
     }
-    
+
     updateStats();
-    
-    // Show result
     showScoreResult(result);
-    
-    // Re-enable button
     document.getElementById('submitBtn').disabled = false;
-  }, 1500);
+  }, 1000);
 }
 
-// Analyze answer (simulated AI analysis)
 function analyzeAnswer(userAnswer, standardAnswer) {
-  const userLength = userAnswer.length;
-  const standardLength = standardAnswer.length;
-  
-  // Extract keywords from standard answer
   const keywords = standardAnswer.match(/[\u4e00-\u9fa5a-zA-Z]+/g) || [];
-  const importantKeywords = keywords.filter(k => k.length >= 2);
-  
-  // Count matched keywords
-  let matchedCount = 0;
-  const matchedKeywords = [];
-  const missedKeywords = [];
-  
-  importantKeywords.forEach(keyword => {
-    if (userAnswer.includes(keyword)) {
-      matchedCount++;
-      matchedKeywords.push(keyword);
-    } else {
-      missedKeywords.push(keyword);
-    }
+  const important = keywords.filter(k => k.length >= 2);
+  let matched = 0;
+  const matchedKw = [], missedKw = [];
+
+  important.forEach(k => {
+    if (userAnswer.includes(k)) { matched++; matchedKw.push(k); }
+    else missedKw.push(k);
   });
-  
-  // Calculate base score from keyword matching
-  const keywordScore = Math.min(100, Math.round((matchedCount / Math.max(importantKeywords.length, 1)) * 100));
-  
-  // Length bonus
-  let lengthBonus = 0;
-  if (userLength > standardLength * 0.8) lengthBonus = 10;
-  else if (userLength > standardLength * 0.5) lengthBonus = 5;
-  else if (userLength < standardLength * 0.2) lengthBonus = -10;
-  
-  // Structure bonus
-  let structureBonus = 0;
-  if (userAnswer.includes('1.') || userAnswer.includes('①') || userAnswer.includes('•')) structureBonus += 5;
-  if (userAnswer.includes('：') || userAnswer.includes(':')) structureBonus += 3;
-  
-  const finalScore = Math.max(0, Math.min(100, keywordScore + lengthBonus + structureBonus));
-  
+
+  const keywordScore = Math.min(100, Math.round((matched / Math.max(important.length, 1)) * 100));
+  const lengthBonus = userAnswer.length > standardAnswer.length * 0.8 ? 10 : userAnswer.length > standardAnswer.length * 0.5 ? 5 : -5;
+  const finalScore = Math.max(0, Math.min(100, keywordScore + lengthBonus));
+
   return {
     score: finalScore,
-    keywordScore,
-    lengthBonus,
-    structureBonus,
-    matchedKeywords: [...new Set(matchedKeywords)].slice(0, 5),
-    missedKeywords: [...new Set(missedKeywords)].slice(0, 5),
-    feedback: generateFeedback(finalScore, matchedKeywords.length, importantKeywords.length)
+    matchedKeywords: [...new Set(matchedKw)].slice(0, 5),
+    missedKeywords: [...new Set(missedKw)].slice(0, 5),
+    feedback: finalScore >= 90 ? '🎉 优秀！' : finalScore >= 80 ? '👍 良好！' : finalScore >= 60 ? '✅ 及格！' : '⚠️ 需要加强！'
   };
 }
 
-function generateFeedback(score, matched, total) {
-  if (score >= 90) return '🎉 优秀！你的回答非常全面，涵盖了大部分关键点。';
-  if (score >= 80) return '👍 良好！回答基本正确，继续加油！';
-  if (score >= 60) return '✅ 及格！回答涵盖了主要概念，但有些细节可以补充。';
-  if (score >= 40) return '⚠️ 不及格！你的回答缺少很多关键点，建议复习相关知识。';
-  return '❌ 需要加强！建议仔细学习这道题的相关知识点。';
-}
-
-// Show score result
 function showScoreResult(result) {
-  const resultEl = document.getElementById('scoreResult');
-  const circleEl = document.getElementById('scoreCircle');
-  const feedbackEl = document.getElementById('scoreFeedback');
-  const matchItemsEl = document.getElementById('matchItems');
-  
-  // Set score circle
-  circleEl.textContent = result.score;
-  circleEl.className = 'score-circle';
-  if (result.score >= 80) circleEl.classList.add('high');
-  else if (result.score >= 60) circleEl.classList.add('medium');
-  else circleEl.classList.add('low');
-  
-  // Set feedback
-  feedbackEl.innerHTML = `
-    <p>${result.feedback}</p>
-    <p>📊 关键词匹配：${result.matchedKeywords.length} / ${result.matchedKeywords.length + result.missedKeywords.length}</p>
-  `;
-  
-  // Set match details
+  document.getElementById('scoreResult').classList.add('show');
+
+  const circle = document.getElementById('scoreCircle');
+  circle.textContent = result.score;
+  circle.className = 'score-circle ' + (result.score >= 80 ? 'high' : result.score >= 60 ? 'medium' : 'low');
+
+  document.getElementById('scoreFeedback').innerHTML = `<p>${result.feedback}</p><p>📊 关键词匹配：${result.matchedKeywords.length} / ${result.matchedKeywords.length + result.missedKeywords.length}</p>`;
+
   let matchHTML = '';
-  if (result.matchedKeywords.length > 0) {
-    matchHTML += `<div class="match-item"><span class="match-label">✅ 匹配关键词</span><span class="match-value">${result.matchedKeywords.join('、')}</span></div>`;
-  }
-  if (result.missedKeywords.length > 0) {
-    matchHTML += `<div class="match-item"><span class="match-label">❌ 遗漏关键词</span><span class="match-value low">${result.missedKeywords.join('、')}</span></div>`;
-  }
-  matchHTML += `<div class="match-item"><span class="match-label">📝 内容长度</span><span class="match-value">${result.lengthBonus >= 0 ? '+' : ''}${result.lengthBonus}分</span></div>`;
-  matchHTML += `<div class="match-item"><span class="match-label">📋 结构化</span><span class="match-value">+${result.structureBonus}分</span></div>`;
-  matchItemsEl.innerHTML = matchHTML;
-  
-  // Show result
-  resultEl.classList.add('show');
-  
-  // Auto show standard answer if score < 60
-  if (result.score < 60) {
-    setTimeout(() => {
-      showCurrentAnswer();
-    }, 1000);
-  }
-  
-  // Scroll to result
-  resultEl.scrollIntoView({ behavior: 'smooth' });
+  if (result.matchedKeywords.length) matchHTML += `<div class="match-item"><span class="match-label">✅ 匹配关键词</span><span class="match-value">${result.matchedKeywords.join('、')}</span></div>`;
+  if (result.missedKeywords.length) matchHTML += `<div class="match-item"><span class="match-label">❌ 遗漏关键词</span><span class="match-value low">${result.missedKeywords.join('、')}</span></div>`;
+  document.getElementById('matchItems').innerHTML = matchHTML;
+
+  if (result.score < 60) setTimeout(showCurrentAnswer, 1000);
+  document.getElementById('scoreResult').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Show current answer
 function showCurrentAnswer() {
   if (!currentQuestion) return;
-  
-  const answerEl = document.getElementById('standardAnswer');
-  const contentEl = document.getElementById('standardContent');
-  
-  // Format answer with paragraphs
-  const formattedAnswer = currentQuestion.answer
-    .split('\n')
-    .map(line => {
-      if (line.trim() === '') return '';
-      // Bold text
-      line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      // List items
-      if (line.match(/^[0-9]+\./) || line.match(/^[-•]/)) {
-        return `<p style="margin-left:20px">${line}</p>`;
-      }
-      return `<p>${line}</p>`;
-    })
-    .join('');
-  
-  contentEl.innerHTML = formattedAnswer;
-  answerEl.classList.add('show');
-  answerEl.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('standardContent').innerHTML = `<p>${currentQuestion.answer}</p>`;
+  document.getElementById('standardAnswer').classList.add('show');
+  document.getElementById('standardAnswer').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Show wrong book
 function showWrongBook() {
-  const section = document.getElementById('wrongBookSection');
-  const listEl = document.getElementById('wrongList');
-  
   const wrongIds = Object.keys(wrongBook);
-  
+  const listEl = document.getElementById('wrongList');
+
   if (wrongIds.length === 0) {
-    listEl.innerHTML = `
-      <div class="empty-state">
-        <div class="icon">🎉</div>
-        <p>暂无错题，继续保持！</p>
-      </div>
-    `;
+    listEl.innerHTML = '<div class="empty-state">🎉 暂无错题，继续保持！</div>';
   } else {
     listEl.innerHTML = wrongIds.map(id => {
       const item = wrongBook[id];
-      return `
-        <div class="wrong-item" onclick="loadWrongQuestion(${id})">
-          <div class="question-text">${item.question}</div>
-          <div class="fail-count">❌ ${item.failCount}次未通过</div>
-          <button class="remove-btn" onclick="event.stopPropagation();removeFromWrongBook(${id})" title="从错题本移除">✕</button>
-        </div>
-      `;
+      return `<div class="wrong-item" onclick="loadWrongQuestion(${id})">
+        <div class="question-text">${item.question}</div>
+        <div class="fail-count">❌ ${item.failCount}次未通过</div>
+        <button class="remove-btn" onclick="event.stopPropagation();removeFromWrongBook(${id})">✕</button>
+      </div>`;
     }).join('');
   }
-  
-  section.style.display = 'block';
-  section.scrollIntoView({ behavior: 'smooth' });
+
+  document.getElementById('wrongBook').classList.add('show');
+  document.getElementById('wrongBook').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Load wrong question
 function loadWrongQuestion(id) {
   const question = questionDatabase.find(q => q.id === id);
-  if (question) {
-    currentQuestion = question;
-    
-    // Update UI
-    document.getElementById('questionNum').textContent = `# 题目 ${question.id}`;
-    document.getElementById('questionTitle').textContent = question.title;
-    
-    const diffEl = document.getElementById('questionDiff');
-    diffEl.textContent = question.difficulty;
-    diffEl.className = 'difficulty-tag';
-    if (question.difficulty === '简单') diffEl.classList.add('easy');
-    else if (question.difficulty === '中等') diffEl.classList.add('medium');
-    else diffEl.classList.add('hard');
-    
-    document.getElementById('questionTags').innerHTML = question.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
-    
-    // Hide other sections
-    document.getElementById('scoreResult').classList.remove('show');
-    document.getElementById('standardAnswer').classList.remove('show');
-    document.getElementById('wrongBookSection').style.display = 'none';
-    
-    // Show answer section
-    document.getElementById('answerSection').style.display = 'block';
-    document.getElementById('answerInput').value = '';
-    document.getElementById('answerInput').focus();
-    
-    document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
-  }
+  if (!question) return;
+  currentQuestion = question;
+
+  document.getElementById('questionNum').textContent = `# 题目 ${question.id}`;
+  document.getElementById('questionTitle').textContent = question.title;
+  const diffEl = document.getElementById('questionDiff');
+  diffEl.textContent = question.difficulty;
+  diffEl.className = 'difficulty ' + (question.difficulty === '简单' ? 'easy' : question.difficulty === '中等' ? 'medium' : 'hard');
+  document.getElementById('questionTags').innerHTML = question.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
+
+  document.getElementById('scoreResult').classList.remove('show');
+  document.getElementById('standardAnswer').classList.remove('show');
+  document.getElementById('wrongBook').classList.remove('show');
+  document.getElementById('answerSection').classList.add('show');
+  document.getElementById('answerInput').value = '';
+  document.getElementById('answerInput').focus();
+  document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Remove from wrong book
 function removeFromWrongBook(id) {
   delete wrongBook[id];
   updateStats();
   showWrongBook();
 }
 
-// Close modal
-function closeModal() {
-  document.getElementById('wrongBookModal').classList.remove('show');
-}
-
-// Initialize
 updateStats();
 </script>
 

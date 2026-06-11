@@ -5,259 +5,181 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI模拟面试 | 李阳的技术博客</title>
 <meta name="description" content="AI智能模拟面试，上传简历+JD生成15道专属面试题">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
-
-:root {
-  --bg-dark: #0a0a0f;
-  --bg-card: rgba(15, 15, 25, 0.8);
-  --neon-cyan: #00f0ff;
-  --neon-purple: #b000ff;
-  --neon-green: #00ff88;
-  --neon-pink: #ff0080;
-  --neon-yellow: #f0ff00;
-  --neon-orange: #ff8800;
-  --text-primary: #e0e0ff;
-  --text-secondary: #8888aa;
-  --border-glow: rgba(0, 240, 255, 0.3);
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --primary: #111827;
+  --secondary: #374151;
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+  --text: #111827;
+  --subtext: #6B7280;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
 body {
-  font-family: 'JetBrains Mono', monospace;
-  background: var(--bg-dark);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.bg-grid {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-image:
-    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  z-index: 0;
-}
-
-.particles {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 2px; height: 2px;
-  background: var(--neon-cyan);
-  border-radius: 50%;
-  animation: float linear infinite;
-  box-shadow: 0 0 6px var(--neon-cyan);
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh) scale(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
-  background: rgba(10, 10, 15, 0.95);
-  border-bottom: 1px solid var(--border-glow);
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
 .navbar .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 15px 30px;
+  padding: 0 24px;
+  height: 64px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.5em;
-  font-weight: 900;
-  color: var(--neon-cyan);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
   text-decoration: none;
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-  letter-spacing: 2px;
 }
-
-.logo span { color: var(--text-secondary); font-weight: 400; }
 
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 32px;
   list-style: none;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.85em;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: all 0.3s;
+  color: var(--subtext);
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.nav-links a:hover {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-}
+.nav-links a:hover { color: var(--primary); }
 
 .hero {
-  position: relative;
-  z-index: 2;
-  padding: 60px 30px 40px;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+  padding: 100px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .hero h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2.5em;
-  font-weight: 900;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
-  margin-bottom: 15px;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
 }
 
 .hero .subtitle {
-  font-size: 1em;
-  color: var(--text-secondary);
-  margin-bottom: 30px;
+  font-size: 16px;
+  color: var(--subtext);
 }
 
-.main-container {
-  position: relative;
-  z-index: 2;
+.main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 30px 60px;
+  padding: 0 24px 80px;
 }
 
 .section-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.3em;
-  color: var(--neon-purple);
-  text-shadow: 0 0 20px rgba(176, 0, 255, 0.5);
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.section-title::before {
-  content: '//';
-  color: var(--text-secondary);
-}
-
-.section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--border-glow), transparent);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 16px;
 }
 
 /* Upload Section */
 .upload-section {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .upload-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
 .upload-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 12px;
-  padding: 25px;
-  transition: all 0.3s;
-}
-
-.upload-card:hover {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
 }
 
 .upload-card.has-file {
-  border-color: var(--neon-green);
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+  border-color: var(--success);
 }
 
 .upload-card .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
-.upload-card .card-header h3 {
-  font-size: 1em;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.upload-card h3 {
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .badge {
-  padding: 3px 10px;
-  border-radius: 4px;
-  font-size: 0.75em;
-  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .badge.required {
-  background: rgba(255, 0, 128, 0.2);
-  border: 1px solid rgba(255, 0, 128, 0.4);
-  color: var(--neon-pink);
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
 .badge.optional {
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: var(--neon-cyan);
+  background: #F3F4F6;
+  color: var(--subtext);
 }
 
 .upload-area {
-  border: 2px dashed var(--border-glow);
+  border: 2px dashed var(--border);
   border-radius: 8px;
-  padding: 30px;
+  padding: 32px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
   position: relative;
 }
 
 .upload-area:hover {
-  border-color: var(--neon-cyan);
-  background: rgba(0, 240, 255, 0.03);
+  border-color: var(--primary);
+  background: var(--bg);
 }
 
 .upload-area .icon {
-  font-size: 2.5em;
-  margin-bottom: 10px;
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
 .upload-area p {
-  color: var(--text-secondary);
-  font-size: 0.85em;
+  font-size: 14px;
+  color: var(--subtext);
 }
 
 .upload-area input[type="file"] {
@@ -272,11 +194,12 @@ body {
 
 .file-info {
   display: none;
-  margin-top: 15px;
-  padding: 12px 15px;
-  background: rgba(0, 255, 136, 0.05);
-  border: 1px solid rgba(0, 255, 136, 0.2);
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg);
   border-radius: 8px;
+  font-size: 14px;
+  color: var(--success);
 }
 
 .file-info.show {
@@ -285,40 +208,29 @@ body {
   justify-content: space-between;
 }
 
-.file-info .file-name {
-  font-size: 0.85em;
-  color: var(--neon-green);
-}
-
-.file-info .remove-btn {
+.remove-btn {
   background: none;
   border: none;
-  color: var(--neon-pink);
+  color: var(--danger);
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 16px;
 }
 
-/* Analysis Result */
+/* Analysis Section */
 .analysis-section {
-  margin-bottom: 40px;
-}
-
-.analysis-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  padding: 30px;
+  margin-bottom: 32px;
   display: none;
 }
 
-.analysis-card.show {
+.analysis-section.show {
   display: block;
-  animation: fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.analysis-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
 }
 
 .analysis-header {
@@ -331,48 +243,46 @@ body {
 .match-score {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
 .score-circle {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.5em;
-  font-weight: 900;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .score-circle.high {
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 240, 255, 0.2));
-  border: 3px solid var(--neon-green);
-  color: var(--neon-green);
+  background: #ECFDF5;
+  color: #059669;
+  border: 2px solid #10B981;
 }
 
 .score-circle.medium {
-  background: linear-gradient(135deg, rgba(255, 136, 0, 0.2), rgba(255, 255, 0, 0.2));
-  border: 3px solid var(--neon-orange);
-  color: var(--neon-orange);
+  background: #FEF3C7;
+  color: #D97706;
+  border: 2px solid #F59E0B;
 }
 
 .score-circle.low {
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(255, 0, 0, 0.2));
-  border: 3px solid var(--neon-pink);
-  color: var(--neon-pink);
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 2px solid #EF4444;
 }
 
 .score-info h3 {
-  font-size: 1.1em;
-  color: var(--text-primary);
-  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .score-info p {
-  font-size: 0.85em;
-  color: var(--text-secondary);
+  font-size: 14px;
+  color: var(--subtext);
 }
 
 .keywords-section {
@@ -380,8 +290,8 @@ body {
 }
 
 .keywords-section h4 {
-  font-size: 0.9em;
-  color: var(--neon-cyan);
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
@@ -392,263 +302,217 @@ body {
 }
 
 .keyword-tag {
-  padding: 5px 12px;
+  padding: 4px 12px;
   border-radius: 6px;
-  font-size: 0.8em;
+  font-size: 13px;
 }
 
 .keyword-tag.hit {
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  color: var(--neon-green);
+  background: #ECFDF5;
+  color: #059669;
 }
 
 .keyword-tag.miss {
-  background: rgba(255, 0, 128, 0.1);
-  border: 1px solid rgba(255, 0, 128, 0.3);
-  color: var(--neon-pink);
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
 .skills-analysis {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  padding: 20px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 16px;
   margin-bottom: 20px;
 }
 
 .skills-analysis h4 {
-  font-size: 0.9em;
-  color: var(--neon-purple);
-  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 .skill-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
 }
 
 .skill-item:last-child {
   border-bottom: none;
 }
 
-.skill-name {
-  color: var(--text-primary);
-  font-size: 0.9em;
-}
-
 .skill-match {
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 4px;
-  font-size: 0.75em;
+  font-size: 12px;
 }
 
 .skill-match.high {
-  background: rgba(0, 255, 136, 0.1);
-  color: var(--neon-green);
+  background: #ECFDF5;
+  color: #059669;
 }
 
 .skill-match.medium {
-  background: rgba(255, 136, 0, 0.1);
-  color: var(--neon-orange);
+  background: #FEF3C7;
+  color: #D97706;
 }
 
 .skill-match.low {
-  background: rgba(255, 0, 128, 0.1);
-  color: var(--neon-pink);
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
 .action-buttons {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .btn {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  font-size: 0.9em;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-family: inherit;
+  transition: all 0.15s;
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
-  border: none;
+  background: var(--primary);
   color: white;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+  border: none;
 }
 
 .btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 30px rgba(0, 255, 136, 0.4);
+  background: #1F2937;
 }
 
 .btn.secondary {
-  background: transparent;
-  border: 1px solid var(--border-glow);
-  color: var(--text-secondary);
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--secondary);
 }
 
 .btn.secondary:hover {
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
+  border-color: var(--primary);
 }
 
-/* Questions Section */
+/* Questions Preview */
 .questions-section {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
+  display: none;
 }
 
-.questions-categories {
+.questions-section.show {
+  display: block;
+}
+
+.questions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 .category-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
 .category-header {
-  padding: 15px 20px;
-  background: rgba(0, 240, 255, 0.05);
-  border-bottom: 1px solid var(--border-glow);
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
 .category-header .icon {
-  font-size: 1.5em;
+  font-size: 20px;
 }
 
 .category-header h3 {
-  font-size: 1em;
-  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .category-header .count {
   margin-left: auto;
-  padding: 3px 10px;
-  background: rgba(0, 240, 255, 0.1);
-  border-radius: 10px;
-  font-size: 0.75em;
-  color: var(--neon-cyan);
+  font-size: 12px;
+  color: var(--subtext);
 }
 
 .question-list {
-  padding: 15px;
+  padding: 12px;
 }
 
 .question-item {
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s;
-  border: 1px solid transparent;
+  font-size: 13px;
+  color: var(--secondary);
+  transition: background 0.15s;
 }
 
 .question-item:hover {
-  border-color: var(--neon-cyan);
-  background: rgba(0, 240, 255, 0.05);
-}
-
-.question-item:last-child {
-  margin-bottom: 0;
-}
-
-.question-item .q-num {
-  display: inline-block;
-  padding: 2px 8px;
-  background: rgba(0, 240, 255, 0.1);
-  border-radius: 4px;
-  font-size: 0.75em;
-  color: var(--neon-cyan);
-  margin-right: 8px;
-}
-
-.question-item .q-text {
-  font-size: 0.85em;
-  color: var(--text-primary);
+  background: var(--bg);
 }
 
 /* Interview Section */
 .interview-section {
-  margin-bottom: 40px;
+  display: none;
+}
+
+.interview-section.show {
+  display: block;
 }
 
 .interview-container {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
 .interview-header {
-  padding: 20px 25px;
-  background: rgba(0, 240, 255, 0.05);
-  border-bottom: 1px solid var(--border-glow);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .interview-header .status {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--neon-green);
-  box-shadow: 0 0 10px var(--neon-green);
-  animation: pulse 2s infinite;
+  background: var(--success);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+.interview-header h3 {
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.interview-header .info h3 {
-  font-size: 1em;
-  color: var(--text-primary);
-}
-
-.interview-header .info p {
-  font-size: 0.8em;
-  color: var(--text-secondary);
+.interview-header p {
+  font-size: 13px;
+  color: var(--subtext);
+  margin-left: auto;
 }
 
 .chat-messages {
-  height: 500px;
+  height: 400px;
   overflow-y: auto;
-  padding: 25px;
-}
-
-.chat-messages::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
-  background: var(--border-glow);
-  border-radius: 3px;
+  padding: 20px;
 }
 
 .message {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .message.user {
@@ -656,133 +520,102 @@ body {
 }
 
 .message-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2em;
+  font-size: 14px;
   flex-shrink: 0;
 }
 
 .message.ai .message-avatar {
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  background: var(--primary);
+  color: white;
 }
 
 .message.user .message-avatar {
-  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  background: var(--border);
 }
 
 .message-content {
-  max-width: 75%;
-  padding: 15px 20px;
-  border-radius: 12px;
-  font-size: 0.9em;
-  line-height: 1.7;
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .message.ai .message-content {
-  background: rgba(0, 240, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: var(--bg);
+  border: 1px solid var(--border);
 }
 
 .message.user .message-content {
-  background: rgba(176, 0, 255, 0.1);
-  border: 1px solid rgba(176, 0, 255, 0.3);
+  background: var(--primary);
+  color: white;
 }
 
 .message-content .meta {
-  font-size: 0.75em;
-  color: var(--text-secondary);
-  margin-top: 8px;
-}
-
-.typing-indicator {
-  display: none;
-  padding: 15px 20px;
-  background: rgba(0, 240, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  border-radius: 12px;
-  max-width: 100px;
-  margin-bottom: 20px;
-}
-
-.typing-indicator span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--neon-cyan);
-  margin: 0 2px;
-  animation: typing 1.4s infinite;
-}
-
-.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typing {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  font-size: 12px;
+  color: var(--subtext);
+  margin-top: 6px;
 }
 
 .action-bar {
-  padding: 15px 25px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  border-top: 1px solid rgba(0, 240, 255, 0.1);
+  gap: 8px;
 }
 
 .action-btn {
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid var(--border-glow);
+  padding: 6px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8em;
+  font-size: 13px;
   cursor: pointer;
-  transition: all 0.3s;
+  font-family: inherit;
 }
 
 .action-btn:hover {
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
+  border-color: var(--primary);
 }
 
 .chat-input {
-  padding: 20px 25px;
-  border-top: 1px solid var(--border-glow);
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
   display: flex;
-  gap: 15px;
+  gap: 12px;
 }
 
 .chat-input input {
   flex: 1;
-  padding: 12px 20px;
-  background: rgba(15, 15, 25, 0.9);
-  border: 1px solid var(--border-glow);
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9em;
+  font-size: 14px;
   outline: none;
+  font-family: inherit;
 }
 
 .chat-input input:focus {
-  border-color: var(--neon-cyan);
+  border-color: var(--primary);
 }
 
 .chat-input button {
-  padding: 12px 25px;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  padding: 10px 20px;
+  background: var(--primary);
+  color: white;
   border: none;
   border-radius: 8px;
-  color: white;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  font-family: inherit;
 }
 
 .chat-input button:disabled {
@@ -792,142 +625,78 @@ body {
 
 /* Score Card */
 .score-card {
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 240, 255, 0.1) 100%);
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  border-radius: 12px;
-  padding: 25px;
-  margin-top: 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 16px;
 }
 
 .score-card h3 {
-  font-family: 'Orbitron', sans-serif;
-  color: var(--neon-green);
-  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 .score-card .score {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 3em;
-  font-weight: 900;
-  color: var(--neon-green);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--primary);
 }
 
-/* Footer */
 .footer {
-  position: relative;
-  z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
   text-align: center;
-  padding: 40px 30px;
-  border-top: 1px solid var(--border-glow);
-  color: var(--text-secondary);
-  font-size: 0.85em;
+  color: var(--subtext);
+  font-size: 13px;
 }
 
-.footer a {
-  color: var(--neon-cyan);
-  text-decoration: none;
-}
-
-/* Loading */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 10, 15, 0.9);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.loading-overlay.show {
-  display: flex;
-}
-
-.loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 3px solid var(--border-glow);
-  border-top-color: var(--neon-cyan);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .hero h1 { font-size: 1.8em; }
+  .hero h1 { font-size: 28px; }
   .upload-grid { grid-template-columns: 1fr; }
-  .questions-categories { grid-template-columns: 1fr; }
+  .questions-grid { grid-template-columns: 1fr; }
   .nav-links { display: none; }
-}
-
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background: var(--neon-cyan);
-  margin-left: 5px;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 </style>
 </head>
 <body>
 
-<div class="bg-grid"></div>
-<div class="particles" id="particles"></div>
-
-<div class="loading-overlay" id="loading-overlay">
-  <div class="loading-spinner"></div>
-  <div class="loading-text" style="color:var(--neon-cyan)">AI正在分析简历和岗位...</div>
-</div>
-
 <nav class="navbar">
   <div class="container">
-    <a href="/" class="logo">LY<span>.DEV</span></a>
+    <a href="/" class="logo">LY.DEV</a>
     <ul class="nav-links">
       <li><a href="/">首页</a></li>
-      <li><a href="/interview-questions/">面试题库</a></li>
-      <li><a href="/ai-mock-interview/" style="color:var(--neon-green)">🎯 AI模拟面试</a></li>
+      <li><a href="/interview-questions/">题库</a></li>
+      <li><a href="/ai-mock-interview/">AI面试</a></li>
+      <li><a href="/random-question/">随机一题</a></li>
     </ul>
   </div>
 </nav>
 
 <section class="hero">
-  <h1>AI MOCK INTERVIEW<span class="cursor"></span></h1>
-  <p class="subtitle">// 📄 上传简历+JD → 🤖 AI分析 → 🎯 15道专属面试题</p>
+  <h1>AI模拟面试</h1>
+  <p class="subtitle">上传简历+JD → AI分析 → 15道专属面试题</p>
 </section>
 
-<div class="main-container">
-  <!-- Upload Section -->
+<div class="main">
+  <!-- Upload -->
   <section class="upload-section">
-    <h2 class="section-title">UPLOAD FILES</h2>
+    <h2 class="section-title">上传文件</h2>
     <div class="upload-grid">
       <div class="upload-card" id="resume-card">
         <div class="card-header">
           <h3>📄 个人简历</h3>
           <span class="badge required">必填</span>
         </div>
-        <div class="upload-area" id="resume-upload">
+        <div class="upload-area">
           <div class="icon">📁</div>
           <p>点击或拖拽上传简历</p>
-          <div style="font-size:0.75em;color:var(--text-secondary);margin-top:8px">支持 PDF、Word、TXT</div>
-          <input type="file" id="resume-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'resume')">
+          <div style="font-size:12px;color:var(--subtext);margin-top:6px">支持 PDF、Word、TXT</div>
+          <input type="file" id="resume-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFile(event,'resume')">
         </div>
         <div class="file-info" id="resume-info">
-          <span class="file-name" id="resume-name">-</span>
+          <span id="resume-name">-</span>
           <button class="remove-btn" onclick="removeFile('resume')">✕</button>
         </div>
       </div>
@@ -937,27 +706,27 @@ body {
           <h3>💼 岗位JD</h3>
           <span class="badge required">必填</span>
         </div>
-        <div class="upload-area" id="jd-upload">
+        <div class="upload-area">
           <div class="icon">📋</div>
           <p>点击或拖拽上传岗位描述</p>
-          <div style="font-size:0.75em;color:var(--text-secondary);margin-top:8px">支持 PDF、Word、TXT</div>
-          <input type="file" id="jd-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'jd')">
+          <div style="font-size:12px;color:var(--subtext);margin-top:6px">支持 PDF、Word、TXT</div>
+          <input type="file" id="jd-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFile(event,'jd')">
         </div>
         <div class="file-info" id="jd-info">
-          <span class="file-name" id="jd-name">-</span>
+          <span id="jd-name">-</span>
           <button class="remove-btn" onclick="removeFile('jd')">✕</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Analysis Section -->
-  <section class="analysis-section">
-    <h2 class="section-title">ANALYSIS RESULT</h2>
-    <div class="analysis-card" id="analysis-card">
+  <!-- Analysis -->
+  <section class="analysis-section" id="analysis-section">
+    <h2 class="section-title">分析结果</h2>
+    <div class="analysis-card">
       <div class="analysis-header">
         <div class="match-score">
-          <div class="score-circle" id="match-score-circle">-</div>
+          <div class="score-circle" id="match-score">-</div>
           <div class="score-info">
             <h3>岗位匹配度</h3>
             <p id="match-reason">-</p>
@@ -977,36 +746,31 @@ body {
 
       <div class="action-buttons">
         <button class="btn primary" onclick="startInterview()">🚀 开始15道专属面试</button>
-        <button class="btn secondary" onclick="downloadInterviewDoc()">📥 下载面试准备文档</button>
+        <button class="btn secondary" onclick="downloadDoc()">📥 下载面试文档</button>
       </div>
     </div>
   </section>
 
   <!-- Questions Preview -->
-  <section class="questions-section" id="questions-section" style="display:none">
-    <h2 class="section-title">INTERVIEW QUESTIONS (15)</h2>
-    <div class="questions-categories" id="questions-categories"></div>
+  <section class="questions-section" id="questions-section">
+    <h2 class="section-title">面试题目 (15)</h2>
+    <div class="questions-grid" id="questions-grid"></div>
   </section>
 
-  <!-- Interview Section -->
-  <section class="interview-section" id="interview-section" style="display:none">
-    <h2 class="section-title">INTERVIEW ROOM</h2>
+  <!-- Interview -->
+  <section class="interview-section" id="interview-section">
+    <h2 class="section-title">面试进行中</h2>
     <div class="interview-container">
       <div class="interview-header">
         <div class="status"></div>
-        <div class="info">
-          <h3 id="current-category">-</h3>
-          <p id="question-progress">问题 1 / 15</p>
-        </div>
+        <h3 id="current-category">-</h3>
+        <p id="question-progress">问题 1 / 15</p>
       </div>
       <div class="chat-messages" id="chat-messages"></div>
-      <div class="typing-indicator" id="typing-indicator">
-        <span></span><span></span><span></span>
-      </div>
       <div class="action-bar">
         <button class="action-btn" onclick="showHint()">💡 提示</button>
         <button class="action-btn" onclick="skipQuestion()">⏭️ 跳过</button>
-        <button class="action-btn" onclick="endInterview()">📊 结束面试</button>
+        <button class="action-btn" onclick="endInterview()">📊 结束</button>
       </div>
       <div class="chat-input">
         <input type="text" id="user-input" placeholder="输入你的回答..." onkeypress="handleKeyPress(event)" disabled>
@@ -1017,52 +781,32 @@ body {
 </div>
 
 <footer class="footer">
-  <p>© 2026 李阳的技术博客 | <a href="/">eligible123.github.io</a></p>
-  <p style="margin-top:8px; opacity:0.6">// AI模拟面试 · Powered by resume-job-matcher v1.1.0</p>
+  <p>© 2026 李阳的技术博客</p>
 </footer>
 
 <script>
-// Particles
-function createParticles() {
-  const container = document.getElementById('particles');
-  for (let i = 0; i < 30; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    container.appendChild(particle);
-  }
-}
-createParticles();
-
-// State
-let resumeText = '';
-let jdText = '';
-let analysisResult = null;
+let resumeText = '', jdText = '';
 let interviewQuestions = [];
 let currentQuestionIndex = 0;
 let scoreHistory = [];
 
-// File handling
-function handleFileUpload(event, type) {
-  const file = event.target.files[0];
+function handleFile(e, type) {
+  const file = e.target.files[0];
   if (!file) return;
-
   const reader = new FileReader();
-  reader.onload = function(e) {
-    const content = e.target.result;
+  reader.onload = function(ev) {
     if (type === 'resume') {
-      resumeText = content;
+      resumeText = ev.target.result;
       document.getElementById('resume-name').textContent = '✅ ' + file.name;
       document.getElementById('resume-info').classList.add('show');
       document.getElementById('resume-card').classList.add('has-file');
     } else {
-      jdText = content;
+      jdText = ev.target.result;
       document.getElementById('jd-name').textContent = '✅ ' + file.name;
       document.getElementById('jd-info').classList.add('show');
       document.getElementById('jd-card').classList.add('has-file');
     }
-    checkFilesReady();
+    if (resumeText && jdText) analyzeFiles();
   };
   reader.readAsText(file);
 }
@@ -1081,355 +825,120 @@ function removeFile(type) {
   }
 }
 
-function checkFilesReady() {
-  if (resumeText && jdText) {
-    analyzeFiles();
-  }
-}
-
-// Analysis
 function analyzeFiles() {
-  const loading = document.getElementById('loading-overlay');
-  loading.classList.add('show');
+  const section = document.getElementById('analysis-section');
+  section.classList.add('show');
 
-  setTimeout(() => {
-    loading.classList.remove('show');
-    analysisResult = performAnalysis(resumeText, jdText);
-    showAnalysisResult(analysisResult);
-    generateInterviewQuestions(analysisResult);
-  }, 2000);
-}
+  // Simulate analysis
+  const keywords = extractKeywords(jdText);
+  const hitKeywords = keywords.filter(k => resumeText.includes(k));
+  const missKeywords = keywords.filter(k => !resumeText.includes(k));
 
-function performAnalysis(resume, jd) {
-  // Extract keywords from JD
-  const jdKeywords = extractKeywords(jd);
-  const resumeKeywords = extractKeywords(resume);
+  const matchRate = Math.round(hitKeywords.length / Math.max(keywords.length, 1) * 100);
+  const circle = document.getElementById('match-score');
+  circle.textContent = matchRate + '%';
+  circle.className = 'score-circle ' + (matchRate >= 70 ? 'high' : matchRate >= 40 ? 'medium' : 'low');
 
-  // Match keywords
-  const hitKeywords = jdKeywords.filter(k => resumeKeywords.some(r => r.includes(k) || k.includes(r)));
-  const missKeywords = jdKeywords.filter(k => !hitKeywords.includes(k));
+  document.getElementById('match-reason').textContent = matchRate >= 70 ? '简历与岗位高度匹配' : matchRate >= 40 ? '简历与岗位部分匹配' : '简历与岗位匹配度较低';
 
-  // Calculate match score
-  const matchRate = hitKeywords.length / Math.max(jdKeywords.length, 1);
-  let matchScore, matchReason;
-  if (matchRate >= 0.7) {
-    matchScore = '高';
-    matchReason = '简历与岗位高度匹配，技能和经验覆盖大部分要求';
-  } else if (matchRate >= 0.4) {
-    matchScore = '中';
-    matchReason = '简历与岗位部分匹配，建议补充相关技能和经验描述';
-  } else {
-    matchScore = '低';
-    matchReason = '简历与岗位匹配度较低，建议针对性优化简历内容';
-  }
+  document.getElementById('keywords-tags').innerHTML = 
+    hitKeywords.map(k => `<span class="keyword-tag hit">✅ ${k}</span>`).join('') +
+    missKeywords.map(k => `<span class="keyword-tag miss">❌ ${k}</span>`).join('');
 
-  // Extract skills
-  const skills = extractSkills(resume, jd);
+  const skills = extractSkills(resumeText, jdText);
+  document.getElementById('skills-list').innerHTML = skills.map(s => `
+    <div class="skill-item">
+      <span>${s.name}</span>
+      <span class="skill-match ${s.match}">${s.match === 'high' ? '完全匹配' : s.match === 'medium' ? '部分匹配' : '需补充'}</span>
+    </div>
+  `).join('');
 
-  return {
-    matchScore,
-    matchReason,
-    jdKeywords,
-    hitKeywords,
-    missKeywords,
-    skills,
-    matchRate: Math.round(matchRate * 100)
-  };
-}
-
-function extractKeywords(text) {
-  const keywords = [];
-  const patterns = [
-    /Java|Spring|SpringBoot|MyBatis|MySQL|Redis|Docker|Kubernetes|K8s/gi,
-    /微服务|分布式|高并发|高可用|架构设计/gi,
-    /Python|Go|C\+\+|JavaScript|TypeScript/gi,
-    /Kafka|RabbitMQ|RocketMQ|Elasticsearch|ES/gi,
-    /Linux|Git|CI\/CD|Jenkins|DevOps/gi,
-    /AI|机器学习|深度学习|LLM|NLP|RAG/gi,
-    /Vue|React|Angular|前端|HTML|CSS/gi,
-    /数据库|索引|事务|锁|缓存/gi,
-    /3年|5年|经验|本科|硕士/gi
-  ];
-
-  patterns.forEach(pattern => {
-    const matches = text.match(pattern);
-    if (matches) {
-      keywords.push(...matches.map(m => m.trim()));
-    }
-  });
-
-  return [...new Set(keywords)].slice(0, 15);
-}
-
-function extractSkills(resume, jd) {
-  const skillKeywords = {
-    'Java': ['Java', 'JDK', 'JVM'],
-    'Spring': ['Spring', 'SpringBoot', 'SpringCloud'],
-    '数据库': ['MySQL', 'Redis', 'MongoDB', 'PostgreSQL'],
-    '中间件': ['Kafka', 'RabbitMQ', 'RocketMQ', 'Elasticsearch'],
-    '容器化': ['Docker', 'Kubernetes', 'K8s', '容器'],
-    '分布式': ['分布式', '微服务', '高并发', '高可用'],
-    '前端': ['Vue', 'React', 'JavaScript', 'TypeScript'],
-    'AI': ['AI', '机器学习', '深度学习', 'LLM', 'NLP'],
-    'DevOps': ['Linux', 'Git', 'CI/CD', 'Jenkins'],
-    '设计模式': ['设计模式', '单例', '工厂', '观察者']
-  };
-
-  const skills = [];
-  const text = resume + ' ' + jd;
-
-  for (const [skill, keywords] of Object.entries(skillKeywords)) {
-    const found = keywords.some(k => text.includes(k));
-    if (found) {
-      const inResume = keywords.some(k => resume.includes(k));
-      const inJd = keywords.some(k => jd.includes(k));
-      skills.push({
-        name: skill,
-        inResume,
-        inJd,
-        match: inResume && inJd ? 'high' : (inResume || inJd ? 'medium' : 'low')
-      });
-    }
-  }
-
-  return skills;
-}
-
-function showAnalysisResult(result) {
-  const card = document.getElementById('analysis-card');
-  card.classList.add('show');
-
-  // Match score
-  const circle = document.getElementById('match-score-circle');
-  circle.textContent = result.matchRate + '%';
-  circle.className = 'score-circle';
-  if (result.matchRate >= 70) circle.classList.add('high');
-  else if (result.matchRate >= 40) circle.classList.add('medium');
-  else circle.classList.add('low');
-
-  document.getElementById('match-reason').textContent = result.matchReason;
-
-  // Keywords
-  const tagsContainer = document.getElementById('keywords-tags');
-  tagsContainer.innerHTML = '';
-  result.hitKeywords.forEach(k => {
-    tagsContainer.innerHTML += `<span class="keyword-tag hit">✅ ${k}</span>`;
-  });
-  result.missKeywords.forEach(k => {
-    tagsContainer.innerHTML += `<span class="keyword-tag miss">❌ ${k}</span>`;
-  });
-
-  // Skills
-  const skillsList = document.getElementById('skills-list');
-  skillsList.innerHTML = '';
-  result.skills.forEach(skill => {
-    skillsList.innerHTML += `
-      <div class="skill-item">
-        <span class="skill-name">${skill.name}</span>
-        <span class="skill-match ${skill.match}">${skill.match === 'high' ? '完全匹配' : skill.match === 'medium' ? '部分匹配' : '需补充'}</span>
-      </div>
-    `;
-  });
-}
-
-// Generate 15 interview questions (7 categories, 2-3 each)
-function generateInterviewQuestions(analysis) {
-  const categories = [
-    {
-      name: '自我介绍',
-      icon: '👤',
-      questions: [
-        { q: '请用1-2分钟做一个自我介绍', a: '我是[姓名]，[学历]毕业，拥有[X]年[领域]开发经验。在[公司]期间，负责[核心工作]，取得了[量化成果]。', tips: '突出与岗位相关的经验和技能' },
-        { q: '你为什么对这个岗位感兴趣？', a: '这个岗位与我的技术栈高度匹配，而且贵公司在[领域]的发展方向与我的职业规划一致。', tips: '结合JD和公司背景回答' }
-      ]
-    },
-    {
-      name: '简历经历深挖',
-      icon: '📝',
-      questions: generateResumeQuestions(analysis)
-    },
-    {
-      name: '岗位专业问题',
-      icon: '💻',
-      questions: generateTechnicalQuestions(analysis)
-    },
-    {
-      name: '行为面试题',
-      icon: '🤝',
-      questions: [
-        { q: '请描述一次你解决技术难题的经历', a: '使用STAR法则：情境-遇到什么问题，任务-需要解决什么，行动-采取了什么措施，结果-取得了什么效果。', tips: '用STAR法则结构化回答' },
-        { q: '你如何处理与同事的技术分歧？', a: '首先倾听对方观点，然后用数据和事实说明自己的方案，必要时进行技术验证，最终以最优方案为准。', tips: '展现沟通能力和团队协作' }
-      ]
-    },
-    {
-      name: '情景面试题',
-      icon: '🎯',
-      questions: [
-        { q: '如果线上出现紧急bug，你会如何处理？', a: '首先快速定位问题，评估影响范围，然后制定修复方案，同时通知相关方，最后复盘总结。', tips: '展现问题处理能力和责任心' },
-        { q: '如何保证项目按时交付？', a: '合理拆解任务，预留buffer时间，及时同步进度，识别风险并提前处理。', tips: '展现项目管理能力' }
-      ]
-    },
-    {
-      name: '压力面试题',
-      icon: '💪',
-      questions: [
-        { q: '你觉得自己的最大缺点是什么？', a: '选择一个真实但不致命的缺点，说明自己正在如何改进。', tips: '诚实但要展现自我改进意识' },
-        { q: '如果入职后发现工作与预期不符，你会怎么办？', a: '先深入了解岗位职责，与领导沟通期望，调整自己的状态，积极适应新环境。', tips: '展现适应能力和积极态度' }
-      ]
-    },
-    {
-      name: '反问面试官',
-      icon: '❓',
-      questions: [
-        { q: '你对这个岗位的新人有什么期望？', a: '这是向面试官了解岗位期望的好机会，可以问：团队目前的技术栈、项目阶段、新人培养计划等。', tips: '展现对岗位的兴趣和思考' },
-        { q: '团队的技术氛围和学习机会如何？', a: '了解团队是否鼓励技术创新、是否有技术分享、是否有培训资源等。', tips: '关注长期发展' }
-      ]
-    }
-  ];
-
-  interviewQuestions = categories;
-  showQuestionsPreview(categories);
-}
-
-function generateResumeQuestions(analysis) {
-  const questions = [];
-  if (analysis.skills.length > 0) {
-    const skill = analysis.skills[0];
-    questions.push({
-      q: `请详细介绍一下你在${skill.name}方面的经验`,
-      a: `结合简历中的项目经历，详细说明在${skill.name}方面的技术深度和实际应用。`,
-      tips: '用具体项目和数据说明'
-    });
-  }
-  questions.push({
-    q: '你参与过最有挑战性的项目是什么？',
-    a: '选择一个与岗位相关的项目，用STAR法则描述：背景、挑战、解决方案、成果。',
-    tips: '突出技术难点和个人贡献'
-  });
-  return questions;
-}
-
-function generateTechnicalQuestions(analysis) {
-  const questions = [];
-  const techMap = {
-    'Java': [
-      { q: '请说说HashMap的底层实现原理？', a: '数组+链表+红黑树，JDK8后链表长度超过8转红黑树，负载因子0.75，扩容2倍。', tips: '讲清楚数据结构和扩容机制' },
-      { q: 'volatile关键字的作用是什么？', a: '保证可见性和禁止指令重排序，但不能保证原子性。', tips: '结合内存模型说明' }
-    ],
-    'Spring': [
-      { q: 'Spring Boot的自动配置原理是什么？', a: '@EnableAutoConfiguration加载spring.factories，通过条件注解过滤配置类。', tips: '讲清楚@EnableAutoConfiguration的作用' }
-    ],
-    '数据库': [
-      { q: 'MySQL索引的B+树原理是什么？', a: '多路平衡搜索树，非叶子节点只存索引，叶子节点存数据用链表连接，树高3-4层减少IO。', tips: '对比B树说明优势' },
-      { q: 'Redis的持久化机制有哪些？', a: 'RDB定时快照、AOF记录命令、混合持久化结合两者优点。', tips: '对比优缺点' }
-    ],
-    '分布式': [
-      { q: '分布式事务有哪些解决方案？', a: '2PC、3PC、TCC、本地消息表、MQ事务消息、Seata等。', tips: '对比各方案优缺点' }
-    ]
-  };
-
-  analysis.skills.forEach(skill => {
-    if (techMap[skill.name]) {
-      questions.push(...techMap[skill.name]);
-    }
-  });
-
-  if (questions.length === 0) {
-    questions.push({
-      q: '请介绍一下你最熟悉的技术栈',
-      a: '选择一个最熟悉的技术，从原理、使用场景、优化经验等方面展开。',
-      tips: '展现技术深度'
-    });
-  }
-
-  return questions.slice(0, 3);
-}
-
-function showQuestionsPreview(categories) {
-  const section = document.getElementById('questions-section');
-  section.style.display = 'block';
-
-  const container = document.getElementById('questions-categories');
-  container.innerHTML = '';
-
-  categories.forEach((cat, catIndex) => {
-    let questionsHtml = '';
-    cat.questions.forEach((q, qIndex) => {
-      questionsHtml += `
-        <div class="question-item" onclick="startSpecificQuestion(${catIndex}, ${qIndex})">
-          <span class="q-num">Q${qIndex + 1}</span>
-          <span class="q-text">${q.q}</span>
-        </div>
-      `;
-    });
-
-    container.innerHTML += `
-      <div class="category-card">
-        <div class="category-header">
-          <span class="icon">${cat.icon}</span>
-          <h3>${cat.name}</h3>
-          <span class="count">${cat.questions.length}题</span>
-        </div>
-        <div class="question-list">${questionsHtml}</div>
-      </div>
-    `;
-  });
-
+  generateQuestions(skills);
   section.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Interview
+function extractKeywords(text) {
+  const patterns = [/Java|Spring|MySQL|Redis|Docker|K8s/gi, /微服务|分布式|高并发/gi, /Python|Go|AI|LLM/gi];
+  const keywords = [];
+  patterns.forEach(p => { const m = text.match(p); if (m) keywords.push(...m); });
+  return [...new Set(keywords)].slice(0, 10);
+}
+
+function extractSkills(resume, jd) {
+  const skillMap = { 'Java': ['Java'], 'Spring': ['Spring'], '数据库': ['MySQL','Redis'], '中间件': ['Kafka','RabbitMQ'], '容器化': ['Docker','K8s'], '分布式': ['分布式','微服务'], 'AI': ['AI','LLM'] };
+  const skills = [];
+  const text = resume + ' ' + jd;
+  for (const [name, keywords] of Object.entries(skillMap)) {
+    if (keywords.some(k => text.includes(k))) {
+      const inResume = keywords.some(k => resume.includes(k));
+      const inJd = keywords.some(k => jd.includes(k));
+      skills.push({ name, match: inResume && inJd ? 'high' : (inResume || inJd ? 'medium' : 'low') });
+    }
+  }
+  return skills;
+}
+
+function generateQuestions(skills) {
+  const categories = [
+    { name: '自我介绍', icon: '👤', questions: [{ q: '请用1-2分钟做一个自我介绍', a: '突出与岗位相关的经验和技能', tips: '简洁明了' }] },
+    { name: '简历深挖', icon: '📝', questions: [{ q: '请介绍你最有挑战的项目', a: '用STAR法则描述', tips: '突出技术难点' }] },
+    { name: '专业问题', icon: '💻', questions: skills.slice(0,3).map(s => ({ q: `请介绍${s.name}的核心原理`, a: `结合项目经验回答`, tips: '讲清楚原理' })) },
+    { name: '行为面试', icon: '🤝', questions: [{ q: '如何处理技术分歧？', a: '用数据和事实说话', tips: '展现沟通能力' }] },
+    { name: '情景面试', icon: '🎯', questions: [{ q: '线上bug如何处理？', a: '快速定位、评估影响、制定方案', tips: '展现问题处理能力' }] },
+    { name: '压力面试', icon: '💪', questions: [{ q: '你的缺点是什么？', a: '真实但不致命，说明改进', tips: '诚实且积极' }] },
+    { name: '反问环节', icon: '❓', questions: [{ q: '你有什么想问的？', a: '问团队、技术栈、发展', tips: '展现兴趣' }] }
+  ];
+
+  interviewQuestions = categories;
+  const grid = document.getElementById('questions-grid');
+  grid.innerHTML = categories.map(cat => `
+    <div class="category-card">
+      <div class="category-header">
+        <span class="icon">${cat.icon}</span>
+        <h3>${cat.name}</h3>
+        <span class="count">${cat.questions.length}题</span>
+      </div>
+      <div class="question-list">
+        ${cat.questions.map((q, i) => `<div class="question-item" onclick="startSpecific(${categories.indexOf(cat)},${i})">Q${i+1}: ${q.q}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('questions-section').classList.add('show');
+}
+
 function startInterview() {
-  document.getElementById('interview-section').style.display = 'block';
+  document.getElementById('interview-section').classList.add('show');
   document.getElementById('user-input').disabled = false;
   document.getElementById('submit-btn').disabled = false;
 
-  // Flatten questions
-  const allQuestions = [];
-  interviewQuestions.forEach(cat => {
-    cat.questions.forEach(q => {
-      allQuestions.push({ ...q, category: cat.name });
-    });
-  });
+  const allQ = [];
+  interviewQuestions.forEach(cat => cat.questions.forEach(q => allQ.push({ ...q, category: cat.name })));
 
-  currentQuestionIndex = 0;
-  scoreHistory = [];
+  addMessage('ai', `👋 你好！基于你的简历和岗位JD，我准备了15道专属面试题。
 
-  addMessage('ai', `👋 你好！基于你的简历和岗位JD，我为你准备了15道专属面试题。
+📋 分类：${interviewQuestions.map(c => c.icon + c.name).join('、')}
 
-📋 **题目分类**：
-${interviewQuestions.map(cat => `${cat.icon} ${cat.name}（${cat.questions.length}题）`).join('\n')}
-
-让我们开始吧！输入任意内容开始第一题。`);
-
+让我们开始吧！`);
   document.getElementById('interview-section').scrollIntoView({ behavior: 'smooth' });
 }
 
-function startSpecificQuestion(catIndex, qIndex) {
-  document.getElementById('interview-section').style.display = 'block';
+function startSpecific(catIdx, qIdx) {
+  document.getElementById('interview-section').classList.add('show');
   document.getElementById('user-input').disabled = false;
   document.getElementById('submit-btn').disabled = false;
 
-  // Calculate global index
-  let globalIndex = 0;
-  for (let i = 0; i < catIndex; i++) {
-    globalIndex += interviewQuestions[i].questions.length;
-  }
-  globalIndex += qIndex;
+  let globalIdx = 0;
+  for (let i = 0; i < catIdx; i++) globalIdx += interviewQuestions[i].questions.length;
+  globalIdx += qIdx;
 
-  currentQuestionIndex = globalIndex;
-  scoreHistory = [];
+  currentQuestionIndex = globalIdx;
+  const cat = interviewQuestions[catIdx];
+  const q = cat.questions[qIdx];
 
-  const cat = interviewQuestions[catIndex];
-  const q = cat.questions[qIndex];
-
-  addMessage('ai', `🎯 **${cat.name}** - 问题 ${globalIndex + 1}/15
-
-${q.q}`);
-
+  addMessage('ai', `🎯 **${cat.name}** - 问题 ${globalIdx + 1}/15\n\n${q.q}`);
   document.getElementById('current-category').textContent = cat.name;
-  document.getElementById('question-progress').textContent = `问题 ${globalIndex + 1} / 15`;
-
+  document.getElementById('question-progress').textContent = `问题 ${globalIdx + 1} / 15`;
   document.getElementById('interview-section').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1437,18 +946,14 @@ function addMessage(role, content) {
   const messages = document.getElementById('chat-messages');
   const div = document.createElement('div');
   div.className = `message ${role}`;
-
-  const avatar = role === 'ai' ? '🤖' : '👤';
   const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
-
   div.innerHTML = `
-    <div class="message-avatar">${avatar}</div>
+    <div class="message-avatar">${role === 'ai' ? '🤖' : '👤'}</div>
     <div class="message-content">
       ${content.replace(/\n/g, '<br>')}
       <div class="meta">${role === 'ai' ? 'AI面试官' : '你'} · ${time}</div>
     </div>
   `;
-
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
@@ -1457,169 +962,85 @@ function submitAnswer() {
   const input = document.getElementById('user-input');
   const answer = input.value.trim();
   if (!answer) return;
-
   addMessage('user', answer);
   input.value = '';
 
-  // Get current question
-  const allQuestions = [];
-  interviewQuestions.forEach(cat => {
-    cat.questions.forEach(q => {
-      allQuestions.push({ ...q, category: cat.name });
-    });
-  });
+  const allQ = [];
+  interviewQuestions.forEach(cat => cat.questions.forEach(q => allQ.push({ ...q, category: cat.name })));
 
-  if (currentQuestionIndex >= allQuestions.length) {
-    endInterview();
-    return;
-  }
+  if (currentQuestionIndex >= allQ.length) { endInterview(); return; }
 
-  const currentQ = allQuestions[currentQuestionIndex];
-
-  // Evaluate answer
-  const score = evaluateAnswer(answer, currentQ);
+  const q = allQ[currentQuestionIndex];
+  const score = Math.min(100, 60 + Math.min(40, answer.length / 5));
   scoreHistory.push(score);
 
-  // Show feedback
-  const feedback = score >= 80 ? '🎉 优秀！' : score >= 60 ? '👍 不错！' : '⚠️ 需要加强';
-  addMessage('ai', `${feedback} **评分：${score}分**
+  addMessage('ai', `${score >= 80 ? '🎉 优秀！' : score >= 60 ? '👍 不错！' : '⚠️ 需要加强'} **评分：${Math.round(score)}分**\n\n💡 **参考答案**：${q.a}\n\n📌 **技巧**：${q.tips}`);
 
-💡 **参考答案**：
-${currentQ.a}
-
-${currentQ.tips ? `📌 **技巧**：${currentQ.tips}` : ''}`);
-
-  // Next question
   currentQuestionIndex++;
-  if (currentQuestionIndex < allQuestions.length) {
-    const nextQ = allQuestions[currentQuestionIndex];
+  if (currentQuestionIndex < allQ.length) {
+    const nextQ = allQ[currentQuestionIndex];
     setTimeout(() => {
-      addMessage('ai', `---
-
-**问题 ${currentQuestionIndex + 1}/15** [${nextQ.category}]
-
-${nextQ.q}`);
+      addMessage('ai', `---\n\n**问题 ${currentQuestionIndex + 1}/15** [${nextQ.category}]\n\n${nextQ.q}`);
       document.getElementById('current-category').textContent = nextQ.category;
       document.getElementById('question-progress').textContent = `问题 ${currentQuestionIndex + 1} / 15`;
-    }, 1500);
+    }, 1000);
   } else {
-    setTimeout(() => {
-      endInterview();
-    }, 1500);
+    setTimeout(endInterview, 1000);
   }
-}
-
-function evaluateAnswer(answer, question) {
-  let score = 60;
-  const length = answer.length;
-
-  if (length > 200) score += 15;
-  else if (length > 100) score += 10;
-  else if (length > 50) score += 5;
-
-  const keywords = ['原理', '实现', '优化', '区别', '场景', '源码', '底层', '机制', '方案'];
-  const found = keywords.filter(k => answer.includes(k));
-  score += found.length * 3;
-
-  return Math.min(100, Math.max(0, score));
 }
 
 function showHint() {
-  const allQuestions = [];
-  interviewQuestions.forEach(cat => {
-    cat.questions.forEach(q => allQuestions.push(q));
-  });
-
-  if (currentQuestionIndex < allQuestions.length) {
-    const q = allQuestions[currentQuestionIndex];
-    addMessage('ai', `💡 **提示**：${q.tips || '从基本概念、原理、应用场景、优缺点等角度回答'}`);
+  const allQ = [];
+  interviewQuestions.forEach(cat => cat.questions.forEach(q => allQ.push(q)));
+  if (currentQuestionIndex < allQ.length) {
+    addMessage('ai', `💡 **提示**：${allQ[currentQuestionIndex].tips}`);
   }
 }
 
 function skipQuestion() {
-  const allQuestions = [];
-  interviewQuestions.forEach(cat => {
-    cat.questions.forEach(q => allQuestions.push(q));
-  });
-
   currentQuestionIndex++;
-  if (currentQuestionIndex < allQuestions.length) {
-    const nextQ = allQuestions[currentQuestionIndex];
-    addMessage('ai', `⏭️ 已跳过
-
-**问题 ${currentQuestionIndex + 1}/15**
-
-${nextQ.q}`);
+  const allQ = [];
+  interviewQuestions.forEach(cat => cat.questions.forEach(q => allQ.push(q)));
+  if (currentQuestionIndex < allQ.length) {
+    addMessage('ai', `⏭️ 已跳过\n\n**问题 ${currentQuestionIndex + 1}/15**\n\n${allQ[currentQuestionIndex].q}`);
   } else {
     endInterview();
   }
 }
 
 function endInterview() {
-  const avgScore = scoreHistory.length > 0
-    ? Math.round(scoreHistory.reduce((a, b) => a + b, 0) / scoreHistory.length)
-    : 0;
-
-  addMessage('ai', `📊 **面试报告**
-
-✅ 已完成：${scoreHistory.length} 道题
-📈 平均分：${avgScore} 分
-🏆 最高分：${Math.max(...scoreHistory, 0)} 分
-
-${avgScore >= 80 ? '🎉 表现优秀！继续保持！' : avgScore >= 60 ? '👍 表现不错，还有提升空间！' : '💪 继续加油，多练习！'}`);
-
+  const avg = scoreHistory.length > 0 ? Math.round(scoreHistory.reduce((a,b) => a+b) / scoreHistory.length) : 0;
+  addMessage('ai', `📊 **面试报告**\n\n✅ 已完成：${scoreHistory.length} 道题\n📈 平均分：${avg} 分\n🏆 最高分：${Math.round(Math.max(...scoreHistory, 0))} 分\n\n${avg >= 80 ? '🎉 表现优秀！' : avg >= 60 ? '👍 表现不错！' : '💪 继续加油！'}`);
   document.getElementById('user-input').disabled = true;
   document.getElementById('submit-btn').disabled = true;
 }
 
-function handleKeyPress(event) {
-  if (event.key === 'Enter') submitAnswer();
+function handleKeyPress(e) {
+  if (e.key === 'Enter') submitAnswer();
 }
 
-// Download interview doc
-function downloadInterviewDoc() {
-  if (!analysisResult || interviewQuestions.length === 0) {
-    alert('请先上传简历和JD');
-    return;
-  }
-
-  let html = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>面试准备文档</title>
-<style>
-body{font-family:-apple-system,sans-serif;line-height:1.8;color:#1f2937;max-width:900px;margin:0 auto;padding:40px 20px;background:#f8fafc}
-h1{font-size:24px;color:#1e40af;border-bottom:3px solid #3b82f6;padding-bottom:12px}
-h2{font-size:18px;color:#1e40af;margin:28px 0 16px;padding-left:12px;border-left:4px solid #3b82f6}
-.card{background:#fff;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.q{font-weight:600;margin-bottom:8px}.a{color:#475569;font-size:14px;margin-bottom:8px}.tip{background:#fef3c7;padding:8px 12px;border-radius:6px;font-size:12px;color:#92400e}
-</style>
-</head>
-<body>
-<h1>🎯 面试准备文档</h1>
-<p>基于简历+岗位JD定制 · 共15道面试题</p>`;
+function downloadDoc() {
+  let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>面试文档</title>
+  <style>body{font-family:Inter,sans-serif;max-width:800px;margin:0 auto;padding:40px 20px;color:#1f2937}
+  h1{font-size:24px;border-bottom:2px solid #e5e7eb;padding-bottom:12px}
+  h2{font-size:18px;margin:24px 0 12px;color:#111827}
+  .card{background:#f9fafb;padding:16px;border-radius:8px;margin:12px 0}
+  .q{font-weight:600;margin-bottom:8px}.tip{color:#6b7280;font-size:13px}</style></head><body>
+  <h1>🎯 面试准备文档</h1><p>基于简历+岗位JD定制 · 共15道面试题</p>`;
 
   interviewQuestions.forEach(cat => {
     html += `<h2>${cat.icon} ${cat.name}</h2>`;
     cat.questions.forEach((q, i) => {
-      html += `<div class="card">
-<div class="q">Q${i + 1}: ${q.q}</div>
-<div class="a"><strong>参考答案：</strong>${q.a}</div>
-${q.tip ? `<div class="tip">💡 ${q.tip}</div>` : ''}
-</div>`;
+      html += `<div class="card"><div class="q">Q${i+1}: ${q.q}</div><p>${q.a}</p><div class="tip">💡 ${q.tips}</div></div>`;
     });
   });
 
   html += '</body></html>';
-
   const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
+  a.href = URL.createObjectURL(blob);
   a.download = 'interview_prep.html';
   a.click();
-  URL.revokeObjectURL(url);
 }
 </script>
 
