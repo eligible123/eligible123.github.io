@@ -31,7 +31,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Navigation */
 .navbar {
   position: fixed;
   top: 0;
@@ -75,7 +74,6 @@ body {
 
 .nav-links a:hover { color: var(--primary); }
 
-/* Hero */
 .hero {
   padding: 100px 24px 40px;
   max-width: 1200px;
@@ -95,7 +93,6 @@ body {
   color: var(--subtext);
 }
 
-/* Main Layout */
 .main {
   max-width: 1200px;
   margin: 0 auto;
@@ -104,7 +101,6 @@ body {
   gap: 32px;
 }
 
-/* Sidebar */
 .sidebar {
   width: 240px;
   flex-shrink: 0;
@@ -118,6 +114,8 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 8px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
 }
 
 .sidebar-item {
@@ -151,13 +149,11 @@ body {
   color: rgba(255,255,255,0.7);
 }
 
-/* Content */
 .content {
   flex: 1;
   min-width: 0;
 }
 
-/* Search */
 .search-bar {
   margin-bottom: 20px;
 }
@@ -177,7 +173,6 @@ body {
   border-color: var(--primary);
 }
 
-/* Questions List */
 .questions-list {
   display: flex;
   flex-direction: column;
@@ -225,15 +220,13 @@ body {
   font-weight: 500;
   color: var(--text);
   margin-bottom: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .question-meta {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .difficulty {
@@ -243,17 +236,17 @@ body {
   font-weight: 500;
 }
 
-.difficulty.easy {
+.difficulty.easy, .difficulty.简单 {
   background: #ECFDF5;
   color: #059669;
 }
 
-.difficulty.medium {
+.difficulty.medium, .difficulty.中等 {
   background: #FEF3C7;
   color: #D97706;
 }
 
-.difficulty.hard {
+.difficulty.hard, .difficulty.困难 {
   background: #FEF2F2;
   color: #DC2626;
 }
@@ -261,6 +254,7 @@ body {
 .question-tags {
   display: flex;
   gap: 4px;
+  flex-wrap: wrap;
 }
 
 .question-tag {
@@ -271,7 +265,47 @@ body {
   color: var(--subtext);
 }
 
-/* Detail View */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--secondary);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.page-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 14px;
+  color: var(--subtext);
+}
+
 .detail-view {
   display: none;
 }
@@ -317,13 +351,14 @@ body {
   font-size: 20px;
   font-weight: 600;
   line-height: 1.5;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .detail-question .q-meta {
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .answer-section {
@@ -358,51 +393,55 @@ body {
   font-size: 15px;
   line-height: 1.8;
   color: var(--secondary);
+  white-space: pre-wrap;
 }
 
 .answer-content.show {
   display: block;
 }
 
-.answer-content p {
-  margin-bottom: 12px;
-}
-
-.answer-content strong {
-  color: var(--primary);
-}
-
-/* Pagination */
-.pagination {
+.detail-nav {
   display: flex;
-  justify-content: center;
-  gap: 4px;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
 }
 
-.page-btn {
-  padding: 8px 12px;
+.nav-btn {
+  padding: 10px 20px;
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--card);
-  color: var(--secondary);
   font-size: 14px;
   cursor: pointer;
   font-family: inherit;
+  color: var(--secondary);
 }
 
-.page-btn:hover {
+.nav-btn:hover:not(:disabled) {
   border-color: var(--primary);
   color: var(--primary);
 }
 
-.page-btn.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
-/* Footer */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--subtext);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--subtext);
+}
+
 .footer {
   border-top: 1px solid var(--border);
   padding: 32px 24px;
@@ -411,12 +450,11 @@ body {
   font-size: 13px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .hero h1 { font-size: 28px; }
-  .question-item { flex-direction: column; align-items: flex-start; }
   .nav-links { display: none; }
+  .question-item { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -436,7 +474,7 @@ body {
 
 <section class="hero">
   <h1>面试题库</h1>
-  <p class="subtitle">2516道面试题 · 46个分类 · 含详细答案</p>
+  <p class="subtitle" id="hero-subtitle">加载中...</p>
 </section>
 
 <div class="main">
@@ -446,11 +484,13 @@ body {
 
   <div class="content">
     <div class="search-bar">
-      <input type="text" class="search-input" id="searchInput" placeholder="搜索面试题...">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索面试题..." oninput="filterQuestions()">
     </div>
 
-    <div class="questions-list" id="questionsList"></div>
-    <div class="pagination" id="pagination"></div>
+    <div id="listView">
+      <div class="questions-list" id="questionsList"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
 
     <div class="detail-view" id="detailView">
       <div class="detail-header">
@@ -469,6 +509,11 @@ body {
           <div class="answer-content" id="answerContent"></div>
         </div>
       </div>
+      <div class="detail-nav">
+        <button class="nav-btn" id="prevBtn" onclick="navigateQuestion(-1)">← 上一题</button>
+        <span class="page-info" id="questionNav">1 / 200</span>
+        <button class="nav-btn" id="nextBtn" onclick="navigateQuestion(1)">下一题 →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -478,125 +523,295 @@ body {
 </footer>
 
 <script>
-// Question categories with counts
-const categories = [
-  { name: '全部题目', count: 2516, filter: 'all' },
-  { name: 'Java', count: 200, filter: 'java' },
-  { name: 'Spring', count: 58, filter: 'spring' },
-  { name: 'MySQL', count: 49, filter: 'mysql' },
-  { name: 'Redis', count: 24, filter: 'redis' },
-  { name: 'Kafka', count: 59, filter: 'kafka' },
-  { name: 'JVM', count: 50, filter: 'jvm' },
-  { name: 'AI大模型', count: 343, filter: 'ai' },
-  { name: '系统设计', count: 34, filter: 'system' },
-  { name: '算法', count: 63, filter: 'algo' },
-  { name: 'Docker', count: 28, filter: 'docker' },
-  { name: 'Kubernetes', count: 25, filter: 'k8s' },
+const CATEGORIES = [
+  { name: '全部题目', dir: 'all', count: 0 },
+  { name: 'Java', dir: 'Java', count: 200 },
+  { name: 'Java热门200道', dir: 'Java热门200道', count: 162 },
+  { name: 'AI大模型', dir: 'AI大模型', count: 343 },
+  { name: 'Spring', dir: 'Spring', count: 58 },
+  { name: 'SpringBoot', dir: 'SpringBoot', count: 19 },
+  { name: 'SpringCloud', dir: 'SpringCloud', count: 44 },
+  { name: 'MySQL', dir: 'MySQL', count: 49 },
+  { name: 'Redis', dir: 'Redis', count: 24 },
+  { name: 'ElasticSearch', dir: 'ElasticSearch', count: 177 },
+  { name: 'Kafka', dir: 'Kafka', count: 59 },
+  { name: 'RabbitMQ', dir: 'RabbitMQ', count: 35 },
+  { name: 'RocketMQ', dir: 'RocketMQ', count: 30 },
+  { name: 'Dubbo', dir: 'Dubbo', count: 64 },
+  { name: 'Zookeeper', dir: 'Zookeeper', count: 92 },
+  { name: 'Docker', dir: 'Docker', count: 28 },
+  { name: 'Kubernetes', dir: 'Kubernetes', count: 25 },
+  { name: 'Nginx', dir: 'Nginx', count: 115 },
+  { name: 'Linux系统', dir: 'Linux系统', count: 43 },
+  { name: 'MyBatis', dir: 'MyBatis', count: 12 },
+  { name: 'Netty', dir: 'Netty', count: 4 },
+  { name: 'Git基础', dir: 'Git基础', count: 59 },
+  { name: 'Git进阶', dir: 'Git进阶', count: 123 },
+  { name: 'SQL电商场景', dir: 'SQL电商场景', count: 34 },
+  { name: 'SQL网站场景', dir: 'SQL网站场景', count: 45 },
+  { name: '后端场景', dir: '后端场景', count: 80 },
+  { name: '后端系统设计', dir: '后端系统设计', count: 34 },
+  { name: '大厂算法真题', dir: '大厂算法真题', count: 63 },
+  { name: '设计模式', dir: '设计模式', count: 26 },
+  { name: '操作系统', dir: '操作系统', count: 21 },
+  { name: '计算机网络', dir: '计算机网络', count: 21 },
+  { name: '消息队列', dir: '消息队列', count: 15 },
+  { name: '华为OD', dir: '华为OD', count: 209 },
+  { name: '字节跳动面经', dir: '字节跳动面经', count: 58 },
+  { name: '阿里巴巴面经', dir: '阿里巴巴面经', count: 35 },
+  { name: '京东面经', dir: '京东面经', count: 33 },
+  { name: '美团面经', dir: '美团面经', count: 20 },
+  { name: '拼多多面经', dir: '拼多多面经', count: 19 },
+  { name: '腾讯面经', dir: '腾讯面经', count: 14 },
+  { name: '快手面经', dir: '快手面经', count: 8 },
+  { name: '百度面经', dir: '百度面经', count: 5 },
+  { name: '小米面经', dir: '小米面经', count: 9 },
 ];
 
-// Sample questions
-const questions = [
-  { id: 1, title: '请说说Java中HashMap的底层实现原理？', difficulty: '中等', tags: ['HashMap', '集合', 'JDK'], category: 'java', answer: 'HashMap基于数组+链表+红黑树实现。JDK8后，当链表长度超过8且数组长度>=64时，链表转为红黑树。默认初始容量16，负载因子0.75，扩容为原来的2倍。' },
-  { id: 2, title: 'volatile关键字的作用是什么？', difficulty: '中等', tags: ['volatile', '多线程', '并发'], category: 'java', answer: 'volatile保证可见性和禁止指令重排序，但不能保证原子性。适用于状态标记、DCL单例等场景。' },
-  { id: 3, title: 'MySQL的事务隔离级别有哪些？', difficulty: '中等', tags: ['MySQL', '事务', '隔离级别'], category: 'mysql', answer: '读未提交、读已提交、可重复读（MySQL默认）、串行化。分别解决脏读、不可重复读、幻读问题。' },
-  { id: 4, title: 'Redis的持久化机制有哪些？', difficulty: '中等', tags: ['Redis', '持久化', 'RDB'], category: 'redis', answer: 'RDB定时快照、AOF记录命令、混合持久化。RDB文件小恢复快，AOF数据安全，混合结合两者优点。' },
-  { id: 5, title: 'JVM的垃圾回收机制是什么？', difficulty: '困难', tags: ['JVM', 'GC', '垃圾回收'], category: 'jvm', answer: '通过可达性分析判断对象存活，使用标记-清除、标记-整理、复制算法。新生代用复制，老年代用标记-整理。' },
-  { id: 6, title: 'Spring Boot自动配置原理？', difficulty: '中等', tags: ['Spring', '自动配置', 'Starter'], category: 'spring', answer: '@EnableAutoConfiguration加载spring.factories，通过条件注解过滤配置类。' },
-  { id: 7, title: '如何设计一个秒杀系统？', difficulty: '困难', tags: ['秒杀', '高并发', '系统设计'], category: 'system', answer: '前端限流、Redis预扣库存、异步下单、乐观锁防超卖。' },
-  { id: 8, title: 'Transformer的Self-Attention机制？', difficulty: '困难', tags: ['Transformer', 'Attention', 'AI'], category: 'ai', answer: 'Q、K、V线性变换，计算注意力分数softmax(QK^T/√d)V，多头注意力并行计算。' },
-  { id: 9, title: 'MySQL索引的B+树原理？', difficulty: '中等', tags: ['索引', 'B+树', 'MySQL'], category: 'mysql', answer: '多路平衡搜索树，非叶子节点只存索引，叶子节点存数据用链表连接，树高3-4层减少IO。' },
-  { id: 10, title: '分布式事务解决方案？', difficulty: '困难', tags: ['分布式', '事务', 'TCC'], category: 'system', answer: '2PC、3PC、TCC、本地消息表、MQ事务消息、Seata等方案。' },
-];
+// Calculate total
+CATEGORIES[0].count = CATEGORIES.slice(1).reduce((sum, cat) => sum + cat.count, 0);
 
 let currentCategory = 'all';
+let currentQuestions = [];
+let filteredQuestions = [];
 let currentPage = 1;
-const pageSize = 20;
+let currentQuestionIndex = 0;
+const pageSize = 30;
+let loadedCategories = {};
 
-// Initialize
 function init() {
   renderSidebar();
-  renderQuestions();
+  document.getElementById('hero-subtitle').textContent = `${CATEGORIES[0].count}道面试题 · ${CATEGORIES.length - 1}个分类 · 含详细答案`;
+  selectCategory('all');
 }
 
-// Render sidebar
 function renderSidebar() {
   const nav = document.getElementById('sidebar-nav');
-  nav.innerHTML = categories.map(cat => `
-    <div class="sidebar-item ${currentCategory === cat.filter ? 'active' : ''}" onclick="selectCategory('${cat.filter}')">
+  nav.innerHTML = CATEGORIES.map(cat => `
+    <div class="sidebar-item ${currentCategory === cat.dir ? 'active' : ''}" onclick="selectCategory('${cat.dir}')">
       <span>${cat.name}</span>
       <span class="count">${cat.count}</span>
     </div>
   `).join('');
 }
 
-// Select category
-function selectCategory(filter) {
-  currentCategory = filter;
+async function selectCategory(dir) {
+  currentCategory = dir;
   currentPage = 1;
   renderSidebar();
+
+  if (dir === 'all') {
+    await loadAllCategories();
+  } else {
+    await loadCategory(dir);
+  }
+
+  filteredQuestions = [...currentQuestions];
   renderQuestions();
-  showList();
+  showListView();
 }
 
-// Render questions
-function renderQuestions() {
-  const list = document.getElementById('questionsList');
-  const filtered = currentCategory === 'all' ? questions : questions.filter(q => q.category === currentCategory);
+async function loadCategory(dir) {
+  if (loadedCategories[dir]) {
+    currentQuestions = loadedCategories[dir];
+    return;
+  }
 
-  list.innerHTML = filtered.map((q, i) => `
-    <div class="question-item" onclick="showDetail(${q.id})">
-      <div class="question-num">${i + 1}</div>
-      <div class="question-content">
-        <div class="question-title">${q.title}</div>
-        <div class="question-meta">
-          <span class="difficulty ${q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard'}">${q.difficulty}</span>
-          <div class="question-tags">
-            ${q.tags.map(t => `<span class="question-tag">${t}</span>`).join('')}
-          </div>
-        </div>
-      </div>
-    </div>
-  `).join('');
+  showLoading();
+  try {
+    const response = await fetch(`/interview-questions/${dir}/data.js`);
+    const text = await response.text();
+    const start = text.indexOf('[');
+    const end = text.lastIndexOf(']') + 1;
+    const data = JSON.parse(text.substring(start, end));
+    loadedCategories[dir] = data;
+    currentQuestions = data;
+  } catch (e) {
+    console.error('Failed to load category:', dir, e);
+    currentQuestions = [];
+  }
 }
 
-// Show detail
-function showDetail(id) {
-  const q = questions.find(q => q.id === id);
-  if (!q) return;
+async function loadAllCategories() {
+  if (loadedCategories['all']) {
+    currentQuestions = loadedCategories['all'];
+    return;
+  }
 
-  document.getElementById('questionsList').style.display = 'none';
-  document.querySelector('.pagination').style.display = 'none';
-  document.getElementById('detailView').classList.add('active');
+  showLoading();
+  const allQuestions = [];
 
-  document.getElementById('detailTitle').textContent = q.title;
-  document.getElementById('detailDiff').textContent = q.difficulty;
-  document.getElementById('detailDiff').className = `difficulty ${q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard'}`;
-  document.getElementById('detailTags').innerHTML = q.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
-  document.getElementById('answerContent').innerHTML = `<p>${q.answer}</p>`;
-  document.getElementById('answerContent').classList.remove('show');
+  for (let i = 1; i < CATEGORIES.length; i++) {
+    const cat = CATEGORIES[i];
+    try {
+      if (!loadedCategories[cat.dir]) {
+        const response = await fetch(`/interview-questions/${cat.dir}/data.js`);
+        const text = await response.text();
+        const start = text.indexOf('[');
+        const end = text.lastIndexOf(']') + 1;
+        loadedCategories[cat.dir] = JSON.parse(text.substring(start, end));
+      }
+      allQuestions.push(...loadedCategories[cat.dir]);
+    } catch (e) {
+      console.error('Failed to load:', cat.dir);
+    }
+  }
+
+  loadedCategories['all'] = allQuestions;
+  currentQuestions = allQuestions;
 }
 
-// Show list
-function showList() {
-  document.getElementById('questionsList').style.display = 'flex';
-  document.querySelector('.pagination').style.display = 'flex';
+function showLoading() {
+  document.getElementById('questionsList').innerHTML = '<div class="loading">加载中...</div>';
+}
+
+function showListView() {
+  document.getElementById('listView').style.display = 'block';
   document.getElementById('detailView').classList.remove('active');
 }
 
-// Toggle answer
+function showDetailView() {
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').classList.add('active');
+}
+
+function renderQuestions() {
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  const pageQuestions = filteredQuestions.slice(start, end);
+  const totalPages = Math.ceil(filteredQuestions.length / pageSize);
+
+  const list = document.getElementById('questionsList');
+  if (pageQuestions.length === 0) {
+    list.innerHTML = '<div class="empty-state">暂无题目</div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  list.innerHTML = pageQuestions.map((q, i) => {
+    const globalIndex = start + i + 1;
+    const tags = typeof q.tags === 'string' ? q.tags.split(',').map(t => t.trim()) : (q.tags || []);
+    const diffClass = q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard';
+
+    return `
+      <div class="question-item" onclick="showDetail(${start + i})">
+        <div class="question-num">${q.num || globalIndex}</div>
+        <div class="question-content">
+          <div class="question-title">${q.title}</div>
+          <div class="question-meta">
+            <span class="difficulty ${diffClass}">${q.difficulty_emoji || ''} ${q.difficulty}</span>
+            <div class="question-tags">
+              ${tags.slice(0, 3).map(t => `<span class="question-tag">${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  if (totalPages <= 1) {
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  let html = '';
+  html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>←</button>`;
+
+  const maxVisible = 7;
+  let startPage = Math.max(1, currentPage - 3);
+  let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+  if (endPage - startPage < maxVisible - 1) {
+    startPage = Math.max(1, endPage - maxVisible + 1);
+  }
+
+  if (startPage > 1) {
+    html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+    if (startPage > 2) html += `<span class="page-info">...</span>`;
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) html += `<span class="page-info">...</span>`;
+    html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>→</button>`;
+
+  document.getElementById('pagination').innerHTML = html;
+}
+
+function goToPage(page) {
+  const totalPages = Math.ceil(filteredQuestions.length / pageSize);
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  renderQuestions();
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function filterQuestions() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!query) {
+    filteredQuestions = [...currentQuestions];
+  } else {
+    filteredQuestions = currentQuestions.filter(q =>
+      q.title.toLowerCase().includes(query) ||
+      (q.tags && q.tags.toLowerCase().includes(query))
+    );
+  }
+  currentPage = 1;
+  renderQuestions();
+}
+
+function showDetail(index) {
+  currentQuestionIndex = index;
+  const q = filteredQuestions[index];
+  if (!q) return;
+
+  const tags = typeof q.tags === 'string' ? q.tags.split(',').map(t => t.trim()) : (q.tags || []);
+  const diffClass = q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard';
+
+  document.getElementById('detailTitle').textContent = q.title;
+  document.getElementById('detailDiff').textContent = `${q.difficulty_emoji || ''} ${q.difficulty}`;
+  document.getElementById('detailDiff').className = `difficulty ${diffClass}`;
+  document.getElementById('detailTags').innerHTML = tags.map(t => `<span class="question-tag">${t}</span>`).join('');
+
+  const answer = q.answer || '暂无答案';
+  document.getElementById('answerContent').textContent = answer;
+  document.getElementById('answerContent').classList.remove('show');
+
+  updateNavigation();
+  showDetailView();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateNavigation() {
+  const total = filteredQuestions.length;
+  document.getElementById('questionNav').textContent = `${currentQuestionIndex + 1} / ${total}`;
+  document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+  document.getElementById('nextBtn').disabled = currentQuestionIndex === total - 1;
+}
+
+function navigateQuestion(direction) {
+  const newIndex = currentQuestionIndex + direction;
+  if (newIndex >= 0 && newIndex < filteredQuestions.length) {
+    showDetail(newIndex);
+  }
+}
+
 function toggleAnswer() {
   document.getElementById('answerContent').classList.toggle('show');
 }
 
-// Search
-document.getElementById('searchInput').addEventListener('input', function(e) {
-  const query = e.target.value.toLowerCase();
-  const items = document.querySelectorAll('.question-item');
-  items.forEach(item => {
-    const title = item.querySelector('.question-title').textContent.toLowerCase();
-    item.style.display = title.includes(query) ? '' : 'none';
-  });
-});
+function showList() {
+  showListView();
+}
 
 init();
 </script>
