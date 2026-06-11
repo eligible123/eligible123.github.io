@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI模拟面试 | 李阳的技术博客</title>
-<meta name="description" content="AI智能模拟面试，支持Java、后端、数据库等方向，实时出题+AI评分">
+<meta name="description" content="AI智能模拟面试，支持上传简历和JD，AI分析专属面试题">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
@@ -17,6 +17,7 @@
   --neon-green: #00ff88;
   --neon-pink: #ff0080;
   --neon-yellow: #f0ff00;
+  --neon-orange: #ff8800;
   --text-primary: #e0e0ff;
   --text-secondary: #8888aa;
   --border-glow: rgba(0, 240, 255, 0.3);
@@ -177,8 +178,8 @@ body {
   margin-bottom: 30px;
 }
 
-/* Mode selection */
-.mode-section {
+/* Upload section */
+.upload-section {
   position: relative;
   z-index: 2;
   max-width: 1200px;
@@ -207,6 +208,233 @@ body {
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, var(--border-glow), transparent);
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.upload-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s;
+}
+
+.upload-card:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.upload-card.has-file {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+}
+
+.upload-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.upload-card .card-header h3 {
+  font-size: 1em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload-card .card-header .badge {
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.badge.required {
+  background: rgba(255, 0, 128, 0.2);
+  border: 1px solid rgba(255, 0, 128, 0.4);
+  color: var(--neon-pink);
+}
+
+.badge.optional {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--neon-cyan);
+}
+
+.upload-area {
+  border: 2px dashed var(--border-glow);
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.upload-area:hover {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.03);
+}
+
+.upload-area.dragover {
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.upload-area .icon {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.upload-area p {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.upload-area .file-types {
+  margin-top: 10px;
+  font-size: 0.75em;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.upload-area input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-info {
+  display: none;
+  margin-top: 15px;
+  padding: 12px 15px;
+  background: rgba(0, 255, 136, 0.05);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 8px;
+}
+
+.file-info.show {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-info .file-name {
+  font-size: 0.85em;
+  color: var(--neon-green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-info .file-size {
+  font-size: 0.75em;
+  color: var(--text-secondary);
+}
+
+.file-info .remove-btn {
+  background: none;
+  border: none;
+  color: var(--neon-pink);
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 5px;
+  transition: all 0.3s;
+}
+
+.file-info .remove-btn:hover {
+  text-shadow: 0 0 10px rgba(255, 0, 128, 0.5);
+}
+
+/* Analysis preview */
+.analysis-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  display: none;
+}
+
+.analysis-preview.show {
+  display: block;
+}
+
+.analysis-preview h4 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--neon-cyan);
+  margin-bottom: 15px;
+  font-size: 0.95em;
+}
+
+.analysis-preview .skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.analysis-preview .skill-tag {
+  padding: 5px 12px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 6px;
+  font-size: 0.8em;
+  color: var(--neon-cyan);
+}
+
+.analysis-preview .skill-tag.jd {
+  background: rgba(176, 0, 255, 0.1);
+  border-color: rgba(176, 0, 255, 0.3);
+  color: var(--neon-purple);
+}
+
+.analysis-preview .start-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+  margin-top: 10px;
+}
+
+.analysis-preview .start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 30px rgba(0, 255, 136, 0.4);
+}
+
+.analysis-preview .start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mode selection */
+.mode-section {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px 40px;
 }
 
 .mode-grid {
@@ -594,6 +822,7 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .hero h1 { font-size: 1.8em; }
+  .upload-grid { grid-template-columns: 1fr; }
   .mode-grid { grid-template-columns: 1fr; }
   .chat-messages { height: 400px; }
   .nav-links { display: none; }
@@ -615,6 +844,45 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 15, 0.9);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loading-overlay.show {
+  display: flex;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 3px solid var(--border-glow);
+  border-top-color: var(--neon-cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--neon-cyan);
+  font-size: 1.1em;
+  animation: pulse 2s infinite;
+}
 </style>
 </head>
 <body>
@@ -622,6 +890,11 @@ body {
 <div class="bg-grid"></div>
 <div class="particles" id="particles"></div>
 <div class="scanline"></div>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">AI正在分析简历和岗位...</div>
+</div>
 
 <nav class="navbar">
   <div class="container">
@@ -637,9 +910,74 @@ body {
 
 <section class="hero">
   <h1>AI MOCK INTERVIEW<span class="cursor"></span></h1>
-  <p class="subtitle">// 🤖 AI驱动 · 实时出题 · 智能评分 · 沉浸式面试体验</p>
+  <p class="subtitle">// 📄 上传简历+JD → 🤖 AI智能分析 → 🎯 专属面试题</p>
 </section>
 
+<!-- Upload Section -->
+<section class="upload-section">
+  <h2 class="section-title">UPLOAD FILES</h2>
+  <div class="upload-grid">
+    <!-- Resume Upload -->
+    <div class="upload-card" id="resume-card">
+      <div class="card-header">
+        <h3>📄 个人简历</h3>
+        <span class="badge required">必填</span>
+      </div>
+      <div class="upload-area" id="resume-upload">
+        <div class="icon">📁</div>
+        <p>点击或拖拽上传简历</p>
+        <div class="file-types">支持 PDF、Word、TXT 格式</div>
+        <input type="file" id="resume-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'resume')">
+      </div>
+      <div class="file-info" id="resume-info">
+        <div class="file-name">
+          <span>✅</span>
+          <span id="resume-name">-</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="file-size" id="resume-size">-</span>
+          <button class="remove-btn" onclick="removeFile('resume')">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JD Upload -->
+    <div class="upload-card" id="jd-card">
+      <div class="card-header">
+        <h3>💼 岗位JD</h3>
+        <span class="badge optional">选填</span>
+      </div>
+      <div class="upload-area" id="jd-upload">
+        <div class="icon">📋</div>
+        <p>点击或拖拽上传岗位描述</p>
+        <div class="file-types">支持 PDF、Word、TXT 格式，或直接粘贴文本</div>
+        <input type="file" id="jd-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event, 'jd')">
+      </div>
+      <div class="file-info" id="jd-info">
+        <div class="file-name">
+          <span>✅</span>
+          <span id="jd-name">-</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="file-size" id="jd-size">-</span>
+          <button class="remove-btn" onclick="removeFile('jd')">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Preview -->
+  <div class="analysis-preview" id="analysis-preview">
+    <h4>🔍 AI分析结果预览</h4>
+    <div class="skills-tags" id="skills-tags"></div>
+    <p style="color:var(--text-secondary);font-size:0.85em;margin-bottom:15px" id="analysis-desc"></p>
+    <button class="start-btn" onclick="startInterview()" id="start-interview-btn">
+      🚀 开始专属面试
+    </button>
+  </div>
+</section>
+
+<!-- Mode Section -->
 <section class="mode-section">
   <h2 class="section-title">SELECT MODE</h2>
   <div class="mode-grid">
@@ -686,6 +1024,7 @@ body {
   </div>
 </section>
 
+<!-- Chat Section -->
 <section class="chat-section">
   <h2 class="section-title">INTERVIEW ROOM</h2>
   <div class="chat-container">
@@ -693,7 +1032,7 @@ body {
       <div class="status"></div>
       <div class="info">
         <h3 id="mode-title">Java后端面试官</h3>
-        <p id="mode-desc">模拟真实面试场景 · AI实时出题 · 智能评分</p>
+        <p id="mode-desc">上传简历后开始专属面试</p>
       </div>
     </div>
     <div class="chat-messages" id="chat-messages">
@@ -701,8 +1040,8 @@ body {
         <div class="message-avatar">🤖</div>
         <div class="message-content">
           <p>👋 你好！我是你的AI面试官。</p>
-          <p>今天我们将进行一场模拟面试，我会根据你选择的方向提出问题，并对你的回答进行评分和反馈。</p>
-          <p>准备好了吗？输入 <code>开始面试</code> 即可开始！</p>
+          <p>请先上传你的<strong>简历</strong>（必填），如果有目标岗位的<strong>JD</strong>（选填）也可以一起上传。</p>
+          <p>我会根据你的简历和岗位要求，为你生成<strong>专属面试题</strong>！</p>
           <div class="meta">AI面试官 · 刚刚</div>
         </div>
       </div>
@@ -711,14 +1050,13 @@ body {
       <span></span><span></span><span></span>
     </div>
     <div class="action-bar">
-      <button class="action-btn" onclick="sendQuickAction('开始面试')">🚀 开始面试</button>
       <button class="action-btn" onclick="sendQuickAction('换一道题')">🔄 换一道题</button>
       <button class="action-btn" onclick="sendQuickAction('提示一下')">💡 提示一下</button>
       <button class="action-btn" onclick="sendQuickAction('结束面试')">📊 结束面试</button>
     </div>
     <div class="chat-input">
-      <input type="text" id="user-input" placeholder="> 输入你的回答..." onkeypress="handleKeyPress(event)">
-      <button onclick="sendMessage()" id="send-btn">发送</button>
+      <input type="text" id="user-input" placeholder="> 输入你的回答..." onkeypress="handleKeyPress(event)" disabled>
+      <button onclick="sendMessage()" id="send-btn" disabled>发送</button>
     </div>
   </div>
 </section>
@@ -743,6 +1081,162 @@ function createParticles() {
   }
 }
 createParticles();
+
+// File upload handling
+let resumeFile = null;
+let jdFile = null;
+let resumeText = '';
+let jdText = '';
+let analyzedSkills = [];
+
+function handleFileUpload(event, type) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const maxSize = 10 * 1024 * 1024; // 10MB
+  if (file.size > maxSize) {
+    alert('文件大小不能超过10MB');
+    return;
+  }
+  
+  if (type === 'resume') {
+    resumeFile = file;
+    document.getElementById('resume-name').textContent = file.name;
+    document.getElementById('resume-size').textContent = formatFileSize(file.size);
+    document.getElementById('resume-info').classList.add('show');
+    document.getElementById('resume-card').classList.add('has-file');
+    readFileContent(file, 'resume');
+  } else {
+    jdFile = file;
+    document.getElementById('jd-name').textContent = file.name;
+    document.getElementById('jd-size').textContent = formatFileSize(file.size);
+    document.getElementById('jd-info').classList.add('show');
+    document.getElementById('jd-card').classList.add('has-file');
+    readFileContent(file, 'jd');
+  }
+  
+  checkFilesReady();
+}
+
+function readFileContent(file, type) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const content = e.target.result;
+    if (type === 'resume') {
+      resumeText = content;
+    } else {
+      jdText = content;
+    }
+    checkFilesReady();
+  };
+  reader.readAsText(file);
+}
+
+function removeFile(type) {
+  if (type === 'resume') {
+    resumeFile = null;
+    resumeText = '';
+    document.getElementById('resume-input').value = '';
+    document.getElementById('resume-info').classList.remove('show');
+    document.getElementById('resume-card').classList.remove('has-file');
+  } else {
+    jdFile = null;
+    jdText = '';
+    document.getElementById('jd-input').value = '';
+    document.getElementById('jd-info').classList.remove('show');
+    document.getElementById('jd-card').classList.remove('has-file');
+  }
+  
+  document.getElementById('analysis-preview').classList.remove('show');
+  checkFilesReady();
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function checkFilesReady() {
+  if (resumeText) {
+    analyzeFiles();
+  }
+}
+
+function analyzeFiles() {
+  // Simulate AI analysis
+  const loading = document.getElementById('loading-overlay');
+  loading.classList.add('show');
+  
+  setTimeout(() => {
+    loading.classList.remove('show');
+    
+    // Extract skills from resume and JD
+    analyzedSkills = extractSkills(resumeText, jdText);
+    
+    // Show analysis preview
+    const preview = document.getElementById('analysis-preview');
+    preview.classList.add('show');
+    
+    const tagsContainer = document.getElementById('skills-tags');
+    tagsContainer.innerHTML = '';
+    
+    analyzedSkills.forEach(skill => {
+      const tag = document.createElement('span');
+      tag.className = `skill-tag ${skill.from === 'jd' ? 'jd' : ''}`;
+      tag.textContent = skill.name;
+      tagsContainer.appendChild(tag);
+    });
+    
+    const desc = document.getElementById('analysis-desc');
+    desc.textContent = `已识别 ${analyzedSkills.length} 个技能点，将基于这些内容生成专属面试题。`;
+    
+    // Auto select mode based on skills
+    autoSelectMode();
+  }, 2000);
+}
+
+function extractSkills(resume, jd) {
+  const skills = [];
+  const skillKeywords = {
+    java: ['Java', 'Spring', 'SpringBoot', 'SpringCloud', 'MyBatis', 'Hibernate', 'JVM', 'JDK', 'Maven', 'Gradle'],
+    database: ['MySQL', 'Redis', 'MongoDB', 'PostgreSQL', 'Oracle', 'SQL', '数据库', '索引', '事务'],
+    middleware: ['Kafka', 'RabbitMQ', 'RocketMQ', 'Elasticsearch', 'ES', 'Nginx', 'Docker', 'Kubernetes', 'K8s'],
+    frontend: ['Vue', 'React', 'Angular', 'JavaScript', 'TypeScript', 'HTML', 'CSS', '前端'],
+    ai: ['AI', '机器学习', '深度学习', 'LLM', '大模型', 'NLP', 'RAG', 'Agent', 'Transformer', 'Python'],
+    devops: ['Linux', 'Git', 'CI/CD', 'Jenkins', 'DevOps', '运维', '部署'],
+    design: ['设计模式', '架构', '微服务', '分布式', '高并发', '高可用', '系统设计']
+  };
+  
+  const text = resume + ' ' + jd;
+  
+  for (const [category, keywords] of Object.entries(skillKeywords)) {
+    keywords.forEach(keyword => {
+      if (text.includes(keyword)) {
+        const from = jd.includes(keyword) ? 'jd' : 'resume';
+        if (!skills.find(s => s.name === keyword)) {
+          skills.push({ name: keyword, category, from });
+        }
+      }
+    });
+  }
+  
+  return skills.slice(0, 15); // Limit to 15 skills
+}
+
+function autoSelectMode() {
+  const categories = analyzedSkills.map(s => s.category);
+  
+  if (categories.includes('ai')) {
+    selectMode('ai');
+  } else if (categories.includes('database')) {
+    selectMode('database');
+  } else if (categories.includes('design')) {
+    selectMode('system');
+  } else {
+    selectMode('java');
+  }
+}
 
 // Mode selection
 let currentMode = 'java';
@@ -773,8 +1267,8 @@ const userInput = document.getElementById('user-input');
 const typingIndicator = document.getElementById('typing-indicator');
 const sendBtn = document.getElementById('send-btn');
 
-// Simulated interview questions by mode
-const questions = {
+// Interview questions based on mode and skills
+const baseQuestions = {
   java: [
     "请说说Java中HashMap的底层实现原理？",
     "volatile关键字的作用是什么？它能保证原子性吗？",
@@ -805,9 +1299,86 @@ const questions = {
   ]
 };
 
+// Skill-specific questions
+const skillQuestions = {
+  'Spring': ['Spring IOC的原理是什么？', 'Spring AOP的实现方式有哪些？', 'Spring Bean的生命周期是怎样的？'],
+  'MySQL': ['MySQL的B+树索引和Hash索引有什么区别？', '如何分析MySQL的执行计划？', 'MySQL主从复制的原理是什么？'],
+  'Redis': ['Redis的数据结构有哪些？各自的使用场景？', 'Redis集群的方案有哪些？', '如何解决Redis缓存穿透问题？'],
+  'Docker': ['Docker和虚拟机的区别是什么？', 'Dockerfile的常用指令有哪些？', 'Docker网络模式有哪些？'],
+  '微服务': ['微服务架构的优缺点是什么？', '服务注册与发现的原理是什么？', '如何实现微服务的链路追踪？'],
+  '分布式': ['CAP理论是什么？', 'BASE理论是什么？', '分布式锁的实现方案有哪些？'],
+  'Java': ['Java中==和equals的区别是什么？', 'Java的泛型是如何实现的？', 'Java的反射机制是什么？'],
+  'SpringBoot': ['SpringBoot的Starter原理是什么？', 'SpringBoot配置文件的加载顺序？', 'SpringBoot Actuator的作用是什么？']
+};
+
 let questionIndex = 0;
 let interviewStarted = false;
 let scoreHistory = [];
+let usedQuestions = new Set();
+
+function startInterview() {
+  if (!resumeText) {
+    alert('请先上传简历！');
+    return;
+  }
+  
+  interviewStarted = true;
+  userInput.disabled = false;
+  sendBtn.disabled = false;
+  
+  addMessage(`
+    <p>✅ 已收到你的简历${jdFile ? '和岗位JD' : ''}！</p>
+    <p>基于你的技能背景，我将为你进行<strong>专属面试</strong>。</p>
+    <p>让我们开始吧！</p>
+  `);
+  
+  setTimeout(() => {
+    askNextQuestion();
+  }, 1000);
+}
+
+function getPersonalizedQuestion() {
+  // Try skill-specific questions first
+  for (const skill of analyzedSkills) {
+    if (skillQuestions[skill.name]) {
+      const questions = skillQuestions[skill.name];
+      const unused = questions.filter(q => !usedQuestions.has(q));
+      if (unused.length > 0) {
+        const question = unused[Math.floor(Math.random() * unused.length)];
+        usedQuestions.add(question);
+        return question;
+      }
+    }
+  }
+  
+  // Fall back to base questions
+  const modeQuestions = baseQuestions[currentMode];
+  const unused = modeQuestions.filter(q => !usedQuestions.has(q));
+  if (unused.length > 0) {
+    const question = unused[Math.floor(Math.random() * unused.length)];
+    usedQuestions.add(question);
+    return question;
+  }
+  
+  // Reset if all questions used
+  usedQuestions.clear();
+  return modeQuestions[Math.floor(Math.random() * modeQuestions.length)];
+}
+
+function askNextQuestion() {
+  const question = getPersonalizedQuestion();
+  questionIndex++;
+  
+  const skillTag = analyzedSkills.length > 0 
+    ? `<span style="color:var(--neon-purple);font-size:0.85em">[${analyzedSkills[Math.floor(Math.random() * analyzedSkills.length)].name}]</span> `
+    : '';
+  
+  addMessage(`
+    <p><strong>第 ${questionIndex} 题 ${skillTag}</strong></p>
+    <p><strong>❓ ${question}</strong></p>
+    <p style="margin-top:10px;color:var(--text-secondary);font-size:0.85em">请在下方输入框中回答，完成后点击发送。</p>
+  `);
+}
 
 function addMessage(content, isUser = false) {
   const messageDiv = document.createElement('div');
@@ -837,13 +1408,7 @@ function hideTyping() {
   typingIndicator.style.display = 'none';
 }
 
-function getRandomQuestion() {
-  const modeQuestions = questions[currentMode];
-  return modeQuestions[Math.floor(Math.random() * modeQuestions.length)];
-}
-
 function evaluateAnswer(answer) {
-  // Simple simulated evaluation
   const length = answer.length;
   let score = 60;
   let feedback = '';
@@ -861,8 +1426,7 @@ function evaluateAnswer(answer) {
     feedback += '回答过于简短，建议展开说明。';
   }
   
-  // Check for keywords
-  const keywords = ['原理', '实现', '优化', '区别', '优缺点', '场景'];
+  const keywords = ['原理', '实现', '优化', '区别', '优缺点', '场景', '源码', '底层', '机制'];
   const foundKeywords = keywords.filter(k => answer.includes(k));
   if (foundKeywords.length > 0) {
     score += foundKeywords.length * 3;
@@ -889,21 +1453,8 @@ function sendMessage() {
     hideTyping();
     sendBtn.disabled = false;
     
-    if (text === '开始面试' || !interviewStarted) {
-      interviewStarted = true;
-      const question = getRandomQuestion();
-      questionIndex++;
-      addMessage(`
-        <p>好的，让我们开始第 ${questionIndex} 题：</p>
-        <p><strong>❓ ${question}</strong></p>
-        <p style="margin-top:10px;color:var(--text-secondary)">请在下方输入框中回答，完成后点击发送。</p>
-      `);
-    } else if (text === '换一道题') {
-      const question = getRandomQuestion();
-      addMessage(`
-        <p>没问题，换一道题：</p>
-        <p><strong>❓ ${question}</strong></p>
-      `);
+    if (text === '换一道题') {
+      askNextQuestion();
     } else if (text === '提示一下') {
       addMessage(`
         <p>💡 提示：</p>
@@ -912,44 +1463,55 @@ function sendMessage() {
         <p>2. 底层原理/实现机制</p>
         <p>3. 实际应用场景</p>
         <p>4. 优缺点对比</p>
-        <p>5. 你的实践经验</p>
+        <p>5. 结合你的项目经验</p>
       `);
     } else if (text === '结束面试') {
-      const avgScore = scoreHistory.length > 0 
-        ? Math.round(scoreHistory.reduce((a, b) => a + b) / scoreHistory.length)
-        : 0;
-      addMessage(`
-        <div class="score-card">
-          <h3>📊 面试报告</h3>
-          <div class="score">${avgScore}分</div>
-          <div class="feedback">
-            <p>✅ 本次面试共回答 ${scoreHistory.length} 道题</p>
-            <p>📈 平均得分：${avgScore}分</p>
-            <p>🏆 最高得分：${Math.max(...scoreHistory)}分</p>
-            <p style="margin-top:15px">💪 继续加油！多练习才能在真实面试中表现出色！</p>
-          </div>
-        </div>
-      `);
-      interviewStarted = false;
-      questionIndex = 0;
-      scoreHistory = [];
+      showInterviewReport();
     } else {
-      // Evaluate answer
       const { score, feedback } = evaluateAnswer(text);
-      const nextQuestion = getRandomQuestion();
-      questionIndex++;
-      
-      let scoreColor = score >= 80 ? 'var(--neon-green)' : score >= 60 ? 'var(--neon-yellow)' : 'var(--neon-pink)';
       
       addMessage(`
         <p><strong>📝 评分：${score}分</strong></p>
         <p>${feedback}</p>
-        <hr style="border-color:var(--border-glow);margin:15px 0">
-        <p><strong>下一题（第${questionIndex}题）：</strong></p>
-        <p><strong>❓ ${nextQuestion}</strong></p>
       `);
+      
+      setTimeout(() => {
+        askNextQuestion();
+      }, 1000);
     }
   }, 1500);
+}
+
+function showInterviewReport() {
+  const avgScore = scoreHistory.length > 0 
+    ? Math.round(scoreHistory.reduce((a, b) => a + b) / scoreHistory.length)
+    : 0;
+  
+  const skillsText = analyzedSkills.length > 0 
+    ? `<p>📋 已覆盖技能点：${analyzedSkills.map(s => s.name).join('、')}</p>`
+    : '';
+  
+  addMessage(`
+    <div class="score-card">
+      <h3>📊 面试报告</h3>
+      <div class="score">${avgScore}分</div>
+      <div class="feedback">
+        <p>✅ 本次面试共回答 ${scoreHistory.length} 道题</p>
+        <p>📈 平均得分：${avgScore}分</p>
+        <p>🏆 最高得分：${Math.max(...scoreHistory)}分</p>
+        ${skillsText}
+        <p style="margin-top:15px">💪 继续加油！多练习才能在真实面试中表现出色！</p>
+      </div>
+    </div>
+  `);
+  
+  interviewStarted = false;
+  questionIndex = 0;
+  scoreHistory = [];
+  usedQuestions.clear();
+  
+  userInput.disabled = true;
+  sendBtn.disabled = true;
 }
 
 function sendQuickAction(action) {
@@ -962,6 +1524,37 @@ function handleKeyPress(event) {
     sendMessage();
   }
 }
+
+// Drag and drop support
+const uploadAreas = document.querySelectorAll('.upload-area');
+uploadAreas.forEach(area => {
+  area.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    area.classList.add('dragover');
+  });
+  
+  area.addEventListener('dragleave', () => {
+    area.classList.remove('dragover');
+  });
+  
+  area.addEventListener('drop', (e) => {
+    e.preventDefault();
+    area.classList.remove('dragover');
+    
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const input = area.querySelector('input[type="file"]');
+      const type = input.id === 'resume-input' ? 'resume' : 'jd';
+      
+      // Create a DataTransfer object to set the file
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      input.files = dataTransfer.files;
+      
+      handleFileUpload({ target: input }, type);
+    }
+  });
+});
 
 // Auto focus input
 userInput.focus();
