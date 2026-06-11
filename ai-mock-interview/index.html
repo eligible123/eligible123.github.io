@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI模拟面试 | 李阳的技术博客</title>
+<meta name="description" content="AI智能模拟面试，支持Java、后端、数据库等方向，实时出题+AI评分">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(15, 15, 25, 0.8);
+  --neon-cyan: #00f0ff;
+  --neon-purple: #b000ff;
+  --neon-green: #00ff88;
+  --neon-pink: #ff0080;
+  --neon-yellow: #f0ff00;
+  --text-primary: #e0e0ff;
+  --text-secondary: #8888aa;
+  --border-glow: rgba(0, 240, 255, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg-grid {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: perspective(500px) rotateX(0deg); }
+  100% { transform: perspective(500px) rotateX(5deg); }
+}
+
+.particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  animation: float linear infinite;
+  box-shadow: 0 0 6px var(--neon-cyan);
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+.scanline {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 240, 255, 0.01) 2px,
+    rgba(0, 240, 255, 0.01) 4px
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 15, 0.95);
+  border-bottom: 1px solid var(--border-glow);
+  backdrop-filter: blur(20px);
+}
+
+.navbar .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5em;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-decoration: none;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+.logo span { color: var(--text-secondary); font-weight: 400; }
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover::after { width: 100%; }
+
+.hero {
+  position: relative;
+  z-index: 2;
+  padding: 60px 30px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+}
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5em;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 40px rgba(0, 240, 255, 0.5), 0 0 80px rgba(0, 240, 255, 0.2);
+  margin-bottom: 15px;
+  letter-spacing: 3px;
+}
+
+.hero .subtitle {
+  font-size: 1em;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+
+/* Mode selection */
+.mode-section {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px 40px;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3em;
+  color: var(--neon-purple);
+  text-shadow: 0 0 20px rgba(176, 0, 255, 0.5);
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.section-title::before {
+  content: '//';
+  color: var(--text-secondary);
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-glow), transparent);
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.mode-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mode-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15), 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.mode-card:hover::before { opacity: 1; }
+
+.mode-card.selected {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+}
+
+.mode-card.selected::before {
+  background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+  opacity: 1;
+}
+
+.mode-icon {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+}
+
+.mode-card h3 {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.mode-card .desc {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mode-card .tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 3px 10px;
+  background: rgba(176, 0, 255, 0.1);
+  border: 1px solid rgba(176, 0, 255, 0.3);
+  border-radius: 4px;
+  font-size: 0.75em;
+  color: var(--neon-purple);
+}
+
+/* Chat area */
+.chat-section {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 30px 60px;
+}
+
+.chat-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 20px 25px;
+  background: rgba(0, 240, 255, 0.05);
+  border-bottom: 1px solid var(--border-glow);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.chat-header .status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  box-shadow: 0 0 10px var(--neon-green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.chat-header .info h3 {
+  font-size: 1em;
+  color: var(--text-primary);
+}
+
+.chat-header .info p {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+
+.chat-messages {
+  height: 500px;
+  overflow-y: auto;
+  padding: 25px;
+  scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--border-glow);
+  border-radius: 3px;
+}
+
+.message {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+.message.user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  flex-shrink: 0;
+}
+
+.message.ai .message-avatar {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+}
+
+.message.user .message-avatar {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+}
+
+.message-content {
+  max-width: 75%;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 0.9em;
+  line-height: 1.7;
+}
+
+.message.ai .message-content {
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.message.user .message-content {
+  background: rgba(176, 0, 255, 0.1);
+  border: 1px solid rgba(176, 0, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.message-content .meta {
+  font-size: 0.75em;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.message-content code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+  color: var(--neon-green);
+}
+
+.message-content pre {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  overflow-x: auto;
+  border: 1px solid var(--border-glow);
+}
+
+.message-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+/* Typing indicator */
+.typing-indicator {
+  display: none;
+  padding: 15px 20px;
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 12px;
+  max-width: 100px;
+  margin-bottom: 20px;
+}
+
+.typing-indicator span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  margin: 0 2px;
+  animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Input area */
+.chat-input {
+  padding: 20px 25px;
+  border-top: 1px solid var(--border-glow);
+  display: flex;
+  gap: 15px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px 20px;
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.chat-input input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.chat-input input::placeholder { color: var(--text-secondary); }
+
+.chat-input button {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.chat-input button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 30px rgba(0, 240, 255, 0.4);
+}
+
+.chat-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Action buttons */
+.action-bar {
+  padding: 15px 25px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.action-btn {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border-glow);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.action-btn:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.05);
+}
+
+/* Score display */
+.score-card {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 240, 255, 0.1) 100%);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.score-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--neon-green);
+  margin-bottom: 15px;
+}
+
+.score-card .score {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3em;
+  font-weight: 900;
+  color: var(--neon-green);
+  text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+}
+
+.score-card .feedback {
+  margin-top: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 30px;
+  border-top: 1px solid var(--border-glow);
+  color: var(--text-secondary);
+  font-size: 0.85em;
+}
+
+.footer a {
+  color: var(--neon-cyan);
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.8em; }
+  .mode-grid { grid-template-columns: 1fr; }
+  .chat-messages { height: 400px; }
+  .nav-links { display: none; }
+  .message-content { max-width: 85%; }
+}
+
+/* Cursor blink */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--neon-cyan);
+  margin-left: 5px;
+  animation: blink 1s infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+<div class="scanline"></div>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="logo">LY<span>.DEV</span></a>
+    <ul class="nav-links">
+      <li><a href="/">首页</a></li>
+      <li><a href="/interview-questions/">面试题库</a></li>
+      <li><a href="/ai-chat/">AI面试助手</a></li>
+      <li><a href="/ai-mock-interview/" style="color:var(--neon-green)">🎯 AI模拟面试</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>AI MOCK INTERVIEW<span class="cursor"></span></h1>
+  <p class="subtitle">// 🤖 AI驱动 · 实时出题 · 智能评分 · 沉浸式面试体验</p>
+</section>
+
+<section class="mode-section">
+  <h2 class="section-title">SELECT MODE</h2>
+  <div class="mode-grid">
+    <div class="mode-card selected" onclick="selectMode('java')" data-mode="java">
+      <div class="mode-icon">☕</div>
+      <h3>Java后端面试</h3>
+      <div class="desc">Java核心、多线程、JVM、Spring全家桶、分布式等高频面试题</div>
+      <div class="tags">
+        <span class="tag">Java</span>
+        <span class="tag">Spring</span>
+        <span class="tag">多线程</span>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode('database')" data-mode="database">
+      <div class="mode-icon">🐬</div>
+      <h3>数据库面试</h3>
+      <div class="desc">MySQL索引优化、事务隔离、锁机制、Redis缓存策略等</div>
+      <div class="tags">
+        <span class="tag">MySQL</span>
+        <span class="tag">Redis</span>
+        <span class="tag">索引</span>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode('system')" data-mode="system">
+      <div class="mode-icon">🏛️</div>
+      <h3>系统设计面试</h3>
+      <div class="desc">高并发、分布式系统、微服务架构、秒杀系统等场景设计题</div>
+      <div class="tags">
+        <span class="tag">架构</span>
+        <span class="tag">分布式</span>
+        <span class="tag">高可用</span>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode('ai')" data-mode="ai">
+      <div class="mode-icon">🤖</div>
+      <h3>AI大模型面试</h3>
+      <div class="desc">Transformer、RAG、Agent、LangChain、向量数据库等前沿技术</div>
+      <div class="tags">
+        <span class="tag">LLM</span>
+        <span class="tag">RAG</span>
+        <span class="tag">Agent</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chat-section">
+  <h2 class="section-title">INTERVIEW ROOM</h2>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="status"></div>
+      <div class="info">
+        <h3 id="mode-title">Java后端面试官</h3>
+        <p id="mode-desc">模拟真实面试场景 · AI实时出题 · 智能评分</p>
+      </div>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="message ai">
+        <div class="message-avatar">🤖</div>
+        <div class="message-content">
+          <p>👋 你好！我是你的AI面试官。</p>
+          <p>今天我们将进行一场模拟面试，我会根据你选择的方向提出问题，并对你的回答进行评分和反馈。</p>
+          <p>准备好了吗？输入 <code>开始面试</code> 即可开始！</p>
+          <div class="meta">AI面试官 · 刚刚</div>
+        </div>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typing-indicator">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="action-bar">
+      <button class="action-btn" onclick="sendQuickAction('开始面试')">🚀 开始面试</button>
+      <button class="action-btn" onclick="sendQuickAction('换一道题')">🔄 换一道题</button>
+      <button class="action-btn" onclick="sendQuickAction('提示一下')">💡 提示一下</button>
+      <button class="action-btn" onclick="sendQuickAction('结束面试')">📊 结束面试</button>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="> 输入你的回答..." onkeypress="handleKeyPress(event)">
+      <button onclick="sendMessage()" id="send-btn">发送</button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 李阳的技术博客 | <a href="/">eligible123.github.io</a></p>
+  <p style="margin-top:8px; opacity:0.6">// AI模拟面试 · Powered by LongCat LLM</p>
+</footer>
+
+<script>
+// Create floating particles
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    particle.style.animationDelay = Math.random() * 10 + 's';
+    particle.style.opacity = Math.random() * 0.5 + 0.2;
+    container.appendChild(particle);
+  }
+}
+createParticles();
+
+// Mode selection
+let currentMode = 'java';
+const modeNames = {
+  java: 'Java后端面试官',
+  database: '数据库面试官',
+  system: '系统设计面试官',
+  ai: 'AI大模型面试官'
+};
+const modeDescs = {
+  java: 'Java核心、多线程、JVM、Spring全家桶、分布式等',
+  database: 'MySQL索引、事务、锁机制、Redis缓存策略等',
+  system: '高并发、分布式系统、微服务架构、秒杀系统等',
+  ai: 'Transformer、RAG、Agent、LangChain、向量数据库等'
+};
+
+function selectMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(card => card.classList.remove('selected'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+  document.getElementById('mode-title').textContent = modeNames[mode];
+  document.getElementById('mode-desc').textContent = modeDescs[mode];
+}
+
+// Chat functionality
+const chatMessages = document.getElementById('chat-messages');
+const userInput = document.getElementById('user-input');
+const typingIndicator = document.getElementById('typing-indicator');
+const sendBtn = document.getElementById('send-btn');
+
+// Simulated interview questions by mode
+const questions = {
+  java: [
+    "请说说Java中HashMap的底层实现原理？",
+    "volatile关键字的作用是什么？它能保证原子性吗？",
+    "请解释一下JVM的垃圾回收机制，常用的垃圾回收器有哪些？",
+    "Spring Boot的自动配置原理是什么？",
+    "说说你对synchronized和ReentrantLock的理解？"
+  ],
+  database: [
+    "请解释MySQL的索引类型和B+树索引的原理？",
+    "MySQL的事务隔离级别有哪些？各自会出现什么问题？",
+    "说说MySQL的锁机制，行锁、表锁、间隙锁的区别？",
+    "Redis的持久化机制有哪些？各自的优缺点？",
+    "如何优化一个慢SQL？说说你的排查思路？"
+  ],
+  system: [
+    "请设计一个秒杀系统，需要考虑哪些问题？",
+    "如何设计一个分布式ID生成器？有哪些方案？",
+    "说说分布式事务的解决方案有哪些？",
+    "如何设计一个高可用的微服务架构？",
+    "消息队列如何保证消息不丢失？"
+  ],
+  ai: [
+    "请解释一下Transformer的Self-Attention机制？",
+    "RAG（检索增强生成）的原理是什么？有哪些优化方向？",
+    "说说你对AI Agent的理解，它有哪些核心组件？",
+    "向量数据库的原理是什么？常用的有哪些？",
+    "如何评估一个大语言模型的效果？有哪些评估指标？"
+  ]
+};
+
+let questionIndex = 0;
+let interviewStarted = false;
+let scoreHistory = [];
+
+function addMessage(content, isUser = false) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+  
+  const avatar = isUser ? '👤' : '🤖';
+  const time = new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
+  
+  messageDiv.innerHTML = `
+    <div class="message-avatar">${avatar}</div>
+    <div class="message-content">
+      ${content}
+      <div class="meta">${isUser ? '你' : 'AI面试官'} · ${time}</div>
+    </div>
+  `;
+  
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  typingIndicator.style.display = 'block';
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTyping() {
+  typingIndicator.style.display = 'none';
+}
+
+function getRandomQuestion() {
+  const modeQuestions = questions[currentMode];
+  return modeQuestions[Math.floor(Math.random() * modeQuestions.length)];
+}
+
+function evaluateAnswer(answer) {
+  // Simple simulated evaluation
+  const length = answer.length;
+  let score = 60;
+  let feedback = '';
+  
+  if (length > 200) {
+    score += 15;
+    feedback += '回答详细，内容充实。';
+  } else if (length > 100) {
+    score += 10;
+    feedback += '回答较为完整。';
+  } else if (length > 50) {
+    score += 5;
+    feedback += '回答基本正确，但可以更详细。';
+  } else {
+    feedback += '回答过于简短，建议展开说明。';
+  }
+  
+  // Check for keywords
+  const keywords = ['原理', '实现', '优化', '区别', '优缺点', '场景'];
+  const foundKeywords = keywords.filter(k => answer.includes(k));
+  if (foundKeywords.length > 0) {
+    score += foundKeywords.length * 3;
+    feedback += `使用了专业术语（${foundKeywords.join('、')}），加分！`;
+  }
+  
+  score = Math.min(score, 100);
+  scoreHistory.push(score);
+  
+  return { score, feedback };
+}
+
+function sendMessage() {
+  const text = userInput.value.trim();
+  if (!text) return;
+  
+  addMessage(`<p>${text}</p>`, true);
+  userInput.value = '';
+  
+  sendBtn.disabled = true;
+  showTyping();
+  
+  setTimeout(() => {
+    hideTyping();
+    sendBtn.disabled = false;
+    
+    if (text === '开始面试' || !interviewStarted) {
+      interviewStarted = true;
+      const question = getRandomQuestion();
+      questionIndex++;
+      addMessage(`
+        <p>好的，让我们开始第 ${questionIndex} 题：</p>
+        <p><strong>❓ ${question}</strong></p>
+        <p style="margin-top:10px;color:var(--text-secondary)">请在下方输入框中回答，完成后点击发送。</p>
+      `);
+    } else if (text === '换一道题') {
+      const question = getRandomQuestion();
+      addMessage(`
+        <p>没问题，换一道题：</p>
+        <p><strong>❓ ${question}</strong></p>
+      `);
+    } else if (text === '提示一下') {
+      addMessage(`
+        <p>💡 提示：</p>
+        <p>你可以从以下几个角度回答：</p>
+        <p>1. 基本概念/定义</p>
+        <p>2. 底层原理/实现机制</p>
+        <p>3. 实际应用场景</p>
+        <p>4. 优缺点对比</p>
+        <p>5. 你的实践经验</p>
+      `);
+    } else if (text === '结束面试') {
+      const avgScore = scoreHistory.length > 0 
+        ? Math.round(scoreHistory.reduce((a, b) => a + b) / scoreHistory.length)
+        : 0;
+      addMessage(`
+        <div class="score-card">
+          <h3>📊 面试报告</h3>
+          <div class="score">${avgScore}分</div>
+          <div class="feedback">
+            <p>✅ 本次面试共回答 ${scoreHistory.length} 道题</p>
+            <p>📈 平均得分：${avgScore}分</p>
+            <p>🏆 最高得分：${Math.max(...scoreHistory)}分</p>
+            <p style="margin-top:15px">💪 继续加油！多练习才能在真实面试中表现出色！</p>
+          </div>
+        </div>
+      `);
+      interviewStarted = false;
+      questionIndex = 0;
+      scoreHistory = [];
+    } else {
+      // Evaluate answer
+      const { score, feedback } = evaluateAnswer(text);
+      const nextQuestion = getRandomQuestion();
+      questionIndex++;
+      
+      let scoreColor = score >= 80 ? 'var(--neon-green)' : score >= 60 ? 'var(--neon-yellow)' : 'var(--neon-pink)';
+      
+      addMessage(`
+        <p><strong>📝 评分：${score}分</strong></p>
+        <p>${feedback}</p>
+        <hr style="border-color:var(--border-glow);margin:15px 0">
+        <p><strong>下一题（第${questionIndex}题）：</strong></p>
+        <p><strong>❓ ${nextQuestion}</strong></p>
+      `);
+    }
+  }, 1500);
+}
+
+function sendQuickAction(action) {
+  userInput.value = action;
+  sendMessage();
+}
+
+function handleKeyPress(event) {
+  if (event.key === 'Enter') {
+    sendMessage();
+  }
+}
+
+// Auto focus input
+userInput.focus();
+</script>
+
+</body>
+</html>
