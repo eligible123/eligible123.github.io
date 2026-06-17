@@ -36,10 +36,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .msg-bubble pre code{background:none;padding:0;color:inherit}
 .msg-time{font-size:11px;color:var(--gray-400);margin-top:4px}
 .msg.user .msg-time{text-align:right}
-.score-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin:8px 4px 4px 0}
-.score-badge.high{background:var(--green-bg);color:#16a34a}
-.score-badge.mid{background:var(--orange-bg);color:#d97706}
-.score-badge.low{background:var(--red-bg);color:#dc2626}
 .chat-input-area{padding:16px 0 24px;flex-shrink:0;border-top:1px solid var(--gray-200)}
 .input-row{display:flex;gap:12px;align-items:flex-end}
 .input-row textarea{flex:1;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:12px;font-size:15px;outline:none;resize:none;font-family:inherit;line-height:1.5;max-height:150px;transition:border-color .2s}
@@ -48,9 +44,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .send-btn:hover{background:#4338ca;transform:scale(1.05)}
 .send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .input-hint{font-size:12px;color:var(--gray-400);margin-top:8px;text-align:center}
-.settings-bar{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.settings-bar select,.settings-bar input{padding:6px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit}
+.settings-bar{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.settings-bar select,.settings-bar input[type=text],.settings-bar input[type=password]{padding:6px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit}
 .settings-bar select:focus,.settings-bar input:focus{outline:none;border-color:var(--primary)}
+.btn-sm{padding:6px 14px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+.btn-sm:hover{border-color:var(--primary);color:var(--primary)}
+.btn-sm.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-sm.primary:hover{background:#4338ca}
+.btn-sm.success{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-sm.danger{background:var(--red);color:#fff;border-color:var(--red)}
 .typing-indicator{display:flex;gap:4px;padding:8px 0}
 .typing-indicator span{width:8px;height:8px;background:var(--gray-300);border-radius:50%;animation:bounce .6s infinite alternate}
 .typing-indicator span:nth-child(2){animation-delay:.2s}
@@ -59,10 +61,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .welcome-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:24px;margin:8px 0}
 .welcome-card h3{font-size:16px;margin-bottom:12px;color:var(--gray-800)}
 .welcome-card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
-.welcome-card li{font-size:14px;color:var(--gray-600);padding:8px 12px;background:var(--gray-50);border-radius:8px;cursor:pointer;transition:all .2s}
-.welcome-card li:hover{background:var(--primary-bg);color:var(--primary)}
+.welcome-card li{font-size:14px;color:var(--gray-600);padding:8px 12px;background:var(--gray-50);border-radius:8px}
+.upload-section{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;margin:8px 0}
+.upload-section h3{font-size:15px;margin-bottom:12px;color:var(--gray-800);display:flex;align-items:center;gap:8px}
+.upload-tabs{display:flex;gap:8px;margin-bottom:12px}
+.upload-tab{padding:6px 16px;border-radius:8px;font-size:13px;cursor:pointer;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .2s;font-family:inherit}
+.upload-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.upload-content textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;outline:none;resize:vertical;font-family:inherit;line-height:1.6}
+.upload-content textarea:focus{border-color:var(--primary)}
+.upload-content .file-zone{border:2px dashed var(--gray-200);border-radius:8px;padding:32px;text-align:center;color:var(--gray-400);cursor:pointer;transition:all .2s}
+.upload-content .file-zone:hover{border-color:var(--primary);color:var(--primary)}
+.upload-content .file-zone input{display:none}
+.upload-content .file-zone p{font-size:14px;margin-top:8px}
+.upload-status{font-size:13px;color:var(--gray-500);margin-top:8px;display:flex;align-items:center;gap:6px}
+.upload-status.ok{color:var(--green)}
+.upload-status.warn{color:var(--orange)}
 .footer{border-top:1px solid var(--gray-200);padding:16px;text-align:center;color:var(--gray-400);font-size:13px;flex-shrink:0}
-@media(max-width:768px){.nav-links{display:none}.msg{max-width:95%}.chat-header h1{font-size:20px}}
+@media(max-width:768px){.nav-links{display:none}.msg{max-width:95%}.chat-header h1{font-size:20px}.settings-bar{flex-direction:column}.settings-bar input{width:100%!important}}
 </style>
 </head>
 <body>
@@ -91,8 +106,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
       <div>
         <div class="msg-bubble">
           你好，我是今天的AI面试官，P8级大厂后端架构师。<br><br>
-          我会从基础出发，逐步深入追问，精确评估你的真实技术能力。<strong>一次只问一个问题，不允许跳过。</strong><br><br>
-          面试开始前，请先配置API（右下角设置），然后点击下方按钮开始。
+          面试前请完成以下两步：<br>
+          <strong>① 配置API连接</strong>（底部设置栏 → 填写API Key → 测试连接）<br>
+          <strong>② 上传简历或粘贴岗位JD</strong>（下方上传区域）<br><br>
+          两步都✅后，点击「开始面试」即可。
           <div class="welcome-card">
             <h3>📋 面试覆盖范围</h3>
             <ul>
@@ -103,6 +120,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
               <li>📐 系统设计：微服务 · 高可用 · 容灾 · 负载均衡</li>
               <li>🔧 工程能力：代码设计 · 调优 · 线上问题排查</li>
             </ul>
+          </div>
+          <div class="upload-section">
+            <h3>📄 上传简历 / 粘贴岗位JD</h3>
+            <div class="upload-tabs">
+              <button class="upload-tab active" onclick="switchTab('paste')">粘贴文本</button>
+              <button class="upload-tab" onclick="switchTab('file')">上传文件</button>
+            </div>
+            <div class="upload-content" id="pasteTab">
+              <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位JD...&#10;&#10;示例：&#10;姓名：张三&#10;专业：计算机科学&#10;技术栈：Java, Spring Boot, MySQL, Redis, Kafka&#10;项目：xxx电商系统，负责订单模块开发..."></textarea>
+            </div>
+            <div class="upload-content" id="fileTab" style="display:none">
+              <div class="file-zone" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" onchange="handleFile(this)">
+                <div style="font-size:32px">📎</div>
+                <p>点击上传简历文件（.txt / .md / .pdf / .docx）</p>
+              </div>
+            </div>
+            <div class="upload-status" id="uploadStatus">⏳ 请粘贴简历或上传文件</div>
           </div>
         </div>
         <div class="msg-time">AI面试官</div>
@@ -121,13 +156,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
         <option value="openai">OpenAI</option>
         <option value="custom">自定义</option>
       </select>
-      <input type="text" id="apiEndpoint" placeholder="API地址" value="https://api.deepseek.com/v1/chat/completions" style="width:280px">
-      <input type="password" id="apiKey" placeholder="API Key" style="width:200px">
-      <input type="text" id="modelName" placeholder="模型名" value="deepseek-chat" style="width:140px">
-      <button onclick="saveConfig()" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;cursor:pointer;font-size:13px">💾 保存</button>
-      <button onclick="startInterview()" style="padding:6px 16px;border:none;border-radius:8px;background:var(--primary);color:#fff;cursor:pointer;font-size:13px;font-weight:600">🎲 开始面试</button>
+      <input type="text" id="apiEndpoint" placeholder="API地址" value="https://api.deepseek.com/v1/chat/completions" style="width:260px">
+      <input type="password" id="apiKey" placeholder="API Key" style="width:180px">
+      <input type="text" id="modelName" placeholder="模型名" value="deepseek-chat" style="width:120px">
+      <button class="btn-sm" onclick="saveConfig()">💾 保存</button>
+      <button class="btn-sm" id="testBtn" onclick="testConnection()">🔗 测试连接</button>
+      <button class="btn-sm primary" onclick="startInterview()">🎲 开始面试</button>
     </div>
-    <div class="input-hint">Enter 发送 · Shift+Enter 换行 · 面试前请先配置API Key</div>
+    <div class="input-hint">Enter 发送 · Shift+Enter 换行 · 面试前请先配置API并上传简历/JD</div>
   </div>
 </div>
 
@@ -180,8 +216,10 @@ STEP 5：代码/SQL能力验证 — 手写代码/SQL优化/并发问题修复/AP
 
 let messages = [];
 let isGenerating = false;
+let apiConnected = false;
+let resumeUploaded = false;
 
-// Load config from localStorage
+// ===== Config =====
 function loadConfig() {
   const saved = localStorage.getItem('interviewConfig');
   if (saved) {
@@ -201,7 +239,7 @@ function saveConfig() {
     model: document.getElementById('modelName').value
   };
   localStorage.setItem('interviewConfig', JSON.stringify(cfg));
-  addSystemMsg('✅ 配置已保存');
+  addSystemMsg('✅ 配置已保存到浏览器');
 }
 
 function updateProvider() {
@@ -215,27 +253,135 @@ function updateProvider() {
   }
 }
 
-function startInterview() {
+// ===== Test Connection =====
+async function testConnection() {
+  const btn = document.getElementById('testBtn');
+  const endpoint = document.getElementById('apiEndpoint').value;
   const key = document.getElementById('apiKey').value;
+  const model = document.getElementById('modelName').value;
+
   if (!key) { addSystemMsg('⚠️ 请先填写 API Key'); return; }
-  messages = [];
-  document.getElementById('userInput').disabled = false;
-  document.getElementById('sendBtn').disabled = false;
-  messages.push({role: 'system', content: SYSTEM_PROMPT});
-  callLLM('面试开始，请出第一道题。');
+
+  btn.disabled = true;
+  btn.innerHTML = '⏳ 测试中...';
+  btn.className = 'btn-sm';
+
+  try {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [{role: 'user', content: 'hi'}],
+        max_tokens: 5
+      })
+    });
+
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.choices && data.choices.length > 0) {
+        btn.innerHTML = '✅ 连接成功';
+        btn.className = 'btn-sm success';
+        apiConnected = true;
+        addSystemMsg(`✅ API连接成功！模型：${model}`);
+      } else {
+        throw new Error('响应格式异常');
+      }
+    } else {
+      const err = await resp.text();
+      btn.innerHTML = '❌ 连接失败';
+      btn.className = 'btn-sm danger';
+      apiConnected = false;
+      addSystemMsg(`❌ 连接失败 (${resp.status}): ${err.substring(0, 150)}`);
+    }
+  } catch (err) {
+    btn.innerHTML = '❌ 连接失败';
+    btn.className = 'btn-sm danger';
+    apiConnected = false;
+    addSystemMsg(`❌ 连接失败: ${err.message}`);
+  }
+
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = '🔗 测试连接';
+    btn.className = 'btn-sm';
+  }, 3000);
 }
 
-async function callLLM(userMsg) {
+// ===== Resume Upload =====
+function switchTab(tab) {
+  document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'paste') {
+    document.querySelector('.upload-tab:first-child').classList.add('active');
+    document.getElementById('pasteTab').style.display = '';
+    document.getElementById('fileTab').style.display = 'none';
+  } else {
+    document.querySelector('.upload-tab:last-child').classList.add('active');
+    document.getElementById('pasteTab').style.display = 'none';
+    document.getElementById('fileTab').style.display = '';
+  }
+}
+
+function handleFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('resumeText').value = e.target.result;
+    resumeUploaded = true;
+    document.getElementById('uploadStatus').className = 'upload-status ok';
+    document.getElementById('uploadStatus').innerHTML = `✅ 已读取文件: ${file.name} (${(file.size/1024).toFixed(1)}KB)`;
+    switchTab('paste');
+  };
+  reader.readAsText(file);
+}
+
+// Monitor textarea changes
+document.getElementById('resumeText').addEventListener('input', function() {
+  const len = this.value.trim().length;
+  const status = document.getElementById('uploadStatus');
+  if (len > 20) {
+    resumeUploaded = true;
+    status.className = 'upload-status ok';
+    status.innerHTML = `✅ 已输入 ${len} 字`;
+  } else {
+    resumeUploaded = false;
+    status.className = 'upload-status';
+    status.innerHTML = '⏳ 请粘贴简历或上传文件';
+  }
+});
+
+// ===== Start Interview =====
+function startInterview() {
+  const key = document.getElementById('apiKey').value;
+  if (!key) { addSystemMsg('⚠️ 请先填写 API Key 并测试连接'); return; }
+  if (!apiConnected) { addSystemMsg('⚠️ 请先点击「测试连接」确认API可用'); return; }
+  if (!resumeUploaded) { addSystemMsg('⚠️ 请先上传简历或粘贴岗位JD'); return; }
+
+  const resumeText = document.getElementById('resumeText').value.trim();
+  const resumeContext = `\n\n## 候选人简历/岗位JD\n${resumeText}`;
+
+  messages = [];
+  messages.push({role: 'system', content: SYSTEM_PROMPT + resumeContext});
+  messages.push({role: 'user', content: '面试开始。请根据我的简历和岗位JD，出第一道题。'});
+
+  document.getElementById('userInput').disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+
+  addMsg('user', '面试开始，请出题。');
+  callLLM_stream();
+}
+
+// ===== LLM Call =====
+async function callLLM_stream() {
   if (isGenerating) return;
   isGenerating = true;
   document.getElementById('sendBtn').disabled = true;
 
-  messages.push({role: 'user', content: userMsg});
-  addMsg('user', userMsg);
-
-  // Show typing indicator
   const typingId = showTyping();
-
   const endpoint = document.getElementById('apiEndpoint').value;
   const key = document.getElementById('apiKey').value;
   const model = document.getElementById('modelName').value;
@@ -265,7 +411,6 @@ async function callLLM(userMsg) {
       return;
     }
 
-    // Stream response
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
     let fullContent = '';
@@ -275,14 +420,12 @@ async function callLLM(userMsg) {
       const {done, value} = await reader.read();
       if (done) break;
       const chunk = decoder.decode(value, {stream: true});
-      const lines = chunk.split('\n');
-      for (const line of lines) {
+      for (const line of chunk.split('\n')) {
         if (line.startsWith('data: ')) {
           const data = line.slice(6).trim();
           if (data === '[DONE]') break;
           try {
-            const json = JSON.parse(data);
-            const delta = json.choices?.[0]?.delta?.content || '';
+            const delta = JSON.parse(data).choices?.[0]?.delta?.content || '';
             fullContent += delta;
             updateMsg(msgId, fullContent);
           } catch {}
@@ -308,26 +451,25 @@ function sendMessage() {
   if (!text || isGenerating) return;
   input.value = '';
   input.style.height = 'auto';
-  callLLM(text);
+  messages.push({role: 'user', content: text});
+  addMsg('user', text);
+  callLLM_stream();
 }
 
+// ===== UI Helpers =====
 function addMsg(role, content, streaming = false) {
   const container = document.getElementById('chatMessages');
   const id = 'msg-' + Date.now();
   const time = new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'});
-  const avatar = role === 'ai' ? '🤖' : '👤';
-  const label = role === 'ai' ? 'AI面试官' : '你';
-
   const div = document.createElement('div');
   div.className = `msg ${role}`;
   div.id = id;
   div.innerHTML = `
-    <div class="msg-avatar">${avatar}</div>
+    <div class="msg-avatar">${role === 'ai' ? '🤖' : '👤'}</div>
     <div>
       <div class="msg-bubble">${formatContent(content)}${streaming ? '<div class="typing-indicator"><span></span><span></span><span></span></div>' : ''}</div>
-      <div class="msg-time">${label} · ${time}</div>
-    </div>
-  `;
+      <div class="msg-time">${role === 'ai' ? 'AI面试官' : '你'} · ${time}</div>
+    </div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
   return id;
@@ -337,8 +479,7 @@ function updateMsg(id, content) {
   const el = document.querySelector(`#${id} .msg-bubble`);
   if (el) {
     el.innerHTML = formatContent(content);
-    const container = document.getElementById('chatMessages');
-    container.scrollTop = container.scrollHeight;
+    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
   }
 }
 
@@ -348,10 +489,7 @@ function addSystemMsg(content) {
   div.className = 'msg ai';
   div.innerHTML = `
     <div class="msg-avatar">⚙️</div>
-    <div>
-      <div class="msg-bubble" style="background:var(--gray-100);font-size:13px;color:var(--gray-600)">${content}</div>
-    </div>
-  `;
+    <div><div class="msg-bubble" style="background:var(--gray-100);font-size:13px;color:var(--gray-600)">${content}</div></div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -362,10 +500,7 @@ function showTyping() {
   const div = document.createElement('div');
   div.className = 'msg ai';
   div.id = id;
-  div.innerHTML = `
-    <div class="msg-avatar">🤖</div>
-    <div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>
-  `;
+  div.innerHTML = `<div class="msg-avatar">🤖</div><div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
   return id;
@@ -385,7 +520,6 @@ function formatContent(text) {
     .replace(/\n/g, '<br>');
 }
 
-// Auto-resize textarea
 document.getElementById('userInput').addEventListener('input', function() {
   this.style.height = 'auto';
   this.style.height = Math.min(this.scrollHeight, 150) + 'px';
