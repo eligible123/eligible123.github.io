@@ -6,206 +6,283 @@
 <title>AI 模拟面试 | 八股面试</title>
 <meta name="description" content="AI 面试官 - P8级压力面试，简历定制追问，实时评分">
 <style>
-  :root {
-    --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a; --border: #2a2a2a;
-    --text: #e0e0e0; --text2: #999; --accent: #00d4aa; --accent2: #00b894;
-    --red: #ff6b6b; --orange: #ffa94d; --blue: #339af0; --purple: #9775fa;
-    --radius: 12px; --shadow: 0 2px 12px rgba(0,0,0,.4);
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, 'SF Pro', 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Header */
-  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .logo { font-size: 20px; }
-  .header h1 { font-size: 16px; font-weight: 600; }
-  .header p { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .header-actions { display: flex; gap: 8px; }
-  .header-actions button { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; }
-  .header-actions button:hover { border-color: var(--accent); color: var(--accent); }
+:root {
+  --primary: #111827;
+  --secondary: #374151;
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+  --text: #111827;
+  --subtext: #6B7280;
+  --accent: #10B981;
+  --accent-light: #D1FAE5;
+  --accent-dark: #059669;
+  --danger: #EF4444;
+  --danger-light: #FEE2E2;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.06);
+}
 
-  /* Resume Upload Modal */
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: center; justify-content: center; }
-  .modal-overlay.active { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; width: 500px; max-width: 90vw; max-height: 80vh; overflow-y: auto; }
-  .modal h2 { font-size: 18px; margin-bottom: 8px; }
-  .modal p.sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
-  .modal textarea { width: 100%; height: 150px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: var(--text); font-size: 13px; resize: vertical; font-family: inherit; }
-  .modal textarea:focus { outline: none; border-color: var(--accent); }
-  .modal .file-upload { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
-  .modal .file-upload label { background: var(--bg3); border: 1px dashed var(--border); border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 13px; color: var(--text2); transition: all .2s; flex: 1; text-align: center; }
-  .modal .file-upload label:hover { border-color: var(--accent); color: var(--accent); }
-  .modal .file-upload input { display: none; }
-  .modal .file-info { font-size: 12px; color: var(--accent); margin-top: 6px; display: none; }
-  .modal .file-info.show { display: block; }
-  .modal .char-count { font-size: 11px; color: var(--text2); text-align: right; margin-top: 4px; }
-  .modal-actions { margin-top: 16px; display: flex; gap: 10px; justify-content: flex-end; }
-  .modal-actions button { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
-  .btn-cancel { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); }
-  .btn-cancel:hover { border-color: var(--text2); }
-  .btn-confirm { background: var(--accent); border: none; color: #000; }
-  .btn-confirm:hover { background: var(--accent2); }
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* Chat Area */
-  .chat-area { flex: 1; overflow-y: auto; padding: 20px; scroll-behavior: smooth; }
-  .chat-area::-webkit-scrollbar { width: 6px; }
-  .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+/* Navbar */
+.navbar {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.nav-left { display: flex; align-items: center; gap: 12px; }
+.nav-left a { text-decoration: none; font-size: 18px; font-weight: 700; color: var(--primary); }
+.nav-left .sep { color: var(--border); font-size: 18px; }
+.nav-left .page-title { font-size: 15px; font-weight: 600; color: var(--secondary); }
+.nav-right { display: flex; gap: 8px; }
+.nav-btn {
+  padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .15s; border: 1px solid var(--border);
+  background: var(--card); color: var(--secondary);
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+.nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.primary:hover { background: var(--accent-dark); }
 
-  /* Messages */
-  .message { margin-bottom: 16px; display: flex; gap: 10px; animation: fadeIn .3s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .msg-avatar { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .msg-avatar.ai { background: linear-gradient(135deg, var(--accent), var(--blue)); }
-  .msg-avatar.user { background: linear-gradient(135deg, var(--orange), var(--red)); }
-  .msg-content { flex: 1; min-width: 0; }
-  .msg-name { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-  .msg-bubble { background: var(--bg3); border: 1px solid var(--border); border-radius: 0 var(--radius) var(--radius) var(--radius); padding: 12px 16px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
-  .msg-bubble.ai { border-color: rgba(0,212,170,.2); }
-  .msg-bubble.user { background: rgba(0,212,170,.08); border-color: rgba(0,212,170,.15); }
-  .msg-bubble strong { color: var(--accent); }
-  .msg-bubble code { background: rgba(0,0,0,.3); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
-  .msg-bubble pre { background: #000; border-radius: 8px; padding: 12px; margin: 8px 0; overflow-x: auto; }
-  .msg-bubble pre code { background: none; padding: 0; }
+/* Main Layout */
+.main-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-  /* System Message */
-  .sys-msg { text-align: center; margin: 16px 0; }
-  .sys-msg span { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--text2); }
+/* Settings Panel */
+.settings-panel {
+  display: none; background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 20px 24px; flex-shrink: 0;
+}
+.settings-panel.active { display: block; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--subtext); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+.field input, .field select {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; color: var(--text); background: var(--bg); transition: border-color .15s;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field select option { background: var(--card); }
+.model-field { position: relative; }
+.refresh-btn {
+  position: absolute; right: 4px; bottom: 4px; width: 28px; height: 28px;
+  border-radius: 6px; border: none; background: var(--bg); color: var(--subtext);
+  cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.refresh-btn:hover { color: var(--accent); }
+.refresh-btn.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Typing Indicator */
-  .typing { display: flex; gap: 4px; padding: 4px 0; }
-  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.4s infinite; }
-  .typing span:nth-child(2) { animation-delay: .2s; }
-  .typing span:nth-child(3) { animation-delay: .4s; }
-  @keyframes blink { 0%,80%,100% { opacity: .3; } 40% { opacity: 1; } }
+.settings-actions { display: flex; gap: 8px; align-items: center; margin-top: 14px; }
+.test-result { font-size: 12px; padding: 6px 10px; border-radius: 6px; display: none; }
+.test-result.show { display: inline-block; }
+.test-result.success { background: var(--accent-light); color: var(--accent-dark); }
+.test-result.error { background: var(--danger-light); color: var(--danger); }
+.api-badge { font-size: 12px; color: var(--subtext); display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.api-dot { width: 6px; height: 6px; border-radius: 50%; }
+.api-dot.ok { background: var(--accent); }
+.api-dot.err { background: var(--danger); }
+.api-dot.pending { background: var(--warning); }
 
-  /* Input Area */
-  .input-area { background: var(--bg2); border-top: 1px solid var(--border); padding: 12px 20px; flex-shrink: 0; }
-  .input-row { display: flex; gap: 10px; align-items: flex-end; }
-  .input-row textarea { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: var(--text); font-size: 14px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; }
-  .input-row textarea:focus { outline: none; border-color: var(--accent); }
-  .input-row textarea::placeholder { color: #555; }
-  .input-row textarea:disabled { opacity: .4; cursor: not-allowed; }
-  .send-btn { width: 40px; height: 40px; border-radius: 10px; background: var(--accent); border: none; color: #000; font-size: 18px; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .send-btn:hover:not(:disabled) { background: var(--accent2); transform: scale(1.05); }
-  .send-btn:disabled { opacity: .3; cursor: not-allowed; }
+/* Resume Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4);
+  backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--card); border-radius: 16px; padding: 28px; width: 520px;
+  max-width: 90vw; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.15);
+}
+.modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.modal .sub { font-size: 13px; color: var(--subtext); margin-bottom: 16px; }
+.modal textarea {
+  width: 100%; height: 150px; padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; color: var(--text); background: var(--bg); resize: vertical; font-family: inherit;
+}
+.modal textarea:focus { outline: none; border-color: var(--accent); }
+.char-count { font-size: 11px; color: var(--subtext); text-align: right; margin-top: 4px; }
+.file-upload { margin-top: 12px; }
+.file-upload label {
+  display: block; padding: 12px; border: 2px dashed var(--border); border-radius: 8px;
+  text-align: center; font-size: 13px; color: var(--subtext); cursor: pointer; transition: all .15s;
+}
+.file-upload label:hover { border-color: var(--accent); color: var(--accent); }
+.file-upload input { display: none; }
+.file-info { font-size: 12px; color: var(--accent); margin-top: 6px; display: none; }
+.file-info.show { display: block; }
+.modal-actions { margin-top: 18px; display: flex; gap: 8px; justify-content: flex-end; }
+.modal-actions button { padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+.btn-cancel { background: var(--bg); border: 1px solid var(--border); color: var(--secondary); }
+.btn-cancel:hover { border-color: var(--subtext); }
+.btn-confirm { background: var(--accent); border: none; color: #fff; }
+.btn-confirm:hover { background: var(--accent-dark); }
 
-  /* Settings Panel */
-  .settings-panel { display: none; background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 20px; flex-shrink: 0; }
-  .settings-panel.active { display: block; }
-  .settings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
-  .settings-grid label { font-size: 11px; color: var(--text2); margin-bottom: 4px; display: block; }
-  .settings-grid input, .settings-grid select { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; color: var(--text); font-size: 13px; }
-  .settings-grid input:focus, .settings-grid select:focus { outline: none; border-color: var(--accent); }
-  .settings-grid select option { background: var(--bg2); color: var(--text); }
-  .settings-grid .model-group { position: relative; }
-  .settings-grid .model-group .refresh-btn { position: absolute; right: 4px; top: 24px; background: var(--bg); border: 1px solid var(--border); color: var(--text2); width: 26px; height: 26px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: all .2s; }
-  .settings-grid .model-group .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .settings-grid .model-group .refresh-btn.spinning { animation: spin 1s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .settings-btns { display: flex; gap: 8px; padding-top: 16px; }
-  .settings-btns button { padding: 8px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; }
-  .test-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); }
-  .test-btn:hover { border-color: var(--blue); color: var(--blue); }
-  .test-btn.success { border-color: var(--accent); color: var(--accent); }
-  .test-btn.error { border-color: var(--red); color: var(--red); }
-  .save-btn { background: var(--accent); border: none; color: #000; font-weight: 600; }
-  .save-btn:hover { background: var(--accent2); }
-  .test-result { font-size: 12px; margin-top: 6px; padding: 6px 10px; border-radius: 6px; display: none; }
-  .test-result.show { display: block; }
-  .test-result.success { background: rgba(0,212,170,.1); color: var(--accent); }
-  .test-result.error { background: rgba(255,107,107,.1); color: var(--red); }
+/* Chat Area */
+.chat-area { flex: 1; overflow-y: auto; padding: 24px; scroll-behavior: smooth; }
+.chat-area::-webkit-scrollbar { width: 6px; }
+.chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  /* API Status */
-  .api-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
-  .api-dot { width: 6px; height: 6px; border-radius: 50%; }
-  .api-dot.ok { background: var(--accent); }
-  .api-dot.err { background: var(--red); }
-  .api-dot.pending { background: var(--orange); }
+/* Messages */
+.message { margin-bottom: 20px; display: flex; gap: 12px; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } }
+.msg-avatar {
+  width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.msg-avatar.ai { background: var(--accent-light); }
+.msg-avatar.user { background: #E0E7FF; }
+.msg-content { flex: 1; min-width: 0; }
+.msg-name { font-size: 12px; font-weight: 600; color: var(--subtext); margin-bottom: 4px; }
+.msg-bubble {
+  background: var(--card); border: 1px solid var(--border); border-radius: 2px var(--radius) var(--radius) var(--radius);
+  padding: 14px 16px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; word-break: break-word;
+  box-shadow: var(--shadow);
+}
+.msg-bubble.user { background: var(--accent-light); border-color: #A7F3D0; }
+.msg-bubble strong { color: var(--accent-dark); }
+.msg-bubble code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
+.msg-bubble pre { background: var(--primary); border-radius: 8px; padding: 12px; margin: 8px 0; overflow-x: auto; }
+.msg-bubble pre code { background: none; color: #E5E7EB; padding: 0; }
 
-  /* Welcome */
-  .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; }
-  .welcome-icon { font-size: 64px; margin-bottom: 16px; }
-  .welcome h2 { font-size: 22px; margin-bottom: 8px; }
-  .welcome p { color: var(--text2); font-size: 14px; max-width: 400px; line-height: 1.6; margin-bottom: 20px; }
-  .welcome .start-btn { background: var(--accent); border: none; color: #000; padding: 12px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s; }
-  .welcome .start-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,212,170,.3); }
-  .welcome .features { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; justify-content: center; }
-  .welcome .feature { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--text2); max-width: 140px; }
-  .welcome .feature .icon { font-size: 20px; margin-bottom: 6px; }
+/* System Message */
+.sys-msg { text-align: center; margin: 16px 0; }
+.sys-msg span {
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 6px 16px; font-size: 12px; color: var(--subtext);
+}
 
-  /* End Interview Button */
-  .end-interview { background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.3); color: var(--red); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; }
-  .end-interview:hover { background: rgba(255,107,107,.2); }
+/* Typing */
+.typing { display: flex; gap: 4px; padding: 4px 0; }
+.typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.4s infinite; }
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,80%,100% { opacity: .3; } 40% { opacity: 1; } }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .settings-grid { grid-template-columns: 1fr; }
-    .welcome .features { flex-direction: column; align-items: center; }
-    .header { flex-direction: column; gap: 8px; align-items: flex-start; }
-  }
+/* Welcome */
+.welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; }
+.welcome-icon { font-size: 56px; margin-bottom: 16px; }
+.welcome h2 { font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+.welcome p { color: var(--subtext); font-size: 14px; max-width: 420px; line-height: 1.7; margin-bottom: 24px; }
+.welcome .start-btn {
+  background: var(--accent); border: none; color: #fff; padding: 12px 36px;
+  border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.welcome .start-btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(16,185,129,.25); }
+.welcome .features { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+.welcome .feature {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 18px; font-size: 12px; color: var(--subtext); min-width: 120px;
+  box-shadow: var(--shadow);
+}
+.welcome .feature .icon { font-size: 22px; margin-bottom: 6px; }
+
+/* Input Area */
+.input-area { background: var(--card); border-top: 1px solid var(--border); padding: 14px 24px; flex-shrink: 0; }
+.input-row { display: flex; gap: 10px; align-items: flex-end; }
+.input-row textarea {
+  flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 14px; color: var(--text); background: var(--bg); resize: none;
+  max-height: 120px; line-height: 1.5; font-family: inherit;
+}
+.input-row textarea:focus { outline: none; border-color: var(--accent); }
+.input-row textarea::placeholder { color: #9CA3AF; }
+.input-row textarea:disabled { opacity: .4; cursor: not-allowed; }
+.send-btn {
+  width: 40px; height: 40px; border-radius: 10px; background: var(--accent);
+  border: none; color: #fff; font-size: 18px; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.send-btn:hover:not(:disabled) { background: var(--accent-dark); }
+.send-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .settings-grid { grid-template-columns: 1fr; }
+  .welcome .features { flex-direction: column; align-items: center; }
+  .navbar { padding: 0 16px; }
+}
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-left">
-    <div class="logo">🎯</div>
-    <div>
-      <h1>AI 模拟面试</h1>
-      <p>P8级压力面试官 · 简历定制追问 · 实时评估</p>
-    </div>
+<!-- Navbar -->
+<div class="navbar">
+  <div class="nav-left">
+    <a href="/">八股面试</a>
+    <span class="sep">/</span>
+    <span class="page-title">AI 模拟面试</span>
   </div>
-  <div class="header-actions">
-    <button onclick="toggleSettings()">⚙️ API设置</button>
-    <button onclick="showResumeModal()">📄 上传简历</button>
-    <button class="end-interview" onclick="endInterview()" style="display:none" id="endBtn">结束面试</button>
+  <div class="nav-right">
+    <button class="nav-btn" onclick="toggleSettings()">⚙️ API设置</button>
+    <button class="nav-btn" onclick="showResumeModal()">📄 上传简历</button>
+    <button class="nav-btn danger" onclick="endInterview()" style="display:none" id="endBtn">结束面试</button>
   </div>
 </div>
 
-<!-- Settings Panel -->
+<!-- Settings -->
 <div class="settings-panel" id="settingsPanel">
   <div class="settings-grid">
-    <div>
+    <div class="field">
       <label>API Base URL</label>
       <input type="text" id="apiUrl" placeholder="https://api.deepseek.com/v1">
     </div>
-    <div>
+    <div class="field">
       <label>API Key</label>
       <input type="password" id="apiKey" placeholder="sk-...">
     </div>
-    <div class="model-group">
+    <div class="field model-field">
       <label>模型名称</label>
       <select id="modelName" onchange="onModelSelect()">
-        <option value="">-- 填写URL和Key后自动获取 --</option>
+        <option value="">填写URL和Key后点击刷新</option>
       </select>
-      <button class="refresh-btn" onclick="fetchModels()" id="refreshBtn" title="刷新模型列表">🔄</button>
+      <button class="refresh-btn" onclick="fetchModels()" id="refreshBtn" title="获取模型列表">↻</button>
     </div>
-    <div style="padding-top: 18px;">
-      <button class="test-btn" onclick="testConnection()" id="testBtn">🔗 测试连接</button>
+    <div style="padding-bottom:2px">
+      <button class="nav-btn" onclick="testConnection()" id="testBtn">🔗 测试</button>
     </div>
   </div>
-  <div class="test-result" id="testResult"></div>
-  <div class="settings-btns">
-    <button class="save-btn" onclick="saveSettings()">💾 保存</button>
-    <span class="api-status" id="apiStatus">
+  <div class="settings-actions">
+    <button class="nav-btn primary" onclick="saveSettings()">💾 保存配置</button>
+    <span class="test-result" id="testResult"></span>
+    <span class="api-badge">
       <span class="api-dot pending" id="apiDot"></span>
       <span id="apiStatusText">未配置</span>
     </span>
   </div>
 </div>
 
-<!-- Resume Upload Modal -->
+<!-- Resume Modal -->
 <div class="modal-overlay" id="resumeModal">
   <div class="modal">
-    <h2>📄 上传简历 / 岗位JD</h2>
+    <h2>📄 上传简历 / 岗位 JD</h2>
     <p class="sub">粘贴简历内容或上传文件，面试官将根据你的经历定制追问</p>
-    <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位JD...&#10;&#10;例如：&#10;姓名：张三&#10;专业：计算机科学&#10;技能：Python, React, MySQL...&#10;项目：xxx系统开发..."></textarea>
+    <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位 JD...&#10;&#10;例如：&#10;姓名：张三&#10;专业：计算机科学&#10;技能：Python, React, MySQL&#10;项目：电商系统开发..."></textarea>
     <div class="char-count"><span id="charCount">0</span> 字</div>
     <div class="file-upload">
-      <label for="fileInput">📁 上传文件 (.txt, .md, .pdf, .docx)</label>
-      <input type="file" id="fileInput" accept=".txt,.md,.pdf,.docx" onchange="handleFile(this)">
+      <label for="fileInput">📁 上传文件 (.txt, .md)</label>
+      <input type="file" id="fileInput" accept=".txt,.md" onchange="handleFile(this)">
     </div>
     <div class="file-info" id="fileInfo"></div>
     <div class="modal-actions">
@@ -215,27 +292,29 @@
   </div>
 </div>
 
-<!-- Chat Area -->
-<div class="chat-area" id="chatArea">
-  <div class="welcome" id="welcomeScreen">
-    <div class="welcome-icon">🤖</div>
-    <h2>准备好了吗？</h2>
-    <p>我是P8级面试官，我会根据你的简历深度追问。没有提示，没有安慰，只有真实的面试压力。</p>
-    <button class="start-btn" onclick="startInterview()">开始面试</button>
-    <div class="features">
-      <div class="feature"><div class="icon">🔍</div>项目真实性审查</div>
-      <div class="feature"><div class="icon">🔥</div>递归深度追问</div>
-      <div class="feature"><div class="icon">📊</div>三维能力评分</div>
-      <div class="feature"><div class="icon">🎯</div>人才画像分析</div>
+<!-- Chat -->
+<div class="main-wrap">
+  <div class="chat-area" id="chatArea">
+    <div class="welcome" id="welcomeScreen">
+      <div class="welcome-icon">🤖</div>
+      <h2>P8 级 AI 面试官</h2>
+      <p>我会根据你的简历深度追问，递归 5 层考察真实能力。没有提示，没有安慰，只有真实的面试压力。</p>
+      <button class="start-btn" onclick="startInterview()">开始面试</button>
+      <div class="features">
+        <div class="feature"><div class="icon">🔍</div>项目真实性审查</div>
+        <div class="feature"><div class="icon">🔥</div>递归深度追问</div>
+        <div class="feature"><div class="icon">📊</div>三维能力评分</div>
+        <div class="feature"><div class="icon">🎯</div>人才画像分析</div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Input Area -->
-<div class="input-area">
-  <div class="input-row">
-    <textarea id="userInput" rows="1" placeholder="输入你的回答..." disabled onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <button class="send-btn" id="sendBtn" disabled onclick="sendMessage()">➤</button>
+  <!-- Input -->
+  <div class="input-area">
+    <div class="input-row">
+      <textarea id="userInput" rows="1" placeholder="输入你的回答..." disabled onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" disabled onclick="sendMessage()">➤</button>
+    </div>
   </div>
 </div>
 
@@ -249,7 +328,6 @@ let messages = [];
 let isStreaming = false;
 let abortController = null;
 
-// CORS proxy for browser→API calls
 const CORS_PROXY = 'https://corsproxy.io/?';
 
 // ====== System Prompt ======
@@ -313,140 +391,73 @@ const SYSTEM_PROMPT = `## 面试官模块 - P8级技术面试官
 
 // ====== Init ======
 function init() {
-  // Load settings
   document.getElementById('apiUrl').value = apiUrl;
   document.getElementById('apiKey').value = apiKey;
-  
-  // Check API status
-  if (apiKey) {
-    updateApiStatus('pending', '已配置，未验证');
-  }
-  
-  // Auto-fetch models if we have credentials
-  if (apiKey && apiUrl) {
-    setTimeout(() => fetchModels(), 500);
-  }
-  
-  // Load resume
-  if (resumeContent) {
-    document.getElementById('resumeText').value = resumeContent;
-    updateCharCount();
-  }
-  
-  // Auto-resize textarea
-  const input = document.getElementById('userInput');
-  input.addEventListener('input', function() { autoResize(this); });
+  if (apiKey) updateApiStatus('pending', '已配置，未验证');
+  if (apiKey && apiUrl) setTimeout(() => fetchModels(), 500);
+  if (resumeContent) { document.getElementById('resumeText').value = resumeContent; updateCharCount(); }
 }
 
 // ====== Settings ======
-function toggleSettings() {
-  document.getElementById('settingsPanel').classList.toggle('active');
-}
+function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
 
 function saveSettings() {
   apiUrl = document.getElementById('apiUrl').value.trim();
   apiKey = document.getElementById('apiKey').value.trim();
   modelName = document.getElementById('modelName').value;
-  
   localStorage.setItem('ai_interview_url', apiUrl);
   localStorage.setItem('ai_interview_key', apiKey);
   localStorage.setItem('ai_interview_model', modelName);
-  
   updateApiStatus('ok', '已保存');
   toggleSettings();
 }
 
-function updateApiStatus(status, text) {
-  const dot = document.getElementById('apiDot');
-  const statusText = document.getElementById('apiStatusText');
-  dot.className = 'api-dot ' + status;
-  statusText.textContent = text;
+function updateApiStatus(s, t) {
+  document.getElementById('apiDot').className = 'api-dot ' + s;
+  document.getElementById('apiStatusText').textContent = t;
 }
 
 // ====== Fetch Models ======
 async function fetchModels() {
   const url = document.getElementById('apiUrl').value.trim();
   const key = document.getElementById('apiKey').value.trim();
-  
-  if (!url || !key) {
-    showTestResult('请先填写 API URL 和 API Key', 'error');
-    return;
-  }
-  
-  const refreshBtn = document.getElementById('refreshBtn');
-  refreshBtn.classList.add('spinning');
-  
-  const select = document.getElementById('modelName');
-  select.innerHTML = '<option value="">加载中...</option>';
-  
+  if (!url || !key) { showTestResult('请先填写 URL 和 Key', 'error'); return; }
+
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  const sel = document.getElementById('modelName');
+  sel.innerHTML = '<option value="">加载中...</option>';
+
   try {
     const modelsUrl = url.replace(/\/chat\/completions$/, '').replace(/\/v1\/?$/, '') + '/v1/models';
-    const proxyUrl = CORS_PROXY + encodeURIComponent(modelsUrl);
-    
-    const res = await fetch(proxyUrl, {
-      headers: { 'Authorization': 'Bearer ' + key }
-    });
-    
+    const res = await fetch(CORS_PROXY + encodeURIComponent(modelsUrl), { headers: { 'Authorization': 'Bearer ' + key } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    
     const data = await res.json();
     const models = data.data || data.models || [];
-    
-    select.innerHTML = '';
-    
-    if (models.length === 0) {
-      select.innerHTML = '<option value="">未获取到模型</option>';
-      showTestResult('API 返回了空的模型列表', 'error');
+
+    sel.innerHTML = '';
+    if (!models.length) {
+      sel.innerHTML = '<option value="">未获取到模型</option>';
     } else {
-      // Add default option
-      const defaultOpt = document.createElement('option');
-      defaultOpt.value = '';
-      defaultOpt.textContent = '-- 请选择模型 (' + models.length + '个) --';
-      select.appendChild(defaultOpt);
-      
-      models.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.id || m.name;
-        opt.textContent = m.id || m.name;
-        select.appendChild(opt);
-      });
-      
-      // Auto-select if previously saved
-      const savedModel = localStorage.getItem('ai_interview_model');
-      if (savedModel) {
-        for (let opt of select.options) {
-          if (opt.value === savedModel) { opt.selected = true; break; }
-        }
-      }
-      
+      const d = document.createElement('option'); d.value = ''; d.textContent = '-- 请选择 (' + models.length + '个) --'; sel.appendChild(d);
+      models.forEach(m => { const o = document.createElement('option'); o.value = m.id || m.name; o.textContent = m.id || m.name; sel.appendChild(o); });
+      const saved = localStorage.getItem('ai_interview_model');
+      if (saved) for (let o of sel.options) if (o.value === saved) { o.selected = true; break; }
       showTestResult('✅ 获取到 ' + models.length + ' 个模型', 'success');
     }
   } catch (e) {
-    select.innerHTML = '<option value="">获取失败，请手动输入</option>';
-    // Add a manual input option
-    const opt = document.createElement('option');
-    opt.value = '__manual__';
-    opt.textContent = '✏️ 手动输入模型名...';
-    select.appendChild(opt);
-    showTestResult('❌ 获取模型列表失败: ' + e.message, 'error');
-  } finally {
-    refreshBtn.classList.remove('spinning');
-  }
+    sel.innerHTML = '<option value="">获取失败</option>';
+    const o = document.createElement('option'); o.value = '__manual__'; o.textContent = '✏️ 手动输入...'; sel.appendChild(o);
+    showTestResult('❌ ' + e.message, 'error');
+  } finally { btn.classList.remove('spinning'); }
 }
 
 function onModelSelect() {
-  const select = document.getElementById('modelName');
-  if (select.value === '__manual__') {
+  const sel = document.getElementById('modelName');
+  if (sel.value === '__manual__') {
     const name = prompt('请输入模型名称：');
-    if (name) {
-      const opt = document.createElement('option');
-      opt.value = name;
-      opt.textContent = name + ' (手动)';
-      opt.selected = true;
-      select.insertBefore(opt, select.lastElementChild);
-    } else {
-      select.value = '';
-    }
+    if (name) { const o = document.createElement('option'); o.value = name; o.textContent = name + ' (手动)'; o.selected = true; sel.insertBefore(o, sel.lastElementChild); }
+    else sel.value = '';
   }
 }
 
@@ -455,157 +466,77 @@ async function testConnection() {
   const url = document.getElementById('apiUrl').value.trim();
   const key = document.getElementById('apiKey').value.trim();
   const model = document.getElementById('modelName').value;
-  
-  if (!url || !key) { showTestResult('请填写 URL 和 API Key', 'error'); return; }
-  if (!model) { showTestResult('请先选择或输入模型名称', 'error'); return; }
-  
+  if (!url || !key) { showTestResult('请填写 URL 和 Key', 'error'); return; }
+  if (!model) { showTestResult('请先选择模型', 'error'); return; }
+
   const btn = document.getElementById('testBtn');
-  btn.textContent = '⏳ 测试中...';
-  btn.disabled = true;
-  
+  btn.textContent = '⏳'; btn.disabled = true;
   try {
     const chatUrl = url.endsWith('/chat/completions') ? url : url.replace(/\/$/, '') + '/chat/completions';
-    const proxyUrl = CORS_PROXY + encodeURIComponent(chatUrl);
-    
-    const res = await fetch(proxyUrl, {
+    const res = await fetch(CORS_PROXY + encodeURIComponent(chatUrl), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + key
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [{ role: 'user', content: 'hi' }],
-        max_tokens: 5
-      })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({ model, messages: [{ role: 'user', content: 'hi' }], max_tokens: 5 })
     });
-    
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error('HTTP ' + res.status + ': ' + errText.slice(0, 100));
-    }
-    
+    if (!res.ok) { const t = await res.text(); throw new Error('HTTP ' + res.status + ': ' + t.slice(0, 80)); }
     const data = await res.json();
-    if (data.choices || data.id) {
-      showTestResult('✅ 连接成功！模型: ' + model, 'success');
-      btn.className = 'test-btn success';
-      updateApiStatus('ok', '已验证 ✓');
-    } else {
-      throw new Error('异常响应: ' + JSON.stringify(data).slice(0, 100));
-    }
-  } catch (e) {
-    showTestResult('❌ 连接失败: ' + e.message, 'error');
-    btn.className = 'test-btn error';
-    updateApiStatus('err', '连接失败');
-  } finally {
-    btn.textContent = '🔗 测试连接';
-    btn.disabled = false;
-    setTimeout(() => { btn.className = 'test-btn'; }, 3000);
-  }
+    if (data.choices || data.id) { showTestResult('✅ 连接成功！模型: ' + model, 'success'); updateApiStatus('ok', '已验证 ✓'); }
+    else throw new Error('异常响应');
+  } catch (e) { showTestResult('❌ ' + e.message, 'error'); updateApiStatus('err', '连接失败'); }
+  finally { btn.textContent = '🔗 测试'; btn.disabled = false; }
 }
 
 function showTestResult(msg, type) {
   const el = document.getElementById('testResult');
-  el.textContent = msg;
-  el.className = 'test-result show ' + type;
+  el.textContent = msg; el.className = 'test-result show ' + type;
 }
 
 // ====== Resume ======
-function showResumeModal() {
-  document.getElementById('resumeModal').classList.add('active');
-  updateCharCount();
-}
-
-function closeResumeModal() {
-  document.getElementById('resumeModal').classList.remove('active');
-}
+function showResumeModal() { document.getElementById('resumeModal').classList.add('active'); updateCharCount(); }
+function closeResumeModal() { document.getElementById('resumeModal').classList.remove('active'); }
 
 function confirmResume() {
   const text = document.getElementById('resumeText').value.trim();
-  if (!text) {
-    alert('请输入简历内容或上传文件');
-    return;
-  }
+  if (!text) { alert('请输入简历内容'); return; }
   resumeContent = text;
   localStorage.setItem('ai_interview_resume', resumeContent);
   closeResumeModal();
-  
-  // Show confirmation in chat
-  addSystemMsg('✅ 简历已上传（' + resumeContent.length + '字），可以开始面试了');
+  addSystemMsg('✅ 简历已上传（' + resumeContent.length + '字），可以开始面试');
 }
 
 function handleFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-  
+  const file = input.files[0]; if (!file) return;
   const info = document.getElementById('fileInfo');
-  info.textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)';
-  info.classList.add('show');
-  
-  if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      document.getElementById('resumeText').value = e.target.result;
-      updateCharCount();
-    };
-    reader.readAsText(file);
-  } else {
-    // For PDF/DOCX, just note that we can't parse in browser
-    document.getElementById('resumeText').value += '\n\n[文件已选择: ' + file.name + '，请手动粘贴内容]';
-    updateCharCount();
-  }
+  info.textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)'; info.classList.add('show');
+  const reader = new FileReader();
+  reader.onload = (e) => { document.getElementById('resumeText').value = e.target.result; updateCharCount(); };
+  reader.readAsText(file);
 }
 
-function updateCharCount() {
-  const text = document.getElementById('resumeText').value;
-  document.getElementById('charCount').textContent = text.length;
-}
-
-// Listen for textarea input
+function updateCharCount() { document.getElementById('charCount').textContent = document.getElementById('resumeText').value.length; }
 document.getElementById('resumeText').addEventListener('input', updateCharCount);
 
 // ====== Chat ======
 function startInterview() {
-  // Check prerequisites
-  if (!apiKey) {
-    alert('请先点击右上角「⚙️ API设置」配置 API');
-    toggleSettings();
-    return;
-  }
-  if (!modelName) {
-    alert('请先选择模型名称');
-    toggleSettings();
-    return;
-  }
-  if (!resumeContent) {
-    showResumeModal();
-    return;
-  }
-  
-  // Hide welcome, enable input
+  if (!apiKey) { alert('请先配置 API（右上角 ⚙️）'); toggleSettings(); return; }
+  if (!modelName) { alert('请先选择模型'); toggleSettings(); return; }
+  if (!resumeContent) { showResumeModal(); return; }
+
   document.getElementById('welcomeScreen').style.display = 'none';
   document.getElementById('userInput').disabled = false;
   document.getElementById('sendBtn').disabled = false;
-  document.getElementById('endBtn').style.display = 'inline-block';
-  
-  // Init messages with system prompt + resume
-  messages = [
-    { role: 'system', content: SYSTEM_PROMPT + '\n\n## 候选人简历\n' + resumeContent }
-  ];
-  
-  // AI opens the interview
+  document.getElementById('endBtn').style.display = '';
+
+  messages = [{ role: 'system', content: SYSTEM_PROMPT + '\n\n## 候选人简历\n' + resumeContent }];
   addSystemMsg('🎯 面试开始 — 请认真回答每一个问题');
   getAIResponse();
 }
 
 function endInterview() {
-  if (isStreaming && abortController) {
-    abortController.abort();
-  }
+  if (isStreaming && abortController) abortController.abort();
   messages.push({ role: 'user', content: '[面试结束，请给出评估报告]' });
   addMessage('user', '[请求结束面试]');
   getAIResponse(true);
-  
   document.getElementById('userInput').disabled = true;
   document.getElementById('sendBtn').disabled = true;
   document.getElementById('endBtn').style.display = 'none';
@@ -615,158 +546,91 @@ function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text || isStreaming) return;
-  
-  input.value = '';
-  autoResize(input);
-  
+  input.value = ''; autoResize(input);
   messages.push({ role: 'user', content: text });
   addMessage('user', text);
   getAIResponse();
 }
 
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 
 // ====== Stream API ======
 async function getAIResponse(isFinal = false) {
-  isStreaming = true;
-  document.getElementById('sendBtn').disabled = true;
-  
+  isStreaming = true; document.getElementById('sendBtn').disabled = true;
   const msgEl = addMessage('ai', '', true);
   const bubble = msgEl.querySelector('.msg-bubble');
-  
   abortController = new AbortController();
-  
+
   try {
     const chatUrl = apiUrl.endsWith('/chat/completions') ? apiUrl : apiUrl.replace(/\/$/, '') + '/chat/completions';
-    const proxyUrl = CORS_PROXY + encodeURIComponent(chatUrl);
-    
-    const res = await fetch(proxyUrl, {
+    const res = await fetch(CORS_PROXY + encodeURIComponent(chatUrl), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey
-      },
-      body: JSON.stringify({
-        model: modelName,
-        messages: messages,
-        stream: true,
-        max_tokens: 2048,
-        temperature: 0.7
-      }),
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: modelName, messages, stream: true, max_tokens: 2048, temperature: 0.7 }),
       signal: abortController.signal
     });
-    
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error('API 错误 ' + res.status + ': ' + err.slice(0, 200));
-    }
-    
+    if (!res.ok) { const e = await res.text(); throw new Error('API ' + res.status + ': ' + e.slice(0, 150)); }
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-    let fullText = '';
-    let buffer = '';
-    
+    let fullText = '', buffer = '';
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      
       buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop();
-      
+      const lines = buffer.split('\n'); buffer = lines.pop();
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
         const data = line.slice(6).trim();
         if (data === '[DONE]') continue;
-        
         try {
-          const json = JSON.parse(data);
-          const delta = json.choices?.[0]?.delta?.content;
-          if (delta) {
-            fullText += delta;
-            bubble.innerHTML = formatMessage(fullText);
-            scrollToBottom();
-          }
+          const delta = JSON.parse(data).choices?.[0]?.delta?.content;
+          if (delta) { fullText += delta; bubble.innerHTML = formatMsg(fullText); scrollToBottom(); }
         } catch {}
       }
     }
-    
     messages.push({ role: 'assistant', content: fullText });
-    
   } catch (e) {
-    if (e.name === 'AbortError') {
-      bubble.innerHTML += '<br><span style="color:var(--orange)">[已中断]</span>';
-    } else {
-      bubble.innerHTML = '<span style="color:var(--red)">❌ ' + e.message + '</span>';
-    }
-  } finally {
-    isStreaming = false;
-    document.getElementById('sendBtn').disabled = false;
-    abortController = null;
-  }
+    if (e.name === 'AbortError') bubble.innerHTML += '<br><span style="color:var(--warning)">[已中断]</span>';
+    else bubble.innerHTML = '<span style="color:var(--danger)">❌ ' + e.message + '</span>';
+  } finally { isStreaming = false; document.getElementById('sendBtn').disabled = false; abortController = null; }
 }
 
-// ====== Message Rendering ======
+// ====== Rendering ======
 function addMessage(role, text, streaming = false) {
   const area = document.getElementById('chatArea');
-  const div = document.createElement('div');
-  div.className = 'message';
-  
-  const avatar = role === 'ai' ? '🤖' : '👤';
-  const name = role === 'ai' ? '面试官' : '候选人';
-  const avatarClass = role === 'ai' ? 'ai' : 'user';
-  
+  const div = document.createElement('div'); div.className = 'message';
+  const isAI = role === 'ai';
   div.innerHTML = `
-    <div class="msg-avatar ${avatarClass}">${avatar}</div>
+    <div class="msg-avatar ${isAI ? 'ai' : 'user'}">${isAI ? '🤖' : '👤'}</div>
     <div class="msg-content">
-      <div class="msg-name">${name}</div>
-      <div class="msg-bubble ${avatarClass}">${streaming ? '<div class="typing"><span></span><span></span><span></span></div>' : formatMessage(text)}</div>
-    </div>
-  `;
-  
-  area.appendChild(div);
-  scrollToBottom();
-  return div;
+      <div class="msg-name">${isAI ? '面试官' : '候选人'}</div>
+      <div class="msg-bubble ${isAI ? '' : 'user'}">${streaming ? '<div class="typing"><span></span><span></span><span></span></div>' : formatMsg(text)}</div>
+    </div>`;
+  area.appendChild(div); scrollToBottom(); return div;
 }
 
 function addSystemMsg(text) {
-  const area = document.getElementById('chatArea');
-  const div = document.createElement('div');
-  div.className = 'sys-msg';
+  const div = document.createElement('div'); div.className = 'sys-msg';
   div.innerHTML = `<span>${text}</span>`;
-  area.appendChild(div);
-  scrollToBottom();
+  document.getElementById('chatArea').appendChild(div); scrollToBottom();
 }
 
-function formatMessage(text) {
-  // Simple markdown-like formatting
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+function formatMsg(t) {
+  return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/`(.*?)`/g, '<code>$1</code>')
     .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
     .replace(/\n/g, '<br>');
 }
 
 function scrollToBottom() {
-  const area = document.getElementById('chatArea');
-  requestAnimationFrame(() => {
-    area.scrollTop = area.scrollHeight;
-  });
+  const a = document.getElementById('chatArea');
+  requestAnimationFrame(() => a.scrollTop = a.scrollHeight);
 }
 
-// ====== Init ======
 init();
 </script>
-
 </body>
 </html>
