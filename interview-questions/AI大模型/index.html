@@ -635,7 +635,21 @@ body {
 <div class="main">
   <div class="list-view" id="listView">
     <div class="question-list" id="questionList"></div>
-    <div class="pagination" id="pagination"></div>
+    <div class="pagination-bar" id="paginationBar">
+  <div class="page-size-wrap">
+    <span>每页</span>
+    <select id="pageSizeSelect" onchange="changePageSize(this.value)">
+      <option value="30">30</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option value="custom">自定义</option>
+    </select>
+    <input type="number" id="pageSizeInput" min="1" max="999" placeholder="数量" style="display:none" onchange="applyCustomSize(this.value)">
+    <span>条</span>
+  </div>
+  <div class="pagination" id="pagination"></div>
+  <div class="page-info" id="pageInfo"></div>
+</div>
   </div>
 
   <!-- Detail View -->
@@ -915,6 +929,8 @@ window.addEventListener('popstate', function(e) {
 });
 
 // ===== Init =====
+function changePageSize(v){var inp=document.getElementById("pageSizeInput");if(v==="custom"){inp.style.display="inline-block";inp.focus();return}inp.style.display="none";PAGE_SIZE=parseInt(v);currentPage=1;renderList()}
+function applyCustomSize(v){var n=parseInt(v);if(n>0){PAGE_SIZE=n;currentPage=1;renderList()}}
 function init() {
   // Check URL hash
   const hash = window.location.hash;
