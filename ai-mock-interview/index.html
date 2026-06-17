@@ -3,529 +3,770 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI模拟面试 | 张三的技术博客</title>
-<meta name="description" content="P8级AI面试官，递归追问，压力面试，精确评估你的技术能力">
+<title>AI 模拟面试 | 八股面试</title>
+<meta name="description" content="AI 面试官 - P8级压力面试，简历定制追问，实时评分">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--primary:#4f46e5;--primary-light:#818cf8;--primary-bg:#eef2ff;--green:#22c55e;--green-bg:#f0fdf4;--orange:#f59e0b;--orange-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.1)}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--gray-50);color:var(--gray-800);line-height:1.6;height:100vh;display:flex;flex-direction:column}
-.navbar{background:#fff;border-bottom:1px solid var(--gray-200);flex-shrink:0}
-.navbar .container{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:20px;font-weight:700;color:var(--gray-900);text-decoration:none}
-.nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{text-decoration:none;color:var(--gray-500);font-size:14px;font-weight:500;transition:color .2s}
-.nav-links a:hover,.nav-links a.active{color:var(--primary)}
-.chat-container{flex:1;display:flex;flex-direction:column;max-width:900px;margin:0 auto;width:100%;padding:0 24px;overflow:hidden}
-.chat-header{padding:20px 0 12px;flex-shrink:0}
-.chat-header h1{font-size:24px;font-weight:700;color:var(--gray-900)}
-.chat-header p{font-size:14px;color:var(--gray-500);margin-top:4px}
-.chat-messages{flex:1;overflow-y:auto;padding:16px 0;display:flex;flex-direction:column;gap:16px}
-.msg{display:flex;gap:12px;max-width:85%}
-.msg.ai{align-self:flex-start}
-.msg.user{align-self:flex-end;flex-direction:row-reverse}
-.msg-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.msg.ai .msg-avatar{background:var(--primary-bg)}
-.msg.user .msg-avatar{background:var(--green-bg)}
-.msg-bubble{padding:14px 18px;border-radius:16px;font-size:15px;line-height:1.7}
-.msg.ai .msg-bubble{background:#fff;border:1px solid var(--gray-200);border-top-left-radius:4px}
-.msg.user .msg-bubble{background:var(--primary);color:#fff;border-top-right-radius:4px}
-.msg-bubble strong{color:var(--gray-900)}
-.msg.user .msg-bubble strong{color:#fff}
-.msg-bubble code{background:var(--gray-100);padding:2px 6px;border-radius:4px;font-size:13px}
-.msg-bubble pre{background:var(--gray-800);color:#e5e7eb;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;font-size:13px}
-.msg-bubble pre code{background:none;padding:0;color:inherit}
-.msg-time{font-size:11px;color:var(--gray-400);margin-top:4px}
-.msg.user .msg-time{text-align:right}
-.chat-input-area{padding:16px 0 24px;flex-shrink:0;border-top:1px solid var(--gray-200)}
-.input-row{display:flex;gap:12px;align-items:flex-end}
-.input-row textarea{flex:1;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:12px;font-size:15px;outline:none;resize:none;font-family:inherit;line-height:1.5;max-height:150px;transition:border-color .2s}
-.input-row textarea:focus{border-color:var(--primary)}
-.send-btn{width:48px;height:48px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-.send-btn:hover{background:#4338ca;transform:scale(1.05)}
-.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.input-hint{font-size:12px;color:var(--gray-400);margin-top:8px;text-align:center}
-.settings-bar{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
-.settings-bar select,.settings-bar input[type=text],.settings-bar input[type=password]{padding:6px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit}
-.settings-bar select:focus,.settings-bar input:focus{outline:none;border-color:var(--primary)}
-.btn-sm{padding:6px 14px;border:1px solid var(--gray-200);border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
-.btn-sm:hover{border-color:var(--primary);color:var(--primary)}
-.btn-sm.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
-.btn-sm.primary:hover{background:#4338ca}
-.btn-sm.success{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-sm.danger{background:var(--red);color:#fff;border-color:var(--red)}
-.typing-indicator{display:flex;gap:4px;padding:8px 0}
-.typing-indicator span{width:8px;height:8px;background:var(--gray-300);border-radius:50%;animation:bounce .6s infinite alternate}
-.typing-indicator span:nth-child(2){animation-delay:.2s}
-.typing-indicator span:nth-child(3){animation-delay:.4s}
-@keyframes bounce{to{transform:translateY(-8px);opacity:.3}}
-.welcome-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:24px;margin:8px 0}
-.welcome-card h3{font-size:16px;margin-bottom:12px;color:var(--gray-800)}
-.welcome-card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
-.welcome-card li{font-size:14px;color:var(--gray-600);padding:8px 12px;background:var(--gray-50);border-radius:8px}
-.upload-section{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;margin:8px 0}
-.upload-section h3{font-size:15px;margin-bottom:12px;color:var(--gray-800);display:flex;align-items:center;gap:8px}
-.upload-tabs{display:flex;gap:8px;margin-bottom:12px}
-.upload-tab{padding:6px 16px;border-radius:8px;font-size:13px;cursor:pointer;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .2s;font-family:inherit}
-.upload-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.upload-content textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;outline:none;resize:vertical;font-family:inherit;line-height:1.6}
-.upload-content textarea:focus{border-color:var(--primary)}
-.upload-content .file-zone{border:2px dashed var(--gray-200);border-radius:8px;padding:32px;text-align:center;color:var(--gray-400);cursor:pointer;transition:all .2s}
-.upload-content .file-zone:hover{border-color:var(--primary);color:var(--primary)}
-.upload-content .file-zone input{display:none}
-.upload-content .file-zone p{font-size:14px;margin-top:8px}
-.upload-status{font-size:13px;color:var(--gray-500);margin-top:8px;display:flex;align-items:center;gap:6px}
-.upload-status.ok{color:var(--green)}
-.upload-status.warn{color:var(--orange)}
-.footer{border-top:1px solid var(--gray-200);padding:16px;text-align:center;color:var(--gray-400);font-size:13px;flex-shrink:0}
-@media(max-width:768px){.nav-links{display:none}.msg{max-width:95%}.chat-header h1{font-size:20px}.settings-bar{flex-direction:column}.settings-bar input{width:100%!important}}
+  :root {
+    --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a; --border: #2a2a2a;
+    --text: #e0e0e0; --text2: #999; --accent: #00d4aa; --accent2: #00b894;
+    --red: #ff6b6b; --orange: #ffa94d; --blue: #339af0; --purple: #9775fa;
+    --radius: 12px; --shadow: 0 2px 12px rgba(0,0,0,.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'SF Pro', 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Header */
+  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 20px; }
+  .header h1 { font-size: 16px; font-weight: 600; }
+  .header p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .header-actions { display: flex; gap: 8px; }
+  .header-actions button { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; }
+  .header-actions button:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Resume Upload Modal */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; width: 500px; max-width: 90vw; max-height: 80vh; overflow-y: auto; }
+  .modal h2 { font-size: 18px; margin-bottom: 8px; }
+  .modal p.sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+  .modal textarea { width: 100%; height: 150px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: var(--text); font-size: 13px; resize: vertical; font-family: inherit; }
+  .modal textarea:focus { outline: none; border-color: var(--accent); }
+  .modal .file-upload { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
+  .modal .file-upload label { background: var(--bg3); border: 1px dashed var(--border); border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 13px; color: var(--text2); transition: all .2s; flex: 1; text-align: center; }
+  .modal .file-upload label:hover { border-color: var(--accent); color: var(--accent); }
+  .modal .file-upload input { display: none; }
+  .modal .file-info { font-size: 12px; color: var(--accent); margin-top: 6px; display: none; }
+  .modal .file-info.show { display: block; }
+  .modal .char-count { font-size: 11px; color: var(--text2); text-align: right; margin-top: 4px; }
+  .modal-actions { margin-top: 16px; display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-actions button { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
+  .btn-cancel { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); }
+  .btn-cancel:hover { border-color: var(--text2); }
+  .btn-confirm { background: var(--accent); border: none; color: #000; }
+  .btn-confirm:hover { background: var(--accent2); }
+
+  /* Chat Area */
+  .chat-area { flex: 1; overflow-y: auto; padding: 20px; scroll-behavior: smooth; }
+  .chat-area::-webkit-scrollbar { width: 6px; }
+  .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Messages */
+  .message { margin-bottom: 16px; display: flex; gap: 10px; animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .msg-avatar { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .msg-avatar.ai { background: linear-gradient(135deg, var(--accent), var(--blue)); }
+  .msg-avatar.user { background: linear-gradient(135deg, var(--orange), var(--red)); }
+  .msg-content { flex: 1; min-width: 0; }
+  .msg-name { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+  .msg-bubble { background: var(--bg3); border: 1px solid var(--border); border-radius: 0 var(--radius) var(--radius) var(--radius); padding: 12px 16px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+  .msg-bubble.ai { border-color: rgba(0,212,170,.2); }
+  .msg-bubble.user { background: rgba(0,212,170,.08); border-color: rgba(0,212,170,.15); }
+  .msg-bubble strong { color: var(--accent); }
+  .msg-bubble code { background: rgba(0,0,0,.3); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .msg-bubble pre { background: #000; border-radius: 8px; padding: 12px; margin: 8px 0; overflow-x: auto; }
+  .msg-bubble pre code { background: none; padding: 0; }
+
+  /* System Message */
+  .sys-msg { text-align: center; margin: 16px 0; }
+  .sys-msg span { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--text2); }
+
+  /* Typing Indicator */
+  .typing { display: flex; gap: 4px; padding: 4px 0; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.4s infinite; }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,80%,100% { opacity: .3; } 40% { opacity: 1; } }
+
+  /* Input Area */
+  .input-area { background: var(--bg2); border-top: 1px solid var(--border); padding: 12px 20px; flex-shrink: 0; }
+  .input-row { display: flex; gap: 10px; align-items: flex-end; }
+  .input-row textarea { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: var(--text); font-size: 14px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; }
+  .input-row textarea:focus { outline: none; border-color: var(--accent); }
+  .input-row textarea::placeholder { color: #555; }
+  .input-row textarea:disabled { opacity: .4; cursor: not-allowed; }
+  .send-btn { width: 40px; height: 40px; border-radius: 10px; background: var(--accent); border: none; color: #000; font-size: 18px; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .send-btn:hover:not(:disabled) { background: var(--accent2); transform: scale(1.05); }
+  .send-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+  /* Settings Panel */
+  .settings-panel { display: none; background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 20px; flex-shrink: 0; }
+  .settings-panel.active { display: block; }
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+  .settings-grid label { font-size: 11px; color: var(--text2); margin-bottom: 4px; display: block; }
+  .settings-grid input, .settings-grid select { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; color: var(--text); font-size: 13px; }
+  .settings-grid input:focus, .settings-grid select:focus { outline: none; border-color: var(--accent); }
+  .settings-grid select option { background: var(--bg2); color: var(--text); }
+  .settings-grid .model-group { position: relative; }
+  .settings-grid .model-group .refresh-btn { position: absolute; right: 4px; top: 24px; background: var(--bg); border: 1px solid var(--border); color: var(--text2); width: 26px; height: 26px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+  .settings-grid .model-group .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .settings-grid .model-group .refresh-btn.spinning { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .settings-btns { display: flex; gap: 8px; padding-top: 16px; }
+  .settings-btns button { padding: 8px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; }
+  .test-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); }
+  .test-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .test-btn.success { border-color: var(--accent); color: var(--accent); }
+  .test-btn.error { border-color: var(--red); color: var(--red); }
+  .save-btn { background: var(--accent); border: none; color: #000; font-weight: 600; }
+  .save-btn:hover { background: var(--accent2); }
+  .test-result { font-size: 12px; margin-top: 6px; padding: 6px 10px; border-radius: 6px; display: none; }
+  .test-result.show { display: block; }
+  .test-result.success { background: rgba(0,212,170,.1); color: var(--accent); }
+  .test-result.error { background: rgba(255,107,107,.1); color: var(--red); }
+
+  /* API Status */
+  .api-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+  .api-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .api-dot.ok { background: var(--accent); }
+  .api-dot.err { background: var(--red); }
+  .api-dot.pending { background: var(--orange); }
+
+  /* Welcome */
+  .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; }
+  .welcome-icon { font-size: 64px; margin-bottom: 16px; }
+  .welcome h2 { font-size: 22px; margin-bottom: 8px; }
+  .welcome p { color: var(--text2); font-size: 14px; max-width: 400px; line-height: 1.6; margin-bottom: 20px; }
+  .welcome .start-btn { background: var(--accent); border: none; color: #000; padding: 12px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s; }
+  .welcome .start-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,212,170,.3); }
+  .welcome .features { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; justify-content: center; }
+  .welcome .feature { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--text2); max-width: 140px; }
+  .welcome .feature .icon { font-size: 20px; margin-bottom: 6px; }
+
+  /* End Interview Button */
+  .end-interview { background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.3); color: var(--red); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all .2s; }
+  .end-interview:hover { background: rgba(255,107,107,.2); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .settings-grid { grid-template-columns: 1fr; }
+    .welcome .features { flex-direction: column; align-items: center; }
+    .header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="container">
-    <a href="/" class="logo">LY.DEV</a>
-    <ul class="nav-links">
-      <li><a href="/">首页</a></li>
-      <li><a href="/interview-questions/">题库</a></li>
-      <li><a href="/ai-mock-interview/" class="active">AI面试</a></li>
-      <li><a href="/random-question/">随机一题</a></li>
-    </ul>
-  </div>
-</nav>
-
-<div class="chat-container">
-  <div class="chat-header">
-    <h1>🤖 AI 模拟面试</h1>
-    <p>P8级面试官 · 递归追问 · 压力面试 · 能力画像评估</p>
-  </div>
-
-  <div class="chat-messages" id="chatMessages">
-    <div class="msg ai">
-      <div class="msg-avatar">🤖</div>
-      <div>
-        <div class="msg-bubble">
-          你好，我是今天的AI面试官，P8级大厂后端架构师。<br><br>
-          面试前请完成以下两步：<br>
-          <strong>① 配置API连接</strong>（底部设置栏 → 填写API Key → 测试连接）<br>
-          <strong>② 上传简历或粘贴岗位JD</strong>（下方上传区域）<br><br>
-          两步都✅后，点击「开始面试」即可。
-          <div class="welcome-card">
-            <h3>📋 面试覆盖范围</h3>
-            <ul>
-              <li>🧩 后端基础：JVM · 并发编程 · Spring生态 · MySQL</li>
-              <li>🏗️ 分布式系统：CAP/BASE · 分布式事务 · RPC</li>
-              <li>⚡ 中间件：Redis · MQ(Kafka/RocketMQ) · ES</li>
-              <li>🚀 高并发架构：秒杀 · 库存 · 订单系统</li>
-              <li>📐 系统设计：微服务 · 高可用 · 容灾 · 负载均衡</li>
-              <li>🔧 工程能力：代码设计 · 调优 · 线上问题排查</li>
-            </ul>
-          </div>
-          <div class="upload-section">
-            <h3>📄 上传简历 / 粘贴岗位JD</h3>
-            <div class="upload-tabs">
-              <button class="upload-tab active" onclick="switchTab('paste')">粘贴文本</button>
-              <button class="upload-tab" onclick="switchTab('file')">上传文件</button>
-            </div>
-            <div class="upload-content" id="pasteTab">
-              <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位JD...&#10;&#10;示例：&#10;姓名：张三&#10;专业：计算机科学&#10;技术栈：Java, Spring Boot, MySQL, Redis, Kafka&#10;项目：xxx电商系统，负责订单模块开发..."></textarea>
-            </div>
-            <div class="upload-content" id="fileTab" style="display:none">
-              <div class="file-zone" onclick="document.getElementById('fileInput').click()">
-                <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" onchange="handleFile(this)">
-                <div style="font-size:32px">📎</div>
-                <p>点击上传简历文件（.txt / .md / .pdf / .docx）</p>
-              </div>
-            </div>
-            <div class="upload-status" id="uploadStatus">⏳ 请粘贴简历或上传文件</div>
-          </div>
-        </div>
-        <div class="msg-time">AI面试官</div>
-      </div>
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">🎯</div>
+    <div>
+      <h1>AI 模拟面试</h1>
+      <p>P8级压力面试官 · 简历定制追问 · 实时评估</p>
     </div>
   </div>
-
-  <div class="chat-input-area">
-    <div class="input-row">
-      <textarea id="userInput" rows="1" placeholder="输入你的回答..." disabled onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
-      <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>➤</button>
-    </div>
-    <div class="settings-bar">
-      <select id="apiProvider" onchange="updateProvider()">
-        <option value="deepseek">DeepSeek</option>
-        <option value="openai">OpenAI</option>
-        <option value="custom">自定义</option>
-      </select>
-      <input type="text" id="apiEndpoint" placeholder="API地址" value="https://api.deepseek.com/v1/chat/completions" style="width:260px">
-      <input type="password" id="apiKey" placeholder="API Key" style="width:180px">
-      <input type="text" id="modelName" placeholder="模型名" value="deepseek-chat" style="width:120px">
-      <button class="btn-sm" onclick="saveConfig()">💾 保存</button>
-      <button class="btn-sm" id="testBtn" onclick="testConnection()">🔗 测试连接</button>
-      <button class="btn-sm primary" onclick="startInterview()">🎲 开始面试</button>
-    </div>
-    <div class="input-hint">Enter 发送 · Shift+Enter 换行 · 面试前请先配置API并上传简历/JD</div>
+  <div class="header-actions">
+    <button onclick="toggleSettings()">⚙️ API设置</button>
+    <button onclick="showResumeModal()">📄 上传简历</button>
+    <button class="end-interview" onclick="endInterview()" style="display:none" id="endBtn">结束面试</button>
   </div>
 </div>
 
-<footer class="footer">
-  <p>© 2026 张三的技术博客</p>
-</footer>
+<!-- Settings Panel -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-grid">
+    <div>
+      <label>API Base URL</label>
+      <input type="text" id="apiUrl" placeholder="https://api.deepseek.com/v1">
+    </div>
+    <div>
+      <label>API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-...">
+    </div>
+    <div class="model-group">
+      <label>模型名称</label>
+      <select id="modelName" onchange="onModelSelect()">
+        <option value="">-- 填写URL和Key后自动获取 --</option>
+      </select>
+      <button class="refresh-btn" onclick="fetchModels()" id="refreshBtn" title="刷新模型列表">🔄</button>
+    </div>
+    <div style="padding-top: 18px;">
+      <button class="test-btn" onclick="testConnection()" id="testBtn">🔗 测试连接</button>
+    </div>
+  </div>
+  <div class="test-result" id="testResult"></div>
+  <div class="settings-btns">
+    <button class="save-btn" onclick="saveSettings()">💾 保存</button>
+    <span class="api-status" id="apiStatus">
+      <span class="api-dot pending" id="apiDot"></span>
+      <span id="apiStatusText">未配置</span>
+    </span>
+  </div>
+</div>
+
+<!-- Resume Upload Modal -->
+<div class="modal-overlay" id="resumeModal">
+  <div class="modal">
+    <h2>📄 上传简历 / 岗位JD</h2>
+    <p class="sub">粘贴简历内容或上传文件，面试官将根据你的经历定制追问</p>
+    <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位JD...&#10;&#10;例如：&#10;姓名：张三&#10;专业：计算机科学&#10;技能：Python, React, MySQL...&#10;项目：xxx系统开发..."></textarea>
+    <div class="char-count"><span id="charCount">0</span> 字</div>
+    <div class="file-upload">
+      <label for="fileInput">📁 上传文件 (.txt, .md, .pdf, .docx)</label>
+      <input type="file" id="fileInput" accept=".txt,.md,.pdf,.docx" onchange="handleFile(this)">
+    </div>
+    <div class="file-info" id="fileInfo"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeResumeModal()">取消</button>
+      <button class="btn-confirm" onclick="confirmResume()">确认上传</button>
+    </div>
+  </div>
+</div>
+
+<!-- Chat Area -->
+<div class="chat-area" id="chatArea">
+  <div class="welcome" id="welcomeScreen">
+    <div class="welcome-icon">🤖</div>
+    <h2>准备好了吗？</h2>
+    <p>我是P8级面试官，我会根据你的简历深度追问。没有提示，没有安慰，只有真实的面试压力。</p>
+    <button class="start-btn" onclick="startInterview()">开始面试</button>
+    <div class="features">
+      <div class="feature"><div class="icon">🔍</div>项目真实性审查</div>
+      <div class="feature"><div class="icon">🔥</div>递归深度追问</div>
+      <div class="feature"><div class="icon">📊</div>三维能力评分</div>
+      <div class="feature"><div class="icon">🎯</div>人才画像分析</div>
+    </div>
+  </div>
+</div>
+
+<!-- Input Area -->
+<div class="input-area">
+  <div class="input-row">
+    <textarea id="userInput" rows="1" placeholder="输入你的回答..." disabled onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="sendBtn" disabled onclick="sendMessage()">➤</button>
+  </div>
+</div>
 
 <script>
-const SYSTEM_PROMPT = `你是一个"AI面试评估系统"，内部由三层组件构成：
-
-1️⃣ 面试官模块（Interviewer）
-P8级大厂后端面试官人格
-负责提问 + 追问 + 压测候选人能力
-
-2️⃣ 评估模块（Evaluator）
-实时分析候选人回答质量，识别：理解深度、是否背题、是否具备工程经验、是否存在逻辑漏洞
-
-3️⃣ 人才画像模块（Profiler）
-输出候选人能力模型，判断：P5/P6/P7/P8/P9级别，是否适合高并发/架构/业务/基础开发
-
-## 面试目标
-精确判断候选人的真实技术能力边界 + 工程经验真实性 + 架构思维能力
-
-## 技能体系（全量覆盖）
-后端基础(JVM/并发编程/Spring生态/MySQL)、分布式系统(CAP/BASE/分布式事务/RPC)、中间件(Redis/MQ/ES)、高并发架构(秒杀/库存/订单系统)、系统设计(微服务/高可用/容灾/负载均衡)、工程能力(代码设计/调优/线上问题排查)
-
-## 面试流程（严格执行）
-STEP 1：能力定位问题 — 随机选择一个基础方向(JVM/MySQL/Redis/Java并发/Spring)，每轮只问一个问题
-STEP 2：递归追问引擎 — L1概念→L2原理→L3机制(源码/数据结构)→L4工程(线上怎么用/踩坑)→L5极端情况(QPS暴涨/数据不一致/服务宕机)，持续追问直到知识边界暴露
-STEP 3：项目真实性审查 — 验证：负责模块/架构图/核心代码逻辑/技术选型原因/线上事故处理/性能瓶颈
-STEP 4：场景设计压测 — 秒杀/支付/订单/登录/高并发扣库存/分布式ID，要求架构设计+数据流+一致性+容灾+性能瓶颈
-STEP 5：代码/SQL能力验证 — 手写代码/SQL优化/并发问题修复/API设计
-
-## 评分系统
-每轮更新：技术能力评分(0-10)、项目真实性评分(0-10)、架构能力评分(0-10)
-
-## 最终输出（面试结束必须）
-1. 候选人等级(P5/P6/P7/P8/P9)
-2. 能力画像(后端/分布式/架构/工程能力)
-3. 风险分析(项目包装/知识断层)
-4. 是否通过(通过/不通过/待定)
-
-## 面试风格约束
-一次只问一个问题、不允许提示答案、不允许降低难度、不允许安慰、不允许跳过追问、必须递归深入、必须保持高压
-
-## 高级行为
-1. 动态难度调整：回答越强→问题越难，回答越弱→深挖基础漏洞
-2. 追问分支树：每个回答可延伸3-5个追问点，自动选择最薄弱点继续追问
-3. 识别背题：术语密集但无法解释、回答结构化但无细节→直接切换压力模式`;
-
+// ====== State ======
+let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.deepseek.com/v1';
+let apiKey = localStorage.getItem('ai_interview_key') || '';
+let modelName = localStorage.getItem('ai_interview_model') || 'deepseek-chat';
+let resumeContent = localStorage.getItem('ai_interview_resume') || '';
 let messages = [];
-let isGenerating = false;
-let apiConnected = false;
-let resumeUploaded = false;
+let isStreaming = false;
+let abortController = null;
 
-// ===== Config =====
-function loadConfig() {
-  const saved = localStorage.getItem('interviewConfig');
-  if (saved) {
-    const cfg = JSON.parse(saved);
-    document.getElementById('apiEndpoint').value = cfg.endpoint || '';
-    document.getElementById('apiKey').value = cfg.key || '';
-    document.getElementById('modelName').value = cfg.model || '';
-    if (cfg.provider) document.getElementById('apiProvider').value = cfg.provider;
+// CORS proxy for browser→API calls
+const CORS_PROXY = 'https://corsproxy.io/?';
+
+// ====== System Prompt ======
+const SYSTEM_PROMPT = `## 面试官模块 - P8级技术面试官
+
+## 角色设定
+你是一位严格的P8级技术面试官。你的目标是通过深度技术追问，精确评估候选人的真实能力水平。
+你必须表现得专业、冷淡、不苟言笑。不要给候选人任何提示或安慰。
+
+## 面试流程
+1. **开场**：简短自我介绍，直接进入技术问题
+2. **递归追问**：每个问题必须深入追问5层
+   - L1: 概念定义（"说说这是什么"）
+   - L2: 原理机制（"为什么是这样"）
+   - L3: 源码/实现（"怎么实现的"）
+   - L4: 工程权衡（"为什么选这个方案"）
+   - L5: 极端场景（"如果XX条件变化会怎样"）
+3. **项目审查**：针对简历中的项目深度追问
+   - 你负责哪个模块？具体代码量？
+   - 遇到最难的技术问题？怎么解决的？
+   - 如果重新做，会改什么？
+4. **场景设计**：给出具体业务场景，要求设计方案
+5. **代码验证**：要求手写关键代码片段或SQL
+
+## 评分规则
+- 技术能力：0-10分（概念准确性、深度理解、源码熟悉度）
+- 项目真实性：0-10分（细节丰富度、问题解决思路、权衡考量）
+- 架构能力：0-10分（系统设计、扩展性、性能优化）
+
+## 禁止事项
+- 不要给候选人任何提示
+- 不要说"答得不错"之类的安慰话
+- 不要主动跳过问题
+- 不要降低追问深度
+
+## 最终输出格式（面试结束时）
+当候选人表示面试结束，或者你认为已经充分评估时，输出如下格式：
+
+\`\`\`
+## 面试评估报告
+
+### 评分
+- 技术能力：X/10
+- 项目真实性：X/10  
+- 架构能力：X/10
+- 综合评分：X/10
+
+### 能力等级：P?
+（P5=初级 / P6=中级 / P7=高级 / P8=资深 / P9=专家）
+
+### 能力画像
+- 强项：...
+- 弱项：...
+
+### 风险分析
+- ...
+
+### 面试结论
+通过 / 待定 / 不通过
+\`\`\``;
+
+// ====== Init ======
+function init() {
+  // Load settings
+  document.getElementById('apiUrl').value = apiUrl;
+  document.getElementById('apiKey').value = apiKey;
+  
+  // Check API status
+  if (apiKey) {
+    updateApiStatus('pending', '已配置，未验证');
   }
-}
-
-function saveConfig() {
-  const cfg = {
-    provider: document.getElementById('apiProvider').value,
-    endpoint: document.getElementById('apiEndpoint').value,
-    key: document.getElementById('apiKey').value,
-    model: document.getElementById('modelName').value
-  };
-  localStorage.setItem('interviewConfig', JSON.stringify(cfg));
-  addSystemMsg('✅ 配置已保存到浏览器');
-}
-
-function updateProvider() {
-  const p = document.getElementById('apiProvider').value;
-  if (p === 'deepseek') {
-    document.getElementById('apiEndpoint').value = 'https://api.deepseek.com/v1/chat/completions';
-    document.getElementById('modelName').value = 'deepseek-chat';
-  } else if (p === 'openai') {
-    document.getElementById('apiEndpoint').value = 'https://api.openai.com/v1/chat/completions';
-    document.getElementById('modelName').value = 'gpt-4o-mini';
+  
+  // Auto-fetch models if we have credentials
+  if (apiKey && apiUrl) {
+    setTimeout(() => fetchModels(), 500);
   }
+  
+  // Load resume
+  if (resumeContent) {
+    document.getElementById('resumeText').value = resumeContent;
+    updateCharCount();
+  }
+  
+  // Auto-resize textarea
+  const input = document.getElementById('userInput');
+  input.addEventListener('input', function() { autoResize(this); });
 }
 
-// ===== Test Connection =====
-async function testConnection() {
-  const btn = document.getElementById('testBtn');
-  const endpoint = document.getElementById('apiEndpoint').value;
-  const key = document.getElementById('apiKey').value;
-  const model = document.getElementById('modelName').value;
+// ====== Settings ======
+function toggleSettings() {
+  document.getElementById('settingsPanel').classList.toggle('active');
+}
 
-  if (!key) { addSystemMsg('⚠️ 请先填写 API Key'); return; }
+function saveSettings() {
+  apiUrl = document.getElementById('apiUrl').value.trim();
+  apiKey = document.getElementById('apiKey').value.trim();
+  modelName = document.getElementById('modelName').value;
+  
+  localStorage.setItem('ai_interview_url', apiUrl);
+  localStorage.setItem('ai_interview_key', apiKey);
+  localStorage.setItem('ai_interview_model', modelName);
+  
+  updateApiStatus('ok', '已保存');
+  toggleSettings();
+}
 
-  btn.disabled = true;
-  btn.innerHTML = '⏳ 测试中...';
-  btn.className = 'btn-sm';
+function updateApiStatus(status, text) {
+  const dot = document.getElementById('apiDot');
+  const statusText = document.getElementById('apiStatusText');
+  dot.className = 'api-dot ' + status;
+  statusText.textContent = text;
+}
 
+// ====== Fetch Models ======
+async function fetchModels() {
+  const url = document.getElementById('apiUrl').value.trim();
+  const key = document.getElementById('apiKey').value.trim();
+  
+  if (!url || !key) {
+    showTestResult('请先填写 API URL 和 API Key', 'error');
+    return;
+  }
+  
+  const refreshBtn = document.getElementById('refreshBtn');
+  refreshBtn.classList.add('spinning');
+  
+  const select = document.getElementById('modelName');
+  select.innerHTML = '<option value="">加载中...</option>';
+  
   try {
-    const resp = await fetch(endpoint, {
+    const modelsUrl = url.replace(/\/chat\/completions$/, '').replace(/\/v1\/?$/, '') + '/v1/models';
+    const proxyUrl = CORS_PROXY + encodeURIComponent(modelsUrl);
+    
+    const res = await fetch(proxyUrl, {
+      headers: { 'Authorization': 'Bearer ' + key }
+    });
+    
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    
+    const data = await res.json();
+    const models = data.data || data.models || [];
+    
+    select.innerHTML = '';
+    
+    if (models.length === 0) {
+      select.innerHTML = '<option value="">未获取到模型</option>';
+      showTestResult('API 返回了空的模型列表', 'error');
+    } else {
+      // Add default option
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.textContent = '-- 请选择模型 (' + models.length + '个) --';
+      select.appendChild(defaultOpt);
+      
+      models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id || m.name;
+        opt.textContent = m.id || m.name;
+        select.appendChild(opt);
+      });
+      
+      // Auto-select if previously saved
+      const savedModel = localStorage.getItem('ai_interview_model');
+      if (savedModel) {
+        for (let opt of select.options) {
+          if (opt.value === savedModel) { opt.selected = true; break; }
+        }
+      }
+      
+      showTestResult('✅ 获取到 ' + models.length + ' 个模型', 'success');
+    }
+  } catch (e) {
+    select.innerHTML = '<option value="">获取失败，请手动输入</option>';
+    // Add a manual input option
+    const opt = document.createElement('option');
+    opt.value = '__manual__';
+    opt.textContent = '✏️ 手动输入模型名...';
+    select.appendChild(opt);
+    showTestResult('❌ 获取模型列表失败: ' + e.message, 'error');
+  } finally {
+    refreshBtn.classList.remove('spinning');
+  }
+}
+
+function onModelSelect() {
+  const select = document.getElementById('modelName');
+  if (select.value === '__manual__') {
+    const name = prompt('请输入模型名称：');
+    if (name) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name + ' (手动)';
+      opt.selected = true;
+      select.insertBefore(opt, select.lastElementChild);
+    } else {
+      select.value = '';
+    }
+  }
+}
+
+// ====== Test Connection ======
+async function testConnection() {
+  const url = document.getElementById('apiUrl').value.trim();
+  const key = document.getElementById('apiKey').value.trim();
+  const model = document.getElementById('modelName').value;
+  
+  if (!url || !key) { showTestResult('请填写 URL 和 API Key', 'error'); return; }
+  if (!model) { showTestResult('请先选择或输入模型名称', 'error'); return; }
+  
+  const btn = document.getElementById('testBtn');
+  btn.textContent = '⏳ 测试中...';
+  btn.disabled = true;
+  
+  try {
+    const chatUrl = url.endsWith('/chat/completions') ? url : url.replace(/\/$/, '') + '/chat/completions';
+    const proxyUrl = CORS_PROXY + encodeURIComponent(chatUrl);
+    
+    const res = await fetch(proxyUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
+        'Authorization': 'Bearer ' + key
       },
       body: JSON.stringify({
         model: model,
-        messages: [{role: 'user', content: 'hi'}],
+        messages: [{ role: 'user', content: 'hi' }],
         max_tokens: 5
       })
     });
-
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data.choices && data.choices.length > 0) {
-        btn.innerHTML = '✅ 连接成功';
-        btn.className = 'btn-sm success';
-        apiConnected = true;
-        addSystemMsg(`✅ API连接成功！模型：${model}`);
-      } else {
-        throw new Error('响应格式异常');
-      }
-    } else {
-      const err = await resp.text();
-      btn.innerHTML = '❌ 连接失败';
-      btn.className = 'btn-sm danger';
-      apiConnected = false;
-      addSystemMsg(`❌ 连接失败 (${resp.status}): ${err.substring(0, 150)}`);
+    
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error('HTTP ' + res.status + ': ' + errText.slice(0, 100));
     }
-  } catch (err) {
-    btn.innerHTML = '❌ 连接失败';
-    btn.className = 'btn-sm danger';
-    apiConnected = false;
-    addSystemMsg(`❌ 连接失败: ${err.message}`);
-  }
-
-  setTimeout(() => {
+    
+    const data = await res.json();
+    if (data.choices || data.id) {
+      showTestResult('✅ 连接成功！模型: ' + model, 'success');
+      btn.className = 'test-btn success';
+      updateApiStatus('ok', '已验证 ✓');
+    } else {
+      throw new Error('异常响应: ' + JSON.stringify(data).slice(0, 100));
+    }
+  } catch (e) {
+    showTestResult('❌ 连接失败: ' + e.message, 'error');
+    btn.className = 'test-btn error';
+    updateApiStatus('err', '连接失败');
+  } finally {
+    btn.textContent = '🔗 测试连接';
     btn.disabled = false;
-    btn.innerHTML = '🔗 测试连接';
-    btn.className = 'btn-sm';
-  }, 3000);
+    setTimeout(() => { btn.className = 'test-btn'; }, 3000);
+  }
 }
 
-// ===== Resume Upload =====
-function switchTab(tab) {
-  document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
-  if (tab === 'paste') {
-    document.querySelector('.upload-tab:first-child').classList.add('active');
-    document.getElementById('pasteTab').style.display = '';
-    document.getElementById('fileTab').style.display = 'none';
-  } else {
-    document.querySelector('.upload-tab:last-child').classList.add('active');
-    document.getElementById('pasteTab').style.display = 'none';
-    document.getElementById('fileTab').style.display = '';
+function showTestResult(msg, type) {
+  const el = document.getElementById('testResult');
+  el.textContent = msg;
+  el.className = 'test-result show ' + type;
+}
+
+// ====== Resume ======
+function showResumeModal() {
+  document.getElementById('resumeModal').classList.add('active');
+  updateCharCount();
+}
+
+function closeResumeModal() {
+  document.getElementById('resumeModal').classList.remove('active');
+}
+
+function confirmResume() {
+  const text = document.getElementById('resumeText').value.trim();
+  if (!text) {
+    alert('请输入简历内容或上传文件');
+    return;
   }
+  resumeContent = text;
+  localStorage.setItem('ai_interview_resume', resumeContent);
+  closeResumeModal();
+  
+  // Show confirmation in chat
+  addSystemMsg('✅ 简历已上传（' + resumeContent.length + '字），可以开始面试了');
 }
 
 function handleFile(input) {
   const file = input.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById('resumeText').value = e.target.result;
-    resumeUploaded = true;
-    document.getElementById('uploadStatus').className = 'upload-status ok';
-    document.getElementById('uploadStatus').innerHTML = `✅ 已读取文件: ${file.name} (${(file.size/1024).toFixed(1)}KB)`;
-    switchTab('paste');
-  };
-  reader.readAsText(file);
+  
+  const info = document.getElementById('fileInfo');
+  info.textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)';
+  info.classList.add('show');
+  
+  if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('resumeText').value = e.target.result;
+      updateCharCount();
+    };
+    reader.readAsText(file);
+  } else {
+    // For PDF/DOCX, just note that we can't parse in browser
+    document.getElementById('resumeText').value += '\n\n[文件已选择: ' + file.name + '，请手动粘贴内容]';
+    updateCharCount();
+  }
 }
 
-// Monitor textarea changes
-document.getElementById('resumeText').addEventListener('input', function() {
-  const len = this.value.trim().length;
-  const status = document.getElementById('uploadStatus');
-  if (len > 20) {
-    resumeUploaded = true;
-    status.className = 'upload-status ok';
-    status.innerHTML = `✅ 已输入 ${len} 字`;
-  } else {
-    resumeUploaded = false;
-    status.className = 'upload-status';
-    status.innerHTML = '⏳ 请粘贴简历或上传文件';
-  }
-});
+function updateCharCount() {
+  const text = document.getElementById('resumeText').value;
+  document.getElementById('charCount').textContent = text.length;
+}
 
-// ===== Start Interview =====
+// Listen for textarea input
+document.getElementById('resumeText').addEventListener('input', updateCharCount);
+
+// ====== Chat ======
 function startInterview() {
-  const key = document.getElementById('apiKey').value;
-  if (!key) { addSystemMsg('⚠️ 请先填写 API Key 并测试连接'); return; }
-  if (!apiConnected) { addSystemMsg('⚠️ 请先点击「测试连接」确认API可用'); return; }
-  if (!resumeUploaded) { addSystemMsg('⚠️ 请先上传简历或粘贴岗位JD'); return; }
-
-  const resumeText = document.getElementById('resumeText').value.trim();
-  const resumeContext = `\n\n## 候选人简历/岗位JD\n${resumeText}`;
-
-  messages = [];
-  messages.push({role: 'system', content: SYSTEM_PROMPT + resumeContext});
-  messages.push({role: 'user', content: '面试开始。请根据我的简历和岗位JD，出第一道题。'});
-
+  // Check prerequisites
+  if (!apiKey) {
+    alert('请先点击右上角「⚙️ API设置」配置 API');
+    toggleSettings();
+    return;
+  }
+  if (!modelName) {
+    alert('请先选择模型名称');
+    toggleSettings();
+    return;
+  }
+  if (!resumeContent) {
+    showResumeModal();
+    return;
+  }
+  
+  // Hide welcome, enable input
+  document.getElementById('welcomeScreen').style.display = 'none';
   document.getElementById('userInput').disabled = false;
   document.getElementById('sendBtn').disabled = false;
-
-  addMsg('user', '面试开始，请出题。');
-  callLLM_stream();
+  document.getElementById('endBtn').style.display = 'inline-block';
+  
+  // Init messages with system prompt + resume
+  messages = [
+    { role: 'system', content: SYSTEM_PROMPT + '\n\n## 候选人简历\n' + resumeContent }
+  ];
+  
+  // AI opens the interview
+  addSystemMsg('🎯 面试开始 — 请认真回答每一个问题');
+  getAIResponse();
 }
 
-// ===== LLM Call =====
-async function callLLM_stream() {
-  if (isGenerating) return;
-  isGenerating = true;
-  document.getElementById('sendBtn').disabled = true;
-
-  const typingId = showTyping();
-  const endpoint = document.getElementById('apiEndpoint').value;
-  const key = document.getElementById('apiKey').value;
-  const model = document.getElementById('modelName').value;
-
-  try {
-    const resp = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: messages,
-        max_tokens: 2000,
-        temperature: 0.7,
-        stream: true
-      })
-    });
-
-    removeTyping(typingId);
-
-    if (!resp.ok) {
-      const err = await resp.text();
-      addSystemMsg(`❌ API错误: ${resp.status} - ${err.substring(0, 200)}`);
-      isGenerating = false;
-      return;
-    }
-
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let fullContent = '';
-    const msgId = addMsg('ai', '', true);
-
-    while (true) {
-      const {done, value} = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value, {stream: true});
-      for (const line of chunk.split('\n')) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') break;
-          try {
-            const delta = JSON.parse(data).choices?.[0]?.delta?.content || '';
-            fullContent += delta;
-            updateMsg(msgId, fullContent);
-          } catch {}
-        }
-      }
-    }
-
-    messages.push({role: 'assistant', content: fullContent});
-
-  } catch (err) {
-    removeTyping(typingId);
-    addSystemMsg(`❌ 请求失败: ${err.message}`);
+function endInterview() {
+  if (isStreaming && abortController) {
+    abortController.abort();
   }
-
-  isGenerating = false;
-  document.getElementById('sendBtn').disabled = false;
-  document.getElementById('userInput').focus();
+  messages.push({ role: 'user', content: '[面试结束，请给出评估报告]' });
+  addMessage('user', '[请求结束面试]');
+  getAIResponse(true);
+  
+  document.getElementById('userInput').disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('endBtn').style.display = 'none';
 }
 
 function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
-  if (!text || isGenerating) return;
+  if (!text || isStreaming) return;
+  
   input.value = '';
-  input.style.height = 'auto';
-  messages.push({role: 'user', content: text});
-  addMsg('user', text);
-  callLLM_stream();
+  autoResize(input);
+  
+  messages.push({ role: 'user', content: text });
+  addMessage('user', text);
+  getAIResponse();
 }
 
-// ===== UI Helpers =====
-function addMsg(role, content, streaming = false) {
-  const container = document.getElementById('chatMessages');
-  const id = 'msg-' + Date.now();
-  const time = new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'});
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  div.id = id;
-  div.innerHTML = `
-    <div class="msg-avatar">${role === 'ai' ? '🤖' : '👤'}</div>
-    <div>
-      <div class="msg-bubble">${formatContent(content)}${streaming ? '<div class="typing-indicator"><span></span><span></span><span></span></div>' : ''}</div>
-      <div class="msg-time">${role === 'ai' ? 'AI面试官' : '你'} · ${time}</div>
-    </div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return id;
-}
-
-function updateMsg(id, content) {
-  const el = document.querySelector(`#${id} .msg-bubble`);
-  if (el) {
-    el.innerHTML = formatContent(content);
-    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
   }
 }
 
-function addSystemMsg(content) {
-  const container = document.getElementById('chatMessages');
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ====== Stream API ======
+async function getAIResponse(isFinal = false) {
+  isStreaming = true;
+  document.getElementById('sendBtn').disabled = true;
+  
+  const msgEl = addMessage('ai', '', true);
+  const bubble = msgEl.querySelector('.msg-bubble');
+  
+  abortController = new AbortController();
+  
+  try {
+    const chatUrl = apiUrl.endsWith('/chat/completions') ? apiUrl : apiUrl.replace(/\/$/, '') + '/chat/completions';
+    const proxyUrl = CORS_PROXY + encodeURIComponent(chatUrl);
+    
+    const res = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey
+      },
+      body: JSON.stringify({
+        model: modelName,
+        messages: messages,
+        stream: true,
+        max_tokens: 2048,
+        temperature: 0.7
+      }),
+      signal: abortController.signal
+    });
+    
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error('API 错误 ' + res.status + ': ' + err.slice(0, 200));
+    }
+    
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buffer = '';
+    
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        
+        try {
+          const json = JSON.parse(data);
+          const delta = json.choices?.[0]?.delta?.content;
+          if (delta) {
+            fullText += delta;
+            bubble.innerHTML = formatMessage(fullText);
+            scrollToBottom();
+          }
+        } catch {}
+      }
+    }
+    
+    messages.push({ role: 'assistant', content: fullText });
+    
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      bubble.innerHTML += '<br><span style="color:var(--orange)">[已中断]</span>';
+    } else {
+      bubble.innerHTML = '<span style="color:var(--red)">❌ ' + e.message + '</span>';
+    }
+  } finally {
+    isStreaming = false;
+    document.getElementById('sendBtn').disabled = false;
+    abortController = null;
+  }
+}
+
+// ====== Message Rendering ======
+function addMessage(role, text, streaming = false) {
+  const area = document.getElementById('chatArea');
   const div = document.createElement('div');
-  div.className = 'msg ai';
+  div.className = 'message';
+  
+  const avatar = role === 'ai' ? '🤖' : '👤';
+  const name = role === 'ai' ? '面试官' : '候选人';
+  const avatarClass = role === 'ai' ? 'ai' : 'user';
+  
   div.innerHTML = `
-    <div class="msg-avatar">⚙️</div>
-    <div><div class="msg-bubble" style="background:var(--gray-100);font-size:13px;color:var(--gray-600)">${content}</div></div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+    <div class="msg-avatar ${avatarClass}">${avatar}</div>
+    <div class="msg-content">
+      <div class="msg-name">${name}</div>
+      <div class="msg-bubble ${avatarClass}">${streaming ? '<div class="typing"><span></span><span></span><span></span></div>' : formatMessage(text)}</div>
+    </div>
+  `;
+  
+  area.appendChild(div);
+  scrollToBottom();
+  return div;
 }
 
-function showTyping() {
-  const id = 'typing-' + Date.now();
-  const container = document.getElementById('chatMessages');
+function addSystemMsg(text) {
+  const area = document.getElementById('chatArea');
   const div = document.createElement('div');
-  div.className = 'msg ai';
-  div.id = id;
-  div.innerHTML = `<div class="msg-avatar">🤖</div><div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return id;
+  div.className = 'sys-msg';
+  div.innerHTML = `<span>${text}</span>`;
+  area.appendChild(div);
+  scrollToBottom();
 }
 
-function removeTyping(id) {
-  const el = document.getElementById(id);
-  if (el) el.remove();
-}
-
-function formatContent(text) {
-  if (!text) return '';
+function formatMessage(text) {
+  // Simple markdown-like formatting
   return text
-    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
     .replace(/\n/g, '<br>');
 }
 
-document.getElementById('userInput').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 150) + 'px';
-});
+function scrollToBottom() {
+  const area = document.getElementById('chatArea');
+  requestAnimationFrame(() => {
+    area.scrollTop = area.scrollHeight;
+  });
+}
 
-loadConfig();
+// ====== Init ======
+init();
 </script>
+
 </body>
 </html>
