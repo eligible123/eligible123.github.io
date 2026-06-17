@@ -6,830 +6,303 @@
 <title>面试题库 | 张三的技术博客</title>
 <meta name="description" content="2516道Java面试题，涵盖AI大模型、后端、中间件等46个分类">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --primary: #111827;
-  --secondary: #374151;
-  --bg: #F9FAFB;
-  --card: #FFFFFF;
-  --border: #E5E7EB;
-  --text: #111827;
-  --subtext: #6B7280;
-  --success: #10B981;
-  --warning: #F59E0B;
-  --danger: #EF4444;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,.08);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F9FAFB;--card:#FFFFFF;--border:#E5E7EB;
+  --text:#111827;--text2:#374151;--text3:#6B7280;--text4:#9CA3AF;
+  --accent:#2563EB;--accent-light:#EFF6FF;--accent-hover:#1D4ED8;
+  --green:#059669;--green-light:#ECFDF5;--orange:#D97706;--orange-light:#FFFBEB;--red:#DC2626;--red-light:#FEF2F2;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);
+  --font:-apple-system,BlinkMacSystemFont,'Inter','PingFang SC','Microsoft YaHei',sans-serif;
+  --max:1280px;
 }
-
-body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.navbar .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--primary);
-  text-decoration: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--subtext);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.nav-links a:hover { color: var(--primary); }
-
-.hero {
-  padding: 100px 24px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -20px;
-  right: -60px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.hero h1 {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--primary);
-  letter-spacing: -1px;
-  margin-bottom: 8px;
-}
-
-.hero .subtitle {
-  font-size: 16px;
-  color: var(--subtext);
-}
-
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px 80px;
-  display: flex;
-  gap: 32px;
-}
-
-.sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 88px;
-  height: fit-content;
-}
-
-.sidebar-nav {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 8px;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-}
-
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--secondary);
-  transition: all 0.15s;
-}
-
-.sidebar-item:hover {
-  background: var(--bg);
-  color: var(--primary);
-}
-
-.sidebar-item.active {
-  background: var(--primary);
-  color: white;
-}
-
-.sidebar-item .count {
-  font-size: 12px;
-  color: var(--subtext);
-}
-
-.sidebar-item.active .count {
-  color: rgba(255,255,255,0.7);
-}
-
-.content {
-  flex: 1;
-  min-width: 0;
-}
-
-.search-bar {
-  margin-bottom: 20px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.search-input:focus {
-  border-color: var(--primary);
-}
-
-.questions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.question-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.question-item:hover {
-  border-color: #D1D5DB;
-  box-shadow: var(--shadow);
-}
-
-.question-num {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--subtext);
-  flex-shrink: 0;
-}
-
-.question-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.question-title {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
-.question-meta {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.difficulty {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.difficulty.easy, .difficulty.简单 {
-  background: #ECFDF5;
-  color: #059669;
-}
-
-.difficulty.medium, .difficulty.中等 {
-  background: #FEF3C7;
-  color: #D97706;
-}
-
-.difficulty.hard, .difficulty.困难 {
-  background: #FEF2F2;
-  color: #DC2626;
-}
-
-.question-tags {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.question-tag {
-  padding: 2px 8px;
-  background: var(--bg);
-  border-radius: 4px;
-  font-size: 12px;
-  color: var(--subtext);
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-}
-
-.page-btn {
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--card);
-  color: var(--secondary);
-  font-size: 14px;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.page-btn:hover:not(:disabled) {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.page-btn.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.page-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.page-info {
-  font-size: 14px;
-  color: var(--subtext);
-}
-
-.detail-view {
-  display: none;
-}
-
-.detail-view.active {
-  display: block;
-}
-
-.detail-header {
-  margin-bottom: 24px;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--subtext);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 8px 0;
-  background: none;
-  border: none;
-  font-family: inherit;
-}
-
-.back-btn:hover {
-  color: var(--primary);
-}
-
-.detail-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.detail-question {
-  padding: 32px;
-  border-bottom: 1px solid var(--border);
-}
-
-.detail-question .q-title {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.5;
-  margin-bottom: 16px;
-}
-
-.detail-question .q-meta {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.answer-section {
-  padding: 32px;
-}
-
-.show-answer-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 24px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.show-answer-btn:hover {
-  background: #1F2937;
-}
-
-.answer-content {
-  display: none;
-  margin-top: 24px;
-  padding: 24px;
-  background: var(--bg);
-  border-radius: var(--radius);
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--secondary);
-  white-space: pre-wrap;
-}
-
-.answer-content.show {
-  display: block;
-}
-
-.detail-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-}
-
-.nav-btn {
-  padding: 10px 20px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: inherit;
-  color: var(--secondary);
-}
-
-.nav-btn:hover:not(:disabled) {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.nav-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: var(--subtext);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--subtext);
-}
-
-.footer {
-  border-top: 1px solid var(--border);
-  padding: 32px 24px;
-  text-align: center;
-  color: var(--subtext);
-  font-size: 13px;
-}
-
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .hero h1 { font-size: 28px; }
-  .nav-links { display: none; }
-  .question-item { flex-direction: column; align-items: flex-start; }
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:15px}
+a{color:var(--accent);text-decoration:none}
+
+/* Navbar */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.navbar .inner{max-width:var(--max);margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.3px}.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--text3);font-size:14px;font-weight:500;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-badge{padding:4px 10px;background:var(--accent-light);color:var(--accent);border-radius:6px;font-size:12px;font-weight:600}
+
+/* Layout */
+.page{max-width:var(--max);margin:0 auto;padding:88px 24px 40px}
+.hero{margin-bottom:24px}
+.hero h1{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-.5px;margin-bottom:4px}
+.hero .sub{font-size:14px;color:var(--text3)}
+.main-wrap{display:flex;gap:24px;align-items:flex-start}
+
+/* Sidebar */
+.sidebar{width:220px;flex-shrink:0;position:sticky;top:88px;max-height:calc(100vh - 100px);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;margin-bottom:1px}
+.sidebar-item:hover{background:var(--bg);color:var(--text)}
+.sidebar-item.active{background:var(--accent-light);color:var(--accent);font-weight:600}
+.sidebar-item .cnt{font-size:11px;color:var(--text4);font-variant-numeric:tabular-nums}
+.sidebar-item.active .cnt{color:var(--accent)}
+
+/* Content */
+.content{flex:1;min-width:0}
+
+/* Search */
+.search-wrap{margin-bottom:16px}
+.search-input{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--card);transition:all .15s;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.search-wrap{position:relative}
+.search-wrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.5}
+
+/* Question List */
+.q-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.q-item{display:flex;gap:12px;padding:12px 16px;background:var(--card);cursor:pointer;transition:background .15s;align-items:flex-start}
+.q-item:hover{background:#FAFAFA}
+.q-num{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text3);flex-shrink:0}
+.q-body{flex:1;min-width:0}
+.q-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4}
+.q-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.diff{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.diff.easy{background:var(--green-light);color:var(--green)}.diff.medium{background:var(--orange-light);color:var(--orange)}.diff.hard{background:var(--red-light);color:var(--red)}
+.q-tag{padding:2px 6px;background:var(--bg);color:var(--text3);border-radius:4px;font-size:11px}
+
+/* Pagination */
+.pagination{display:flex;justify-content:center;align-items:center;gap:4px;margin-top:16px}
+.page-btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+.page-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.page-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.page-btn:disabled{opacity:.3;cursor:not-allowed}
+.page-info{font-size:12px;color:var(--text4);padding:0 4px}
+
+/* Detail View */
+.detail-view{display:none}.detail-view.active{display:block}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text3);font-size:13px;cursor:pointer;padding:6px 0;background:none;border:none;font-family:inherit;margin-bottom:16px}
+.back-btn:hover{color:var(--accent)}
+.detail-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.detail-q{padding:24px;border-bottom:1px solid var(--bg)}
+.detail-q .q-title{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:8px}
+.answer-section{padding:0 24px 24px}
+.show-answer-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;font-family:inherit;transition:all .15s}
+.show-answer-btn:hover{background:var(--accent-hover)}
+.answer-content{display:none;margin-top:16px;padding:20px;background:var(--bg);border-radius:var(--radius-sm);font-size:14px;line-height:1.8;color:var(--text2);white-space:pre-wrap}
+.answer-content.show{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.detail-nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px}
+.nav-btn{padding:8px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
+.nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* Loading & Empty */
+.loading,.empty-state{text-align:center;padding:40px;color:var(--text4);font-size:14px}
+
+/* Footer */
+.footer{max-width:var(--max);margin:0 auto;padding:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--text4);font-size:13px}
+
+@media(max-width:768px){
+  .main-wrap{flex-direction:column}
+  .sidebar{width:100%;position:static;max-height:none;display:flex;gap:4px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .sidebar-item{padding:6px 10px;font-size:12px}
+  .nav-links{display:none}
 }
 </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="container">
-    <a href="/" class="logo">LY.DEV</a>
+  <div class="inner">
+    <a href="/" class="logo">张三<span>.dev</span></a>
     <ul class="nav-links">
       <li><a href="/">首页</a></li>
-      <li><a href="/interview-questions/">题库</a></li>
+      <li><a href="/interview-questions/" class="active">题库</a></li>
+      <li><a href="/random-question/">刷题</a></li>
       <li><a href="/ai-mock-interview/">AI面试</a></li>
-      <li><a href="/random-question/">随机一题</a></li>
+      <li><a href="/archives/">博客</a></li>
     </ul>
+    <div class="nav-right"><span class="nav-badge" id="totalCount">—</span></div>
   </div>
 </nav>
 
-<section class="hero">
-  <h1>面试题库</h1>
-  <p class="subtitle" id="hero-subtitle">加载中...</p>
-</section>
+<div class="page">
+  <div class="hero">
+    <h1>面试题库</h1>
+    <p class="sub" id="heroSub">加载中...</p>
+  </div>
 
-<div class="main">
-  <aside class="sidebar">
-    <nav class="sidebar-nav" id="sidebar-nav"></nav>
-  </aside>
-
-  <div class="content">
-    <div class="search-bar">
-      <input type="text" class="search-input" id="searchInput" placeholder="搜索面试题..." oninput="filterQuestions()">
-    </div>
-
-    <div id="listView">
-      <div class="questions-list" id="questionsList"></div>
-      <div class="pagination" id="pagination"></div>
-    </div>
-
-    <div class="detail-view" id="detailView">
-      <div class="detail-header">
+  <div class="main-wrap">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="content">
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索面试题..." oninput="filterQuestions()">
+      </div>
+      <div id="listView">
+        <div class="q-list" id="questionsList"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+      <div class="detail-view" id="detailView">
         <button class="back-btn" onclick="showList()">← 返回列表</button>
-      </div>
-      <div class="detail-card">
-        <div class="detail-question">
-          <div class="q-meta">
-            <span class="difficulty" id="detailDiff"></span>
-            <div class="question-tags" id="detailTags"></div>
+        <div class="detail-card">
+          <div class="detail-q">
+            <div class="q-meta"><span class="diff" id="detailDiff"></span><div id="detailTags"></div></div>
+            <h2 class="q-title" id="detailTitle"></h2>
           </div>
-          <h2 class="q-title" id="detailTitle"></h2>
+          <div class="answer-section">
+            <button class="show-answer-btn" onclick="toggleAnswer()">查看答案</button>
+            <div class="answer-content" id="answerContent"></div>
+          </div>
         </div>
-        <div class="answer-section">
-          <button class="show-answer-btn" onclick="toggleAnswer()">查看答案</button>
-          <div class="answer-content" id="answerContent"></div>
+        <div class="detail-nav">
+          <button class="nav-btn" id="prevBtn" onclick="navigateQ(-1)">← 上一题</button>
+          <span class="page-info" id="qNav">1 / 200</span>
+          <button class="nav-btn" id="nextBtn" onclick="navigateQ(1)">下一题 →</button>
         </div>
-      </div>
-      <div class="detail-nav">
-        <button class="nav-btn" id="prevBtn" onclick="navigateQuestion(-1)">← 上一题</button>
-        <span class="page-info" id="questionNav">1 / 200</span>
-        <button class="nav-btn" id="nextBtn" onclick="navigateQuestion(1)">下一题 →</button>
       </div>
     </div>
   </div>
 </div>
 
 <footer class="footer">
-  <p>© 2026 张三的技术博客</p>
+  <span>© 2026 张三的技术博客</span>
+  <a href="https://github.com/eligible123">GitHub</a>
 </footer>
 
 <script>
-const CATEGORIES = [
-  { name: '全部题目', dir: 'all', count: 0 },
-  { name: 'Java', dir: 'Java', count: 200 },
-  { name: 'Java热门200道', dir: 'Java热门200道', count: 162 },
-  { name: 'AI大模型', dir: 'AI大模型', count: 343 },
-  { name: 'Agent面试题', dir: 'Agent面试题', count: 87 },
-  { name: 'Spring', dir: 'Spring', count: 58 },
-  { name: 'SpringBoot', dir: 'SpringBoot', count: 19 },
-  { name: 'SpringCloud', dir: 'SpringCloud', count: 44 },
-  { name: 'MySQL', dir: 'MySQL', count: 49 },
-  { name: 'Redis', dir: 'Redis', count: 24 },
-  { name: 'ElasticSearch', dir: 'ElasticSearch', count: 177 },
-  { name: 'Kafka', dir: 'Kafka', count: 59 },
-  { name: 'RabbitMQ', dir: 'RabbitMQ', count: 35 },
-  { name: 'RocketMQ', dir: 'RocketMQ', count: 30 },
-  { name: 'Dubbo', dir: 'Dubbo', count: 64 },
-  { name: 'Zookeeper', dir: 'Zookeeper', count: 92 },
-  { name: 'Docker', dir: 'Docker', count: 28 },
-  { name: 'Kubernetes', dir: 'Kubernetes', count: 25 },
-  { name: 'Nginx', dir: 'Nginx', count: 115 },
-  { name: 'Linux系统', dir: 'Linux系统', count: 43 },
-  { name: 'MyBatis', dir: 'MyBatis', count: 12 },
-  { name: 'Netty', dir: 'Netty', count: 4 },
-  { name: 'Git基础', dir: 'Git基础', count: 59 },
-  { name: 'Git进阶', dir: 'Git进阶', count: 123 },
-  { name: 'SQL电商场景', dir: 'SQL电商场景', count: 34 },
-  { name: 'SQL网站场景', dir: 'SQL网站场景', count: 45 },
-  { name: '后端场景', dir: '后端场景', count: 80 },
-  { name: '后端系统设计', dir: '后端系统设计', count: 34 },
-  { name: '大厂算法真题', dir: '大厂算法真题', count: 63 },
-  { name: '设计模式', dir: '设计模式', count: 26 },
-  { name: '操作系统', dir: '操作系统', count: 21 },
-  { name: '计算机网络', dir: '计算机网络', count: 21 },
-  { name: '消息队列', dir: '消息队列', count: 15 },
-  { name: '华为OD', dir: '华为OD', count: 209 },
-  { name: '字节跳动面经', dir: '字节跳动面经', count: 58 },
-  { name: '阿里巴巴面经', dir: '阿里巴巴面经', count: 35 },
-  { name: '京东面经', dir: '京东面经', count: 33 },
-  { name: '美团面经', dir: '美团面经', count: 20 },
-  { name: '拼多多面经', dir: '拼多多面经', count: 19 },
-  { name: '腾讯面经', dir: '腾讯面经', count: 14 },
-  { name: '快手面经', dir: '快手面经', count: 8 },
-  { name: '百度面经', dir: '百度面经', count: 5 },
-  { name: '小米面经', dir: '小米面经', count: 9 },
+const CATEGORIES=[
+  {name:'全部题目',dir:'all',count:0},
+  {name:'Java',dir:'Java',count:200},
+  {name:'Java热门200道',dir:'Java热门200道',count:162},
+  {name:'AI大模型',dir:'AI大模型',count:343},
+  {name:'Agent面试题',dir:'Agent面试题',count:87},
+  {name:'Spring',dir:'Spring',count:58},
+  {name:'SpringBoot',dir:'SpringBoot',count:19},
+  {name:'SpringCloud',dir:'SpringCloud',count:44},
+  {name:'MySQL',dir:'MySQL',count:49},
+  {name:'Redis',dir:'Redis',count:24},
+  {name:'ElasticSearch',dir:'ElasticSearch',count:177},
+  {name:'Kafka',dir:'Kafka',count:59},
+  {name:'RabbitMQ',dir:'RabbitMQ',count:35},
+  {name:'RocketMQ',dir:'RocketMQ',count:30},
+  {name:'Dubbo',dir:'Dubbo',count:64},
+  {name:'Zookeeper',dir:'Zookeeper',count:92},
+  {name:'Docker',dir:'Docker',count:28},
+  {name:'Kubernetes',dir:'Kubernetes',count:25},
+  {name:'Nginx',dir:'Nginx',count:115},
+  {name:'Linux系统',dir:'Linux系统',count:43},
+  {name:'MyBatis',dir:'MyBatis',count:12},
+  {name:'Netty',dir:'Netty',count:4},
+  {name:'Git基础',dir:'Git基础',count:59},
+  {name:'Git进阶',dir:'Git进阶',count:123},
+  {name:'SQL电商场景',dir:'SQL电商场景',count:34},
+  {name:'SQL网站场景',dir:'SQL网站场景',count:45},
+  {name:'后端场景',dir:'后端场景',count:80},
+  {name:'后端系统设计',dir:'后端系统设计',count:34},
+  {name:'大厂算法真题',dir:'大厂算法真题',count:63},
+  {name:'设计模式',dir:'设计模式',count:26},
+  {name:'操作系统',dir:'操作系统',count:21},
+  {name:'计算机网络',dir:'计算机网络',count:21},
+  {name:'消息队列',dir:'消息队列',count:15},
+  {name:'华为OD',dir:'华为OD',count:209},
+  {name:'字节跳动面经',dir:'字节跳动面经',count:58},
+  {name:'阿里巴巴面经',dir:'阿里巴巴面经',count:35},
+  {name:'京东面经',dir:'京东面经',count:33},
+  {name:'美团面经',dir:'美团面经',count:20},
+  {name:'拼多多面经',dir:'拼多多面经',count:19},
+  {name:'腾讯面经',dir:'腾讯面经',count:14},
+  {name:'快手面经',dir:'快手面经',count:8},
+  {name:'百度面经',dir:'百度面经',count:5},
+  {name:'小米面经',dir:'小米面经',count:9},
 ];
+CATEGORIES[0].count=CATEGORIES.slice(1).reduce((s,c)=>s+c.count,0);
 
-// Calculate total
-CATEGORIES[0].count = CATEGORIES.slice(1).reduce((sum, cat) => sum + cat.count, 0);
+let curCat='all',curQs=[],filtered=[],curPage=1,curIdx=0,pageSize=30,loaded={};
 
-let currentCategory = 'all';
-let currentQuestions = [];
-let filteredQuestions = [];
-let currentPage = 1;
-let currentQuestionIndex = 0;
-const pageSize = 30;
-let loadedCategories = {};
-
-function init() {
+function init(){
   renderSidebar();
-  document.getElementById('hero-subtitle').textContent = `${CATEGORIES[0].count}道面试题 · ${CATEGORIES.length - 1}个分类 · 含详细答案`;
+  document.getElementById('heroSub').textContent=CATEGORIES[0].count+'道面试题 · '+(CATEGORIES.length-1)+'个分类 · 含详细答案';
+  document.getElementById('totalCount').textContent=CATEGORIES[0].count+' 道题';
   selectCategory('all');
 }
 
-function renderSidebar() {
-  const nav = document.getElementById('sidebar-nav');
-  nav.innerHTML = CATEGORIES.map(cat => `
-    <div class="sidebar-item ${currentCategory === cat.dir ? 'active' : ''}" onclick="selectCategory('${cat.dir}')">
-      <span>${cat.name}</span>
-      <span class="count">${cat.count}</span>
-    </div>
-  `).join('');
+function renderSidebar(){
+  document.getElementById('sidebar').innerHTML=CATEGORIES.map(c=>
+    `<div class="sidebar-item ${curCat===c.dir?'active':''}" onclick="selectCategory('${c.dir}')"><span>${c.name}</span><span class="cnt">${c.count}</span></div>`
+  ).join('');
 }
 
-async function selectCategory(dir) {
-  currentCategory = dir;
-  currentPage = 1;
-  renderSidebar();
-
-  if (dir === 'all') {
-    await loadAllCategories();
-  } else {
-    await loadCategory(dir);
-  }
-
-  filteredQuestions = [...currentQuestions];
-  renderQuestions();
-  showListView();
+async function selectCategory(dir){
+  curCat=dir;curPage=1;renderSidebar();
+  if(dir==='all')await loadAll();else await loadCat(dir);
+  filtered=[...curQs];renderQs();show('list');
 }
 
-async function loadCategory(dir) {
-  if (loadedCategories[dir]) {
-    currentQuestions = loadedCategories[dir];
-    return;
-  }
-
+async function loadCat(dir){
+  if(loaded[dir]){curQs=loaded[dir];return}
   showLoading();
-  try {
-    const response = await fetch(`/interview-questions/${dir}/data.js`);
-    const text = await response.text();
-    const start = text.indexOf('[');
-    const end = text.lastIndexOf(']') + 1;
-    const data = JSON.parse(text.substring(start, end));
-    loadedCategories[dir] = data;
-    currentQuestions = data;
-  } catch (e) {
-    console.error('Failed to load category:', dir, e);
-    currentQuestions = [];
-  }
+  try{const r=await fetch(`/interview-questions/${dir}/data.js`);const t=await r.text();const s=t.indexOf('['),e=t.lastIndexOf(']')+1;loaded[dir]=JSON.parse(t.substring(s,e));curQs=loaded[dir]}catch(e){curQs=[]}
 }
 
-async function loadAllCategories() {
-  if (loadedCategories['all']) {
-    currentQuestions = loadedCategories['all'];
-    return;
-  }
-
-  showLoading();
-  const allQuestions = [];
-
-  for (let i = 1; i < CATEGORIES.length; i++) {
-    const cat = CATEGORIES[i];
-    try {
-      if (!loadedCategories[cat.dir]) {
-        const response = await fetch(`/interview-questions/${cat.dir}/data.js`);
-        const text = await response.text();
-        const start = text.indexOf('[');
-        const end = text.lastIndexOf(']') + 1;
-        loadedCategories[cat.dir] = JSON.parse(text.substring(start, end));
-      }
-      allQuestions.push(...loadedCategories[cat.dir]);
-    } catch (e) {
-      console.error('Failed to load:', cat.dir);
-    }
-  }
-
-  loadedCategories['all'] = allQuestions;
-  currentQuestions = allQuestions;
+async function loadAll(){
+  if(loaded.all){curQs=loaded.all;return}
+  showLoading();const all=[];
+  for(let i=1;i<CATEGORIES.length;i++){const c=CATEGORIES[i];try{if(!loaded[c.dir]){const r=await fetch(`/interview-questions/${c.dir}/data.js`);const t=await r.text();const s=t.indexOf('['),e=t.lastIndexOf(']')+1;loaded[c.dir]=JSON.parse(t.substring(s,e))}all.push(...loaded[c.dir])}catch(e){}}
+  loaded.all=all;curQs=all;
 }
 
-function showLoading() {
-  document.getElementById('questionsList').innerHTML = '<div class="loading">加载中...</div>';
-}
+function showLoading(){document.getElementById('questionsList').innerHTML='<div class="loading">加载中...</div>'}
+function show(v){document.getElementById('listView').style.display=v==='list'?'block':'none';document.getElementById('detailView').classList.toggle('active',v==='detail')}
 
-function showListView() {
-  document.getElementById('listView').style.display = 'block';
-  document.getElementById('detailView').classList.remove('active');
-}
-
-function showDetailView() {
-  document.getElementById('listView').style.display = 'none';
-  document.getElementById('detailView').classList.add('active');
-}
-
-function renderQuestions() {
-  const start = (currentPage - 1) * pageSize;
-  const end = start + pageSize;
-  const pageQuestions = filteredQuestions.slice(start, end);
-  const totalPages = Math.ceil(filteredQuestions.length / pageSize);
-
-  const list = document.getElementById('questionsList');
-  if (pageQuestions.length === 0) {
-    list.innerHTML = '<div class="empty-state">暂无题目</div>';
-    document.getElementById('pagination').innerHTML = '';
-    return;
-  }
-
-  list.innerHTML = pageQuestions.map((q, i) => {
-    const globalIndex = start + i + 1;
-    const tags = typeof q.tags === 'string' ? q.tags.split(',').map(t => t.trim()) : (q.tags || []);
-    const diffClass = q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard';
-
-    return `
-      <div class="question-item" onclick="showDetail(${start + i})">
-        <div class="question-num">${q.num || globalIndex}</div>
-        <div class="question-content">
-          <div class="question-title">${q.title}</div>
-          <div class="question-meta">
-            <span class="difficulty ${diffClass}">${q.difficulty_emoji || ''} ${q.difficulty}</span>
-            <div class="question-tags">
-              ${tags.slice(0, 3).map(t => `<span class="question-tag">${t}</span>`).join('')}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
+function renderQs(){
+  const s=(curPage-1)*pageSize,e=s+pageSize,pq=filtered.slice(s,e),tp=Math.ceil(filtered.length/pageSize);
+  const el=document.getElementById('questionsList');
+  if(!pq.length){el.innerHTML='<div class="empty-state">暂无题目</div>';document.getElementById('pagination').innerHTML='';return}
+  el.innerHTML=pq.map((q,i)=>{
+    const n=s+i+1,tags=typeof q.tags==='string'?q.tags.split(',').map(t=>t.trim()):(q.tags||[]);
+    const dc=q.difficulty==='简单'?'easy':q.difficulty==='中等'?'medium':'hard';
+    return`<div class="q-item" onclick="showDetail(${s+i})"><div class="q-num">${q.num||n}</div><div class="q-body"><div class="q-title">${q.title}</div><div class="q-meta"><span class="diff ${dc}">${q.difficulty_emoji||''} ${q.difficulty}</span>${tags.slice(0,3).map(t=>`<span class="q-tag">${t}</span>`).join('')}</div></div></div>`;
   }).join('');
-
-  renderPagination(totalPages);
+  renderPag(tp);
 }
 
-function renderPagination(totalPages) {
-  if (totalPages <= 1) {
-    document.getElementById('pagination').innerHTML = '';
-    return;
-  }
-
-  let html = '';
-  html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>←</button>`;
-
-  const maxVisible = 7;
-  let startPage = Math.max(1, currentPage - 3);
-  let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-  if (endPage - startPage < maxVisible - 1) {
-    startPage = Math.max(1, endPage - maxVisible + 1);
-  }
-
-  if (startPage > 1) {
-    html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
-    if (startPage > 2) html += `<span class="page-info">...</span>`;
-  }
-
-  for (let i = startPage; i <= endPage; i++) {
-    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
-  }
-
-  if (endPage < totalPages) {
-    if (endPage < totalPages - 1) html += `<span class="page-info">...</span>`;
-    html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
-  }
-
-  html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>→</button>`;
-
-  document.getElementById('pagination').innerHTML = html;
+function renderPag(tp){
+  if(tp<=1){document.getElementById('pagination').innerHTML='';return}
+  let h=`<button class="page-btn" onclick="goPage(${curPage-1})" ${curPage===1?'disabled':''}>←</button>`;
+  let s=Math.max(1,curPage-3),e=Math.min(tp,s+6);
+  if(e-s<6)s=Math.max(1,e-6);
+  if(s>1){h+=`<button class="page-btn" onclick="goPage(1)">1</button>`;if(s>2)h+=`<span class="page-info">...</span>`}
+  for(let i=s;i<=e;i++)h+=`<button class="page-btn ${i===curPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  if(e<tp){if(e<tp-1)h+=`<span class="page-info">...</span>`;h+=`<button class="page-btn" onclick="goPage(${tp})">${tp}</button>`}
+  h+=`<button class="page-btn" onclick="goPage(${curPage+1})" ${curPage===tp?'disabled':''}>→</button>`;
+  document.getElementById('pagination').innerHTML=h;
 }
 
-function goToPage(page) {
-  const totalPages = Math.ceil(filteredQuestions.length / pageSize);
-  if (page < 1 || page > totalPages) return;
-  currentPage = page;
-  renderQuestions();
-  window.scrollTo({ top: 200, behavior: 'smooth' });
+function goPage(p){const tp=Math.ceil(filtered.length/pageSize);if(p<1||p>tp)return;curPage=p;renderQs();window.scrollTo({top:200,behavior:'smooth'})}
+
+function filterQuestions(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  filtered=q?curQs.filter(x=>x.title.toLowerCase().includes(q)||(x.tags&&x.tags.toLowerCase().includes(q))):[...curQs];
+  curPage=1;renderQs();
 }
 
-function filterQuestions() {
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
-  if (!query) {
-    filteredQuestions = [...currentQuestions];
-  } else {
-    filteredQuestions = currentQuestions.filter(q =>
-      q.title.toLowerCase().includes(query) ||
-      (q.tags && q.tags.toLowerCase().includes(query))
-    );
-  }
-  currentPage = 1;
-  renderQuestions();
-}
-
-function showDetail(index) {
-  currentQuestionIndex = index;
-  const q = filteredQuestions[index];
-  if (!q) return;
-
-  const tags = typeof q.tags === 'string' ? q.tags.split(',').map(t => t.trim()) : (q.tags || []);
-  const diffClass = q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard';
-
-  document.getElementById('detailTitle').textContent = q.title;
-  document.getElementById('detailDiff').textContent = `${q.difficulty_emoji || ''} ${q.difficulty}`;
-  document.getElementById('detailDiff').className = `difficulty ${diffClass}`;
-  document.getElementById('detailTags').innerHTML = tags.map(t => `<span class="question-tag">${t}</span>`).join('');
-
-  const answer = q.answer || '暂无答案';
-  document.getElementById('answerContent').textContent = answer;
+function showDetail(i){
+  curIdx=i;const q=filtered[i];if(!q)return;
+  const tags=typeof q.tags==='string'?q.tags.split(',').map(t=>t.trim()):(q.tags||[]);
+  const dc=q.difficulty==='简单'?'easy':q.difficulty==='中等'?'medium':'hard';
+  document.getElementById('detailTitle').textContent=q.title;
+  document.getElementById('detailDiff').textContent=`${q.difficulty_emoji||''} ${q.difficulty}`;
+  document.getElementById('detailDiff').className=`diff ${dc}`;
+  document.getElementById('detailTags').innerHTML=tags.map(t=>`<span class="q-tag">${t}</span>`).join('');
+  document.getElementById('answerContent').textContent=q.answer||'暂无答案';
   document.getElementById('answerContent').classList.remove('show');
-
-  updateNavigation();
-  showDetailView();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateNav();show('detail');window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function updateNavigation() {
-  const total = filteredQuestions.length;
-  document.getElementById('questionNav').textContent = `${currentQuestionIndex + 1} / ${total}`;
-  document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
-  document.getElementById('nextBtn').disabled = currentQuestionIndex === total - 1;
-}
-
-function navigateQuestion(direction) {
-  const newIndex = currentQuestionIndex + direction;
-  if (newIndex >= 0 && newIndex < filteredQuestions.length) {
-    showDetail(newIndex);
-  }
-}
-
-function toggleAnswer() {
-  document.getElementById('answerContent').classList.toggle('show');
-}
-
-function showList() {
-  showListView();
-}
+function updateNav(){document.getElementById('qNav').textContent=`${curIdx+1} / ${filtered.length}`;document.getElementById('prevBtn').disabled=curIdx===0;document.getElementById('nextBtn').disabled=curIdx===filtered.length-1}
+function navigateQ(d){const n=curIdx+d;if(n>=0&&n<filtered.length)showDetail(n)}
+function toggleAnswer(){document.getElementById('answerContent').classList.toggle('show')}
+function showList(){show('list')}
 
 init();
 </script>
-
 </body>
 </html>
