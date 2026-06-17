@@ -4,509 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>随机一题 | 面试题库</title>
-<meta name="description" content="随机抽取面试题，AI分析答案匹配度，错题本功能">
+<meta name="description" content="随机抽取面试题，闪记卡模式，点击翻转查看答案">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --primary: #111827;
-  --secondary: #374151;
-  --bg: #F9FAFB;
-  --card: #FFFFFF;
-  --border: #E5E7EB;
-  --text: #111827;
-  --subtext: #6B7280;
-  --success: #10B981;
-  --warning: #F59E0B;
-  --danger: #EF4444;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,.08);
-}
-
-body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.navbar .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--primary);
-  text-decoration: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--subtext);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.nav-links a:hover { color: var(--primary); }
-
-.hero {
-  padding: 100px 24px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.hero h1 {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--primary);
-  letter-spacing: -1px;
-  margin-bottom: 8px;
-}
-
-.hero .subtitle {
-  font-size: 16px;
-  color: var(--subtext);
-}
-
-.main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 24px 80px;
-}
-
-/* Stats */
-.stats-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.stat-label {
-  font-size: 13px;
-  color: var(--subtext);
-  margin-top: 4px;
-}
-
-/* Question Card */
-.question-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
-  margin-bottom: 24px;
-}
-
-.question-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.question-meta {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.question-num {
-  padding: 4px 12px;
-  background: var(--bg);
-  border-radius: 6px;
-  font-size: 13px;
-  color: var(--subtext);
-}
-
-.difficulty {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.difficulty.easy {
-  background: #ECFDF5;
-  color: #059669;
-}
-
-.difficulty.medium {
-  background: #FEF3C7;
-  color: #D97706;
-}
-
-.difficulty.hard {
-  background: #FEF2F2;
-  color: #DC2626;
-}
-
-.question-tags {
-  display: flex;
-  gap: 6px;
-}
-
-.question-tag {
-  padding: 3px 10px;
-  background: var(--bg);
-  border-radius: 6px;
-  font-size: 12px;
-  color: var(--subtext);
-}
-
-.question-title {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
-
-.question-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn.primary {
-  background: var(--primary);
-  color: white;
-  border: none;
-}
-
-.btn.primary:hover {
-  background: #1F2937;
-}
-
-.btn.secondary {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--secondary);
-}
-
-.btn.secondary:hover {
-  border-color: var(--primary);
-}
-
-/* Answer Section */
-.answer-section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 24px;
-  display: none;
-}
-
-.answer-section.show {
-  display: block;
-}
-
-.answer-section h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.answer-input {
-  width: 100%;
-  min-height: 150px;
-  padding: 16px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: vertical;
-  outline: none;
-  font-family: inherit;
-}
-
-.answer-input:focus {
-  border-color: var(--primary);
-}
-
-.submit-btn {
-  margin-top: 12px;
-}
-
-/* Score Result */
-.score-result {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 24px;
-  display: none;
-}
-
-.score-result.show {
-  display: block;
-}
-
-.score-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.score-header h3 {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.score-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 auto 16px;
-}
-
-.score-circle.high {
-  background: #ECFDF5;
-  color: #059669;
-  border: 3px solid #10B981;
-}
-
-.score-circle.medium {
-  background: #FEF3C7;
-  color: #D97706;
-  border: 3px solid #F59E0B;
-}
-
-.score-circle.low {
-  background: #FEF2F2;
-  color: #DC2626;
-  border: 3px solid #EF4444;
-}
-
-.score-feedback {
-  color: var(--subtext);
-  font-size: 14px;
-  margin-bottom: 16px;
-}
-
-.match-details {
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.match-details h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.match-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-
-.match-item:last-child {
-  border-bottom: none;
-}
-
-.match-label {
-  color: var(--subtext);
-}
-
-.match-value {
-  color: var(--success);
-}
-
-.match-value.low {
-  color: var(--danger);
-}
-
-/* Standard Answer */
-.standard-answer {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 24px;
-  display: none;
-}
-
-.standard-answer.show {
-  display: block;
-}
-
-.standard-answer h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: var(--danger);
-}
-
-.standard-answer .answer-content {
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 20px;
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--secondary);
-}
-
-/* Wrong Book */
-.wrong-book {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 24px;
-  display: none;
-}
-
-.wrong-book.show {
-  display: block;
-}
-
-.wrong-book h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.wrong-book .count-badge {
-  padding: 4px 12px;
-  background: #FEF2F2;
-  border-radius: 20px;
-  font-size: 13px;
-  color: #DC2626;
-}
-
-.wrong-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.wrong-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px;
-  background: var(--bg);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.wrong-item:hover {
-  background: #F3F4F6;
-}
-
-.wrong-item .question-text {
-  flex: 1;
-  font-size: 14px;
-  margin-right: 12px;
-}
-
-.wrong-item .fail-count {
-  padding: 4px 10px;
-  background: #FEF2F2;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #DC2626;
-  white-space: nowrap;
-}
-
-.wrong-item .remove-btn {
-  margin-left: 8px;
-  background: none;
-  border: none;
-  color: var(--subtext);
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.wrong-item .remove-btn:hover {
-  color: var(--danger);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 32px;
-  color: var(--subtext);
-  font-size: 14px;
-}
-
-.footer {
-  border-top: 1px solid var(--border);
-  padding: 32px 24px;
-  text-align: center;
-  color: var(--subtext);
-  font-size: 13px;
-}
-
-@media (max-width: 768px) {
-  .hero h1 { font-size: 28px; }
-  .stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .nav-links { display: none; }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#4f46e5;--primary-light:#818cf8;--primary-bg:#eef2ff;--green:#22c55e;--green-bg:#f0fdf4;--orange:#f59e0b;--orange-bg:#fffbeb;--red:#ef4444;--red-bg:#fef2f2;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;--radius:16px;--shadow:0 4px 24px rgba(0,0,0,.08)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--gray-50);color:var(--gray-800);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+.navbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-200)}
+.navbar .container{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:700;color:var(--gray-900);text-decoration:none}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--gray-500);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--primary)}
+.hero{padding:100px 24px 40px;text-align:center}
+.hero h1{font-size:36px;font-weight:800;color:var(--gray-900);letter-spacing:-1px;margin-bottom:8px}
+.hero .subtitle{font-size:16px;color:var(--gray-500)}
+.container{max-width:680px;margin:0 auto;padding:0 24px 80px;width:100%}
+
+/* Flashcard */
+.flashcard-wrap{perspective:1200px;margin-bottom:32px}
+.flashcard{position:relative;width:100%;min-height:380px;cursor:pointer;transition:transform .6s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.flashcard.flipped{transform:rotateY(180deg)}
+.flashcard-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);padding:40px 36px;display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--gray-200);box-shadow:var(--shadow)}
+.flashcard-back{transform:rotateY(180deg);overflow-y:auto}
+.flashcard-face .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-shrink:0}
+.card-num{padding:4px 14px;background:var(--primary-bg);color:var(--primary);border-radius:8px;font-size:13px;font-weight:600}
+.card-diff{padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600}
+.card-diff.easy{background:var(--green-bg);color:#16a34a}
+.card-diff.medium{background:var(--orange-bg);color:#d97706}
+.card-diff.hard{background:var(--red-bg);color:#dc2626}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.card-tag{padding:3px 10px;background:var(--gray-100);color:var(--gray-500);border-radius:6px;font-size:12px}
+.flashcard-front .card-title{font-size:22px;font-weight:700;color:var(--gray-900);line-height:1.6;flex:1;display:flex;align-items:center;justify-content:center;text-align:center}
+.flashcard-back .card-title{font-size:15px;line-height:1.9;color:var(--gray-700);flex:1}
+.flashcard-front .card-hint{font-size:13px;color:var(--gray-400);text-align:center;margin-top:20px;flex-shrink:0}
+.flashcard-back .card-label{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:16px;flex-shrink:0}
+
+/* Controls */
+.controls{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:24px}
+.nav-btn{width:52px;height:52px;border-radius:50%;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nav-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary);background:var(--primary-bg)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.random-btn{padding:14px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:8px}
+.random-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,70,229,.3)}
+.random-btn:active{transform:translateY(0)}
+.counter{font-size:14px;color:var(--gray-400);text-align:center;margin-bottom:32px}
+
+/* Category filter */
+.cat-filter{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.cat-btn{padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .2s;font-family:inherit}
+.cat-btn:hover{border-color:var(--primary-light);color:var(--primary)}
+.cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.footer{margin-top:auto;border-top:1px solid var(--gray-200);padding:24px;text-align:center;color:var(--gray-400);font-size:13px}
+
+@media(max-width:768px){
+  .hero h1{font-size:28px}
+  .flashcard-face{padding:28px 24px}
+  .flashcard-front .card-title{font-size:18px}
+  .flashcard{min-height:320px}
+  .nav-links{display:none}
 }
 </style>
 </head>
@@ -519,282 +75,181 @@ body {
       <li><a href="/">首页</a></li>
       <li><a href="/interview-questions/">题库</a></li>
       <li><a href="/ai-mock-interview/">AI面试</a></li>
-      <li><a href="/random-question/">随机一题</a></li>
+      <li><a href="/random-question/" class="active">随机一题</a></li>
     </ul>
   </div>
 </nav>
 
 <section class="hero">
   <h1>随机一题</h1>
-  <p class="subtitle">随机出题 · AI评分 · 错题本 · 查漏补缺</p>
+  <p class="subtitle">闪记卡模式 · 点击翻转查看答案 · 左右切换</p>
 </section>
 
-<div class="main">
-  <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat-card">
-      <div class="stat-value" id="totalAttempted">0</div>
-      <div class="stat-label">已答题目</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="passCount">0</div>
-      <div class="stat-label">通过数量</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="wrongCount">0</div>
-      <div class="stat-label">错题数量</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="passRate">0%</div>
-      <div class="stat-label">通过率</div>
-    </div>
-  </div>
+<div class="container">
+  <div class="cat-filter" id="catFilter"></div>
 
-  <!-- Question -->
-  <div class="question-card" id="questionCard">
-    <div class="question-header">
-      <div class="question-meta">
-        <span class="question-num" id="questionNum"># 题目 1</span>
-        <span class="difficulty" id="questionDiff">中等</span>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-face flashcard-front">
+        <div class="card-header">
+          <span class="card-num" id="cardNum">#1</span>
+          <span class="card-diff easy" id="cardDiff">简单</span>
+        </div>
+        <div class="card-title" id="cardQuestion">点击「随机一题」开始...</div>
+        <div class="card-hint">👆 点击卡片翻转查看答案</div>
       </div>
-      <div class="question-tags" id="questionTags"></div>
-    </div>
-    <div class="question-title" id="questionTitle">点击下方按钮开始随机出题...</div>
-    <div class="question-actions">
-      <button class="btn primary" onclick="getRandomQuestion()">🎲 随机一题</button>
-      <button class="btn secondary" onclick="showWrongBook()">📕 错题本 <span id="wrongBadge" style="display:none;background:#FEE2E2;color:#DC2626;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:4px">0</span></button>
-    </div>
-  </div>
-
-  <!-- Answer -->
-  <div class="answer-section" id="answerSection">
-    <h3>✏️ 输入你的答案</h3>
-    <textarea class="answer-input" id="answerInput" placeholder="请在此输入你的答案..."></textarea>
-    <button class="btn primary submit-btn" onclick="submitAnswer()" id="submitBtn">📝 提交答案</button>
-  </div>
-
-  <!-- Score -->
-  <div class="score-result" id="scoreResult">
-    <div class="score-header">
-      <h3>📊 评分结果</h3>
-    </div>
-    <div class="score-circle" id="scoreCircle">0</div>
-    <div class="score-feedback" id="scoreFeedback"></div>
-    <div class="match-details" id="matchDetails">
-      <h4>匹配度分析</h4>
-      <div id="matchItems"></div>
-    </div>
-    <div style="display:flex;gap:10px">
-      <button class="btn primary" onclick="getRandomQuestion()">🎲 下一题</button>
-      <button class="btn secondary" onclick="showCurrentAnswer()">📖 查看标准答案</button>
+      <div class="flashcard-face flashcard-back">
+        <div class="card-header">
+          <span class="card-num" id="cardNumBack">#1</span>
+          <div class="card-tags" id="cardTagsBack"></div>
+        </div>
+        <div class="card-label">📖 参考答案</div>
+        <div class="card-title" id="cardAnswer"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Standard Answer -->
-  <div class="standard-answer" id="standardAnswer">
-    <h3>📖 标准答案</h3>
-    <div class="answer-content" id="standardContent"></div>
-    <button class="btn primary" onclick="getRandomQuestion()" style="margin-top:16px">🎲 下一题</button>
+  <div class="controls">
+    <button class="nav-btn" id="prevBtn" onclick="event.stopPropagation();goCard(-1)" disabled>‹</button>
+    <button class="random-btn" onclick="event.stopPropagation();randomCard()">🎲 随机一题</button>
+    <button class="nav-btn" id="nextBtn" onclick="event.stopPropagation();goCard(1)" disabled>›</button>
   </div>
 
-  <!-- Wrong Book -->
-  <div class="wrong-book" id="wrongBook">
-    <h3>
-      📕 错题本
-      <span class="count-badge" id="wrongBookCount">0 道</span>
-    </h3>
-    <div class="wrong-list" id="wrongList"></div>
-  </div>
+  <div class="counter" id="counter">点击「随机一题」开始练习</div>
 </div>
 
 <footer class="footer">
-  <p>© 2026 李阳的技术博客</p>
+  <p>© 2026 张三的技术博客</p>
 </footer>
 
 <script>
-const questionDatabase = [
-  { id: 1, title: '请说说Java中HashMap的底层实现原理？', difficulty: '中等', tags: ['Java', '集合'], answer: 'HashMap基于数组+链表+红黑树实现。JDK8后链表长度超过8转红黑树，默认容量16，负载因子0.75。' },
-  { id: 2, title: 'volatile关键字的作用是什么？', difficulty: '中等', tags: ['Java', '多线程'], answer: 'volatile保证可见性和禁止指令重排序，但不能保证原子性。' },
-  { id: 3, title: 'MySQL的事务隔离级别有哪些？', difficulty: '中等', tags: ['MySQL', '事务'], answer: '读未提交、读已提交、可重复读（默认）、串行化。' },
-  { id: 4, title: 'Redis的持久化机制有哪些？', difficulty: '中等', tags: ['Redis', '持久化'], answer: 'RDB定时快照、AOF记录命令、混合持久化。' },
-  { id: 5, title: 'JVM的垃圾回收机制是什么？', difficulty: '困难', tags: ['JVM', 'GC'], answer: '可达性分析判断存活，标记-清除/整理/复制算法，分代收集。' },
-  { id: 6, title: 'Spring Boot自动配置原理？', difficulty: '中等', tags: ['Spring', '自动配置'], answer: '@EnableAutoConfiguration加载spring.factories，条件注解过滤。' },
-  { id: 7, title: '如何设计一个秒杀系统？', difficulty: '困难', tags: ['系统设计', '高并发'], answer: '前端限流、Redis预扣库存、异步下单、乐观锁防超卖。' },
-  { id: 8, title: 'Transformer的Self-Attention机制？', difficulty: '困难', tags: ['AI', 'Transformer'], answer: 'Q、K、V线性变换，softmax(QK^T/√d)V，多头注意力。' },
-  { id: 9, title: 'MySQL索引的B+树原理？', difficulty: '中等', tags: ['MySQL', '索引'], answer: '多路平衡搜索树，非叶子节点存索引，叶子节点存数据用链表连接。' },
-  { id: 10, title: '分布式事务解决方案？', difficulty: '困难', tags: ['分布式', '事务'], answer: '2PC、3PC、TCC、本地消息表、MQ事务消息、Seata。' },
+// Load all questions from interview category data.js files
+const CATEGORIES_DATA = [
+  'AI大模型','Agent面试题','Docker','Dubbo','ElasticSearch','Git基础','Git概念','Git进阶',
+  'Java','Java热门200道','Kafka','Kubernetes','Linux系统','MyBatis','MySQL','Netty','Nginx',
+  'RabbitMQ','Redis','RocketMQ','Spring','SpringBoot','SpringCloud','SQL电商场景','SQL网站场景',
+  'Zookeeper','后端场景','后端系统设计','大厂算法真题','操作系统','消息队列','计算机网络','设计模式',
+  '华为OD','字节跳动面经','阿里巴巴面经','京东面经','美团面经','拼多多面经','腾讯面经','快手面经',
+  '百度面经','小米面经','小红书面经','得物面经','网易面经','滴滴出行面经'
 ];
 
-let currentQuestion = null;
-let wrongBook = JSON.parse(localStorage.getItem('wrongBook') || '{}');
-let stats = JSON.parse(localStorage.getItem('questionStats') || '{"attempted":0,"passed":0}');
+let allQuestions = [];
+let filtered = [];
+let history = [];
+let historyIdx = -1;
+let currentCat = 'all';
+let loaded = false;
 
-function updateStats() {
-  const wrongCount = Object.keys(wrongBook).length;
-  const passRate = stats.attempted > 0 ? Math.round((stats.passed / stats.attempted) * 100) : 0;
-  document.getElementById('totalAttempted').textContent = stats.attempted;
-  document.getElementById('passCount').textContent = stats.passed;
-  document.getElementById('wrongCount').textContent = wrongCount;
-  document.getElementById('passRate').textContent = passRate + '%';
-  const badge = document.getElementById('wrongBadge');
-  badge.style.display = wrongCount > 0 ? 'inline' : 'none';
-  badge.textContent = wrongCount;
-  document.getElementById('wrongBookCount').textContent = wrongCount + ' 道';
-  localStorage.setItem('wrongBook', JSON.stringify(wrongBook));
-  localStorage.setItem('questionStats', JSON.stringify(stats));
-}
-
-function getRandomQuestion() {
-  document.getElementById('scoreResult').classList.remove('show');
-  document.getElementById('standardAnswer').classList.remove('show');
-  document.getElementById('wrongBook').classList.remove('show');
-  document.getElementById('answerSection').classList.add('show');
-
-  const wrongIds = Object.keys(wrongBook);
-  let question;
-  if (wrongIds.length > 0 && Math.random() < 0.3) {
-    question = questionDatabase.find(q => q.id == wrongIds[Math.floor(Math.random() * wrongIds.length)]);
-  }
-  if (!question) question = questionDatabase[Math.floor(Math.random() * questionDatabase.length)];
-
-  currentQuestion = question;
-  document.getElementById('questionNum').textContent = `# 题目 ${question.id}`;
-  document.getElementById('questionTitle').textContent = question.title;
-
-  const diffEl = document.getElementById('questionDiff');
-  diffEl.textContent = question.difficulty;
-  diffEl.className = 'difficulty ' + (question.difficulty === '简单' ? 'easy' : question.difficulty === '中等' ? 'medium' : 'hard');
-
-  document.getElementById('questionTags').innerHTML = question.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
-  document.getElementById('answerInput').value = '';
-  document.getElementById('answerInput').focus();
-  document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
-}
-
-function submitAnswer() {
-  const answer = document.getElementById('answerInput').value.trim();
-  if (!answer || !currentQuestion) return;
-
-  document.getElementById('submitBtn').disabled = true;
-
-  setTimeout(() => {
-    const result = analyzeAnswer(answer, currentQuestion.answer);
-    stats.attempted++;
-
-    if (result.score >= 60) {
-      stats.passed++;
-      if (wrongBook[currentQuestion.id]) delete wrongBook[currentQuestion.id];
-    } else {
-      if (!wrongBook[currentQuestion.id]) {
-        wrongBook[currentQuestion.id] = { question: currentQuestion.title, failCount: 0, lastAttempt: new Date().toISOString() };
-      }
-      wrongBook[currentQuestion.id].failCount++;
-    }
-
-    updateStats();
-    showScoreResult(result);
-    document.getElementById('submitBtn').disabled = false;
-  }, 1000);
-}
-
-function analyzeAnswer(userAnswer, standardAnswer) {
-  const keywords = standardAnswer.match(/[\u4e00-\u9fa5a-zA-Z]+/g) || [];
-  const important = keywords.filter(k => k.length >= 2);
-  let matched = 0;
-  const matchedKw = [], missedKw = [];
-
-  important.forEach(k => {
-    if (userAnswer.includes(k)) { matched++; matchedKw.push(k); }
-    else missedKw.push(k);
-  });
-
-  const keywordScore = Math.min(100, Math.round((matched / Math.max(important.length, 1)) * 100));
-  const lengthBonus = userAnswer.length > standardAnswer.length * 0.8 ? 10 : userAnswer.length > standardAnswer.length * 0.5 ? 5 : -5;
-  const finalScore = Math.max(0, Math.min(100, keywordScore + lengthBonus));
-
-  return {
-    score: finalScore,
-    matchedKeywords: [...new Set(matchedKw)].slice(0, 5),
-    missedKeywords: [...new Set(missedKw)].slice(0, 5),
-    feedback: finalScore >= 90 ? '🎉 优秀！' : finalScore >= 80 ? '👍 良好！' : finalScore >= 60 ? '✅ 及格！' : '⚠️ 需要加强！'
+// Load questions from data.js files
+async function loadAll() {
+  const loadCat = async (cat) => {
+    try {
+      const resp = await fetch(`/interview-questions/${encodeURIComponent(cat)}/data.js`);
+      if (!resp.ok) return [];
+      const text = await resp.text();
+      const match = text.match(/\[[\s\S]*\]/);
+      if (!match) return [];
+      const arr = JSON.parse(match[0]);
+      return arr.map(q => ({...q, category: cat}));
+    } catch { return []; }
   };
-}
 
-function showScoreResult(result) {
-  document.getElementById('scoreResult').classList.add('show');
-
-  const circle = document.getElementById('scoreCircle');
-  circle.textContent = result.score;
-  circle.className = 'score-circle ' + (result.score >= 80 ? 'high' : result.score >= 60 ? 'medium' : 'low');
-
-  document.getElementById('scoreFeedback').innerHTML = `<p>${result.feedback}</p><p>📊 关键词匹配：${result.matchedKeywords.length} / ${result.matchedKeywords.length + result.missedKeywords.length}</p>`;
-
-  let matchHTML = '';
-  if (result.matchedKeywords.length) matchHTML += `<div class="match-item"><span class="match-label">✅ 匹配关键词</span><span class="match-value">${result.matchedKeywords.join('、')}</span></div>`;
-  if (result.missedKeywords.length) matchHTML += `<div class="match-item"><span class="match-label">❌ 遗漏关键词</span><span class="match-value low">${result.missedKeywords.join('、')}</span></div>`;
-  document.getElementById('matchItems').innerHTML = matchHTML;
-
-  if (result.score < 60) setTimeout(showCurrentAnswer, 1000);
-  document.getElementById('scoreResult').scrollIntoView({ behavior: 'smooth' });
-}
-
-function showCurrentAnswer() {
-  if (!currentQuestion) return;
-  document.getElementById('standardContent').innerHTML = `<p>${currentQuestion.answer}</p>`;
-  document.getElementById('standardAnswer').classList.add('show');
-  document.getElementById('standardAnswer').scrollIntoView({ behavior: 'smooth' });
-}
-
-function showWrongBook() {
-  const wrongIds = Object.keys(wrongBook);
-  const listEl = document.getElementById('wrongList');
-
-  if (wrongIds.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">🎉 暂无错题，继续保持！</div>';
-  } else {
-    listEl.innerHTML = wrongIds.map(id => {
-      const item = wrongBook[id];
-      return `<div class="wrong-item" onclick="loadWrongQuestion(${id})">
-        <div class="question-text">${item.question}</div>
-        <div class="fail-count">❌ ${item.failCount}次未通过</div>
-        <button class="remove-btn" onclick="event.stopPropagation();removeFromWrongBook(${id})">✕</button>
-      </div>`;
-    }).join('');
+  // Load in batches to avoid overwhelming
+  const batches = [];
+  for (let i = 0; i < CATEGORIES_DATA.length; i += 8) {
+    batches.push(CATEGORIES_DATA.slice(i, i + 8));
+  }
+  for (const batch of batches) {
+    const results = await Promise.all(batch.map(loadCat));
+    results.forEach(arr => allQuestions.push(...arr));
   }
 
-  document.getElementById('wrongBook').classList.add('show');
-  document.getElementById('wrongBook').scrollIntoView({ behavior: 'smooth' });
+  // Build category filter
+  const cats = [...new Set(allQuestions.map(q => q.category))].sort();
+  const filterEl = document.getElementById('catFilter');
+  filterEl.innerHTML = `<button class="cat-btn active" onclick="setCat(this,'all')">全部 (${allQuestions.length})</button>` +
+    cats.map(c => {
+      const cnt = allQuestions.filter(q => q.category === c).length;
+      return `<button class="cat-btn" onclick="setCat(this,'${c.replace(/'/g,"\\'")}')">${c} (${cnt})</button>`;
+    }).join('');
+
+  filtered = [...allQuestions];
+  loaded = true;
+  document.getElementById('counter').textContent = `共 ${allQuestions.length} 道题，点击「随机一题」开始`;
 }
 
-function loadWrongQuestion(id) {
-  const question = questionDatabase.find(q => q.id === id);
-  if (!question) return;
-  currentQuestion = question;
-
-  document.getElementById('questionNum').textContent = `# 题目 ${question.id}`;
-  document.getElementById('questionTitle').textContent = question.title;
-  const diffEl = document.getElementById('questionDiff');
-  diffEl.textContent = question.difficulty;
-  diffEl.className = 'difficulty ' + (question.difficulty === '简单' ? 'easy' : question.difficulty === '中等' ? 'medium' : 'hard');
-  document.getElementById('questionTags').innerHTML = question.tags.map(t => `<span class="question-tag">${t}</span>`).join('');
-
-  document.getElementById('scoreResult').classList.remove('show');
-  document.getElementById('standardAnswer').classList.remove('show');
-  document.getElementById('wrongBook').classList.remove('show');
-  document.getElementById('answerSection').classList.add('show');
-  document.getElementById('answerInput').value = '';
-  document.getElementById('answerInput').focus();
-  document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
+function setCat(el, cat) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentCat = cat;
+  filtered = cat === 'all' ? [...allQuestions] : allQuestions.filter(q => q.category === cat);
+  history = [];
+  historyIdx = -1;
+  document.getElementById('counter').textContent = `已筛选 ${filtered.length} 道题`;
 }
 
-function removeFromWrongBook(id) {
-  delete wrongBook[id];
-  updateStats();
-  showWrongBook();
+function randomCard() {
+  if (!loaded || filtered.length === 0) return;
+  const q = filtered[Math.floor(Math.random() * filtered.length)];
+  // Add to history, trim forward
+  history = history.slice(0, historyIdx + 1);
+  history.push(q);
+  historyIdx = history.length - 1;
+  showCard(q);
 }
 
-updateStats();
+function goCard(dir) {
+  const ni = historyIdx + dir;
+  if (ni < 0 || ni >= history.length) return;
+  historyIdx = ni;
+  showCard(history[ni]);
+}
+
+function showCard(q) {
+  // Unflip
+  document.getElementById('flashcard').classList.remove('flipped');
+
+  // Front
+  document.getElementById('cardNum').textContent = '#' + q.num;
+  document.getElementById('cardQuestion').textContent = q.title;
+  const diffEl = document.getElementById('cardDiff');
+  diffEl.textContent = q.difficulty_emoji + ' ' + q.difficulty;
+  diffEl.className = 'card-diff ' + (q.difficulty === '简单' ? 'easy' : q.difficulty === '中等' ? 'medium' : 'hard');
+
+  // Back
+  document.getElementById('cardNumBack').textContent = '#' + q.num;
+  document.getElementById('cardTagsBack').innerHTML = (q.tags || '').split(',').map(t =>
+    `<span class="card-tag">${t.trim()}</span>`
+  ).join('');
+  // Render markdown-ish answer
+  let ans = q.answer || '暂无答案';
+  ans = ans.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>');
+  document.getElementById('cardAnswer').innerHTML = ans;
+
+  // Nav buttons
+  document.getElementById('prevBtn').disabled = historyIdx <= 0;
+  document.getElementById('nextBtn').disabled = historyIdx >= history.length - 1;
+
+  // Counter
+  document.getElementById('counter').textContent = `第 ${historyIdx + 1} / ${history.length} 张 · 共 ${filtered.length} 道题`;
+
+  // Scroll to card
+  document.getElementById('flashcard').scrollIntoView({behavior: 'smooth', block: 'center'});
+}
+
+function flipCard() {
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') goCard(-1);
+  if (e.key === 'ArrowRight') goCard(1);
+  if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  if (e.key === 'Enter') randomCard();
+});
+
+loadAll();
 </script>
-
 </body>
 </html>
