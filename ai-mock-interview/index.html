@@ -524,7 +524,7 @@ body {
     <div class="settings-grid">
       <div class="field">
         <label>API Base URL</label>
-        <input type="text" id="apiUrl" placeholder="https://api.deepseek.com/v1">
+        <input type="text" id="apiUrl" placeholder="https://api.longcat.chat/anthropic">
       </div>
       <div class="field">
         <label>API Key</label>
@@ -574,9 +574,9 @@ body {
 
 <script>
 // ====== State ======
-let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.deepseek.com/v1';
+let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.longcat.chat/anthropic';
 let apiKey = localStorage.getItem('ai_interview_key') || '';
-let modelName = localStorage.getItem('ai_interview_model') || 'deepseek-chat';
+let modelName = localStorage.getItem('ai_interview_model') || 'LongCat-2.0-Preview';
 let resumeContent = localStorage.getItem('ai_interview_resume') || '';
 let messages = [];
 let isStreaming = false;
