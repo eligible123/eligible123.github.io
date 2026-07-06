@@ -574,9 +574,9 @@ body {
 
 <script>
 // ====== State ======
-let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.longcat.chat/anthropic';
+let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.iamhc.cn';
 let apiKey = localStorage.getItem('ai_interview_key') || '';
-let modelName = localStorage.getItem('ai_interview_model') || 'LongCat-2.0-Preview';
+let modelName = localStorage.getItem('ai_interview_model') || 'auto';
 let resumeContent = localStorage.getItem('ai_interview_resume') || '';
 let messages = [];
 let isStreaming = false;
@@ -703,7 +703,9 @@ async function fetchModels() {
   sel.innerHTML = '<option value="">加载中...</option>';
 
   try {
-    const modelsUrl = url.replace(/\/chat\/completions$/, '').replace(/\/v1\/?$/, '') + '/v1/models';
+    let modelsBaseUrl = url.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
+    if (!modelsBaseUrl.endsWith('/v1')) modelsBaseUrl = modelsBaseUrl + '/v1';
+    const modelsUrl = modelsBaseUrl + '/models';
     const res = await fetch(modelsUrl, { method: 'GET', headers: { 'Authorization': 'Bearer ' + key } });
     if (!res.ok) throw new Error('不支持 /v1/models 路径，请手动填写模型名称');
     const data = await res.json();
@@ -746,7 +748,9 @@ async function testConnection() {
   const btn = document.getElementById('testBtn');
   btn.textContent = '⏳'; btn.disabled = true;
   try {
-    const chatUrl = url.endsWith('/chat/completions') ? url : url.replace(/\/$/, '') + '/chat/completions';
+    let testBaseUrl = url.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
+    if (!testBaseUrl.endsWith('/v1')) testBaseUrl = testBaseUrl + '/v1';
+    const chatUrl = testBaseUrl + '/chat/completions';
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
@@ -1026,7 +1030,9 @@ async function getAIResponse(isFinal = false) {
   abortController = new AbortController();
 
   try {
-    const chatUrl = apiUrl.endsWith('/chat/completions') ? apiUrl : apiUrl.replace(/\/$/, '') + '/chat/completions';
+    // Normalize URL: add /v1 if not present
+    let baseUrl = apiUrl.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
+    let chatUrl = baseUrl.endsWith('/v1') ? baseUrl + '/chat/completions' : baseUrl + '/v1/chat/completions';
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
