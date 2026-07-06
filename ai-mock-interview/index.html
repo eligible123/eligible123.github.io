@@ -537,6 +537,10 @@ body {
         </select>
         <button class="refresh-btn" onclick="fetchModels()" id="refreshBtn" title="获取模型列表">↻</button>
       </div>
+      <div class="field full">
+        <label>CORS 代理（可选，留空走直连）</label>
+        <input type="text" id="apiProxy" placeholder="如 https://your-worker.workers.dev（解决浏览器跨域）">
+      </div>
       <div class="field" style="display:flex;align-items:flex-end;">
         <button class="nav-btn" onclick="testConnection()" id="testBtn" style="width:100%;">🔗 测试连接</button>
       </div>
@@ -577,6 +581,7 @@ body {
 let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.iamhc.cn';
 let apiKey = localStorage.getItem('ai_interview_key') || '';
 let modelName = localStorage.getItem('ai_interview_model') || 'auto';
+let apiProxy = localStorage.getItem('ai_interview_proxy') || '';
 let resumeContent = localStorage.getItem('ai_interview_resume') || '';
 let messages = [];
 let isStreaming = false;
@@ -648,6 +653,7 @@ const SYSTEM_PROMPT = `## 面试官模块 - P8级技术面试官
 function init() {
   document.getElementById('apiUrl').value = apiUrl;
   document.getElementById('apiKey').value = apiKey;
+  document.getElementById('apiProxy').value = apiProxy;
   if (apiKey) updateApiStatus('pending', '已配置，未验证');
   if (apiKey && apiUrl) setTimeout(() => fetchModels(), 500);
   if (resumeContent) {
@@ -667,10 +673,12 @@ function toggleSettings() {
 function saveSettings() {
   apiUrl = document.getElementById('apiUrl').value.trim();
   apiKey = document.getElementById('apiKey').value.trim();
+  apiProxy = document.getElementById('apiProxy').value.trim();
   modelName = document.getElementById('modelName').value;
   localStorage.setItem('ai_interview_url', apiUrl);
   localStorage.setItem('ai_interview_key', apiKey);
   localStorage.setItem('ai_interview_model', modelName);
+  localStorage.setItem('ai_interview_proxy', apiProxy);
   updateApiStatus('ok', '已保存');
   updateModelDisplay();
   toggleSettings();
@@ -692,6 +700,14 @@ function updateModelDisplay() {
 }
 
 // ====== Fetch Models ======
+// 走自建代理：代理地址 + '/' + 原 URL（path 风格，适配 Cloudflare Worker）
+async function fetchThrough(url, options = {}) {
+  if (apiProxy) {
+    return fetch(apiProxy.replace(/\/+$/, '') + '/' + url, options);
+  }
+  return fetch(url, options);
+}
+
 async function fetchModels() {
   const url = document.getElementById('apiUrl').value.trim();
   const key = document.getElementById('apiKey').value.trim();
@@ -706,7 +722,7 @@ async function fetchModels() {
     let modelsBaseUrl = url.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
     if (!modelsBaseUrl.endsWith('/v1')) modelsBaseUrl = modelsBaseUrl + '/v1';
     const modelsUrl = modelsBaseUrl + '/models';
-    const res = await fetch(modelsUrl, { method: 'GET', headers: { 'Authorization': 'Bearer ' + key } });
+    const res = await fetchThrough(modelsUrl, { method: 'GET', headers: { 'Authorization': 'Bearer ' + key } });
     if (!res.ok) throw new Error('不支持 /v1/models 路径，请手动填写模型名称');
     const data = await res.json();
     const models = data.data || data.models || [];
@@ -751,7 +767,7 @@ async function testConnection() {
     let testBaseUrl = url.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
     if (!testBaseUrl.endsWith('/v1')) testBaseUrl = testBaseUrl + '/v1';
     const chatUrl = testBaseUrl + '/chat/completions';
-    const res = await fetch(chatUrl, {
+    const res = await fetchThrough(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
       body: JSON.stringify({ model, messages: [{ role: 'user', content: 'hi' }], max_tokens: 5 })
@@ -1029,11 +1045,24 @@ async function getAIResponse(isFinal = false) {
   const bubble = msgEl.querySelector('.msg-bubble');
   abortController = new AbortController();
 
+  // 空闲超时：30 秒收不到数据则强制 abort，避免请求挂起导致永久卡死
+  const IDLE_TIMEOUT_MS = 30000;
+  let idleTimer = null;
+  let idleTimedOut = false;
+  const armIdleTimer = () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      idleTimedOut = true;
+      try { abortController.abort(); } catch {}
+    }, IDLE_TIMEOUT_MS);
+  };
+
   try {
+    armIdleTimer();
     // Normalize URL: add /v1 if not present
     let baseUrl = apiUrl.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
     let chatUrl = baseUrl.endsWith('/v1') ? baseUrl + '/chat/completions' : baseUrl + '/v1/chat/completions';
-    const res = await fetch(chatUrl, {
+    const res = await fetchThrough(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
       body: JSON.stringify({ model: modelName, messages, stream: true, max_tokens: 2048, temperature: 0.7 }),
@@ -1041,6 +1070,7 @@ async function getAIResponse(isFinal = false) {
     });
     if (!res.ok) { const e = await res.text(); throw new Error('API ' + res.status + ': ' + e.slice(0, 150)); }
 
+    armIdleTimer();
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let fullText = '', buffer = '';
@@ -1051,6 +1081,7 @@ async function getAIResponse(isFinal = false) {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
+      armIdleTimer();
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n'); buffer = lines.pop();
       for (const line of lines) {
@@ -1082,6 +1113,11 @@ async function getAIResponse(isFinal = false) {
         } catch {}
       }
     }
+
+    // 流式返回为空时显式报错（通常是浏览器被跨域拦截，代理返了 HTML）
+    if (!fullText.trim()) {
+      throw new Error('模型返回为空。常见原因：1) 浏览器跨域被拦截；2) 模型名称错误；3) 接口未真正支持流式。');
+    }
     messages.push({ role: 'assistant', content: fullText });
 
     // Update status if final
@@ -1089,9 +1125,15 @@ async function getAIResponse(isFinal = false) {
       document.getElementById('interviewStatus').innerHTML = '<span class="status-dot pending"></span>面试已完成';
     }
   } catch (e) {
-    if (e.name === 'AbortError') bubble.innerHTML += '<br><span style="color:#F59E0B">[已中断]</span>';
-    else bubble.innerHTML = '<span style="color:var(--red)">❌ ' + e.message + '</span>';
+    if (idleTimedOut) {
+      bubble.innerHTML = '<span style="color:var(--red)">❌ 等待响应超时（30秒无数据）。通常是接口未通或被代理拦截，请检查 API 地址与代理设置。</span>';
+    } else if (e.name === 'AbortError') {
+      bubble.innerHTML += '<br><span style="color:#F59E0B">[已中断]</span>';
+    } else {
+      bubble.innerHTML = '<span style="color:var(--red)">❌ ' + e.message + '</span>';
+    }
   } finally {
+    clearTimeout(idleTimer);
     isStreaming = false; document.getElementById('sendBtn').disabled = false; abortController = null;
     updateMsgCount();
   }
