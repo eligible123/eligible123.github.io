@@ -704,8 +704,8 @@ async function fetchModels() {
 
   try {
     const modelsUrl = url.replace(/\/chat\/completions$/, '').replace(/\/v1\/?$/, '') + '/v1/models';
-    const res = await fetch(modelsUrl, { headers: { 'Authorization': 'Bearer ' + key } });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const res = await fetch(modelsUrl, { method: 'GET', headers: { 'Authorization': 'Bearer ' + key } });
+    if (!res.ok) throw new Error('不支持 /v1/models 路径，请手动填写模型名称');
     const data = await res.json();
     const models = data.data || data.models || [];
 
