@@ -561,8 +561,8 @@ body {
     <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位 JD...&#10;&#10;例如：&#10;姓名：张三&#10;专业：计算机科学&#10;技能：Python, React, MySQL&#10;项目：电商系统开发..."></textarea>
     <div class="char-count"><span id="charCount">0</span> 字</div>
     <div class="file-upload">
-      <label for="fileInput">📁 上传文件 (.txt, .md)</label>
-      <input type="file" id="fileInput" accept=".txt,.md" onchange="handleFile(this)">
+      <label for="fileInput">📁 上传文件 (.txt, .md, .pdf, .docx)</label>
+      <input type="file" id="fileInput" accept=".txt,.md,.pdf,.docx" onchange="handleFile(this)">
     </div>
     <div class="file-info" id="fileInfo"></div>
     <div class="modal-actions">
@@ -784,9 +784,119 @@ function handleFile(input) {
   const file = input.files[0]; if (!file) return;
   const info = document.getElementById('fileInfo');
   info.textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)'; info.classList.add('show');
-  const reader = new FileReader();
-  reader.onload = (e) => { document.getElementById('resumeText').value = e.target.result; updateCharCount(); };
-  reader.readAsText(file);
+
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if (ext === 'txt' || ext === 'md') {
+    const reader = new FileReader();
+    reader.onload = (e) => { document.getElementById('resumeText').value = e.target.result; updateCharCount(); };
+    reader.readAsText(file);
+  } else if (ext === 'pdf') {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const uint8 = new Uint8Array(e.target.result);
+      // Minimal PDF text extraction (no external libs)
+      const text = extractPDFText(uint8);
+      if (text) {
+        document.getElementById('resumeText').value = text;
+        updateCharCount();
+      } else {
+        info.textContent = '⚠️ PDF 内容提取失败，请手动粘贴';
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  } else if (ext === 'docx') {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const uint8 = new Uint8Array(e.target.result);
+      const text = extractDOCXText(uint8);
+      if (text) {
+        document.getElementById('resumeText').value = text;
+        updateCharCount();
+      } else {
+        info.textContent = '⚠️ DOCX 内容提取失败，请手动粘贴';
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+// Minimal PDF text extraction — strips PDF stream content between "stream" and "endstream"
+function extractPDFText(uint8) {
+  let text = '';
+  const raw = new TextDecoder().decode(uint8);
+  // Find all "stream...endstream" blocks and extract text
+  const streamRegex = /stream\r?\n([\s\S]*?)endstream/g;
+  let m;
+  while ((m = streamRegex.exec(raw)) !== null) {
+    const block = m[1];
+    // Extract text between parentheses or from BT/ET blocks
+    const textRegex = /\(([^)]*)\)/g;
+    let t;
+    while ((t = textRegex.exec(block)) !== null) {
+      text += t[1].replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
+    }
+    // Also try to extract from hex-encoded strings like <48656C6C6F>
+    const hexRegex = /<([0-9A-Fa-f]+)>/g;
+    let h;
+    while ((h = hexRegex.exec(block)) !== null) {
+      text += hexToUtf8(h[1]);
+    }
+  }
+  return text.trim() || null;
+}
+
+function hexToUtf8(hex) {
+  const bytes = [];
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes.push(parseInt(hex.substr(i, 2), 16));
+  }
+  return new TextDecoder().decode(new Uint8Array(bytes));
+}
+
+// Minimal DOCX text extraction — reads .zip XML and extracts text from word/document.xml
+function extractDOCXText(uint8) {
+  try {
+    // Read ZIP central directory to find document.xml offset
+    const decoder = new TextDecoder();
+    let pos = uint8.length - 22; // ZIP end of central dir signature
+    while (pos >= 0 && uint8[pos] !== 0x50 && uint8[pos+1] !== 0x4B) { pos--; }
+    if (pos < 0) return null; // not a valid ZIP
+
+    // Find central directory
+    const cdOffset = (uint8[pos+16] << 24) | (uint8[pos+17] << 16) | (uint8[pos+18] << 8) | uint8[pos+19];
+    const cdEntries = (uint8[pos+10] << 8) | uint8[pos+11];
+    let offset = cdOffset;
+
+    for (let i = 0; i < cdEntries && i < 50; i++) { // max 50 files
+      if (offset + 46 > uint8.length) break;
+      const flags = uint8[offset + 8];
+      const nameLen = uint8[offset + 28] | (uint8[offset + 29] << 8);
+      const fileName = decoder.decode(uint8.subarray(offset + 46, offset + 46 + nameLen));
+      if (fileName === 'word/document.xml') {
+        const compMethod = uint8[offset + 10] | (uint8[offset + 11] << 8);
+        const localOffset = (uint8[offset+18] << 0) | (uint8[offset+19] << 8) | (uint8[offset+20] << 16) | (uint8[offset+21] << 24);
+        // Read local file header
+        let lo = localOffset + 30 + nameLen;
+        if (compMethod === 8) {
+          // Decompress (stored offset)
+          const compSize = (uint8[localOffset+18] << 0) | (uint8[localOffset+19] << 8) | (uint8[localOffset+20] << 16) | (uint8[localOffset+21] << 24);
+          const compData = uint8.subarray(lo, lo + compSize);
+          // Simple stored (no-zip compression) extract
+          const raw = decoder.decode(uint8.subarray(localOffset + 30 + nameLen, localOffset + 30 + nameLen + compSize));
+          const docRegex = />([^<]*?)</g;
+          let r;
+          while ((r = docRegex.exec(raw)) !== null) {
+            text += r[1].trim();
+          }
+          return text.trim() || null;
+        }
+        return null; // compressed not handled without zlib
+      }
+      offset += 46 + nameLen + (uint8[offset+30] << 0) | (uint8[offset+31] << 8);
+    }
+    return null;
+  } catch { return null; }
 }
 
 function updateCharCount() { document.getElementById('charCount').textContent = document.getElementById('resumeText').value.length; }
@@ -930,6 +1040,9 @@ async function getAIResponse(isFinal = false) {
     const decoder = new TextDecoder();
     let fullText = '', buffer = '';
 
+    // Detect protocol
+    const isAnthropic = apiUrl.includes('anthropic') || modelName.toLowerCase().includes('claude') || modelName.toLowerCase().includes('sonnet') || modelName.toLowerCase().includes('opus') || modelName.toLowerCase().includes('haiku');
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -940,8 +1053,27 @@ async function getAIResponse(isFinal = false) {
         const data = line.slice(6).trim();
         if (data === '[DONE]') continue;
         try {
-          const delta = JSON.parse(data).choices?.[0]?.delta?.content;
-          if (delta) { fullText += delta; bubble.innerHTML = formatMsg(fullText); scrollToBottom(); }
+          const parsed = JSON.parse(data);
+
+          if (isAnthropic) {
+            // Anthropic stream format:
+            // {"type":"content_block_delta","delta":{"type":"text_delta","text":"..."}}
+            // {"type":"message_delta","delta":{"stop_reason":"..."}}
+            if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta' && parsed.delta?.text) {
+              fullText += parsed.delta.text;
+              bubble.innerHTML = formatMsg(fullText);
+              scrollToBottom();
+            }
+          } else {
+            // OpenAI stream format:
+            // {"choices":[{"delta":{"content":"..."}}]}
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (delta) {
+              fullText += delta;
+              bubble.innerHTML = formatMsg(fullText);
+              scrollToBottom();
+            }
+          }
         } catch {}
       }
     }
