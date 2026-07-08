@@ -429,7 +429,12 @@ async function fetchModels() {
   sel.innerHTML = '<option value="">加载中...</option>';
 
   try {
-    const modelsUrl = url.replace(/\/chat\/completions$/, '').replace(/\/v1\/?$/, '') + '/v1/models';
+    // 自动补全 /v1 前缀（如果 URL 不以 /v1 开头）
+    let baseUrl = url.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
+    if (!baseUrl.endsWith('/v1')) {
+      baseUrl = baseUrl.replace(/\/$/, '') + '/v1';
+    }
+    const modelsUrl = baseUrl + '/models';
     const res = await fetch(modelsUrl, { headers: { 'Authorization': 'Bearer ' + key } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
@@ -474,7 +479,12 @@ async function testConnection() {
   const btn = document.getElementById('testBtn');
   btn.textContent = '⏳'; btn.disabled = true;
   try {
-    const chatUrl = url.endsWith('/chat/completions') ? url : url.replace(/\/$/, '') + '/chat/completions';
+    // 自动补全 /v1 前缀
+    let baseUrl = url.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
+    if (!baseUrl.endsWith('/v1')) {
+      baseUrl = baseUrl.replace(/\/$/, '') + '/v1';
+    }
+    const chatUrl = baseUrl + '/chat/completions';
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
@@ -565,7 +575,12 @@ async function getAIResponse(isFinal = false) {
   abortController = new AbortController();
 
   try {
-    const chatUrl = apiUrl.endsWith('/chat/completions') ? apiUrl : apiUrl.replace(/\/$/, '') + '/chat/completions';
+    // 自动补全 /v1 前缀
+    let baseUrl = apiUrl.replace(/\/chat\/completions$/, '').replace(/\/$/, '');
+    if (!baseUrl.endsWith('/v1')) {
+      baseUrl = baseUrl.replace(/\/$/, '') + '/v1';
+    }
+    const chatUrl = baseUrl + '/chat/completions';
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
