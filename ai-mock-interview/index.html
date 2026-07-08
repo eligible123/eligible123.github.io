@@ -118,10 +118,18 @@ body {
 }
 .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
 .modal .sub { font-size: 13px; color: var(--subtext); margin-bottom: 16px; }
+.material-section { margin-top: 16px; }
+.material-section + .material-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.material-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.material-head label { font-size: 13px; font-weight: 700; color: var(--text); }
+.material-tag { flex: 0 0 auto; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 11px; color: var(--subtext); background: var(--bg); }
+.material-tag.required { border-color: #A7F3D0; color: var(--accent-dark); background: var(--accent-light); }
 .modal textarea {
-  width: 100%; height: 150px; padding: 12px; border: 1px solid var(--border); border-radius: 8px;
-  font-size: 13px; color: var(--text); background: var(--bg); resize: vertical; font-family: inherit;
+  width: 100%; min-height: 150px; padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; line-height: 1.55; color: var(--text); background: var(--bg); resize: vertical; font-family: inherit;
 }
+.modal textarea.jd-textarea { min-height: 96px; max-height: 160px; }
+.modal textarea.resume-textarea { min-height: 150px; max-height: 240px; }
 .modal textarea:focus { outline: none; border-color: var(--accent); }
 .char-count { font-size: 11px; color: var(--subtext); text-align: right; margin-top: 4px; }
 .file-upload { margin-top: 12px; }
@@ -276,15 +284,37 @@ body {
 <!-- Resume Modal -->
 <div class="modal-overlay" id="resumeModal">
   <div class="modal">
-    <h2>📄 上传简历 / 岗位 JD</h2>
-    <p class="sub">粘贴简历内容或上传文件，面试官将根据你的经历定制追问</p>
-    <textarea id="resumeText" placeholder="粘贴你的简历内容或岗位 JD...&#10;&#10;例如：&#10;姓名：张三&#10;专业：计算机科学&#10;技能：Python, React, MySQL&#10;项目：电商系统开发..."></textarea>
-    <div class="char-count"><span id="charCount">0</span> 字</div>
-    <div class="file-upload">
-      <label for="fileInput">📁 上传文件 (.txt, .md)</label>
-      <input type="file" id="fileInput" accept=".txt,.md" onchange="handleFile(this)">
+    <h2>📄 上传面试材料</h2>
+    <p class="sub">岗位 JD 可选，个人简历必填；面试官会结合两者定制追问</p>
+
+    <div class="material-section">
+      <div class="material-head">
+        <label for="jdText">岗位 JD（可选）</label>
+        <span class="material-tag">可选</span>
+      </div>
+      <textarea id="jdText" class="jd-textarea" placeholder="粘贴岗位 JD，例如：岗位职责、技术栈、任职要求、加分项..."></textarea>
+      <div class="char-count"><span id="jdCharCount">0</span> 字</div>
+      <div class="file-upload">
+        <label for="jdFileInput">📁 上传 JD 文件 (.txt, .md, .pdf, .docx)</label>
+        <input type="file" id="jdFileInput" accept=".txt,.md,.pdf,.docx" onchange="handleFile(this, 'jd')">
+      </div>
+      <div class="file-info" id="jdFileInfo"></div>
     </div>
-    <div class="file-info" id="fileInfo"></div>
+
+    <div class="material-section">
+      <div class="material-head">
+        <label for="resumeText">个人简历（必填）</label>
+        <span class="material-tag required">必填</span>
+      </div>
+      <textarea id="resumeText" class="resume-textarea" placeholder="粘贴你的个人简历...&#10;&#10;例如：&#10;姓名：张三&#10;专业：计算机科学&#10;技能：Python, React, MySQL&#10;项目：电商系统开发..."></textarea>
+      <div class="char-count"><span id="charCount">0</span> 字</div>
+      <div class="file-upload">
+        <label for="fileInput">📁 上传简历文件 (.txt, .md, .pdf, .docx)</label>
+        <input type="file" id="fileInput" accept=".txt,.md,.pdf,.docx" onchange="handleFile(this, 'resume')">
+      </div>
+      <div class="file-info" id="fileInfo"></div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeResumeModal()">取消</button>
       <button class="btn-confirm" onclick="confirmResume()">确认上传</button>
@@ -324,6 +354,7 @@ let apiUrl = localStorage.getItem('ai_interview_url') || 'https://api.deepseek.c
 let apiKey = localStorage.getItem('ai_interview_key') || '';
 let modelName = localStorage.getItem('ai_interview_model') || 'deepseek-chat';
 let resumeContent = localStorage.getItem('ai_interview_resume') || '';
+let jdContent = localStorage.getItem('ai_interview_jd') || '';
 let messages = [];
 let isStreaming = false;
 let abortController = null;
@@ -395,7 +426,9 @@ function init() {
   document.getElementById('apiKey').value = apiKey;
   if (apiKey) updateApiStatus('pending', '已配置，未验证');
   if (apiKey && apiUrl) setTimeout(() => fetchModels(), 500);
-  if (resumeContent) { document.getElementById('resumeText').value = resumeContent; updateCharCount(); }
+  if (jdContent) document.getElementById('jdText').value = jdContent;
+  if (resumeContent) document.getElementById('resumeText').value = resumeContent;
+  updateCharCount();
 }
 
 // ====== Settings ======
@@ -485,6 +518,7 @@ async function testConnection() {
       baseUrl = baseUrl.replace(/\/$/, '') + '/v1';
     }
     const chatUrl = baseUrl + '/chat/completions';
+    const apiMessages = buildApiMessages();
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
@@ -508,25 +542,98 @@ function showResumeModal() { document.getElementById('resumeModal').classList.ad
 function closeResumeModal() { document.getElementById('resumeModal').classList.remove('active'); }
 
 function confirmResume() {
-  const text = document.getElementById('resumeText').value.trim();
-  if (!text) { alert('请输入简历内容'); return; }
-  resumeContent = text;
+  const jd = document.getElementById('jdText').value.trim();
+  const resume = document.getElementById('resumeText').value.trim();
+  if (!resume) { alert('请填写或上传个人简历'); return; }
+  jdContent = jd;
+  resumeContent = resume;
+  localStorage.setItem('ai_interview_jd', jdContent);
   localStorage.setItem('ai_interview_resume', resumeContent);
   closeResumeModal();
-  addSystemMsg('✅ 简历已上传（' + resumeContent.length + '字），可以开始面试');
+  addSystemMsg('✅ 面试材料已确认（简历' + resumeContent.length + '字' + (jdContent ? '，JD ' + jdContent.length + '字' : '') + '），可以开始面试');
 }
 
-function handleFile(input) {
+function handleFile(input, target = 'resume') {
   const file = input.files[0]; if (!file) return;
-  const info = document.getElementById('fileInfo');
-  info.textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)'; info.classList.add('show');
-  const reader = new FileReader();
-  reader.onload = (e) => { document.getElementById('resumeText').value = e.target.result; updateCharCount(); };
-  reader.readAsText(file);
+  const isJd = target === 'jd';
+  const info = document.getElementById(isJd ? 'jdFileInfo' : 'fileInfo');
+  info.textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)';
+  info.classList.add('show');
+
+  const ext = file.name.split('.').pop().toLowerCase();
+  const setText = (text) => {
+    document.getElementById(isJd ? 'jdText' : 'resumeText').value = text;
+    updateCharCount();
+  };
+
+  if (ext === 'txt' || ext === 'md') {
+    const reader = new FileReader();
+    reader.onload = (e) => setText(e.target.result);
+    reader.readAsText(file);
+  } else if (ext === 'pdf') {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const uint8 = new Uint8Array(e.target.result);
+      const text = extractPDFText(uint8);
+      if (text) setText(text);
+      else info.textContent = '⚠️ PDF 内容提取失败，请手动粘贴';
+    };
+    reader.readAsArrayBuffer(file);
+  } else if (ext === 'docx') {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const uint8 = new Uint8Array(e.target.result);
+      const text = extractDOCXText(uint8);
+      if (text) setText(text);
+      else info.textContent = '⚠️ DOCX 内容提取失败，请手动粘贴';
+    };
+    reader.readAsArrayBuffer(file);
+  }
 }
 
-function updateCharCount() { document.getElementById('charCount').textContent = document.getElementById('resumeText').value.length; }
+function extractPDFText(uint8) {
+  let text = '';
+  const raw = new TextDecoder().decode(uint8);
+  const streamRegex = /stream\r?\n([\s\S]*?)endstream/g;
+  let m;
+  while ((m = streamRegex.exec(raw)) !== null) {
+    const block = m[1];
+    const textRegex = /\(([^)]*)\)/g;
+    let t;
+    while ((t = textRegex.exec(block)) !== null) {
+      text += t[1].replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
+    }
+    const hexRegex = /<([0-9A-Fa-f]+)>/g;
+    let h;
+    while ((h = hexRegex.exec(block)) !== null) text += hexToUtf8(h[1]);
+  }
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+function hexToUtf8(hex) {
+  try {
+    const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+    return new TextDecoder('utf-8').decode(bytes);
+  } catch { return ''; }
+}
+
+function extractDOCXText(uint8) {
+  try {
+    const raw = new TextDecoder('latin1').decode(uint8);
+    const matches = raw.match(/<w:t[^>]*>([^<]*)<\/w:t>/g);
+    if (!matches) return null;
+    return matches.map(m => m.replace(/<[^>]+>/g, '')).join('').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').trim();
+  } catch { return null; }
+}
+
+function updateCharCount() {
+  const resumeEl = document.getElementById('resumeText');
+  const jdEl = document.getElementById('jdText');
+  if (resumeEl) document.getElementById('charCount').textContent = resumeEl.value.length;
+  if (jdEl) document.getElementById('jdCharCount').textContent = jdEl.value.length;
+}
 document.getElementById('resumeText').addEventListener('input', updateCharCount);
+document.getElementById('jdText').addEventListener('input', updateCharCount);
 
 // ====== Chat ======
 function startInterview() {
@@ -539,7 +646,11 @@ function startInterview() {
   document.getElementById('sendBtn').disabled = false;
   document.getElementById('endBtn').style.display = '';
 
-  messages = [{ role: 'system', content: SYSTEM_PROMPT + '\n\n## 候选人简历\n' + resumeContent }];
+  const jdBlock = jdContent || '未提供岗位 JD。请基于候选人简历进行通用技术面试。';
+  messages = [
+    { role: 'system', content: SYSTEM_PROMPT + '\n\n## 岗位 JD（可选）\n' + jdBlock + '\n\n## 候选人简历\n' + resumeContent },
+    { role: 'user', content: '请先基于岗位 JD 和候选人简历判断面试重点，然后直接提出第一个技术问题。', __internal: true }
+  ];
   addSystemMsg('🎯 面试开始 — 请认真回答每一个问题');
   getAIResponse();
 }
@@ -567,6 +678,12 @@ function sendMessage() {
 function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 
+function buildApiMessages() {
+  return messages
+    .map(({ role, content }) => ({ role, content }))
+    .filter(m => m.role && typeof m.content === 'string' && m.content.trim());
+}
+
 // ====== Stream API ======
 async function getAIResponse(isFinal = false) {
   isStreaming = true; document.getElementById('sendBtn').disabled = true;
@@ -584,7 +701,7 @@ async function getAIResponse(isFinal = false) {
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-      body: JSON.stringify({ model: modelName, messages, stream: true, max_tokens: 2048, temperature: 0.7 }),
+      body: JSON.stringify({ model: modelName, messages: apiMessages, stream: true, max_tokens: 2048, temperature: 0.7 }),
       signal: abortController.signal
     });
     if (!res.ok) { const e = await res.text(); throw new Error('API ' + res.status + ': ' + e.slice(0, 150)); }
