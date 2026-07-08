@@ -518,7 +518,6 @@ async function testConnection() {
       baseUrl = baseUrl.replace(/\/$/, '') + '/v1';
     }
     const chatUrl = baseUrl + '/chat/completions';
-    const apiMessages = buildApiMessages();
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
@@ -698,6 +697,7 @@ async function getAIResponse(isFinal = false) {
       baseUrl = baseUrl.replace(/\/$/, '') + '/v1';
     }
     const chatUrl = baseUrl + '/chat/completions';
+    const apiMessages = buildApiMessages();
     const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
