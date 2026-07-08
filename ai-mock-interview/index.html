@@ -430,14 +430,16 @@ async function fetchModels() {
 
   try {
     const modelsUrl = url.replace(/\/chat\/completions$/, '').replace(/\/v1\/?$/, '') + '/v1/models';
-    const res = await fetch(CORS_PROXY + encodeURIComponent(modelsUrl), { headers: { 'Authorization': 'Bearer ' + key } });
+    const res = await fetch(modelsUrl, { headers: { 'Authorization': 'Bearer ' + key } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const models = data.data || data.models || [];
 
     sel.innerHTML = '';
     if (!models.length) {
-      sel.innerHTML = '<option value="">未获取到模型</option>';
+      sel.innerHTML = '<option value="auto">auto</option>';
+      document.getElementById('modelName').value = 'auto';
+      showTestResult('✅ 模型列表为空，默认使用 auto', 'success');
     } else {
       const d = document.createElement('option'); d.value = ''; d.textContent = '-- 请选择 (' + models.length + '个) --'; sel.appendChild(d);
       models.forEach(m => { const o = document.createElement('option'); o.value = m.id || m.name; o.textContent = m.id || m.name; sel.appendChild(o); });
@@ -446,9 +448,9 @@ async function fetchModels() {
       showTestResult('✅ 获取到 ' + models.length + ' 个模型', 'success');
     }
   } catch (e) {
-    sel.innerHTML = '<option value="">获取失败</option>';
-    const o = document.createElement('option'); o.value = '__manual__'; o.textContent = '✏️ 手动输入...'; sel.appendChild(o);
-    showTestResult('❌ ' + e.message, 'error');
+    sel.innerHTML = '<option value="auto">auto</option>';
+    document.getElementById('modelName').value = 'auto';
+    showTestResult('⚠️ 模型列表获取失败（' + e.message + '），已默认使用 auto', 'success');
   } finally { btn.classList.remove('spinning'); }
 }
 
@@ -473,7 +475,7 @@ async function testConnection() {
   btn.textContent = '⏳'; btn.disabled = true;
   try {
     const chatUrl = url.endsWith('/chat/completions') ? url : url.replace(/\/$/, '') + '/chat/completions';
-    const res = await fetch(CORS_PROXY + encodeURIComponent(chatUrl), {
+    const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
       body: JSON.stringify({ model, messages: [{ role: 'user', content: 'hi' }], max_tokens: 5 })
@@ -564,7 +566,7 @@ async function getAIResponse(isFinal = false) {
 
   try {
     const chatUrl = apiUrl.endsWith('/chat/completions') ? apiUrl : apiUrl.replace(/\/$/, '') + '/chat/completions';
-    const res = await fetch(CORS_PROXY + encodeURIComponent(chatUrl), {
+    const res = await fetch(chatUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
       body: JSON.stringify({ model: modelName, messages, stream: true, max_tokens: 2048, temperature: 0.7 }),
