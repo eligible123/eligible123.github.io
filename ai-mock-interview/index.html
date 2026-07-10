@@ -66,6 +66,15 @@ body {
 .nav-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
 .nav-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .nav-btn.primary:hover { background: var(--accent-dark); }
+.nav-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.nav-btn:disabled:hover {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--secondary);
+}
 
 /* Main Layout */
 .main-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -245,6 +254,7 @@ body {
   <div class="nav-right">
     <button class="nav-btn" onclick="toggleSettings()">⚙️ API设置</button>
     <button class="nav-btn" onclick="showResumeModal()">📄 上传简历</button>
+    <button class="nav-btn" onclick="exportInterviewTranscript()" style="display:none" id="exportBtn" disabled>⬇️ 导出对话</button>
     <button class="nav-btn danger" onclick="endInterview()" style="display:none" id="endBtn">结束面试</button>
   </div>
 </div>
@@ -358,6 +368,8 @@ let jdContent = localStorage.getItem('ai_interview_jd') || '';
 let messages = [];
 let isStreaming = false;
 let abortController = null;
+let interviewEnded = false;
+let responseSeq = 0;
 
 const CORS_PROXY = '';
 
@@ -619,10 +631,12 @@ function startInterview() {
   if (!modelName) { alert('请先选择模型'); toggleSettings(); return; }
   if (!resumeContent) { showResumeModal(); return; }
 
+  interviewEnded = false;
   document.getElementById('welcomeScreen').style.display = 'none';
   document.getElementById('userInput').disabled = false;
   document.getElementById('sendBtn').disabled = false;
   document.getElementById('endBtn').style.display = '';
+  setExportButtonState();
 
   const jdBlock = jdContent || '未提供岗位 JD。请基于候选人简历进行通用技术面试。';
   messages = [
@@ -634,9 +648,12 @@ function startInterview() {
 }
 
 function endInterview() {
+  if (interviewEnded || !messages.length) return;
+  interviewEnded = true;
   if (isStreaming && abortController) abortController.abort();
-  messages.push({ role: 'user', content: REVIEW_PROMPT });
+  messages.push({ role: 'user', content: REVIEW_PROMPT, __internal: true });
   addMessage('user', '[请求结束面试，生成复盘报告]');
+  setExportButtonState(true);
   getAIResponse(true);
   document.getElementById('userInput').disabled = true;
   document.getElementById('sendBtn').disabled = true;
@@ -656,6 +673,80 @@ function sendMessage() {
 function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 
+function getExportableMessages() {
+  return messages.filter(({ role, content, __internal }) =>
+    !__internal &&
+    (role === 'user' || role === 'assistant') &&
+    typeof content === 'string' &&
+    content.trim() &&
+    content !== REVIEW_PROMPT
+  );
+}
+
+function getExportRoleName(role) {
+  return role === 'assistant' ? '面试官' : '候选人';
+}
+
+function normalizeExportText(text) {
+  return String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+}
+
+function buildInterviewExportMarkdown() {
+  const exportMessages = getExportableMessages();
+  const lines = [
+    '# AI 模拟面试对话记录',
+    '',
+    '- 导出时间：' + new Date().toLocaleString('zh-CN'),
+    '- 使用模型：' + (modelName || '未选择'),
+    '- 岗位 JD：' + (jdContent ? '已提供' : '未提供'),
+    '',
+    '## 对话记录',
+    ''
+  ];
+
+  exportMessages.forEach((msg, index) => {
+    lines.push('### ' + (index + 1) + '. ' + getExportRoleName(msg.role));
+    lines.push('');
+    lines.push(normalizeExportText(msg.content));
+    lines.push('');
+  });
+
+  return lines.join('\n');
+}
+
+function buildExportFileName() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const stamp = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+  return 'ai-interview-transcript-' + stamp + '.md';
+}
+
+function downloadTextFile(filename, text) {
+  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportInterviewTranscript() {
+  if (!interviewEnded) { alert('请先结束面试，生成复盘后再导出对话'); return; }
+  if (!getExportableMessages().length) { alert('暂无可导出的面试对话'); return; }
+  downloadTextFile(buildExportFileName(), buildInterviewExportMarkdown());
+}
+
+function setExportButtonState(isBusy = false) {
+  const btn = document.getElementById('exportBtn');
+  if (!btn) return;
+  btn.style.display = interviewEnded ? '' : 'none';
+  btn.disabled = isBusy || getExportableMessages().length === 0;
+  btn.textContent = isBusy ? '复盘生成中...' : '⬇️ 导出对话';
+}
+
 function buildApiMessages() {
   return messages
     .map(({ role, content }) => ({ role, content }))
@@ -664,7 +755,9 @@ function buildApiMessages() {
 
 // ====== Stream API ======
 async function getAIResponse(isFinal = false) {
+  const responseId = ++responseSeq;
   isStreaming = true; document.getElementById('sendBtn').disabled = true;
+  if (isFinal) setExportButtonState(true);
   const msgEl = addMessage('ai', '', true);
   const bubble = msgEl.querySelector('.msg-bubble');
   abortController = new AbortController();
@@ -709,7 +802,14 @@ async function getAIResponse(isFinal = false) {
   } catch (e) {
     if (e.name === 'AbortError') bubble.innerHTML += '<br><span style="color:var(--warning)">[已中断]</span>';
     else bubble.innerHTML = '<span style="color:var(--danger)">❌ ' + e.message + '</span>';
-  } finally { isStreaming = false; document.getElementById('sendBtn').disabled = false; abortController = null; }
+  } finally {
+    if (responseId === responseSeq) {
+      isStreaming = false;
+      document.getElementById('sendBtn').disabled = interviewEnded;
+      if (isFinal || interviewEnded) setExportButtonState(false);
+      abortController = null;
+    }
+  }
 }
 
 // ====== Rendering ======
