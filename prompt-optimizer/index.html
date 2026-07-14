@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt 优化 | 张三的技术博客</title>
+<meta name="description" content="基于 Role、Goal、Context、Workflow、Constraint、Output、Verification 等 16 要素的标准 Prompt 框架与生成器">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F9FAFB;--card:#FFFFFF;--border:#E5E7EB;
+  --text:#111827;--text2:#374151;--text3:#6B7280;--text4:#9CA3AF;
+  --accent:#2563EB;--accent-light:#EFF6FF;--accent-hover:#1D4ED8;
+  --green:#059669;--green-light:#ECFDF5;--orange:#D97706;--orange-light:#FFFBEB;
+  --radius:14px;--radius-sm:8px;--shadow:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 10px 30px rgba(17,24,39,.08);
+  --font:-apple-system,BlinkMacSystemFont,'Inter','PingFang SC','Microsoft YaHei',sans-serif;
+  --mono:'SF Mono','Fira Code','Consolas','Liberation Mono',monospace;
+  --max:1280px;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;font-size:15px}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-hover)}
+
+.navbar{position:sticky;top:0;z-index:100;height:64px;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.navbar .inner{max-width:var(--max);margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.3px}.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:26px;list-style:none}.nav-links a{color:var(--text3);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-badge{padding:4px 10px;background:var(--accent-light);color:var(--accent);border-radius:6px;font-size:12px;font-weight:600}
+
+.page{max-width:var(--max);margin:0 auto;padding:56px 24px 48px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:end;margin-bottom:28px}
+.hero h1{font-size:40px;line-height:1.12;font-weight:850;letter-spacing:-1.1px;margin-bottom:12px}
+.hero .sub{font-size:16px;color:var(--text3);max-width:760px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border);background:var(--card);color:var(--text2);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;font-weight:650;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--shadow)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.primary:hover{background:var(--accent-hover);color:#fff}
+.hero-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.hero-card h2{font-size:14px;margin-bottom:12px;color:var(--text2)}
+.mini-tree{font-family:var(--mono);font-size:12px;line-height:1.8;color:var(--text3);white-space:pre-wrap}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.pill{padding:4px 9px;border-radius:999px;background:var(--accent-light);color:var(--accent);font-size:12px;font-weight:650}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:24px;align-items:start}
+.panel,.article-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel-head,.article-head{padding:20px 22px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#fff,#FAFAFA)}
+.panel-head h2,.article-head h2{font-size:18px;line-height:1.3;margin-bottom:4px}.panel-head p,.article-head p{font-size:13px;color:var(--text3)}
+.panel-body{padding:20px 22px}
+
+.field{margin-bottom:14px}.field label{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;color:var(--text2);margin-bottom:6px}.field label span{font-weight:500;color:var(--text4)}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--text);background:#fff;font-family:inherit;transition:border-color .15s,box-shadow .15s}
+.field textarea{min-height:74px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.preset-grid{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:16px}
+.output-box{margin-top:18px}.output-box textarea{min-height:340px;font-family:var(--mono);font-size:13px;line-height:1.65;background:#0F172A;color:#E5E7EB;border-color:#1E293B}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.toast{display:none;font-size:13px;color:var(--green);font-weight:650;align-self:center}.toast.show{display:inline-flex}
+
+.article-body{padding:22px}.article-body h2{font-size:20px;margin:24px 0 10px}.article-body h3{font-size:15px;margin:18px 0 8px}.article-body p{color:var(--text2);margin-bottom:10px}.article-body blockquote{border-left:4px solid var(--accent);background:var(--accent-light);padding:12px 14px;border-radius:0 10px 10px 0;color:var(--text2);margin:14px 0}
+.elements-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.element-card{border:1px solid var(--border);border-radius:12px;padding:13px;background:#fff}.element-card strong{display:block;font-size:13px;margin-bottom:4px}.element-card span{font-size:12px;color:var(--text3)}
+.scene-table{width:100%;border-collapse:collapse;margin:12px 0 18px;font-size:13px}.scene-table th,.scene-table td{border:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top}.scene-table th{background:var(--bg);font-weight:700;color:var(--text2)}.scene-table td{color:var(--text3)}
+.code-block{background:#0F172A;color:#E5E7EB;border-radius:12px;padding:16px;font-family:var(--mono);font-size:13px;line-height:1.7;overflow:auto;margin:12px 0 18px}
+.checklist{display:grid;gap:8px;margin:12px 0 4px}.check{display:flex;gap:8px;color:var(--text2);font-size:14px}.check::before{content:'✓';width:20px;height:20px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px}
+
+.footer{max-width:var(--max);margin:0 auto;padding:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--text4);font-size:13px}
+
+@media(max-width:1024px){.hero,.layout{grid-template-columns:1fr}.layout{display:flex;flex-direction:column}.panel{width:100%}}
+@media(max-width:700px){.page{padding:36px 16px}.hero h1{font-size:30px}.nav-links{display:none}.elements-grid{grid-template-columns:1fr}.preset-grid{grid-template-columns:1fr}.footer{flex-direction:column;gap:8px}.panel-head,.article-head,.panel-body,.article-body{padding-left:16px;padding-right:16px}}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="inner">
+    <a href="/" class="logo">张三<span>.dev</span></a>
+    <ul class="nav-links">
+      <li><a href="/">首页</a></li>
+      <li><a href="/interview-questions/">题库</a></li>
+      <li><a href="/random-question/">刷题</a></li>
+      <li><a href="/ai-mock-interview/">AI面试</a></li>
+      <li><a href="/prompt-optimizer/" class="active">Prompt优化</a></li>
+      <li><a href="/archives/">博客</a></li>
+    </ul>
+    <div class="nav-right"><span class="nav-badge">16 要素框架</span></div>
+  </div>
+</nav>
+
+<main class="page">
+  <section class="hero">
+    <div>
+      <h1>Prompt 优化：把一句话升级成 AI 需求规格说明书</h1>
+      <p class="sub">一个优秀 Prompt 不只是告诉 AI「做什么」，而是说清楚角色、目标、上下文、流程、约束、输出格式和验收标准。下面这套 16 要素框架，适合写代码、系统设计、面试模拟、写作和 Agent Prompt。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#builder">开始生成 Prompt</a>
+        <a class="btn" href="#framework">查看 16 要素</a>
+      </div>
+    </div>
+    <aside class="hero-card" aria-label="Prompt 框架摘要">
+      <h2>标准 Prompt 框架</h2>
+      <div class="mini-tree">Prompt
+├── Role / Goal / Context
+├── Audience / Input / Task
+├── Workflow / Thinking
+├── Constraint / Output
+├── Quality / Verification
+└── Iteration / Example / Persona / Success</div>
+      <div class="pill-row">
+        <span class="pill">可复制</span>
+        <span class="pill">可落地</span>
+        <span class="pill">可复用</span>
+      </div>
+    </aside>
+  </section>
+
+  <div class="layout">
+    <article class="article-card" id="framework">
+      <div class="article-head">
+        <h2>为什么 Prompt 应该像需求规格说明书？</h2>
+        <p>因为 AI 的输出质量，取决于输入信息是否完整、边界是否清晰、成功标准是否明确。</p>
+      </div>
+      <div class="article-body">
+        <blockquote>优秀 Prompt 的核心链路：你是谁（Role）→ 为什么做（Goal）→ 用什么方法做（Workflow）→ 输出什么（Output）→ 什么不能做（Constraint）→ 如何判断做好了（Evaluation）。</blockquote>
+
+        <h2>16 个核心模块</h2>
+        <div class="elements-grid">
+          <div class="element-card"><strong>1. Role（角色）</strong><span>定义 AI 的职业、经验、领域、思维方式和价值观。</span></div>
+          <div class="element-card"><strong>2. Goal（目标）</strong><span>明确最终要达成什么，而不是只描述一个动作。</span></div>
+          <div class="element-card"><strong>3. Context（上下文）</strong><span>说明项目背景、技术栈、已有系统、限制和业务目标。</span></div>
+          <div class="element-card"><strong>4. Audience（受众）</strong><span>告诉 AI 最终内容给谁看：面试官、CTO、用户或老师。</span></div>
+          <div class="element-card"><strong>5. Input（输入）</strong><span>明确会提供哪些材料：源码、日志、简历、JD、SQL、图片或 PDF。</span></div>
+          <div class="element-card"><strong>6. Task（任务）</strong><span>拆清楚要分析、设计、优化、生成、审核、调试还是规划。</span></div>
+          <div class="element-card"><strong>7. Workflow（流程）</strong><span>规定执行步骤，避免 AI 自由发挥导致遗漏。</span></div>
+          <div class="element-card"><strong>8. Thinking（思维模式）</strong><span>指定 MECE、第一性原理、STAR、PDCA、ReAct、5Why 等方法。</span></div>
+          <div class="element-card"><strong>9. Constraint（约束）</strong><span>写清楚不能编造、不能泛泛而谈，必须符合生产环境等边界。</span></div>
+          <div class="element-card"><strong>10. Output（输出格式）</strong><span>规定 Markdown、JSON、YAML、HTML、Mermaid 或固定章节结构。</span></div>
+          <div class="element-card"><strong>11. Quality（质量要求）</strong><span>要求专业、完整、企业级、可维护、可扩展、符合工程规范。</span></div>
+          <div class="element-card"><strong>12. Verification（校验）</strong><span>输出前自检是否遗漏、是否有 Bug、是否满足约束。</span></div>
+          <div class="element-card"><strong>13. Iteration（迭代机制）</strong><span>信息不足时先提问；复杂任务分阶段确认。</span></div>
+          <div class="element-card"><strong>14. Example（示例）</strong><span>提供 few-shot 示例，让输出风格和结构更稳定。</span></div>
+          <div class="element-card"><strong>15. Persona（表达风格）</strong><span>控制语气：严谨、简洁、导师、CTO、面试官或学术论文。</span></div>
+          <div class="element-card"><strong>16. Success Criteria（成功标准）</strong><span>定义什么叫完成：可运行、可上线、可放简历、可通过面试。</span></div>
+        </div>
+
+        <h2>不同场景的侧重点</h2>
+        <table class="scene-table">
+          <thead><tr><th>场景</th><th>最重要的模块</th></tr></thead>
+          <tbody>
+            <tr><td>写代码</td><td>Context、Constraint、Output、Verification</td></tr>
+            <tr><td>系统设计</td><td>Context、Workflow、Thinking、Quality</td></tr>
+            <tr><td>写作</td><td>Audience、Persona、Output、Example</td></tr>
+            <tr><td>面试模拟</td><td>Role、Workflow、Constraint、Verification</td></tr>
+            <tr><td>Agent Prompt</td><td>Role、Workflow、Tool 使用规则、Memory、Constraint、Verification</td></tr>
+          </tbody>
+        </table>
+
+        <h2>标准模板</h2>
+        <div class="code-block">你是：{Role}
+
+目标：{Goal}
+
+背景：{Context}
+
+受众：{Audience}
+
+输入：{Input}
+
+任务：{Task}
+
+执行流程：{Workflow}
+
+思维方式：{Thinking}
+
+约束：{Constraint}
+
+输出格式：{Output}
+
+质量要求：{Quality}
+
+结果校验：{Verification}
+
+迭代机制：{Iteration}
+
+示例：{Example}
+
+表达风格：{Persona}
+
+成功标准：{Success Criteria}</div>
+
+        <h2>写 Prompt 的判断标准</h2>
+        <div class="checklist">
+          <div class="check">是否说清楚最终目标，而不是只说一个动作？</div>
+          <div class="check">是否提供足够上下文，让 AI 不需要猜？</div>
+          <div class="check">是否规定输出结构，方便直接使用？</div>
+          <div class="check">是否写明限制条件，避免编造和跑偏？</div>
+          <div class="check">是否定义成功标准，让结果可验收？</div>
+        </div>
+      </div>
+    </article>
+
+    <aside class="panel" id="builder">
+      <div class="panel-head">
+        <h2>Prompt 生成器</h2>
+        <p>选择场景后补充关键字段，一键生成可复制的标准 Prompt。</p>
+      </div>
+      <div class="panel-body">
+        <div class="preset-grid">
+          <div class="field" style="margin-bottom:0">
+            <label for="preset">场景模板 <span>可选</span></label>
+            <select id="preset" onchange="applyPreset()">
+              <option value="">选择一个场景模板</option>
+              <option value="code">写代码 / 改 Bug</option>
+              <option value="design">系统设计</option>
+              <option value="interview">面试模拟</option>
+              <option value="agent">Agent Prompt</option>
+              <option value="writing">写作优化</option>
+            </select>
+          </div>
+          <button class="btn" type="button" onclick="resetBuilder()" style="align-self:end">清空</button>
+        </div>
+
+        <div class="field"><label for="role">Role（角色）<span>AI 是谁</span></label><textarea id="role" placeholder="例如：你是一名拥有15年经验的大厂Java架构师，同时也是优秀技术面试官。"></textarea></div>
+        <div class="field"><label for="goal">Goal（目标）<span>最终要什么</span></label><textarea id="goal" placeholder="例如：帮助我完成企业级 Agent 系统设计，要求能够用于真实项目开发和上线。"></textarea></div>
+        <div class="field"><label for="context">Context（上下文）<span>背景和限制</span></label><textarea id="context" placeholder="例如：Spring Boot、Java21、LangChain4j、Qdrant、Redis、Docker，企业内部知识库系统。"></textarea></div>
+        <div class="field"><label for="audience">Audience（受众）<span>谁会看</span></label><input id="audience" placeholder="例如：CTO、技术面试官、产品经理、普通用户"></div>
+        <div class="field"><label for="input">Input（输入）<span>处理什么</span></label><textarea id="input" placeholder="例如：我的简历、岗位 JD、项目源码、日志、SQL、图片、PDF。"></textarea></div>
+        <div class="field"><label for="task">Task（任务）<span>具体动作</span></label><textarea id="task" placeholder="例如：请完成需求分析、方案设计、代码实现、风险检查和最终总结。"></textarea></div>
+        <div class="field"><label for="workflow">Workflow（流程）<span>怎么做</span></label><textarea id="workflow" placeholder="例如：先理解需求，再发现问题，提出多个方案，分析优缺点，推荐最佳方案，给出实现。"></textarea></div>
+        <div class="field"><label for="thinking">Thinking（思维模式）<span>如何思考</span></label><input id="thinking" placeholder="例如：MECE、First Principle、ReAct、STAR、5Why、系统设计思维"></div>
+        <div class="field"><label for="constraint">Constraint（约束）<span>不能做什么</span></label><textarea id="constraint" placeholder="例如：不要编造；不要泛泛而谈；必须符合 Spring Boot 3、Java 21、生产环境、高并发。"></textarea></div>
+        <div class="field"><label for="output">Output（输出格式）<span>长什么样</span></label><textarea id="output" placeholder="例如：Markdown 输出，包含背景、问题、方案、优缺点、代码、验证和总结。"></textarea></div>
+        <div class="field"><label for="quality">Quality（质量要求）<span>质量线</span></label><textarea id="quality" placeholder="例如：完整、专业、企业级、可落地、可维护、可扩展，符合 SOLID。"></textarea></div>
+        <div class="field"><label for="verification">Verification（校验）<span>自检规则</span></label><textarea id="verification" placeholder="例如：输出结束前检查是否遗漏、是否有 Bug、是否违反要求、是否有更优方案。"></textarea></div>
+        <div class="field"><label for="iteration">Iteration（迭代机制）<span>如何追问</span></label><textarea id="iteration" placeholder="例如：发现信息不足时先提出问题；每完成一个模块询问是否继续深入。"></textarea></div>
+        <div class="field"><label for="example">Example（示例）<span>Few-shot</span></label><textarea id="example" placeholder="可选：给出一个输入和期望输出示例。"></textarea></div>
+        <div class="field"><label for="persona">Persona（表达风格）<span>语气</span></label><input id="persona" placeholder="例如：严谨、专业、简洁、导师、CTO、面试官"></div>
+        <div class="field"><label for="success">Success Criteria（成功标准）<span>验收结果</span></label><textarea id="success" placeholder="例如：能够直接复制运行、能够直接上线、能够放进简历、能够通过大厂面试。"></textarea></div>
+
+        <button class="btn primary" type="button" onclick="generatePrompt()">生成标准 Prompt</button>
+
+        <div class="output-box">
+          <div class="field">
+            <label for="result">生成结果 <span>Markdown</span></label>
+            <textarea id="result" readonly placeholder="生成后的 Prompt 会出现在这里。"></textarea>
+          </div>
+          <div class="toolbar">
+            <button class="btn" type="button" onclick="copyPrompt()">复制 Prompt</button>
+            <button class="btn" type="button" onclick="downloadPrompt()">下载 .txt</button>
+            <span class="toast" id="toast">已复制</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <span>© 2026 张三的技术博客</span>
+  <a href="https://github.com/eligible123">GitHub</a>
+</footer>
+
+<script>
+const fields=['role','goal','context','audience','input','task','workflow','thinking','constraint','output','quality','verification','iteration','example','persona','success'];
+const labels={
+  role:'Role（角色）',goal:'Goal（目标）',context:'Context（上下文）',audience:'Audience（受众）',
+  input:'Input（输入）',task:'Task（任务）',workflow:'Workflow（执行流程）',thinking:'Thinking（思考方式）',
+  constraint:'Constraint（约束）',output:'Output（输出格式）',quality:'Quality（质量要求）',
+  verification:'Verification（校验）',iteration:'Iteration（迭代机制）',example:'Example（示例）',
+  persona:'Persona（表达风格）',success:'Success Criteria（成功标准）'
+};
+
+const presets={
+  code:{
+    role:'你是一名拥有15年经验的大厂高级软件工程师，熟悉工程化、测试、性能优化和生产环境问题排查。',
+    goal:'帮助我完成可维护、可验证、可上线的代码实现或 Bug 修复。',
+    context:'我会提供项目背景、源码片段、错误日志、运行环境和约束条件。请基于现有代码风格最小化改动。',
+    audience:'项目维护者、代码评审者、技术负责人',
+    input:'源码、报错日志、复现步骤、接口说明、依赖版本。',
+    task:'分析问题根因；提出修复方案；给出代码修改；说明验证方式；指出潜在风险。',
+    workflow:'1. 复述需求和现象；2. 定位可能原因；3. 给出最小可行修改；4. 提供关键代码；5. 给出测试与回归检查。',
+    thinking:'系统化调试、5Why、最小变更原则、可观测性思维',
+    constraint:'不要编造不存在的 API；不要大范围重构；不要省略异常处理；必须考虑线程安全、边界条件和兼容性。',
+    output:'使用 Markdown，包含：问题判断、根因分析、修改方案、代码、验证步骤、风险提示。',
+    quality:'代码清晰、可维护、可测试，符合项目现有风格，避免重复和过度设计。',
+    verification:'输出前检查是否能编译、是否覆盖边界条件、是否引入性能或安全问题。',
+    iteration:'如果缺少源码或日志，先列出必须补充的信息，不要直接猜测。',
+    persona:'严谨、直接、工程化',
+    success:'修改后能够通过测试，可被代码评审接受，并能安全上线。'
+  },
+  design:{
+    role:'你是一名资深系统架构师，熟悉高并发、高可用、缓存、消息队列、数据库、云原生和可观测性。',
+    goal:'帮助我设计一个生产可落地、可扩展、可维护的系统方案。',
+    context:'请围绕业务目标、用户规模、QPS、数据量、延迟要求、成本限制和团队技术栈进行设计。',
+    audience:'CTO、架构评审委员会、后端开发团队',
+    input:'业务需求、规模预估、现有系统、技术栈、非功能要求。',
+    task:'完成需求拆解、架构设计、核心流程、数据模型、接口设计、风险和演进路线。',
+    workflow:'1. 明确目标和约束；2. 识别核心领域模型；3. 给出整体架构；4. 设计关键链路；5. 分析瓶颈和风险；6. 给出落地计划。',
+    thinking:'MECE、第一性原理、DDD、容量规划、故障优先设计',
+    constraint:'不要只给概念；必须说明取舍；必须考虑降级、限流、监控、数据一致性和扩展性。',
+    output:'Markdown + Mermaid，包含：背景、需求、架构图、模块说明、关键流程、技术选型、风险、实施计划。',
+    quality:'企业级、可落地、可演进，兼顾复杂度、成本和维护性。',
+    verification:'检查是否满足性能、可用性、安全性、可维护性和扩展性要求。',
+    iteration:'如果关键规模数据缺失，先给出合理假设，并标记需要确认的点。',
+    persona:'架构师视角、专业、克制',
+    success:'方案能够进入真实项目设计评审，并指导后续开发。'
+  },
+  interview:{
+    role:'你是一名大厂资深技术面试官，擅长根据简历和岗位 JD 进行结构化追问和评分。',
+    goal:'帮助我完成高质量面试模拟，发现知识漏洞并提升表达质量。',
+    context:'面试围绕岗位要求、项目经历、技术深度、系统设计和行为面试展开。',
+    audience:'候选人本人、面试官、求职辅导者',
+    input:'个人简历、岗位 JD、目标公司、期望岗位、当前回答。',
+    task:'模拟面试提问；根据回答追问；指出问题；给出优化表达；最终评分。',
+    workflow:'1. 先问基础背景；2. 针对项目深挖；3. 技术原理追问；4. 场景设计题；5. 总结评分和改进建议。',
+    thinking:'STAR、漏斗式追问、能力模型评估、5Why',
+    constraint:'不要一次性问太多；不要直接给答案；必须基于我的回答继续追问。',
+    output:'每轮输出：问题、考察点、我的回答评分、追问方向、参考优化。',
+    quality:'真实、有压力、可复盘，能暴露短板。',
+    verification:'检查问题是否匹配岗位，反馈是否具体，评分是否有依据。',
+    iteration:'每次只问一个主问题，等待我回答后再继续。',
+    persona:'严格但建设性的面试官',
+    success:'我能形成更清晰的项目表达，并提升真实面试通过率。'
+  },
+  agent:{
+    role:'你是一名 Agentic AI 架构师，熟悉 ReAct、Tool Calling、Memory、RAG、多步规划和安全工具调用。',
+    goal:'帮助我设计或优化一个可运行、可观测、可控的智能体 Prompt。',
+    context:'智能体需要在真实业务环境中调用工具、检索知识库、规划任务并处理异常。',
+    audience:'AI 应用开发者、后端工程师、企业技术负责人',
+    input:'业务目标、可用工具、知识库范围、权限边界、失败处理策略。',
+    task:'定义 Agent 角色、任务边界、工具使用规则、记忆策略、检索策略和输出协议。',
+    workflow:'1. 分析任务类型；2. 制定计划；3. 决定是否调用工具；4. 执行并观察结果；5. 迭代修正；6. 输出可验证结果。',
+    thinking:'ReAct、Plan-and-Execute、风险优先、上下文工程',
+    constraint:'不能越权调用工具；不能编造工具结果；不能泄露敏感信息；失败时必须降级或询问。',
+    output:'输出完整 System Prompt，包含角色、目标、工具规则、记忆规则、错误处理、输出格式和验收标准。',
+    quality:'稳定、可复现、安全、易调试，适合生产环境。',
+    verification:'检查是否存在越权、幻觉、无限循环、工具滥用和上下文污染风险。',
+    iteration:'如果工具定义不完整，先要求补充工具 schema 和权限说明。',
+    persona:'冷静、精确、安全优先',
+    success:'Prompt 能直接用于 Agent 开发，并显著降低误调用和幻觉风险。'
+  },
+  writing:{
+    role:'你是一名资深内容编辑和技术写作者，擅长把复杂内容改写成清晰、有结构、有说服力的文章。',
+    goal:'帮助我把素材整理成读者愿意读、能看懂、能记住的内容。',
+    context:'文章需要兼顾专业性、可读性和传播性，避免空话和堆概念。',
+    audience:'技术读者、面试准备者、普通学习者或业务决策者',
+    input:'原始笔记、草稿、观点、案例、目标读者和发布平台。',
+    task:'提炼观点；重组结构；优化标题；润色表达；补充案例；输出最终稿。',
+    workflow:'1. 提炼核心观点；2. 识别读者问题；3. 设计文章结构；4. 优化段落；5. 给出标题和摘要。',
+    thinking:'金字塔原理、读者视角、问题-方案-收益结构',
+    constraint:'不要空泛鸡汤；不要改变事实；不要过度营销；保留我的核心观点。',
+    output:'Markdown，包含标题、摘要、正文、小结和可选金句。',
+    quality:'逻辑清晰、表达自然、信息密度高，适合发布。',
+    verification:'检查是否跑题、是否有重复、是否存在事实不清或表达含糊。',
+    iteration:'先给出结构建议，再根据反馈展开全文。',
+    persona:'专业、清晰、有一点锋利',
+    success:'文章可以直接发布，并让目标读者获得明确收获。'
+  }
+};
+
+function valueOf(id){
+  return document.getElementById(id).value.trim();
+}
+
+function setValue(id,value){
+  document.getElementById(id).value=value||'';
+}
+
+function applyPreset(){
+  const key=document.getElementById('preset').value;
+  if(!key||!presets[key])return;
+  const preset=presets[key];
+  fields.forEach(id=>setValue(id,preset[id]));
+  generatePrompt();
+}
+
+function generatePrompt(){
+  const lines=['# 标准 Prompt'];
+  fields.forEach(id=>{
+    const value=valueOf(id);
+    if(value)lines.push(`\n## ${labels[id]}\n${value}`);
+  });
+  if(lines.length===1){
+    lines.push('\n请先填写至少一个模块，或选择一个场景模板。');
+  }
+  document.getElementById('result').value=lines.join('\n');
+}
+
+function resetBuilder(){
+  document.getElementById('preset').value='';
+  fields.forEach(id=>setValue(id,''));
+  document.getElementById('result').value='';
+}
+
+async function copyPrompt(){
+  const result=document.getElementById('result');
+  if(!result.value.trim())generatePrompt();
+  try{
+    await navigator.clipboard.writeText(result.value);
+  }catch(e){
+    result.select();
+    document.execCommand('copy');
+  }
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),1600);
+}
+
+function downloadPrompt(){
+  if(!document.getElementById('result').value.trim())generatePrompt();
+  const blob=new Blob([document.getElementById('result').value],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='standard-prompt.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
