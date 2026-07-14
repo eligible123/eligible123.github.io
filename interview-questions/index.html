@@ -215,7 +215,15 @@ const CATEGORIES=[
 ];
 CATEGORIES[0].count=CATEGORIES.slice(1).reduce((s,c)=>s+c.count,0);
 
-let curCat='all',curQs=[],filtered=[],curPage=1,curIdx=0,pageSize=30,loaded={};
+let curCat='all',curQs=[],filtered=[],curPage=1,curIdx=0,pageSize=30;
+let loaded={},loading={},filterTimer=null,allPrefetchPromise=null,allPrefetchScheduled=false,renderSeq=0;
+
+let offset=0;
+for(let i=1;i<CATEGORIES.length;i++){
+  CATEGORIES[i].start=offset;
+  CATEGORIES[i].end=offset+CATEGORIES[i].count;
+  offset=CATEGORIES[i].end;
+}
 
 function init(){
   renderSidebar();
@@ -233,35 +241,133 @@ function renderSidebar(){
 async function selectCategory(dir){
   curCat=dir;curPage=1;renderSidebar();
   if(dir==='all')await loadAll();else await loadCat(dir);
-  filtered=[...curQs];renderQs();show('list');
+  await applyFilter(false);
+  await renderQs();
+  show('list');
 }
 
 async function loadCat(dir){
   if(loaded[dir]){curQs=loaded[dir];return}
   showLoading();
-  try{const r=await fetch(`/interview-questions/${dir}/data.js`);const t=await r.text();const s=t.indexOf('['),e=t.lastIndexOf(']')+1;loaded[dir]=JSON.parse(t.substring(s,e));curQs=loaded[dir]}catch(e){curQs=[]}
+  curQs=await fetchCategory(dir);
 }
 
 async function loadAll(){
-  if(loaded.all){curQs=loaded.all;return}
-  showLoading();const all=[];
-  for(let i=1;i<CATEGORIES.length;i++){const c=CATEGORIES[i];try{if(!loaded[c.dir]){const r=await fetch(`/interview-questions/${c.dir}/data.js`);const t=await r.text();const s=t.indexOf('['),e=t.lastIndexOf(']')+1;loaded[c.dir]=JSON.parse(t.substring(s,e))}all.push(...loaded[c.dir])}catch(e){}}
-  loaded.all=all;curQs=all;
+  curQs=getAllBuffer();
+  await ensureRangeLoaded(0,pageSize);
+  startAllPrefetch();
 }
 
-function showLoading(){document.getElementById('questionsList').innerHTML='<div class="loading">加载中...</div>'}
+function getAllBuffer(){
+  if(!loaded.all)loaded.all=new Array(CATEGORIES[0].count);
+  return loaded.all;
+}
+
+function parseQuestions(text){
+  const s=text.indexOf('['),e=text.lastIndexOf(']')+1;
+  if(s<0||e<=s)return[];
+  return JSON.parse(text.substring(s,e));
+}
+
+async function fetchCategory(dir){
+  if(loaded[dir])return loaded[dir];
+  if(loading[dir])return loading[dir];
+  loading[dir]=fetch(`/interview-questions/${encodeURIComponent(dir)}/data.js`)
+    .then(r=>r.ok?r.text():Promise.reject(new Error(`HTTP ${r.status}`)))
+    .then(t=>{
+      const qs=parseQuestions(t);
+      loaded[dir]=qs;
+      fillAllBuffer(dir,qs);
+      return qs;
+    })
+    .catch(err=>{
+      console.warn(`Load interview questions failed: ${dir}`,err);
+      loaded[dir]=[];
+      return loaded[dir];
+    })
+    .finally(()=>{delete loading[dir]});
+  return loading[dir];
+}
+
+function fillAllBuffer(dir,qs){
+  if(!loaded.all)return;
+  const cat=CATEGORIES.find(c=>c.dir===dir);
+  if(!cat||cat.start===undefined)return;
+  for(let i=0;i<qs.length&&i<cat.count;i++)loaded.all[cat.start+i]=qs[i];
+}
+
+async function ensureRangeLoaded(start,end){
+  getAllBuffer();
+  const tasks=[];
+  for(let i=1;i<CATEGORIES.length;i++){
+    const c=CATEGORIES[i];
+    if(c.end>start&&c.start<end&&!loaded[c.dir])tasks.push(fetchCategory(c.dir));
+  }
+  if(tasks.length)await Promise.all(tasks);
+}
+
+function hasMissingRange(arr,start,end){
+  for(let i=start;i<end;i++)if(!arr[i])return true;
+  return false;
+}
+
+function startAllPrefetch(){
+  if(allPrefetchPromise||allPrefetchScheduled)return;
+  allPrefetchScheduled=true;
+  const run=()=>loadEveryCategory().then(()=>{
+    if(curCat==='all'&&!currentKeyword())renderQs();
+  });
+  if('requestIdleCallback'in window)requestIdleCallback(run,{timeout:1500});
+  else setTimeout(run,300);
+}
+
+function loadEveryCategory(){
+  if(allPrefetchPromise)return allPrefetchPromise;
+  getAllBuffer();
+  allPrefetchPromise=(async()=>{
+    const cats=CATEGORIES.slice(1);
+    let i=0;
+    const workerCount=Math.min(6,cats.length);
+    await Promise.all(Array.from({length:workerCount},async()=>{
+      while(i<cats.length){
+        const c=cats[i++];
+        await fetchCategory(c.dir);
+      }
+    }));
+    return loaded.all;
+  })();
+  return allPrefetchPromise;
+}
+
+function showLoading(msg='加载中...'){
+  document.getElementById('questionsList').innerHTML=`<div class="loading">${msg}</div>`;
+  document.getElementById('pagination').innerHTML='';
+}
 function show(v){document.getElementById('listView').style.display=v==='list'?'block':'none';document.getElementById('detailView').classList.toggle('active',v==='detail')}
 
-function renderQs(){
-  const s=(curPage-1)*pageSize,e=s+pageSize,pq=filtered.slice(s,e),tp=Math.ceil(filtered.length/pageSize);
+async function renderQs(){
+  const seq=++renderSeq;
+  const total=filtered.length;
+  const s=(curPage-1)*pageSize,e=Math.min(s+pageSize,total),tp=Math.ceil(total/pageSize);
   const el=document.getElementById('questionsList');
-  if(!pq.length){el.innerHTML='<div class="empty-state">暂无题目</div>';document.getElementById('pagination').innerHTML='';return}
+  if(!total){el.innerHTML='<div class="empty-state">暂无题目</div>';document.getElementById('pagination').innerHTML='';return}
+  if(curCat==='all'&&!currentKeyword()&&hasMissingRange(filtered,s,e)){
+    showLoading('正在加载当前页...');
+    await ensureRangeLoaded(s,e);
+    if(seq!==renderSeq)return;
+  }
+  const pq=filtered.slice(s,e);
   el.innerHTML=pq.map((q,i)=>{
+    if(!q)return'<div class="q-item"><div class="q-body"><div class="q-title">当前题目加载失败，请刷新重试</div></div></div>';
     const n=s+i+1,tags=typeof q.tags==='string'?q.tags.split(',').map(t=>t.trim()):(q.tags||[]);
-    const dc=q.difficulty==='简单'?'easy':q.difficulty==='中等'?'medium':'hard';
+    const dc=difficultyClass(q.difficulty);
     return`<div class="q-item" onclick="showDetail(${s+i})"><div class="q-num">${q.num||n}</div><div class="q-body"><div class="q-title">${q.title}</div><div class="q-meta"><span class="diff ${dc}">${q.difficulty_emoji||''} ${q.difficulty}</span>${tags.slice(0,3).map(t=>`<span class="q-tag">${t}</span>`).join('')}</div></div></div>`;
   }).join('');
   renderPag(tp);
+}
+
+function difficultyClass(difficulty){
+  return difficulty==='简单'?'easy':difficulty==='中等'?'medium':'hard';
 }
 
 function renderPag(tp){
@@ -276,23 +382,53 @@ function renderPag(tp){
   document.getElementById('pagination').innerHTML=h;
 }
 
-function goPage(p){const tp=Math.ceil(filtered.length/pageSize);if(p<1||p>tp)return;curPage=p;renderQs();window.scrollTo({top:200,behavior:'smooth'})}
+async function goPage(p){const tp=Math.ceil(filtered.length/pageSize);if(p<1||p>tp)return;curPage=p;await renderQs();window.scrollTo({top:200,behavior:'smooth'})}
 
 function filterQuestions(){
-  const q=document.getElementById('searchInput').value.toLowerCase().trim();
-  filtered=q?curQs.filter(x=>x.title.toLowerCase().includes(q)||(x.tags&&x.tags.toLowerCase().includes(q))):[...curQs];
-  curPage=1;renderQs();
+  clearTimeout(filterTimer);
+  filterTimer=setTimeout(()=>applyFilter(true),180);
 }
 
-function showDetail(i){
-  curIdx=i;const q=filtered[i];if(!q)return;
-  const tags=typeof q.tags==='string'?q.tags.split(',').map(t=>t.trim()):(q.tags||[]);
-  const dc=q.difficulty==='简单'?'easy':q.difficulty==='中等'?'medium':'hard';
-  document.getElementById('detailTitle').textContent=q.title;
-  document.getElementById('detailDiff').textContent=`${q.difficulty_emoji||''} ${q.difficulty}`;
+function currentKeyword(){
+  return document.getElementById('searchInput').value.toLowerCase().trim();
+}
+
+function matchQuestion(q,keyword){
+  const tags=Array.isArray(q.tags)?q.tags.join(','):(q.tags||'');
+  return(q.title||'').toLowerCase().includes(keyword)||tags.toLowerCase().includes(keyword);
+}
+
+async function applyFilter(shouldRender){
+  const keyword=currentKeyword();
+  curPage=1;
+  if(curCat==='all'){
+    curQs=getAllBuffer();
+    if(keyword){
+      showLoading('正在加载全部题库用于搜索...');
+      await loadEveryCategory();
+      filtered=curQs.filter(Boolean).filter(q=>matchQuestion(q,keyword));
+    }else{
+      filtered=curQs;
+    }
+  }else{
+    if(!loaded[curCat])await loadCat(curCat);
+    filtered=keyword?curQs.filter(q=>matchQuestion(q,keyword)):[...curQs];
+  }
+  if(shouldRender)await renderQs();
+}
+
+async function showDetail(i){
+  if(curCat==='all'&&!currentKeyword()&&!filtered[i]){
+    await ensureRangeLoaded(i,i+1);
+  }
+  curIdx=i;const item=filtered[i];if(!item)return;
+  const tags=typeof item.tags==='string'?item.tags.split(',').map(t=>t.trim()):(item.tags||[]);
+  const dc=difficultyClass(item.difficulty);
+  document.getElementById('detailTitle').textContent=item.title;
+  document.getElementById('detailDiff').textContent=`${item.difficulty_emoji||''} ${item.difficulty}`;
   document.getElementById('detailDiff').className=`diff ${dc}`;
   document.getElementById('detailTags').innerHTML=tags.map(t=>`<span class="q-tag">${t}</span>`).join('');
-  document.getElementById('answerContent').textContent=q.answer||'暂无答案';
+  document.getElementById('answerContent').textContent=item.answer||'暂无答案';
   document.getElementById('answerContent').classList.remove('show');
   updateNav();show('detail');window.scrollTo({top:0,behavior:'smooth'});
 }
